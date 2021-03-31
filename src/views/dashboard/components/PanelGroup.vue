@@ -9,14 +9,14 @@
           <div class="card-panel-text">设备</div>总
           <count-to
             :start-val="0"
-            :end-val="list.total_account"
+            :end-val="list.dev_number"
             :duration="2600"
             class="card-panel-num"
           />个
           <br>在线
           <count-to
             :start-val="0"
-            :end-val="Object.keys(list.area_stats).length"
+            :end-val="0"
             :duration="2600"
             class="card-panel-num"
           />个
@@ -32,20 +32,20 @@
           <div class="card-panel-text">语音</div>
           <count-to
             :start-val="0"
-            :end-val="parseInt(list.total_stats.total_delay / list.total_stats.session_number)"
+            :end-val="0"
             :duration="3000"
             class="card-panel-num"
           />次
           <count-to
             :start-val="0"
-            :end-val="parseInt(list.total_stats.total_first_delay / list.total_stats.session_number)"
+            :end-val="0"
             :duration="3000"
             class="card-panel-num"
           />
           <br>
           <count-to
             :start-val="0"
-            :end-val="parseInt(list.total_stats.total_lost / list.total_stats.session_number)"
+            :end-val="0"
             :duration="3000"
             class="card-panel-num"
           />个
@@ -68,7 +68,7 @@
           <br>总
           <count-to
             :start-val="0"
-            :end-val="list.total_stats.max_lost"
+            :end-val="0"
             :duration="3200"
             class="card-panel-num"
           />条
@@ -84,19 +84,12 @@
           <div class="card-panel-text">流量</div>总
           <count-to
             :start-val="0"
-            :end-val="formatSessionNumber(list.total_stats.session_number,true)"
+            :end-val="list.packet_number"
             :duration="2000"
-            :decimals="1"
+            :decimals="0"
             class="card-panel-num"
-          />G
-          A:
-          <count-to
-            :start-val="0"
-            :end-val="1000"
-            :duration="2000"
-            :decimals="1"
-            class="card-panel-num"
-          />  <br> 丢包率:
+          />个包
+          <br> 丢包率:
           <count-to
             :start-val="0"
             :end-val="0.1"
@@ -113,7 +106,6 @@
 
 <script>
 import CountTo from 'vue-count-to'
-import { formatSessionNumber } from '@/utils'
 
 export default {
   components: {
@@ -130,7 +122,6 @@ export default {
   },
 
   methods: {
-    formatSessionNumber,
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
     }

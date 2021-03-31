@@ -16,6 +16,14 @@ export function fetchMyDeviceList(data) {
   })
 }
 
+export function queryDevice(data) {
+  return request({
+    url: '/device/query',
+    method: 'post',
+    data
+  })
+}
+
 export function bingDevice(data) {
   return request({
     url: '/device/binddevice',

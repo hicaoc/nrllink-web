@@ -6,11 +6,19 @@
 
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>客厅</span>
+          <span>未分配设备</span>
           <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
         </div>
         <div v-for="dev in list" :key="dev.id" class="text item">
-          <span v-if="dev.group_id==0 ">{{ dev.name }}</span>
+          <span v-if="dev.group_id==0 ">{{ dev.name }} <el-switch v-model="dev.switch" active-text="继电器" active-color="#13ce66" inactive-color="#ff4949" />
+
+            <el-slider
+              v-model="dev.rate"
+              :max="3"
+              :min="1"
+              :step="1"
+              show-stops
+            />  </span>
         </div>
       </el-card>
 
@@ -20,7 +28,14 @@
           <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
         </div>
         <div v-for="dev in list" :key="dev.id" class="text item">
-        <span v-if="dev.group_id==1 ">{{ dev.name  }}</span>
+          <span v-if="dev.group_id==1 ">{{ dev.name }}  <el-switch v-model="dev.switch" active-text="继电器" active-color="#13ce66" inactive-color="#ff4949" />
+            <el-slider
+              v-model="dev.rate"
+              :max="3"
+              :min="1"
+              :step="1"
+              show-stops
+            />  </span>
         </div>
       </el-card>
 
@@ -30,7 +45,14 @@
           <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
         </div>
         <div v-for="dev in list" :key="dev.id" class="text item">
-          <span v-if="dev.group_id==2 ">{{ dev.name  }}</span>
+          <span v-if="dev.group_id==2 ">{{ dev.name }}  <el-switch v-model="dev.switch" active-text="继电器" active-color="#13ce66" inactive-color="#ff4949" />
+            <el-slider
+              v-model="dev.rate"
+              :max="3"
+              :min="1"
+              :step="1"
+              show-stops
+            />  </span>
         </div>
       </el-card>
 
@@ -40,7 +62,14 @@
           <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
         </div>
         <div v-for="dev in list" :key="dev.id" class="text item">
-          <span v-if="dev.group_id==3">{{ dev.name  }} {{ dev.public_group_id === 0 ? '在公共组' : ""}}</span>
+          <span v-if="dev.group_id==3">{{ dev.name }}  <el-switch v-model="dev.switch" active-text="继电器" active-color="#13ce66" inactive-color="#ff4949" />
+            <el-slider
+              v-model="dev.rate"
+              :max="3"
+              :min="1"
+              :step="1"
+              show-stops
+            />  {{ dev.public_group_id !== 0 ? '在公共组' : "" }}</span>
         </div>
       </el-card>
 
@@ -54,8 +83,6 @@ import { fetchMyGroupList } from '@/api/groups'
 
 // import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
-import LineChart from './components/LineChart'
-import PanelGroup from './components/PanelGroup'
 
 import waves from '@/directive/waves' // waves directive
 import { parseTime, AreaValueFilter, ValueFilter } from '@/utils'
@@ -64,7 +91,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination, LineChart, PanelGroup },
+  components: { Pagination },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -94,6 +121,7 @@ export default {
         name: ''
 
       },
+      switch: false,
       areaDataOptions: [],
       areaOptions: [],
       chartData: {},

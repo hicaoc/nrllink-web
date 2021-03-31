@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       title: '',
-      logo: true,
+      logo: false,
       logourl: ''
     }
   },

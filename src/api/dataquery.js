@@ -8,7 +8,6 @@ export function fetchAccountList(data) {
   })
 }
 
-
 export function fetchTotalStats(data) {
   return request({
     url: '/platform/totalstats',
@@ -16,10 +15,6 @@ export function fetchTotalStats(data) {
     data
   })
 }
-
-
-
-
 
 // export function fetchDownloadUrl() {
 //   return request({

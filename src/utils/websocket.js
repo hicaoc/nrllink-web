@@ -1,110 +1,225 @@
-import { Message } from 'element-ui'
-//import { getToken } from '@/utils/authToken' // 与后端的协商，websocket请求需要带上token参数
-let websock = null
-let messageCallback = null
-let errorCallback = null
-let wsUrl = ''
-let tryTime = 0
- 
-// 接收ws后端返回的数据
-function websocketonmessage (e) { 
-  messageCallback(JSON.parse(e.data))
-}
- 
-/**
- * 发起websocket连接
- * @param {Object} agentData 需要向后台传递的参数数据
- */
-function websocketSend (agentData) {
-  // 加延迟是为了尽量让ws连接状态变为OPEN   
-  setTimeout(() => { 
-    // 添加状态判断，当为OPEN时，发送消息
-    if (websock.readyState === websock.OPEN) { // websock.OPEN = 1 
-      // 发给后端的数据需要字符串化
-      websock.send(JSON.stringify(agentData))
-    }
-    if (websock.readyState === websock.CLOSED) { // websock.CLOSED = 3 
-      console.log('websock.readyState=3')
-      Message.error('ws连接异常，请稍候重试')
-      errorCallback()
-    }
-  }, 500)
-}
- 
-// 关闭ws连接
-function websocketclose (e) {  
-  // e.code === 1000  表示正常关闭。 无论为何目的而创建, 该链接都已成功完成任务。
-  // e.code !== 1000  表示非正常关闭。
-  if (e && e.code !== 1000) {
-    Message.error('ws连接异常，请稍候重试')
-    errorCallback()
-    // // 如果需要设置异常重连则可替换为下面的代码，自行进行测试
-    // if (tryTime < 10) {
-    //   setTimeout(function() {
-    //    websock = null
-    //    tryTime++
-    //    initWebSocket()
-    //    console.log(`第${tryTime}次重连`)
-    //  }, 3 * 1000)
-    //} else {
-    //  Message.error('重连失败！请稍后重试')
-    //}
-  }
-}
-// 建立ws连接
-function websocketOpen (e) {
-  // console.log('ws连接成功')
-}
- 
-// 初始化weosocket
-function initWebSocket () { 
-  if (typeof (WebSocket) === 'undefined') {
-    Message.error('您的浏览器不支持WebSocket，无法获取数据')
+var a = document.getElementById('a')
+var b = document.getElementById('b')
+var c = document.getElementById('c')
+
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia
+
+var gRecorder = null
+var audio = document.querySelector('audio')
+var door = false
+var ws = null
+
+b.onclick = function() {
+  if (a.value === '') {
+    alert('请输入用户名')
     return false
   }
-  
-  //const token = 'JWT=' + getToken()
-  // ws请求完整地址
-  const requstWsUrl = wsUrl 
-  websock = new WebSocket(requstWsUrl)
-
-  websock.onmessage = function (e) {
-    websocketonmessage(e)
-  } 
-  websock.onopen = function () {
-    websocketOpen()
+  if (!navigator.getUserMedia) {
+    alert('抱歉您的设备无法语音聊天')
+    return false
   }
-  websock.onerror = function () {
-    Message.error('ws连接异常，请稍候重试')
-    errorCallback()
-  }
-  websock.onclose = function (e) {
-    websocketclose(e)
-  } 
-}
- 
-/**
- * 发起websocket请求函数
- * @param {string} url ws连接地址
- * @param {Object} agentData 传给后台的参数
- * @param {function} successCallback 接收到ws数据，对数据进行处理的回调函数
- * @param {function} errCallback ws连接错误的回调函数
- */
-export function sendWebsocket (url, agentData, successCallback, errCallback) { 
-  wsUrl = url
-  initWebSocket()
-  messageCallback = successCallback
-  errorCallback = errCallback
-  websocketSend(agentData)
-}
 
-/**
- * 关闭websocket函数
- */
-export function closeWebsocket () {
-  if (websock) {
-    websock.close() // 关闭websocket
-    websock.onclose() // 关闭websocket
+  SRecorder.get(function(rec) {
+    gRecorder = rec
+  })
+
+  ws = new WebSocket('wss://x.x.x.x:8888')
+
+  ws.onopen = function() {
+    console.log('握手成功')
+    ws.send('user:' + a.value)
+  }
+
+  ws.onmessage = function(e) {
+    receive(e.data)
+  }
+
+  document.onkeydown = function(e) {
+    if (e.keyCode === 65) {
+      if (!door) {
+        gRecorder.start()
+        door = true
+      }
+    }
+  }
+
+  document.onkeyup = function(e) {
+    if (e.keyCode === 65) {
+      if (door) {
+        ws.send(gRecorder.getBlob())
+        gRecorder.clear()
+        gRecorder.stop()
+        door = false
+      }
+    }
   }
 }
 
+c.onclick = function() {
+  if (ws) {
+    ws.close()
+  }
+}
+
+var SRecorder = function(stream) {
+  config = {}
+
+  config.sampleBits = config.smapleBits || 8
+  config.sampleRate = config.sampleRate || (44100 / 6)
+
+  var context = new AudioContext()
+  var audioInput = context.createMediaStreamSource(stream)
+  var recorder = context.createScriptProcessor(4096, 1, 1)
+
+  var audioData = {
+    size: 0, // 录音文件长度
+    buffer: [], // 录音缓存
+    inputSampleRate: context.sampleRate, // 输入采样率
+    inputSampleBits: 16, // 输入采样数位 8, 16
+    outputSampleRate: config.sampleRate, // 输出采样率
+    oututSampleBits: config.sampleBits, // 输出采样数位 8, 16
+    clear: function() {
+      this.buffer = []
+      this.size = 0
+    },
+    input: function(data) {
+      this.buffer.push(new Float32Array(data))
+      this.size += data.length
+    },
+    compress: function() { // 合并压缩
+      // 合并
+      var data = new Float32Array(this.size)
+      var offset = 0
+      for (var i = 0; i < this.buffer.length; i++) {
+        data.set(this.buffer[i], offset)
+        offset += this.buffer[i].length
+      }
+      // 压缩
+      var compression = parseInt(this.inputSampleRate / this.outputSampleRate)
+      var length = data.length / compression
+      var result = new Float32Array(length)
+      var index = 0
+      var j = 0
+      while (index < length) {
+        result[index] = data[j]
+        j += compression
+        index++
+      }
+      return result
+    },
+    encodeWAV: function() {
+      var sampleRate = Math.min(this.inputSampleRate, this.outputSampleRate)
+      var sampleBits = Math.min(this.inputSampleBits, this.oututSampleBits)
+      var bytes = this.compress()
+      var dataLength = bytes.length * (sampleBits / 8)
+      var buffer = new ArrayBuffer(44 + dataLength)
+      var data = new DataView(buffer)
+
+      var channelCount = 1 // 单声道
+      var offset = 0
+
+      var writeString = function(str) {
+        for (var i = 0; i < str.length; i++) {
+          data.setUint8(offset + i, str.charCodeAt(i))
+        }
+      }
+
+      // 资源交换文件标识符
+      writeString('RIFF')
+      offset += 4
+      // 下个地址开始到文件尾总字节数,即文件大小-8
+      data.setUint32(offset, 36 + dataLength, true)
+      offset += 4
+      // WAV文件标志
+      writeString('WAVE')
+      offset += 4
+      // 波形格式标志
+      writeString('fmt ')
+      offset += 4
+      // 过滤字节,一般为 0x10 = 16
+      data.setUint32(offset, 16, true)
+      offset += 4
+      // 格式类别 (PCM形式采样数据)
+      data.setUint16(offset, 1, true)
+      offset += 2
+      // 通道数
+      data.setUint16(offset, channelCount, true)
+      offset += 2
+      // 采样率,每秒样本数,表示每个通道的播放速度
+      data.setUint32(offset, sampleRate, true)
+      offset += 4
+      // 波形数据传输率 (每秒平均字节数) 单声道×每秒数据位数×每样本数据位/8
+      data.setUint32(offset, channelCount * sampleRate * (sampleBits / 8), true)
+      offset += 4
+      // 快数据调整数 采样一次占用字节数 单声道×每样本的数据位数/8
+      data.setUint16(offset, channelCount * (sampleBits / 8), true)
+      offset += 2
+      // 每样本数据位数
+      data.setUint16(offset, sampleBits, true)
+      offset += 2
+      // 数据标识符
+      writeString('data')
+      offset += 4
+      // 采样数据总数,即数据总大小-44
+      data.setUint32(offset, dataLength, true)
+      offset += 4
+      // 写入采样数据
+      if (sampleBits === 8) {
+        for (var i = 0; i < bytes.length; i++, offset++) {
+          var s = Math.max(-1, Math.min(1, bytes[i]))
+          var val = s < 0 ? s * 0x8000 : s * 0x7FFF
+          val = parseInt(255 / (65535 / (val + 32768)))
+          data.setInt8(offset, val, true)
+        }
+      } else {
+        for (var i = 0; i < bytes.length; i++, offset += 2) {
+          var s = Math.max(-1, Math.min(1, bytes[i]))
+          data.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true)
+        }
+      }
+
+      return new Blob([data], {
+        type: 'audio/wav'
+      })
+    }
+  }
+
+  this.start = function() {
+    audioInput.connect(recorder)
+    recorder.connect(context.destination)
+  }
+
+  this.stop = function() {
+    recorder.disconnect()
+  }
+
+  this.getBlob = function() {
+    return audioData.encodeWAV()
+  }
+
+  this.clear = function() {
+    audioData.clear()
+  }
+
+  recorder.onaudioprocess = function(e) {
+    audioData.input(e.inputBuffer.getChannelData(0))
+  }
+}
+
+SRecorder.get = function(callback) {
+  if (callback) {
+    if (navigator.getUserMedia) {
+      navigator.getUserMedia({
+        audio: true
+      },
+      function(stream) {
+        var rec = new SRecorder(stream)
+        callback(rec)
+      })
+    }
+  }
+}
+
+function receive(e) {
+  audio.src = window.URL.createObjectURL(e)
+}

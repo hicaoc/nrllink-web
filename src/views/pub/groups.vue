@@ -6,11 +6,11 @@
 
       <el-card v-for="g in list " :key="g.id" class="box-card">
         <div slot="header" class="clearfix">
-          <span >{{ g.name+" "+g.note }}</span>
+          <span>{{ g.name+" "+g.note }}</span>
           <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
         </div>
         <div v-for="d in g.devmap" :key="d.id" class="text item">
-           <span v-if="d.ower_id === 0">{{ d.id +" "+ d.name +" "+ d.callsign }}</span>
+          <span v-if="(d.group_id !== 0 && d.public_group_id === 0)  === false ">{{ d.id +" "+ d.name +" "+ d.callsign + '-' + d.ssid }}  <el-tag> {{ d.is_online ? '在线' : '离线' }} </el-tag> </span>
         </div>
       </el-card>
 

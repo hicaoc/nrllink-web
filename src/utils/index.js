@@ -429,7 +429,7 @@ export function ValueFilter(type, array) {
       return v.name
     }
   }
-  return type
+  return '未知'
 }
 
 export function AreaValueFilter(type, array) {

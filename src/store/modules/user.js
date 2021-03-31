@@ -8,10 +8,10 @@ const state = {
   name: '',
   phone: '',
   status: '',
- // area: '',
- // current_area: '',
-  //current_area_name: '',
- // area_status: '',
+  // area: '',
+  // current_area: '',
+  // current_area_name: '',
+  // area_status: '',
   package_type: '',
   avatar: '',
   introduction: '',
@@ -52,7 +52,7 @@ const mutations = {
   // },
   // SET_CURRENT_AREA_NAME: (state, current_area_name) => {
   //   state.current_area_name = current_area_name
-  //},
+  // },
   SET_PACKAGE_TYPE: (state, package_type) => {
     state.package_type = package_type
   },
@@ -102,7 +102,6 @@ const actions = {
         commit('SET_NAME', name)
         commit('SET_PHONE', phone)
         commit('SET_STATUS', status)
-      
 
         commit('SET_PACKAGE_TYPE', package_type)
         commit('SET_AVATAR', avatar)
@@ -125,7 +124,7 @@ const actions = {
         commit('SET_PHONE', '')
         commit('SET_STATUS', 0)
         commit('SET_STATUS', 0)
-       
+
         commit('SET_PACKAGE_TYPE', 0)
         commit('SET_AVATAR', '')
         commit('SET_INTRODUCTION', '')

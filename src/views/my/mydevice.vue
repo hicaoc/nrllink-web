@@ -1,11 +1,10 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-
       <el-input
         v-model="listQuery.callsign"
         :placeholder="$t('device.callsign')"
-        style="width: 320px;"
+        style="width: 320px"
         class="filter-item"
         clearable
         @keyup.enter.native="handleFilter"
@@ -14,7 +13,7 @@
       <el-input
         v-model="listQuery.cpuid"
         :placeholder="$t('device.cpuid')"
-        style="width: 320px;"
+        style="width: 320px"
         class="filter-item"
         clearable
         @keyup.enter.native="handleFilter"
@@ -26,8 +25,7 @@
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >{{ $t('Account.search') }}</el-button>
-
+      >{{ $t("Account.search") }}</el-button>
     </div>
 
     <div>
@@ -39,8 +37,7 @@
         fit
         stripe
         highlight-current-row
-        style="width: 100%;"
-
+        style="width: 100%"
         @sort-change="sortChange"
       >
         <el-table-column
@@ -48,7 +45,7 @@
           prop="id"
           sortable="custom"
           align="center"
-          width="80"
+          width="100"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.id }}</span>
@@ -67,7 +64,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="类型" width="110px" align="center">
+        <el-table-column label="类型" width="60px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.type }}</span>
           </template>
@@ -75,60 +72,55 @@
 
         <el-table-column label="呼号" width="110px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.callsign+"-"+scope.row.ssid }}</span>
+            <span>{{ scope.row.callsign + "-" + scope.row.ssid }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="私有组" width="110px" align="center">
+        <el-table-column label="所在组" width="110px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.group_id }}</span>
+            <span>{{( scope.row.public_group_id === 0 &&  scope.row.group_id !== 0) ?   "房间" + scope.row.group_id : ValueFilter(scope.row.public_group_id, groupsOptions)  }}</span>
           </template>
         </el-table-column>
 
-                <el-table-column label="公共组" width="110px" align="center">
+
+        <el-table-column label="绑定" width="80px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.public_group_id }}</span>
+            <span>{{ scope.row.ower_id === 0 ? '未绑定' : "已绑定" }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="所有者" width="110px" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.ower_id }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="丢包率" width="110px" align="center">
+        <el-table-column label="丢包" width="60px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.lost }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="状态" width="110px" align="center">
+        <el-table-column label="状态" width="60px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.status }}</span>
+           <span>{{ scope.row.status === 0 ? '启用' : "禁用" }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="是否在线" width="110px" align="center">
+        <el-table-column label="在线" width="60px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.is_online }}</span>
+            <span>{{scope.row.is_online === true ? "在线" : "离线"  }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="上线时间" width="100px" align="center">
+        <el-table-column label="上线时间" width="155px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.online_time }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="加入时间" width="100px" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.creatre_time}}</span>
+            <span>{{ parseTime(scope.row.online_time) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="更新时间" width="100px" align="center">
+        <el-table-column label="加入时间" width="155px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.update_time }}</span>
+            <span>{{ parseTime(scope.row.creatre_time) }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="更新时间" width="155px" align="center">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.update_time) }}</span>
           </template>
         </el-table-column>
 
@@ -143,24 +135,22 @@
           align="center"
           class-name="small-padding fixed-width"
         >
-          <template slot-scope="{row}">
-            <el-button
-
+          <template slot-scope="{ row }">
+            <el-button 
               size="mini"
               type="primary"
               @click="handleBingDevice(row)"
-            >{{ $t('device.bind') }}</el-button>
+            >{{ $t("device.bind") }}</el-button>
 
-            <el-button
+            <el-button size="mini" type="primary" @click="handleUpdate(row)">{{
+              $t("device.edit")
+            }}</el-button>
 
-              size="mini"
-              type="primary"
-              @click="handleUpdate(row)"
-            >{{ $t('device.edit') }}</el-button>
-
+            <el-button size="mini" type="primary" @click="handleChange(row)">{{
+              $t("device.change")
+            }}</el-button>
           </template>
         </el-table-column>
-
       </el-table>
     </div>
 
@@ -171,67 +161,114 @@
         :model="temp"
         label-position="right"
         label-width="140px"
-        style="width: 400px; margin-left:50px;"
+        style="width: 400px; margin-left: 50px"
       >
-
         <el-form-item :label="$t('device.name')" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
 
         <el-form-item :label="$t('device.callsign')" prop="callsign">
-         {{ temp.callsign }}
+          {{ temp.callsign }}
         </el-form-item>
 
-                 <el-form-item :label="$t('device.group')" prop="type">
-          <el-radio-group  v-model="temp.group_id">
-            <el-radio  :label="0" > 客厅 </el-radio>
-             <el-radio  :label="1" > 房间1 </el-radio>
-                  <el-radio  :label="2" > 房间2 </el-radio>
-                 <el-radio  :label="3" > 房间3 </el-radio>
+        <el-form-item :label="$t('device.group')" prop="type">
+          <el-radio-group v-model="temp.group_id">
+            <el-radio :label="0"> 未加入 </el-radio>
+            <el-radio :label="1"> 房间1 </el-radio>
+            <el-radio :label="2"> 房间2 </el-radio>
+            <el-radio :label="3"> 房间3 </el-radio>
           </el-radio-group>
         </el-form-item>
 
-                 <el-form-item :label="$t('device.public_group')" prop="type">
-          <el-radio-group  v-model="temp.public_group_id">
-            <el-radio v-for="d in groupsOptions" :key="d.id" :label="d.id">{{ d.name }}</el-radio>
+        <el-form-item :label="$t('device.public_group')" prop="type">
+          <el-radio-group v-model="temp.public_group_id">
+            <el-radio v-for="d in groupsOptions" :key="d.id" :label="d.id">{{
+              d.id == 0 ? "不加入" : d.name
+            }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
-         <el-form-item :label="$t('device.type')" prop="type">
-          <el-radio-group  v-model="temp.type">
-            <el-radio v-for="d in DevTypeOptions" :key="d.id" :label="d.id">{{ d.name }}</el-radio>
+        <el-form-item :label="$t('device.type')" prop="type">
+          <el-radio-group v-model="temp.type">
+            <el-radio v-for="d in DevTypeOptions" :key="d.id" :label="d.id">{{
+              d.name
+            }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item :label="$t('device.model')" prop="model">
           <el-radio-group v-model="temp.model">
-              <el-radio v-for="d in DevModelOptions" :key="d.id" :label="d.id">{{ d.name }}</el-radio>
+            <el-radio v-for="d in DevModelOptions" :key="d.id" :label="d.id">{{
+              d.name
+            }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item :label="$t('device.status')" prop="status">
           <el-radio-group v-model="temp.status">
-             <el-radio v-for="d in DevStatusOptions" :key="d.id" :label="d.id">{{ d.name }}</el-radio>
+            <el-radio v-for="d in DevStatusOptions" :key="d.id" :label="d.id">{{
+              d.name
+            }}</el-radio>
           </el-radio-group>
         </el-form-item>
-
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
+        <el-button @click="dialogFormVisible = false">{{
+          $t("employee.cancel")
+        }}</el-button>
         <el-button
           type="primary"
-          @click="dialogStatus==='create'?createData():updateData()"
-        >{{ $t('employee.confirm') }}</el-button>
+          @click="dialogStatus === 'create' ? createData() : updateData()"
+        >{{ $t("employee.confirm") }}</el-button>
       </div>
     </el-dialog>
 
+    <el-dialog
+      :title="textMap[dialogStatus]"
+      :visible.sync="dialogFormChangeVisible"
+    >
+      <el-form
+        ref="dataForm"
+        :rules="rules"
+        :model="temp"
+        label-position="right"
+        label-width="140px"
+        style="width: 400px; margin-left: 50px"
+      >
+        <el-form-item :label="$t('device.name')" prop="name">
+          <el-input v-model="temp.name" />
+        </el-form-item>
+
+        <el-form-item :label="$t('device.callsign')" prop="callsign">
+          {{ temp.callsign }}
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormChangeVisible = false">{{
+          $t("employee.cancel")
+        }}</el-button>
+        <el-button type="primary" @click="changeData()">{{
+          $t("employee.confirm")
+        }}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchMyDeviceList, bingDevice, updateDevice } from '@/api/device'
-import { DevTypeOptions, DevModelOptions, DevStatusOptions } from '@/utils/system'
+import {
+  fetchMyDeviceList,
+  bingDevice,
+  updateDevice,
+  queryDevice
+} from '@/api/device'
+import {
+  DevTypeOptions,
+  DevModelOptions,
+  DevStatusOptions
+} from '@/utils/system'
 import { fetchGroupList } from '@/api/groups'
 
 // import permission from '@/directive/permission/index.js' // 权限判断指令
@@ -267,7 +304,6 @@ export default {
       var d = new Date(Date.parse(date.replace(/-/g, '/')))
       return d.getDay()
     }
-
   },
   data() {
     return {
@@ -294,17 +330,15 @@ export default {
 
       //  roles: ["admin", "editer", "guest"],
       dialogFormVisible: false,
-      dialogTimeLineVisible: false,
-      dialogTimeLineChartVisible: false,
+      dialogFormChangeVisible: false,
+
       dialogStatus: '',
       textMap: {
         update: 'Edit',
         create: 'Create'
       },
 
-      rules: {
-
-      },
+      rules: {},
       downloadLoading: false,
       uploadLoading: false
     }
@@ -321,20 +355,20 @@ export default {
     }
 
     this.fetchGroupList({}).then(response => {
-
-       this.groupsOptions = Object.values(response.data.items)
-
+      this.groupsOptions = Object.values(response.data.items)
     })
 
     this.fetchMyDeviceList({}).then(response => {
       this.list = Object.values(response.data.items)
-      //console.log(this.list)
+      // console.log(this.list)
     })
   },
 
   methods: {
+    parseTime,
     checkPermission,
     fetchMyDeviceList,
+    queryDevice,
     ValueFilter,
     AreaValueFilter,
     fetchGroupList,
@@ -368,6 +402,50 @@ export default {
               }
             }
             this.dialogFormVisible = false
+            this.$notify({
+              title: '成功',
+              message: response.data.message,
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }
+      })
+    },
+
+    handleChange(row) {
+      this.temp = Object.assign({}, row)
+
+      queryDevice(row).then(response => {
+        this.dialogFormChangeVisible = false
+        this.$notify({
+          title: '成功',
+          message: response.data.message,
+          type: 'success',
+          duration: 2000
+        })
+      }) // copy obj
+      //  this.temp.timestamp = new Date(this.temp.timestamp);
+      this.dialogStatus = 'change'
+      this.dialogFormChangeVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    changeData() {
+      this.$refs['dataForm'].validate(valid => {
+        if (valid) {
+          const tempData = Object.assign({}, this.temp)
+          //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+          queryDevice(tempData).then(response => {
+            for (const v of this.list) {
+              if (v.id === this.temp.id) {
+                const index = this.list.indexOf(v)
+                this.list.splice(index, 1, this.temp)
+                break
+              }
+            }
+            this.dialogFormChangeVisible = false
             this.$notify({
               title: '成功',
               message: response.data.message,
@@ -430,19 +508,8 @@ export default {
         return
       }
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = [
-          '姓名',
-          '电话',
-          '性别',
-          '出生年月日'
-
-        ]
-        const filterVal = [
-          'name',
-          'phone',
-          'sex'
-
-        ]
+        const tHeader = ['姓名', '电话', '性别', '出生年月日']
+        const filterVal = ['name', 'phone', 'sex']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,

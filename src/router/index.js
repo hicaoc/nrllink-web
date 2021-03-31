@@ -77,22 +77,14 @@ export const constantRoutes = [{
   path: '',
   component: Layout,
   redirect: 'dashboard',
-
   children: [{
     path: 'dashboard',
     component: () =>
       import ('@/views/dashboard/index'),
     name: 'Dashboard',
     meta: { title: 'dashboard', icon: 'dashboard', affix: true, noCache: true }
-  },
-  {
-    path: 'chat',
-    component: () =>
-      import ('@/views/dashboard/chat'),
-    name: 'chat',
-    meta: { title: 'chat', icon: 'user', affix: true, noCache: true }
   }
-]
+  ]
 },
 
 {
@@ -114,155 +106,187 @@ export const constantRoutes = [{
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  */
-export const asyncRoutes = [
+export const asyncRoutes = [{
 
-  {
-    path: '/public',
-    component: Layout,
-    redirect: '/pub/device',
-    alwaysShow: true, // will always show the root menu
-    name: 'public',
-    meta: {
-      title: 'public',
-      icon: 'people',
-      roles: ['master'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'totaldevices',
-        component: () =>
-          import ('@/views/pub/device'),
-        name: 'totaldevices',
-        meta: {
-          title: 'totaldevices',
-          roles: ['master']
-        }
-      },
-      {
-        path: 'groups',
-        component: () =>
-          import ('@/views/pub/groups'),
-        name: 'groups',
-        meta: {
-          title: 'groups',
-          roles: ['master']
-        }
-      }
-
-    ]
-  },
-  {
-    path: '/myhome',
-    component: Layout,
-    redirect: '/myhome/device',
-    alwaysShow: true, // will always show the root menu
-    name: 'myhome',
-    meta: {
-      title: 'myhome',
-      icon: 'people',
-      roles: ['master'] // you can set roles in root nav
-    },
-    children: [
-
-      {
-        path: 'mydevices',
-        component: () =>
-          import ('@/views/my/mydevice'),
-        name: 'mydevices',
-        meta: {
-          title: 'mydevices',
-          roles: ['master']
-        }
-      },
-      {
-        path: 'rooms',
-        component: () =>
-          import ('@/views/my/rooms'),
-        name: 'rooms',
-        meta: {
-          title: 'rooms',
-          roles: ['master']
-        }
-      }
-
-    ]
+  path: '/month',
+  component: Layout,
+  redirect: 'monty',
+  meta: {
+    title: 'month',
+    icon: 'dashboard',
+    affix: true,
+    noCache: true,
+    roles: ['ham'] // you can set roles in root nav
   },
 
-  {
-    path: '/setup',
-    component: Layout,
-    redirect: '/setup/users',
-    alwaysShow: true, // will always show the root menu
-    name: 'Setup',
-    meta: {
-      title: 'setup',
-      icon: 'edit',
-      roles: ['master'] // you can set roles in root nav
-    },
-    children: [
+  children: [{
+    path: '/chat',
+    component: () =>
+      import ('@/views/dashboard/chat'),
 
-      {
-        path: 'publicgroup',
-        component: () =>
-          import ('@/views/setup/groups'),
-        name: 'publicgroup',
-        meta: {
-          title: 'publicgroup',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
-      },
+    name: 'chat',
+    meta: { title: 'chat', icon: 'user', noCache: true }
+  }]
+},
 
-      {
-        path: 'users',
-        component: () =>
-          import ('@/views/setup/users'),
-        name: 'UserMgr',
-        meta: {
-          title: 'users',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'roles',
-        component: () =>
-          import ('@/views/setup/role'),
-        name: 'Roles',
-        meta: {
-          title: 'rolemgr',
-          roles: ['admin']
-        }
-      }
-
-    ]
+{
+  path: '/public',
+  component: Layout,
+  redirect: '/pub/device',
+  alwaysShow: true, // will always show the root menu
+  name: 'public',
+  meta: {
+    title: 'public',
+    icon: 'people',
+    roles: ['master'] // you can set roles in root nav
   },
-
-  {
-    path: '/log',
-    component: Layout,
-    redirect: '/log/operatorlog',
-    alwaysShow: true, // will always show the root menu
-    name: 'Log',
-    meta: {
-      title: 'log',
-      icon: 'documentation',
-      roles: ['master'] // you can set roles in root nav
-    },
-    children: [
-
-      {
-        path: 'operatorlog',
-        component: () =>
-          import ('@/views/log/operatorlog'),
-        name: 'OperatorLog',
-        meta: {
-          title: 'operatorlog',
-          roles: ['master'] // or you can only set roles in sub nav
-        }
+  children: [
+    {
+      path: 'totaldevices',
+      component: () =>
+        import ('@/views/pub/device'),
+      name: 'totaldevices',
+      meta: {
+        title: 'totaldevices',
+        roles: ['ham']
       }
-    ]
-  },
+    },
+    {
+      path: 'groups',
+      component: () =>
+        import ('@/views/pub/groups'),
+      name: 'groups',
+      meta: {
+        title: 'groups',
+        roles: ['ham']
+      }
+    }
 
-  { path: '*', redirect: '/404', hidden: true }
+  ]
+},
+{
+  path: '/myhome',
+  component: Layout,
+  redirect: '/myhome/device',
+  alwaysShow: true, // will always show the root menu
+  name: 'myhome',
+  meta: {
+    title: 'myhome',
+    icon: 'people',
+    roles: ['ham'] // you can set roles in root nav
+  },
+  children: [
+
+    {
+      path: 'mydevices',
+      component: () =>
+        import ('@/views/my/mydevice'),
+      name: 'mydevices',
+      meta: {
+        title: 'mydevices',
+        roles: ['ham']
+      }
+    },
+    {
+      path: 'rooms',
+      component: () =>
+        import ('@/views/my/rooms'),
+      name: 'rooms',
+      meta: {
+        title: 'rooms',
+        roles: ['ham']
+      }
+    }
+
+  ]
+},
+
+{
+  path: '/setup',
+  component: Layout,
+  redirect: '/setup/users',
+  alwaysShow: true, // will always show the root menu
+  name: 'Setup',
+  meta: {
+    title: 'setup',
+    icon: 'edit',
+    roles: ['master'] // you can set roles in root nav
+  },
+  children: [
+
+    {
+      path: 'publicgroup',
+      component: () =>
+        import ('@/views/setup/groups'),
+      name: 'publicgroup',
+      meta: {
+        title: 'publicgroup',
+        roles: ['admin'] // or you can only set roles in sub nav
+      }
+    },
+
+    {
+      path: 'devicemgr',
+      component: () =>
+        import ('@/views/setup/device'),
+      name: 'devicemgr',
+      meta: {
+        title: 'devicemgr',
+        roles: ['admin'] // or you can only set roles in sub nav
+      }
+    },
+
+    {
+      path: 'users',
+      component: () =>
+        import ('@/views/setup/users'),
+      name: 'UserMgr',
+      meta: {
+        title: 'users',
+        roles: ['admin'] // or you can only set roles in sub nav
+      }
+    },
+    {
+      path: 'roles',
+      component: () =>
+        import ('@/views/setup/role'),
+      name: 'Roles',
+      meta: {
+        title: 'rolemgr',
+        roles: ['admin']
+      }
+    }
+
+  ]
+},
+
+{
+  path: '/log',
+  component: Layout,
+  redirect: '/log/operatorlog',
+  alwaysShow: true, // will always show the root menu
+  name: 'Log',
+  meta: {
+    title: 'log',
+    icon: 'documentation',
+    roles: ['admin'] // you can set roles in root nav
+  },
+  children: [
+
+    {
+      path: 'operatorlog',
+      component: () =>
+        import ('@/views/log/operatorlog'),
+      name: 'OperatorLog',
+      meta: {
+        title: 'operatorlog',
+        roles: ['admin'] // or you can only set roles in sub nav
+      }
+    }
+  ]
+},
+
+{ path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({

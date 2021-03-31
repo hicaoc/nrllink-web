@@ -16,8 +16,8 @@ export const DevModelOptions = [
 ]
 
 export const DevStatusOptions = [
-  { id: 0, name: '禁用' },
-  { id: 1, name: '正常' }
+  { id: 0, name: '正常' },
+  { id: 1, name: '禁用' }
 ]
 
 export const WeekOptions = [

@@ -98,6 +98,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column :label="$t('employee.position')" width="110px" align="center">
+        <template slot-scope="scope">
+          <el-tag v-for="r in scope.row.roles" :key="r">{{ r|RoleValueFilter(roles) }}</el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column :label="$t('Account.nickname')" width="150px" align="center">
         <template slot-scope="scope">
           <span>
