@@ -25,7 +25,8 @@
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >{{ $t("Account.search") }}</el-button>
+        >{{ $t("Account.search") }}</el-button
+      >
     </div>
 
     <div>
@@ -78,14 +79,17 @@
 
         <el-table-column label="所在组" width="110px" align="center">
           <template slot-scope="scope">
-            <span>{{( scope.row.public_group_id === 0 &&  scope.row.group_id !== 0) ?   "房间" + scope.row.group_id : ValueFilter(scope.row.public_group_id, groupsOptions)  }}</span>
+            <span>{{
+              scope.row.public_group_id === 0 && scope.row.group_id !== 0
+                ? "房间" + scope.row.group_id
+                : ValueFilter(scope.row.public_group_id, groupsOptions)
+            }}</span>
           </template>
         </el-table-column>
 
-
         <el-table-column label="绑定" width="80px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.ower_id === 0 ? '未绑定' : "已绑定" }}</span>
+            <span>{{ scope.row.ower_id === 0 ? "未绑定" : "已绑定" }}</span>
           </template>
         </el-table-column>
 
@@ -97,13 +101,13 @@
 
         <el-table-column label="状态" width="60px" align="center">
           <template slot-scope="scope">
-           <span>{{ scope.row.status === 0 ? '启用' : "禁用" }}</span>
+            <span>{{ scope.row.status === 0 ? "启用" : "禁用" }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="在线" width="60px" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.is_online === true ? "在线" : "离线"  }}</span>
+            <span>{{ scope.row.is_online === true ? "在线" : "离线" }}</span>
           </template>
         </el-table-column>
         <el-table-column label="上线时间" width="155px" align="center">
@@ -136,11 +140,12 @@
           class-name="small-padding fixed-width"
         >
           <template slot-scope="{ row }">
-            <el-button 
+            <el-button
               size="mini"
               type="primary"
               @click="handleBingDevice(row)"
-            >{{ $t("device.bind") }}</el-button>
+              >{{ $t("device.bind") }}</el-button
+            >
 
             <el-button size="mini" type="primary" @click="handleUpdate(row)">{{
               $t("device.edit")
@@ -220,7 +225,8 @@
         <el-button
           type="primary"
           @click="dialogStatus === 'create' ? createData() : updateData()"
-        >{{ $t("employee.confirm") }}</el-button>
+          >{{ $t("employee.confirm") }}</el-button
+        >
       </div>
     </el-dialog>
 
@@ -233,16 +239,329 @@
         :rules="rules"
         :model="temp"
         label-position="right"
-        label-width="140px"
-        style="width: 400px; margin-left: 50px"
+        label-width="100px"
+        style="width: 900px; margin-left: 50px"
       >
-        <el-form-item :label="$t('device.name')" prop="name">
-          <el-input v-model="temp.name" />
+        <el-form-item :label="$t('device.callsign')" prop="callsign">
+          {{ temp.callsign }}-{{ temp.ssid }} {{ temp.name }}
+        </el-form-item>
+        <!-- 
+        <el-switch
+          v-model="temp.iptype"
+          active-text="DHCP"
+          inactive-text="静态"
+          active-color="#1890ff"
+          inactive-color="#dcdfe6"
+        /> -->
+
+        <el-row :gutter="2">
+          <el-col :span="8">
+            <el-form-item label="呼号:" prop="name">
+              <el-input
+                placeholder="呼号"
+                v-model="temp.device_parm.callsign"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="设备编号:" prop="name">
+              <el-input v-model="temp.device_parm.ssid" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6">
+            <el-form-item label="本机密码:" prop="name">
+              <el-input v-model="temp.device_parm.local_password" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="2">
+          <el-col :span="7">
+            <el-form-item label="本机IP:" prop="name">
+              <el-input v-model="temp.device_parm.local_ipaddr" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="掩码:" prop="name">
+              <el-input v-model="temp.device_parm.netmask" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="网关:" prop="name"
+              ><el-input v-model="temp.device_parm.gateway" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="DNS地址:" prop="name"
+              ><el-input v-model="temp.device_parm.dns_ipaddr" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="2">
+          <el-col :span="9">
+            <el-form-item label="目标地址:" prop="name">
+           
+              <el-select v-model="temp.device_parm.dest_domainname">
+                <el-option label="bg6fcs.allazy.com" value="121.005.120.167"> </el-option>
+                  <el-option label="bh4aiu.allazy.com" value="bh4aiu.allazy.com"> </el-option>
+                    <el-option label="ham.bi4qzw.com" value="ham.bi4qzw.com"> </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="7">
+            <el-form-item label="对端CPUID:" prop="name">
+              <el-input v-model="temp.device_parm.peer_cpuid" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="对端密码:" prop="name">
+              <el-input v-model="temp.device_parm.peer_password" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-form-item label="DCD选择:" prop="name">
+          <el-radio-group v-model="temp.device_parm.dcd">
+            <el-radio :label="1">手动</el-radio>
+            <el-radio :label="2">VOX</el-radio>
+            <el-radio :label="3">SQL_LO</el-radio>
+            <el-radio :label="4">SQL_HI</el-radio>
+          </el-radio-group>
         </el-form-item>
 
-        <el-form-item :label="$t('device.callsign')" prop="callsign">
-          {{ temp.callsign }}
-        </el-form-item>
+        <el-row :gutter="2">
+          <el-col :span="4">
+            <el-form-item label="PTT允许:" prop="name">
+              <el-switch
+                v-model="temp.device_parm.ptt_enable"
+                active-color="#1890ff"
+                inactive-color="#dcdfe6"
+                :active-value="1"
+                :inactive-value="0"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="PTT电平:" prop="name">
+              <el-radio-group v-model="temp.device_parm.ptt_level_reversed">
+                <el-radio :label="1">高电平</el-radio>
+                <el-radio :label="0">低电平</el-radio>
+              </el-radio-group>
+            </el-form-item></el-col
+          >
+          <el-col :span="4">
+            <el-form-item label="M/Y PTT:" prop="name">
+              <el-switch
+                v-model="temp.device_parm.ptt_resistive"
+                active-color="#1890ff"
+                inactive-color="#dcdfe6"
+                :active-value="1"
+                :inactive-value="0"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="2">
+          <el-col :span="4">
+            <el-form-item label="监听:" prop="name">
+              <el-switch
+                v-model="temp.device_parm.monitor"
+                active-color="#1890ff"
+                inactive-color="#dcdfe6"
+                :active-value="1"
+                :inactive-value="0"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item label="继电器:" prop="name">
+              <el-switch
+                v-model="temp.device_parm.realy_status"
+                active-color="#1890ff"
+                inactive-color="#dcdfe6"
+                :active-value="1"
+                :inactive-value="0"
+              /> </el-form-item
+          ></el-col>
+        </el-row>
+
+        <el-row :gutter="2">
+          <el-col :span="7">
+            <el-form-item label="添加尾音:" prop="name">
+              <el-input v-model="temp.device_parm.add_tail_voice" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="7">
+            <el-form-item label="消除尾音:" prop="name">
+              <el-input v-model="temp.device_parm.add_tail_voice" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="2">
+          <el-col :span="4">
+            <el-form-item label="内置UV:" prop="name">
+              <el-switch
+                v-model="temp.device_parm.one_uv_power"
+                active-color="#1890ff"
+                inactive-color="#dcdfe6"
+                :active-value="1"
+                :inactive-value="0"
+              />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="7">
+            <el-form-item label="带宽" prop="one_band">
+              <el-radio-group v-model="temp.device_parm.one_band">
+                <el-radio :label="0">窄带</el-radio>
+                <el-radio :label="1">宽带</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="DTMF" prop="one_dtmf">
+              <el-radio-group v-model="temp.device_parm.one_dtmf">
+                <el-radio :label="0">发射</el-radio>
+                <el-radio :label="1">不发射</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="2">
+          <el-col :span="6">
+            <el-form-item label="1w接收频率:" prop="name">
+              <el-input v-model="temp.device_parm.one_recive_freq" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="1w发送频率:" prop="transimit_freq">
+              <el-input v-model="temp.device_parm.one_transimit_freq" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="1w接收哑音:" prop="recive_dumb">
+              <el-input v-model="temp.device_parm.one_recive_cxcss" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="1w发射哑音:" prop="transmit_dumb">
+              <el-input v-model="temp.device_parm.one_transmit_cxcss" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="2">
+          <el-col :span="6">
+            <el-form-item label="1W音量:" prop="one_volume">
+              <el-select v-model="temp.device_parm.one_volume">
+                <el-option
+                  v-for="item in 9"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="1W SQL:" prop="one_sql_level">
+              <el-select v-model="temp.device_parm.one_sql_level">
+                <el-option
+                  v-for="item in 9"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="1w话筒增益:" prop="one_mic_sensitivity">
+              <el-select v-model="temp.device_parm.one_mic_sensitivity">
+                <el-option
+                  v-for="item in 8"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="2">
+          <el-col :span="6">
+            <el-form-item label="2W接收频率:" prop="name">
+              <el-input v-model="temp.device_parm.two_recive_freq" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="2W发送频率:" prop="transimit_freq">
+              <el-input v-model="temp.device_parm.two_transimit_freq" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="2w接收哑音:" prop="recive_dumb">
+              <el-input v-model="temp.device_parm.two_recive_cxcss" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="2w发射哑音:" prop="transmit_dumb">
+              <el-input v-model="temp.device_parm.two_transmit_cxcss" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="2">
+          <el-col :span="6">
+            <el-form-item label="2W音量:" prop="name">
+              <el-select v-model="temp.device_parm.two_volume">
+                <el-option
+                  v-for="item in 9"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="2W SQL:" prop="transimit_freq">
+              <el-select v-model="temp.device_parm.two_sql_level">
+                <el-option
+                  v-for="item in 9"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
+            <el-form-item label="2w话筒增益:" prop="recive_dumb">
+              <el-select v-model="temp.device_parm.two_mic_level">
+                <el-option
+                  v-for="item in 9"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -325,7 +644,10 @@ export default {
       showReviewer: false,
       temp: {
         id: undefined,
-        name: ''
+        name: '',
+        device_parm: {
+          callsign: ''
+        }
       },
 
       //  roles: ["admin", "editer", "guest"],
@@ -417,20 +739,20 @@ export default {
       this.temp = Object.assign({}, row)
 
       queryDevice(row).then(response => {
-        this.dialogFormChangeVisible = false
+        this.temp = response.data.items
         this.$notify({
-          title: '成功',
+          title: '加载参数成功',
           message: response.data.message,
           type: 'success',
           duration: 2000
         })
+        this.dialogStatus = 'change'
+        this.dialogFormChangeVisible = true
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate()
+        })
       }) // copy obj
       //  this.temp.timestamp = new Date(this.temp.timestamp);
-      this.dialogStatus = 'change'
-      this.dialogFormChangeVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
     },
     changeData() {
       this.$refs['dataForm'].validate(valid => {
@@ -447,7 +769,7 @@ export default {
             }
             this.dialogFormChangeVisible = false
             this.$notify({
-              title: '成功',
+              title: '配置加载完成',
               message: response.data.message,
               type: 'success',
               duration: 2000

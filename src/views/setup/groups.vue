@@ -220,10 +220,7 @@ export default {
   data() {
     return {
       tableKey: 0,
-      list: {
-        name: ''
-
-      },
+      list:[],
 
       chartData: {},
 
@@ -280,8 +277,7 @@ export default {
     checkPermission,
     fetchGroupList, createGroup, updateGroup, deleteGroup,
     ValueFilter,
-    AreaValueFilter,
-    getList() {
+    etList() {
       this.fetchGroupList({}).then(response => {
         this.list = Object.values(response.data.items)
         // console.log(this.list)
