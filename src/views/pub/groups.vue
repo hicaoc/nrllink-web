@@ -3,19 +3,23 @@
     <div class="filter-container" />
 
     <div>
-
-      <el-card v-for="g in list " :key="g.id" class="box-card">
+      <el-card v-for="g in list" :key="g.id" class="box-card">
         <div slot="header" class="clearfix">
-          <span>{{ g.name+" "+g.note }}</span>
-          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+          <span>{{ g.name + " " + g.note }}</span>
+          <el-button style="float: right; padding: 3px 0" type="text"
+            >操作按钮</el-button
+          >
         </div>
         <div v-for="d in g.devmap" :key="d.id" class="text item">
-          <span v-if="(d.group_id !== 0 && d.public_group_id === 0)  === false ">{{ d.id +" "+ d.name +" "+ d.callsign + '-' + d.ssid }}  <el-tag> {{ d.is_online ? '在线' : '离线' }} </el-tag> </span>
+          <span v-if="(d.group_id !== 0 && d.public_group_id === 0) === false"
+            >{{ d.id + " " + d.name + " " + d.callsign + "-" + d.ssid }}
+            <el-tag :type="d.is_online === true ? '' : 'info'">
+              {{ d.is_online ? "在线" : "离线" }}
+            </el-tag>
+          </span>
         </div>
       </el-card>
-
     </div>
-
   </div>
 </template>
 
@@ -53,14 +57,12 @@ export default {
       var d = new Date(Date.parse(date.replace(/-/g, '/')))
       return d.getDay()
     }
-
   },
   data() {
     return {
       tableKey: 0,
       list: {
         name: ''
-
       },
       areaDataOptions: [],
       areaOptions: [],
@@ -91,9 +93,7 @@ export default {
         create: 'Create'
       },
 
-      rules: {
-
-      },
+      rules: {},
       downloadLoading: false,
       uploadLoading: false
     }
@@ -174,19 +174,8 @@ export default {
         return
       }
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = [
-          '姓名',
-          '电话',
-          '性别',
-          '出生年月日'
-
-        ]
-        const filterVal = [
-          'name',
-          'phone',
-          'sex'
-
-        ]
+        const tHeader = ['姓名', '电话', '性别', '出生年月日']
+        const filterVal = ['name', 'phone', 'sex']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,

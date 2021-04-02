@@ -32,6 +32,15 @@ export function bingDevice(data) {
   })
 }
 
+export function changeDeviceParm(data) {
+  return request({
+    url: '/device/change',
+    method: 'post',
+    data
+  })
+}
+
+
 export function fetchDeviceStats(data) {
   return request({
     url: '/device/stats',

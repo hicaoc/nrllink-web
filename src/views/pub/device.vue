@@ -131,7 +131,7 @@
 
         <el-table-column label="在线" width="80px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.is_online === true ? "在线" : "离线" }}</span>
+            <span><el-tag :type=" scope.row.is_online === true ? '' : 'info'">{{ scope.row.is_online === true ? "在线" : "离线" }}</el-tag></span>
           </template>
         </el-table-column>
         

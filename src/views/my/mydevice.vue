@@ -242,7 +242,7 @@
         label-width="100px"
         style="width: 900px; margin-left: 50px"
       >
-        <el-form-item :label="$t('device.callsign')" prop="callsign">
+        <el-form-item :label="$t('device.name')" prop="callsign">
           {{ temp.callsign }}-{{ temp.ssid }} {{ temp.name }}
         </el-form-item>
         <!-- 
@@ -302,11 +302,13 @@
         <el-row :gutter="2">
           <el-col :span="9">
             <el-form-item label="目标地址:" prop="name">
-           
               <el-select v-model="temp.device_parm.dest_domainname">
-                <el-option label="bg6fcs.allazy.com" value="121.005.120.167"> </el-option>
-                  <el-option label="bh4aiu.allazy.com" value="bh4aiu.allazy.com"> </el-option>
-                    <el-option label="ham.bi4qzw.com" value="ham.bi4qzw.com"> </el-option>
+                <el-option label="bg6fcs.allazy.com" value="121.005.120.167">
+                </el-option>
+                <el-option label="bh4aiu.allazy.com" value="bh4aiu.allazy.com">
+                </el-option>
+                <el-option label="ham.bi4qzw.com" value="ham.bi4qzw.com">
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -325,10 +327,11 @@
 
         <el-form-item label="DCD选择:" prop="name">
           <el-radio-group v-model="temp.device_parm.dcd">
+            <el-radio :label="0">关闭</el-radio>
             <el-radio :label="1">手动</el-radio>
-            <el-radio :label="2">VOX</el-radio>
-            <el-radio :label="3">SQL_LO</el-radio>
-            <el-radio :label="4">SQL_HI</el-radio>
+            <el-radio :label="2">SQL_LO</el-radio>
+            <el-radio :label="3">SQL_HI</el-radio>
+            <el-radio :label="4">VOX </el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -384,8 +387,21 @@
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
+                @change="SwitchRealy"
               /> </el-form-item
           ></el-col>
+
+           <el-col :span="4">
+            <el-form-item label="内置UV:" prop="name">
+              <el-switch
+                v-model="temp.device_parm.one_uv_power"
+                active-color="#1890ff"
+                inactive-color="#dcdfe6"
+                :active-value="1"
+                :inactive-value="0"
+              />
+            </el-form-item>
+          </el-col>
         </el-row>
 
         <el-row :gutter="2">
@@ -401,7 +417,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-
+<!-- 
         <el-row :gutter="2">
           <el-col :span="4">
             <el-form-item label="内置UV:" prop="name">
@@ -431,7 +447,7 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row> -->
 
         <el-row :gutter="2">
           <el-col :span="6">
@@ -581,7 +597,8 @@ import {
   fetchMyDeviceList,
   bingDevice,
   updateDevice,
-  queryDevice
+  queryDevice,
+  changeDeviceParm
 } from '@/api/device'
 import {
   DevTypeOptions,
@@ -779,6 +796,12 @@ export default {
       })
     },
 
+    SwitchRealy(val){
+
+      console.log(val)
+      changeDeviceParm("realy_status="+val+"&CPUID="+this.temp.cpuid)
+
+    },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
