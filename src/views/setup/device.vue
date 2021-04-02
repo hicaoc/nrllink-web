@@ -105,13 +105,13 @@
 
         <el-table-column label="状态" width="110px" align="center">
           <template slot-scope="scope">
-             <span>{{ scope.row.status === 0 ? '启用' : "禁用" }}</span>
+            <span>{{ scope.row.status === 0 ? '启用' : "禁用" }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="是否在线" width="110px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.is_online === true ? "在线" : "离线"  }}</span>
+            <span>{{ scope.row.is_online === true ? "在线" : "离线" }}</span>
           </template>
         </el-table-column>
         <el-table-column label="最近活动时间" width="180px" align="center">
@@ -247,12 +247,12 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 
 import waves from '@/directive/waves' // waves directive
 import { parseTime, AreaValueFilter, ValueFilter } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+// import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  // components: { Pagination },
   directives: { waves },
   filters: {
     statusFilter(status) {

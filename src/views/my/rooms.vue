@@ -86,12 +86,12 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 
 import waves from '@/directive/waves' // waves directive
 import { parseTime, AreaValueFilter, ValueFilter } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+// import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  // //components: { Pagination },
   directives: { waves },
   filters: {
     statusFilter(status) {

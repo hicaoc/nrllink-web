@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { changearea } from '@/api/employee'
+// import { changearea } from '@/api/employee'
 
 import { mapGetters } from 'vuex'
 
@@ -83,12 +83,8 @@ export default {
         '#/getcustomer?' +
         'id=' +
         this.user.id +
-        '&area=' +
-        this.user.current_area +
         '&source_rem=' +
         this.source_rem +
-        '&areaname=' +
-        this.ValueFilter(this.user.current_area, this.list) +
         '&salsename=' +
         this.user.name
 
@@ -105,16 +101,6 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchAreaList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-        // this.updateurl()
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 100)
-      })
     },
     // updateurl() {
     //   this.url =
@@ -138,21 +124,21 @@ export default {
     //   return this.uri
     // },
     submit() {
-      this.user.current_area_name = changearea(this.user).then(response => {
-        this.$message(response.data.message)
+      // this.user.current_area_name = changearea(this.user).then(response => {
+      //   this.$message(response.data.message)
 
-        // this.$store.commit('user/SET_current_area', this.user.current_area)
-        // this.$store.commit('user/SET_current_area_NAME', this.user.current_area_name)
+      //   // this.$store.commit('user/SET_current_area', this.user.current_area)
+      //   // this.$store.commit('user/SET_current_area_NAME', this.user.current_area_name)
 
-        this.$store.dispatch('user/getInfo')
-        // this.updateurl()
-        // this.$store.dispatch('user/getInfo', this.user.current_area)
+      //   this.$store.dispatch('user/getInfo')
+      //   // this.updateurl()
+      //   // this.$store.dispatch('user/getInfo', this.user.current_area)
 
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 100)
-      })
+      //   // Just to simulate the time of the request
+      //   setTimeout(() => {
+      //     this.listLoading = false
+      //   }, 1.5 * 100)
+      // })
     },
     ValueFilter(type, array) {
       for (const v of array) {

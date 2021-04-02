@@ -40,7 +40,6 @@ export function changeDeviceParm(data) {
   })
 }
 
-
 export function fetchDeviceStats(data) {
   return request({
     url: '/device/stats',

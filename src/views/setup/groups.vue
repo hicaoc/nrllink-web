@@ -188,13 +188,13 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 // import PanelGroup from './components/PanelGroup'
 
 import waves from '@/directive/waves' // waves directive
-import { parseTime, AreaValueFilter, ValueFilter } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { parseTime, ValueFilter } from '@/utils'
+// import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  // components: { Pagination },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -220,7 +220,7 @@ export default {
   data() {
     return {
       tableKey: 0,
-      list:[],
+      list: [],
 
       chartData: {},
 
@@ -288,16 +288,6 @@ export default {
       this.getList()
     },
 
-    handleBingDevice(row) {
-      bingDevice(row).then(response => {
-        this.$notify({
-          title: '完成',
-          message: response.data.message,
-          type: 'success',
-          duration: 2000
-        })
-      })
-    },
     sortChange(data) {
       const { prop, order } = data
       if (prop === 'id') {
@@ -391,7 +381,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          deleteEmployee(row).then(response => {
+          deleteGroup(row).then(response => {
             this.$message(response.data.message)
             this.listLoading = false
           })

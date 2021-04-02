@@ -6,13 +6,15 @@
       <el-card v-for="g in list" :key="g.id" class="box-card">
         <div slot="header" class="clearfix">
           <span>{{ g.name + " " + g.note }}</span>
-          <el-button style="float: right; padding: 3px 0" type="text"
-            >操作按钮</el-button
-          >
+          <el-button
+            style="float: right; padding: 3px 0"
+            type="text"
+          >操作按钮</el-button>
         </div>
         <div v-for="d in g.devmap" :key="d.id" class="text item">
-          <span v-if="(d.group_id !== 0 && d.public_group_id === 0) === false"
-            >{{ d.id + " " + d.name + " " + d.callsign + "-" + d.ssid }}
+          <span
+            v-if="(d.group_id !== 0 && d.public_group_id === 0) === false"
+          >{{ d.id + " " + d.name + " " + d.callsign + "-" + d.ssid }}
             <el-tag :type="d.is_online === true ? '' : 'info'">
               {{ d.is_online ? "在线" : "离线" }}
             </el-tag>
@@ -31,12 +33,12 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 
 import waves from '@/directive/waves' // waves directive
 import { parseTime, AreaValueFilter, ValueFilter } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+// import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  // components: { Pagination },
   directives: { waves },
   filters: {
     statusFilter(status) {

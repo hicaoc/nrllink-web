@@ -102,16 +102,15 @@
             <span>{{ scope.row.callsign+"-"+scope.row.ssid }}</span>
           </template>
         </el-table-column>
-                <el-table-column label="当前群组" width="180px" align="center">
+        <el-table-column label="当前群组" width="180px" align="center">
           <template slot-scope="scope">
-            <span>{{ (scope.row.public_group_id === 0 &&  scope.row.group_id !== 0) ? '私有组' : ValueFilter(scope.row.public_group_id,groupsOptions) }}</span>
+            <span>{{ (scope.row.public_group_id === 0 && scope.row.group_id !== 0) ? '私有组' : ValueFilter(scope.row.public_group_id,groupsOptions) }}</span>
           </template>
         </el-table-column>
 
-
         <el-table-column label="类型" width="60px" align="center">
           <template slot-scope="scope">
-            <span>{{ ValueFilter(scope.row.dev_type,DevTypeOptions)}}</span>
+            <span>{{ ValueFilter(scope.row.dev_type,DevTypeOptions) }}</span>
           </template>
         </el-table-column>
 
@@ -127,17 +126,15 @@
           </template>
         </el-table-column>
 
-
-
         <el-table-column label="在线" width="80px" align="center">
           <template slot-scope="scope">
             <span><el-tag :type=" scope.row.is_online === true ? '' : 'info'">{{ scope.row.is_online === true ? "在线" : "离线" }}</el-tag></span>
           </template>
         </el-table-column>
-        
+
         <el-table-column label="状态" width="60px" align="center">
           <template slot-scope="scope">
-            <span>{{ ValueFilter(scope.row.status,DevStatusOptions)}}</span>
+            <span>{{ ValueFilter(scope.row.status,DevStatusOptions) }}</span>
           </template>
         </el-table-column>
 
@@ -258,9 +255,9 @@ export default {
       tableKey: 0,
       list: [],
       groupsOptions: [],
-        DevTypeOptions,
-  DevModelOptions,
-  DevStatusOptions,
+      DevTypeOptions,
+      DevModelOptions,
+      DevStatusOptions,
       userOptions: [],
       chartData: {},
       userTimeLinelist: null,

@@ -63,7 +63,7 @@
 <script>
 // import GithubCorner from '@/components/GithubCorner'
 import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
+// import LineChart from './components/LineChart'
 // import PieAmont from './components/PieAmont'
 // import PieChart from './components/PieChart'
 // import BarChart from './components/BarChart'
@@ -97,8 +97,8 @@ export default {
   name: 'DashboardAdmin',
   components: {
     //  GithubCorner,
-    PanelGroup,
-    LineChart
+    PanelGroup
+    // LineChart
     // PieAmont,
     // PieChart,
     // BarChart

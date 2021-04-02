@@ -74,7 +74,7 @@ export default {
         area: this.area,
         current_area: this.current_area,
         current_area_name: this.current_area_name,
-        email: 'admin@test.com',
+        email: 'caoc@live.com',
         avatar: this.avatar
       }
     }

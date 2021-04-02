@@ -29,18 +29,6 @@ export default {
       msgitem: '',
       websock: null,
       pcmPlayer: null,
-      importObj: {
-        env: {
-          abortStackOverflow: () => { throw new Error('overflow') },
-          table: new WebAssembly.Table({ initial: 0, maximum: 0, element: 'anyfunc' }),
-          tableBase: 0,
-          memory: memory,
-          memoryBase: 102400,
-          STACKTOP: 0,
-          STACK_MAX: memory.buffer.byteLength
-        }
-      },
-      memory: new WebAssembly.Memory({ initial: 256, maximum: 256 }),
 
       listQuery: {
 
@@ -79,37 +67,12 @@ export default {
     websocketonerror() { // 连接建立失败重连
       this.initWebSocket()
     },
-    websocketonmessage(e) { // 数据接收
-      // const redata = JSON.parse(e.data)
-      fetch('../src/audio.wasm').then((response) => response.arrayBuffer())
-        .then((bytes) => WebAssembly.instantiate(bytes, importObj))
-        .then((wasm) => {
-          const decoder = new G711(wasm, this.importObj)
-          decodeAudio('demo.g711a', decoder.decodeA.bind(decoder))
-        })
-    },
+
     websocketsend(Data) { // 数据发送
       this.websock.send(Data)
     },
     websocketclose(e) { // 关闭
       console.log('断开连接', e)
-    },
-
-    decodeAudio(fileName, decodeCallback) {
-      if (this.pcmPlayer != null) {
-        this.pcmPlayer.close()
-      }
-      this.pcmPlayer = new PCMPlayer(1, 8000)
-      fetch(fileName).then((response) => response.arrayBuffer())
-        .then((bytes) => {
-          const audioData = new Uint8Array(bytes)
-          const step = 160
-          for (let i = 0; i < audioData.byteLength; i += step) {
-            const pcm16BitData = decodeCallback(audioData.slice(i, i + step))
-            const pcmFloat32Data = Std.shortToFloatData(pcm16BitData)
-            this.pcmPlayer.feed(pcmFloat32Data)
-          }
-        })
     }
 
   }
