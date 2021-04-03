@@ -465,7 +465,10 @@
           label="DCD选择:"
           prop="name"
         >
-          <el-radio-group v-model="temp.device_parm.dcd">
+          <el-radio-group
+            v-model="temp.device_parm.dcd_select"
+            @change="change_dcd_select"
+          >
             <el-radio :label="0">关闭</el-radio>
             <el-radio :label="1">手动</el-radio>
             <el-radio :label="2">SQL_LO</el-radio>
@@ -527,6 +530,7 @@
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
+                @change="SwitchMonitor"
               />
             </el-form-item>
           </el-col>
@@ -549,7 +553,7 @@
           <el-col :span="4">
             <el-form-item
               label="内置UV:"
-              prop="name"
+              prop="one_uv_power"
             >
               <el-switch
                 v-model="temp.device_parm.one_uv_power"
@@ -557,6 +561,25 @@
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
+                @change="Switch_one_uv_power"
+              />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item
+              label="按键功能:"
+              prop="key_func"
+            >
+              <el-switch
+                v-model="temp.device_parm.key_func"
+                inactive-text="继电器"
+                active-text="PTT"
+                active-color="#1890ff"
+                inactive-color="#1890ff"
+                :active-value="1"
+                :inactive-value="0"
+                @change="Switch_key_func"
               />
             </el-form-item>
           </el-col>
@@ -784,15 +807,8 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="dialogFormChangeVisible = false">{{
-          $t("employee.cancel")
-        }}</el-button>
-        <el-button
-          type="primary"
-          @click="changeData()"
-        >{{
-          $t("employee.confirm")
-        }}</el-button>
+        <el-button @click="dialogFormChangeVisible = false">关闭</el-button>
+
       </div>
     </el-dialog>
   </div>
@@ -987,34 +1003,27 @@ export default {
       }) // copy obj
       //  this.temp.timestamp = new Date(this.temp.timestamp);
     },
-    changeData() {
-      this.$refs['devicedataForm'].validate(valid => {
-        if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          queryDevice(tempData).then(response => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
-                break
-              }
-            }
-            this.dialogFormChangeVisible = false
-            this.$notify({
-              title: '配置加载完成',
-              message: response.data.message,
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
 
     SwitchRealy(val) {
       console.log(val)
       changeDeviceParm('realy_status=' + val + '&CPUID=' + this.temp.cpuid)
+    },
+    SwitchMonitor(val) {
+      console.log(val)
+      changeDeviceParm('monitor_out=' + val + '&CPUID=' + this.temp.cpuid)
+    },
+    change_dcd_select(val) {
+      console.log(val)
+      changeDeviceParm('dcd_select=' + val + '&CPUID=' + this.temp.cpuid)
+    },
+    Switch_key_func(val) {
+      console.log(val)
+      changeDeviceParm('key_func=' + val + '&CPUID=' + this.temp.cpuid)
+    },
+
+    Switch_one_uv_power(val) {
+      console.log(val)
+      changeDeviceParm('one_uv_power=' + val + '&CPUID=' + this.temp.cpuid)
     },
     handleFilter() {
       this.listQuery.page = 1
