@@ -363,6 +363,7 @@
               <el-input
                 v-model="temp.device_parm.callsign"
                 placeholder="呼号"
+                :disabled="true"
               />
             </el-form-item>
           </el-col>
@@ -371,7 +372,7 @@
               label="设备编号:"
               prop="name"
             >
-              <el-input v-model="temp.device_parm.ssid" />
+              <el-input v-model="temp.device_parm.ssid" :disabled="true" />
             </el-form-item>
           </el-col>
 
@@ -380,7 +381,7 @@
               label="本机密码:"
               prop="name"
             >
-              <el-input v-model="temp.device_parm.local_password" />
+              <el-input v-model="temp.device_parm.local_password" :disabled="true" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -391,7 +392,7 @@
               label="本机IP:"
               prop="name"
             >
-              <el-input v-model="temp.device_parm.local_ipaddr" />
+              <el-input v-model="temp.device_parm.local_ipaddr" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="7">
@@ -399,7 +400,7 @@
               label="掩码:"
               prop="name"
             >
-              <el-input v-model="temp.device_parm.netmask" />
+              <el-input v-model="temp.device_parm.netmask" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="7">
@@ -407,7 +408,7 @@
               label="网关:"
               prop="name"
             >
-              <el-input v-model="temp.device_parm.gateway" />
+              <el-input v-model="temp.device_parm.gateway" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -415,7 +416,7 @@
               label="DNS地址:"
               prop="name"
             >
-              <el-input v-model="temp.device_parm.dns_ipaddr" />
+              <el-input v-model="temp.device_parm.dns_ipaddr" :disabled="true" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -426,7 +427,7 @@
               label="目标地址:"
               prop="name"
             >
-              <el-select v-model="temp.device_parm.dest_domainname">
+              <el-select v-model="temp.device_parm.dest_domainname" :disabled="true">
                 <el-option
                   label="bg6fcs.allazy.com"
                   value="121.005.120.167"
@@ -448,7 +449,7 @@
               label="对端CPUID:"
               prop="name"
             >
-              <el-input v-model="temp.device_parm.peer_cpuid" />
+              <el-input v-model="temp.device_parm.peer_cpuid" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="7">
@@ -456,7 +457,7 @@
               label="对端密码:"
               prop="name"
             >
-              <el-input v-model="temp.device_parm.peer_password" />
+              <el-input v-model="temp.device_parm.peer_password" :disabled="true" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -591,7 +592,7 @@
               label="添加尾音:"
               prop="name"
             >
-              <el-input v-model="temp.device_parm.add_tail_voice" />
+              <el-input v-model="temp.device_parm.add_tail_voice" @change="addTailVoice" />
             </el-form-item>
           </el-col>
 
@@ -600,7 +601,7 @@
               label="消除尾音:"
               prop="name"
             >
-              <el-input v-model="temp.device_parm.add_tail_voice" />
+              <el-input v-model="temp.device_parm.add_tail_voice" @change="removeTailVoice" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -1025,6 +1026,15 @@ export default {
       console.log(val)
       changeDeviceParm('one_uv_power=' + val + '&CPUID=' + this.temp.cpuid)
     },
+    addTailVoice(val) {
+      console.log(val)
+      changeDeviceParm('add_tail_voice=' + val + '&CPUID=' + this.temp.cpuid)
+    },
+    removeTailVoice(val) {
+      console.log(val)
+      changeDeviceParm('remove_tail_voice=' + val + '&CPUID=' + this.temp.cpuid)
+    },
+
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
