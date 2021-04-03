@@ -2,15 +2,51 @@
   <div class="app-container">
     <div class="filter-container">
 
-      <el-input
+      <!-- <el-input
         v-model="listQuery.callsign"
         :placeholder="$t('device.callsign')"
         style="width: 320px;"
         class="filter-item"
         clearable
         @keyup.enter.native="handleFilter"
-      />
+      /> -->
 
+      <el-select
+        v-model="listQuery.name"
+        filterable
+        clearable
+        placeholder="姓名"
+        style="width: 320px;"
+        class="filter-item"
+        @change="filterName"
+      >
+
+        <el-option
+          v-for="item in userOptions"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        />
+      </el-select>
+
+      <el-select
+        v-model="listQuery.callsign"
+        filterable
+        clearable
+        placeholder="呼号"
+        style="width: 320px;"
+        class="filter-item"
+        @change="filterCallsign"
+      >
+
+        <el-option
+          v-for="item in userOptions"
+          :key="item.id"
+          :label="item.callsign"
+          :value="item.id"
+        />
+      </el-select>
+      <!--
       <el-input
         v-model="listQuery.public_group_id"
         :placeholder="$t('device.public_group_id')"
@@ -18,14 +54,44 @@
         class="filter-item"
         clearable
         @keyup.enter.native="handleFilter"
-      />
+      /> -->
+
+      <el-select
+        v-model="listQuery.group"
+        filterable
+        clearable
+        placeholder="请选择组"
+        style="width: 320px;"
+        class="filter-item"
+        @change="filterGroup"
+      >
+        <el-option
+          label="私有组"
+          value="0"
+        />
+        <el-option
+          v-for="item in groupsOptions"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        />
+      </el-select>
       <el-button
         v-waves
         class="filter-item"
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >{{ $t('Account.search') }}</el-button>
+      >刷新</el-button>
+
+      <el-switch
+        v-model="displayOnline"
+        active-text="显示在线"
+        active-color="#1890ff"
+        inactive-color="#dcdfe6"
+        :active-value="true"
+        :inactive-value="false"
+      />
 
     </div>
 
@@ -52,13 +118,12 @@
       <el-table
         :key="tableKey"
         v-loading="listLoading"
-        :data="list"
+        :data="display_list"
         border
         fit
         stripe
         highlight-current-row
         style="width: 100%;"
-
         @sort-change="sortChange"
       >
         <el-table-column
@@ -73,7 +138,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="设备名称" width="120px" align="center">
+        <el-table-column
+          label="设备名称"
+          width="120px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
@@ -91,60 +160,102 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="所有者" width="80px" align="center">
+        <el-table-column
+          label="所有者"
+          width="80px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.ower_id,userOptions) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="呼号" width="110px" align="center">
+        <el-table-column
+          label="呼号"
+          width="110px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.callsign+"-"+scope.row.ssid }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="当前群组" width="180px" align="center">
+        <el-table-column
+          label="当前群组"
+          width="180px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ (scope.row.public_group_id === 0 && scope.row.group_id !== 0) ? '私有组' : ValueFilter(scope.row.public_group_id,groupsOptions) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="类型" width="60px" align="center">
+        <el-table-column
+          label="类型"
+          width="60px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.dev_type,DevTypeOptions) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="型号" width="60px" align="center">
+        <el-table-column
+          label="型号"
+          width="60px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.dev_model,DevModelOptions) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="丢包" width="60px" align="center">
+        <el-table-column
+          label="丢包"
+          width="60px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.lost }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="在线" width="80px" align="center">
+        <el-table-column
+          label="在线"
+          width="80px"
+          align="center"
+        >
           <template slot-scope="scope">
-            <span><el-tag :type=" scope.row.is_online === true ? '' : 'info'">{{ scope.row.is_online === true ? "在线" : "离线" }}</el-tag></span>
+            <span>
+              <el-tag :type=" scope.row.is_online === true ? '' : 'info'">{{ scope.row.is_online === true ? "在线" : "离线" }}</el-tag>
+            </span>
           </template>
         </el-table-column>
 
-        <el-table-column label="状态" width="60px" align="center">
+        <el-table-column
+          label="状态"
+          width="60px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.status,DevStatusOptions) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="上线时间" width="155px" align="center">
+        <el-table-column
+          label="上线时间"
+          width="155px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.online_time) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="最近活动时间" width="155px" align="center">
+        <el-table-column
+          label="最近活动时间"
+          width="155px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.last_packet_time) }}</span>
           </template>
@@ -162,7 +273,11 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="备注" width="100px" align="center">
+        <el-table-column
+          label="备注"
+          width="100px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.note }}</span>
           </template>
@@ -248,18 +363,21 @@ export default {
       var d = new Date(Date.parse(date.replace(/-/g, '/')))
       return d.getDay()
     }
-
   },
   data() {
     return {
       tableKey: 0,
       list: [],
+      display_list: [],
+      online_list: [],
+      offline_list: [],
       groupsOptions: [],
       DevTypeOptions,
       DevModelOptions,
       DevStatusOptions,
       userOptions: [],
       chartData: {},
+      displayOnline: false,
       userTimeLinelist: null,
       activeName: 'first',
       total: 0,
@@ -286,15 +404,25 @@ export default {
         create: 'Create'
       },
 
-      rules: {
-
-      },
+      rules: {},
       downloadLoading: false,
       uploadLoading: false
     }
   },
   computed: {
     ...mapGetters(['device'])
+  },
+
+  watch: {
+    displayOnline(item1, item2) {
+      console.log(item1, item2)
+      if (item1 === true) {
+        this.display_list = this.online_list
+      } else {
+        this.display_list = this.list
+      }
+    }
+    // immediate:true
   },
 
   created() {
@@ -308,9 +436,7 @@ export default {
       this.userOptions = response.data.items
     })
 
-    this.fetchDeviceList({}).then(response => {
-      this.list = Object.values(response.data.items)
-    })
+    this.getList()
 
     this.fetchGroupList({}).then(response => {
       this.groupsOptions = Object.values(response.data.items)
@@ -328,7 +454,20 @@ export default {
     getList() {
       this.fetchDeviceList({}).then(response => {
         this.list = Object.values(response.data.items)
-        console.log(this.list)
+        for (const item of this.list) {
+          if (item.is_online) {
+            this.online_list.push(item)
+          } else {
+            this.offline_list.push(item)
+          }
+        }
+        if (this.displayOnline) {
+          this.display_list = this.online_list
+        } else {
+          this.display_list = this.list
+        }
+
+        // console.log(this.list)
       })
     },
     handleFilter() {
@@ -341,6 +480,15 @@ export default {
         type: 'success'
       })
       row.status = status
+    },
+    filterName(val) {
+
+    },
+    filterCallsign(val) {
+
+    },
+    filterGroup(val) {
+
     },
     sortChange(data) {
       const { prop, order } = data
@@ -378,19 +526,8 @@ export default {
         return
       }
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = [
-          '姓名',
-          '电话',
-          '性别',
-          '出生年月日'
-
-        ]
-        const filterVal = [
-          'name',
-          'phone',
-          'sex'
-
-        ]
+        const tHeader = ['姓名', '电话', '性别', '出生年月日']
+        const filterVal = ['name', 'phone', 'sex']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,
