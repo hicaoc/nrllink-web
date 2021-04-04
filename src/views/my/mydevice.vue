@@ -73,22 +73,26 @@
         </el-table-column>
 
         <el-table-column
+          prop="dev_type"
           label="类型"
-          width="80px"
+          width="100px"
           align="center"
+          :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.dev_type }}</span>
+            <span>{{ ValueFilter(scope.row.dev_type,DevTypeOptions) }}</span>
           </template>
         </el-table-column>
 
         <el-table-column
           label="型号"
-          width="80px"
+          prop="dev_model"
+          width="100px"
           align="center"
+          :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.dev_model }}</span>
+            <span>{{ ValueFilter(scope.row.dev_model,DevModelOptions) }}</span>
           </template>
         </el-table-column>
 
@@ -1017,32 +1021,32 @@ export default {
 
     SwitchRealy(val) {
       console.log(val)
-      changeDeviceParm('realy_status=' + val + '&CPUID=' + this.temp.cpuid)
+      changeDeviceParm('realy_status=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
     },
     SwitchMonitor(val) {
       console.log(val)
-      changeDeviceParm('monitor_out=' + val + '&CPUID=' + this.temp.cpuid)
+      changeDeviceParm('monitor_out=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
     },
     change_dcd_select(val) {
       console.log(val)
-      changeDeviceParm('dcd_select=' + val + '&CPUID=' + this.temp.cpuid)
+      changeDeviceParm('dcd_select=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
     },
     Switch_key_func(val) {
       console.log(val)
-      changeDeviceParm('key_func=' + val + '&CPUID=' + this.temp.cpuid)
+      changeDeviceParm('key_func=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
     },
 
     Switch_one_uv_power(val) {
       console.log(val)
-      changeDeviceParm('one_uv_power=' + val + '&CPUID=' + this.temp.cpuid)
+      changeDeviceParm('one_uv_power=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
     },
     addTailVoice(val) {
       console.log(val)
-      changeDeviceParm('add_tail_voice=' + val + '&CPUID=' + this.temp.cpuid)
+      changeDeviceParm('add_tail_voice=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
     },
     removeTailVoice(val) {
       console.log(val)
-      changeDeviceParm('remove_tail_voice=' + val + '&CPUID=' + this.temp.cpuid)
+      changeDeviceParm('remove_tail_voice=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
     },
 
     handleFilter() {
