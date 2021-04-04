@@ -12,13 +12,13 @@
       /> -->
 
       <el-select
-        v-model="listQuery.name"
+        v-model="listQuery.ower_id"
         filterable
         clearable
         placeholder="姓名"
         style="width: 320px;"
         class="filter-item"
-        @change="filterName"
+        @change="handleFilter"
       >
 
         <el-option
@@ -36,14 +36,14 @@
         placeholder="呼号"
         style="width: 320px;"
         class="filter-item"
-        @change="filterCallsign"
+        @change="handleFilter"
       >
 
         <el-option
           v-for="item in userOptions"
           :key="item.id"
           :label="item.callsign"
-          :value="item.id"
+          :value="item.callsign"
         />
       </el-select>
       <!--
@@ -57,13 +57,13 @@
       /> -->
 
       <el-select
-        v-model="listQuery.group"
+        v-model="listQuery.group_id"
         filterable
         clearable
         placeholder="请选择组"
         style="width: 320px;"
         class="filter-item"
-        @change="filterGroup"
+        @change="handleFilter"
       >
         <el-option
           label="私有组"
@@ -81,16 +81,17 @@
         class="filter-item"
         type="primary"
         icon="el-icon-search"
-        @click="handleFilter"
+        @click="getList"
       >刷新</el-button>
 
       <el-switch
-        v-model="displayOnline"
+        v-model="listQuery.displayOnline"
         active-text="显示在线"
         active-color="#1890ff"
         inactive-color="#dcdfe6"
         :active-value="true"
         :inactive-value="false"
+        @change="handleFilter"
       />
 
     </div>
@@ -124,12 +125,12 @@
         stripe
         highlight-current-row
         style="width: 100%;"
-        @sort-change="sortChange"
+        :default-sort="{prop: 'id', order: 'descending'}"
       >
         <el-table-column
           :label="$t('Account.id')"
           prop="id"
-          sortable="custom"
+          :sortable="true"
           align="center"
           width="110"
         >
@@ -140,8 +141,10 @@
 
         <el-table-column
           label="设备名称"
+          prop="name"
           width="120px"
           align="center"
+          :sortable="true"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
@@ -162,8 +165,10 @@
 
         <el-table-column
           label="所有者"
-          width="80px"
+          prop="ower_id"
+          width="90px"
           align="center"
+          :sortable="true"
         >
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.ower_id,userOptions) }}</span>
@@ -171,9 +176,11 @@
         </el-table-column>
 
         <el-table-column
+          prop="callsign"
           label="呼号"
           width="110px"
           align="center"
+          :sortable="true"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.callsign+"-"+scope.row.ssid }}</span>
@@ -181,8 +188,10 @@
         </el-table-column>
         <el-table-column
           label="当前群组"
+          prop="public_group_id"
           width="180px"
           align="center"
+          sortable="true"
         >
           <template slot-scope="scope">
             <span>{{ (scope.row.public_group_id === 0 && scope.row.group_id !== 0) ? '私有组' : ValueFilter(scope.row.public_group_id,groupsOptions) }}</span>
@@ -190,9 +199,11 @@
         </el-table-column>
 
         <el-table-column
+          prop="dev_type"
           label="类型"
-          width="60px"
+          width="100px"
           align="center"
+          :sortable="true"
         >
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.dev_type,DevTypeOptions) }}</span>
@@ -201,8 +212,10 @@
 
         <el-table-column
           label="型号"
-          width="60px"
+          prop="dev_model"
+          width="100px"
           align="center"
+          :sortable="true"
         >
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.dev_model,DevModelOptions) }}</span>
@@ -211,8 +224,10 @@
 
         <el-table-column
           label="丢包"
-          width="60px"
+          prop="lost"
+          width="80px"
           align="center"
+          :sortable="true"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.lost }}</span>
@@ -222,7 +237,9 @@
         <el-table-column
           label="在线"
           width="80px"
+          prop="is_online"
           align="center"
+          :sortable="true"
         >
           <template slot-scope="scope">
             <span>
@@ -233,8 +250,10 @@
 
         <el-table-column
           label="状态"
-          width="60px"
+          prop="status"
+          width="80px"
           align="center"
+          :sortable="true"
         >
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.status,DevStatusOptions) }}</span>
@@ -243,8 +262,10 @@
 
         <el-table-column
           label="上线时间"
+          prop="online_time"
           width="155px"
           align="center"
+          :sortable="true"
         >
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.online_time) }}</span>
@@ -253,8 +274,10 @@
 
         <el-table-column
           label="最近活动时间"
+          prop="last_packet_time"
           width="155px"
           align="center"
+          :sortable="true"
         >
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.last_packet_time) }}</span>
@@ -377,13 +400,16 @@ export default {
       DevStatusOptions,
       userOptions: [],
       chartData: {},
-      displayOnline: false,
+
       userTimeLinelist: null,
       activeName: 'first',
       total: 0,
       listLoading: false,
       listQuery: {
-        callsign: ''
+        callsign: '',
+        displayOnline: false,
+        ower_id: '',
+        group_id: ''
 
         // sort: "+id"
       },
@@ -413,17 +439,17 @@ export default {
     ...mapGetters(['device'])
   },
 
-  watch: {
-    displayOnline(item1, item2) {
-      console.log(item1, item2)
-      if (item1 === true) {
-        this.display_list = this.online_list
-      } else {
-        this.display_list = this.list
-      }
-    }
-    // immediate:true
-  },
+  // watch: {
+  //   displayOnline(item1, item2) {
+  //     console.log(item1, item2)
+  //     if (item1 === true) {
+  //       this.display_list = this.online_list
+  //     } else {
+  //       this.display_list = this.list
+  //     }
+  //   }
+  //   // immediate:true
+  // },
 
   created() {
     if (this.device === 'mobile') {
@@ -454,26 +480,12 @@ export default {
     getList() {
       this.fetchDeviceList({}).then(response => {
         this.list = Object.values(response.data.items)
-        for (const item of this.list) {
-          if (item.is_online) {
-            this.online_list.push(item)
-          } else {
-            this.offline_list.push(item)
-          }
-        }
-        if (this.displayOnline) {
-          this.display_list = this.online_list
-        } else {
-          this.display_list = this.list
-        }
+        this.handleFilter()
 
         // console.log(this.list)
       })
     },
-    handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
-    },
+
     handleModifiStatus(row, status) {
       this.$message({
         message: '操作成功',
@@ -481,15 +493,70 @@ export default {
       })
       row.status = status
     },
-    filterName(val) {
-
+    changeodispnline(val) {
+      if (val === true) {
+        this.display_list = this.online_list
+      } else {
+        this.display_list = this.list
+      }
     },
-    filterCallsign(val) {
-
+    handleFilter() {
+      this.display_list = []
+      console.log(this.listQuery)
+      for (const id in this.list) {
+        if (
+          this.filterOnline(this.list[id]) &&
+          this.filterOwer(this.list[id]) &&
+          this.filterCallsign(this.list[id]) &&
+          this.filterGroup(this.list[id])
+        ) {
+          this.display_list.push(this.list[id])
+        }
+      }
     },
-    filterGroup(val) {
 
+    filterOnline(dev) {
+      if (this.listQuery.displayOnline === true && dev.is_online === true) {
+        return true
+      } else if (this.listQuery.displayOnline === false) {
+        return true
+      }
+      return false
     },
+    filterOwer(dev) {
+      if (
+        this.listQuery.ower_id !== '' &&
+        dev.ower_id === this.listQuery.ower_id
+      ) {
+        return true
+      } else if (this.listQuery.ower_id === '') {
+        return true
+      }
+      return false
+    },
+    filterCallsign(dev) {
+      if (
+        this.listQuery.callsign !== '' &&
+        dev.callsign === this.listQuery.callsign
+      ) {
+        return true
+      } else if (this.listQuery.callsign === '') {
+        return true
+      }
+      return false
+    },
+    filterGroup(dev) {
+      if (
+        this.listQuery.group_id !== '' &&
+        dev.public_group_id === this.listQuery.group_id
+      ) {
+        return true
+      } else if (this.listQuery.group_id === '') {
+        return true
+      }
+      return false
+    },
+
     sortChange(data) {
       const { prop, order } = data
       if (prop === 'id') {

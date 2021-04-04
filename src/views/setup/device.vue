@@ -204,13 +204,13 @@
         </el-form-item>
 
         <el-form-item :label="$t('device.type')" prop="type">
-          <el-radio-group v-model="temp.type">
+          <el-radio-group v-model="temp.dev_type">
             <el-radio v-for="d in DevTypeOptions" :key="d.id" :label="d.id">{{ d.name }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item :label="$t('device.model')" prop="model">
-          <el-radio-group v-model="temp.model">
+          <el-radio-group v-model="temp.dev_model">
             <el-radio v-for="d in DevModelOptions" :key="d.id" :label="d.id">{{ d.name }}</el-radio>
           </el-radio-group>
         </el-form-item>

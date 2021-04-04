@@ -1,4 +1,3 @@
-
 export const DevTypeOptions = [
   { id: 0, name: '未知' },
   { id: 1, name: '中继' },
@@ -13,6 +12,15 @@ export const DevModelOptions = [
   { id: 2, name: 'NRL2200' },
   { id: 3, name: 'NRL2300' }
 
+]
+
+export const groupTypeOptions = [
+  { id: 0, name: '公共房间' },
+  { id: 1, name: '中继互联' },
+  { id: 2, name: '中继转发' },
+  { id: 3, name: '中继守听' },
+  { id: 4, name: '会议组' },
+  { id: 100, name: '其他' }
 ]
 
 export const DevStatusOptions = [

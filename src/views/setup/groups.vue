@@ -2,14 +2,14 @@
   <div class="app-container">
     <div class="filter-container">
 
-      <el-input
+      <!-- <el-input
         v-model="listQuery.callsign"
         :placeholder="$t('device.callsign')"
         style="width: 320px;"
         class="filter-item"
         clearable
         @keyup.enter.native="handleFilter"
-      />
+      /> -->
 
       <el-button
         v-waves
@@ -39,7 +39,6 @@
         stripe
         highlight-current-row
         style="width: 100%;"
-
         @sort-change="sortChange"
       >
         <el-table-column
@@ -54,49 +53,91 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="群组名称" width="120px" align="center">
+        <el-table-column
+          label="群组名称"
+          width="120px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="类型" width="110px" align="center">
+        <el-table-column
+          label="类型"
+          width="110px"
+          align="center"
+        >
           <template slot-scope="scope">
-            <span>{{ scope.row.type }}</span>
+            <span>{{ ValueFilter(scope.row.type,groupTypeOptions) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="创建者呼号" width="110px" align="center">
+        <el-table-column
+          label="允许设备"
+          width="200px"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{ cpuidValueFilter(scope.row.allow_cpuid,devicesOptions) }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="创建者呼号"
+          width="110px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.callsign }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="创建者" width="110px" align="center">
+        <el-table-column
+          label="创建者"
+          width="110px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.ower_id }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="状态" width="110px" align="center">
+        <el-table-column
+          label="状态"
+          width="110px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.status }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="创建时间" width="100px" align="center">
+        <el-table-column
+          label="创建时间"
+          width="100px"
+          align="center"
+        >
           <template slot-scope="scope">
-            <span>{{ scope.row.create_time.substr(0,19) }}</span>
+            <span>{{ parseTime(scope.row.create_time) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="更新时间" width="100px" align="center">
+        <el-table-column
+          label="更新时间"
+          width="100px"
+          align="center"
+        >
           <template slot-scope="scope">
-            <span>{{ scope.row.update_time.substr(0,19) }}</span>
+            <span>{{ parseTime(scope.row.update_time) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="备注" width="100px" align="center">
+        <el-table-column
+          label="备注"
+          width="100px"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.note }}</span>
           </template>
@@ -109,14 +150,12 @@
         >
           <template slot-scope="{row}">
             <el-button
-
               size="mini"
               type="primary"
               @click="handleUpdate(row)"
             >{{ $t('device.edit') }}</el-button>
 
             <el-button
-
               size="mini"
               type="primary"
               @click="handleDelete(row)"
@@ -128,7 +167,10 @@
       </el-table>
     </div>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog
+      :title="textMap[dialogStatus]"
+      :visible.sync="dialogFormVisible"
+    >
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -138,16 +180,49 @@
         style="width: 400px; margin-left:50px;"
       >
 
-        <el-form-item :label="$t('group.name')" prop="name">
+        <el-form-item
+          :label="$t('group.name')"
+          prop="name"
+        >
           <el-input v-model="temp.name" />
         </el-form-item>
 
-        <el-form-item :label="$t('group.type')" prop="sex">
-          <el-radio-group v-model="temp.sex">
-            <el-radio :label="0">公共房间</el-radio>
-            <el-radio :label="1">中继互联</el-radio>
-            <el-radio :label="3">其他</el-radio>
+        <el-form-item
+          :label="$t('group.type')"
+          prop="sex"
+        >
+          <el-radio-group v-model="temp.type">
+            <el-radio
+              v-for="item in groupTypeOptions"
+              :key="item.id"
+              :label="item.id"
+            >{{ item.name }}</el-radio>
+
           </el-radio-group>
+        </el-form-item>
+        <el-form-item
+          v-if="temp.type===3"
+          :label="$t('group.allow_cpuid')"
+          prop="allow_cpuid"
+        >
+          <el-select
+            v-model="temp.allow_cpuid"
+            filterable
+            placeholder="请选择设备ID"
+            style="width: 320px;"
+            class="filter-item"
+          >
+            <el-option
+              label="没有限制"
+              value=""
+            />
+            <el-option
+              v-for="item in devicesOptions"
+              :key="item.id"
+              :label="item.callsign+'-'+item.ssid+' '+item.name"
+              :value="item.cpuid"
+            />
+          </el-select>
         </el-form-item>
 
         <!-- <el-form-item :label="$t('employee.employee_id')" prop="employee_id">
@@ -167,7 +242,10 @@
 
       </el-form>
 
-      <div slot="footer" class="dialog-footer">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
         <el-button
           type="primary"
@@ -180,8 +258,13 @@
 </template>
 
 <script>
-import { fetchGroupList, createGroup, updateGroup, deleteGroup } from '@/api/groups'
-
+import {
+  fetchGroupList,
+  createGroup,
+  updateGroup,
+  deleteGroup
+} from '@/api/groups'
+import { fetchDeviceList } from '@/api/device'
 // import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
 // import LineChart from './components/LineChart'
@@ -189,6 +272,7 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 
 import waves from '@/directive/waves' // waves directive
 import { parseTime, ValueFilter } from '@/utils'
+import { groupTypeOptions } from '@/utils/system'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapGetters } from 'vuex'
 
@@ -215,7 +299,6 @@ export default {
       var d = new Date(Date.parse(date.replace(/-/g, '/')))
       return d.getDay()
     }
-
   },
   data() {
     return {
@@ -223,6 +306,8 @@ export default {
       list: [],
 
       chartData: {},
+      devicesOptions: [],
+      groupTypeOptions,
 
       activeName: 'first',
       total: 0,
@@ -249,9 +334,7 @@ export default {
         create: 'Create'
       },
 
-      rules: {
-
-      },
+      rules: {},
       downloadLoading: false,
       uploadLoading: false
     }
@@ -267,17 +350,23 @@ export default {
       this.showtable = true
     }
 
-    this.fetchGroupList({}).then(response => {
-      this.list = Object.values(response.data.items)
-      console.log(this.list)
+    this.getList()
+
+    this.fetchDeviceList({}).then(response => {
+      this.devicesOptions = Object.values(response.data.items)
     })
   },
 
   methods: {
     checkPermission,
-    fetchGroupList, createGroup, updateGroup, deleteGroup,
+    fetchGroupList,
+    fetchDeviceList,
+    createGroup,
+    updateGroup,
+    deleteGroup,
     ValueFilter,
-    etList() {
+    parseTime,
+    getList() {
       this.fetchGroupList({}).then(response => {
         this.list = Object.values(response.data.items)
         // console.log(this.list)
@@ -341,6 +430,16 @@ export default {
         }
       })
     },
+
+    cpuidValueFilter(cpuid, array) {
+      for (const v of array) {
+        if (v.cpuid === cpuid) {
+          return v.callsign + '-' + v.ssid + ' ' + v.name
+        }
+      }
+      return '未指定'
+    },
+
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
       //  this.temp.timestamp = new Date(this.temp.timestamp);
@@ -408,19 +507,8 @@ export default {
         return
       }
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = [
-          '姓名',
-          '电话',
-          '性别',
-          '出生年月日'
-
-        ]
-        const filterVal = [
-          'name',
-          'phone',
-          'sex'
-
-        ]
+        const tHeader = ['姓名', '电话', '性别', '出生年月日']
+        const filterVal = ['name', 'phone', 'sex']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,

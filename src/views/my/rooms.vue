@@ -5,71 +5,139 @@
     <div>
 
       <el-card class="box-card">
-        <div slot="header" class="clearfix">
+        <div
+          slot="header"
+          class="clearfix"
+        >
           <span>未分配设备</span>
-          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+          <el-button
+            style="float: right; padding: 3px 0"
+            type="text"
+          >操作按钮</el-button>
         </div>
-        <div v-for="dev in list" :key="dev.id" class="text item">
-          <span v-if="dev.group_id==0 ">{{ dev.name }} <el-switch v-model="dev.switch" active-text="继电器" active-color="#13ce66" inactive-color="#ff4949" />
+        <div
+          v-for="dev in list"
+          :key="dev.id"
+          class="text item"
+        >
+          <span v-if="dev.group_id==0 ">{{ dev.id+" "+dev.callsign+"-"+dev.ssid+" "+dev.name }}
+            <el-switch
+              v-model="dev.switch"
+              active-text="继电器"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            />
 
-            <el-slider
+            <!-- <el-slider
               v-model="dev.rate"
               :max="3"
               :min="1"
               :step="1"
               show-stops
-            />  </span>
+            /> -->
+          </span>
         </div>
       </el-card>
 
       <el-card class="box-card">
-        <div slot="header" class="clearfix">
+        <div
+          slot="header"
+          class="clearfix"
+        >
           <span>一号房间</span>
-          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+          <el-button
+            style="float: right; padding: 3px 0"
+            type="text"
+          >操作按钮</el-button>
         </div>
-        <div v-for="dev in list" :key="dev.id" class="text item">
-          <span v-if="dev.group_id==1 ">{{ dev.name }}  <el-switch v-model="dev.switch" active-text="继电器" active-color="#13ce66" inactive-color="#ff4949" />
+        <div
+          v-for="dev in list"
+          :key="dev.id"
+          class="text item"
+        >
+          <span v-if="dev.group_id==1 ">{{ dev.name }}
+            <el-switch
+              v-model="dev.switch"
+              active-text="继电器"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            />
             <el-slider
               v-model="dev.rate"
               :max="3"
               :min="1"
               :step="1"
               show-stops
-            />  </span>
+            />
+          </span>
         </div>
       </el-card>
 
       <el-card class="box-card">
-        <div slot="header" class="clearfix">
+        <div
+          slot="header"
+          class="clearfix"
+        >
           <span>二号房间</span>
-          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+          <el-button
+            style="float: right; padding: 3px 0"
+            type="text"
+          >操作按钮</el-button>
         </div>
-        <div v-for="dev in list" :key="dev.id" class="text item">
-          <span v-if="dev.group_id==2 ">{{ dev.name }}  <el-switch v-model="dev.switch" active-text="继电器" active-color="#13ce66" inactive-color="#ff4949" />
+        <div
+          v-for="dev in list"
+          :key="dev.id"
+          class="text item"
+        >
+          <span v-if="dev.group_id==2 ">{{ dev.name }}
+            <el-switch
+              v-model="dev.switch"
+              active-text="继电器"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            />
             <el-slider
               v-model="dev.rate"
               :max="3"
               :min="1"
               :step="1"
               show-stops
-            />  </span>
+            />
+          </span>
         </div>
       </el-card>
 
       <el-card class="box-card">
-        <div slot="header" class="clearfix">
+        <div
+          slot="header"
+          class="clearfix"
+        >
           <span>三号房间</span>
-          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+          <el-button
+            style="float: right; padding: 3px 0"
+            type="text"
+          >操作按钮</el-button>
         </div>
-        <div v-for="dev in list" :key="dev.id" class="text item">
-          <span v-if="dev.group_id==3">{{ dev.name }}  <el-switch v-model="dev.switch" active-text="继电器" active-color="#13ce66" inactive-color="#ff4949" />
+        <div
+          v-for="dev in list"
+          :key="dev.id"
+          class="text item"
+        >
+          <span v-if="dev.group_id==3">{{ dev.name }}
+            <el-switch
+              v-model="dev.switch"
+              active-text="继电器"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            />
             <el-slider
               v-model="dev.rate"
               :max="3"
               :min="1"
               :step="1"
               show-stops
-            />  {{ dev.public_group_id !== 0 ? '在公共组' : "" }}</span>
+            /> {{ dev.public_group_id !== 0 ? '在公共组' : "" }}
+          </span>
         </div>
       </el-card>
 
@@ -112,14 +180,12 @@ export default {
       var d = new Date(Date.parse(date.replace(/-/g, '/')))
       return d.getDay()
     }
-
   },
   data() {
     return {
       tableKey: 0,
       list: {
         name: ''
-
       },
       switch: false,
       areaDataOptions: [],
@@ -151,9 +217,7 @@ export default {
         create: 'Create'
       },
 
-      rules: {
-
-      },
+      rules: {},
       downloadLoading: false,
       uploadLoading: false
     }
@@ -233,19 +297,8 @@ export default {
         return
       }
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = [
-          '姓名',
-          '电话',
-          '性别',
-          '出生年月日'
-
-        ]
-        const filterVal = [
-          'name',
-          'phone',
-          'sex'
-
-        ]
+        const tHeader = ['姓名', '电话', '性别', '出生年月日']
+        const filterVal = ['name', 'phone', 'sex']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,

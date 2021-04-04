@@ -74,11 +74,21 @@
 
         <el-table-column
           label="类型"
-          width="60px"
+          width="80px"
           align="center"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.type }}</span>
+            <span>{{ scope.row.dev_type }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="型号"
+          width="80px"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{ scope.row.dev_model }}</span>
           </template>
         </el-table-column>
 
@@ -271,7 +281,7 @@
           :label="$t('device.type')"
           prop="type"
         >
-          <el-radio-group v-model="temp.type">
+          <el-radio-group v-model="temp.dev_type">
             <el-radio
               v-for="d in DevTypeOptions"
               :key="d.id"
@@ -286,7 +296,7 @@
           :label="$t('device.model')"
           prop="model"
         >
-          <el-radio-group v-model="temp.model">
+          <el-radio-group v-model="temp.dev_model">
             <el-radio
               v-for="d in DevModelOptions"
               :key="d.id"

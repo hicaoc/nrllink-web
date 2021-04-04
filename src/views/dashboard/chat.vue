@@ -43,17 +43,17 @@ export default {
     }
   },
   created() {
-    this.initWebSocket()
+    // this.initWebSocket()
   },
   destroyed() {
-    this.websock.close() // 离开路由之后断开websocket连接
+    // this.websock.close() // 离开路由之后断开websocket连接
   },
 
   methods: {
 
     // ws连接成功，后台返回的ws数据，组件要拿数据渲染页面等操作
     initWebSocket() { // 初始化weosocket
-      const wsuri = 'ws://121.5.120.167:9998/ws'
+      const wsuri = 'ws://121.5.149.170:9998/ws'
       this.websock = new WebSocket(wsuri)
       this.websock.onmessage = this.websocketonmessage
       this.websock.onopen = this.websocketonopen

@@ -84,7 +84,8 @@ export default {
   },
   group: {
     name: '名称',
-    type: '类型'
+    type: '类型',
+    allow_cpuid: '允许设备'
 
   },
   navbar: {

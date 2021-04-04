@@ -5,7 +5,7 @@
     <div>
       <el-card v-for="g in list" :key="g.id" class="box-card">
         <div slot="header" class="clearfix">
-          <span>{{ g.name + " " + g.note }}</span>
+          <span>{{ g.name + "-" + ValueFilter(g.type,groupTypeOptions)+" "+ g.note }}</span>
           <el-button
             style="float: right; padding: 3px 0"
             type="text"
@@ -33,6 +33,7 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 
 import waves from '@/directive/waves' // waves directive
 import { parseTime, AreaValueFilter, ValueFilter } from '@/utils'
+import { groupTypeOptions } from '@/utils/system'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapGetters } from 'vuex'
 
@@ -66,8 +67,8 @@ export default {
       list: {
         name: ''
       },
-      areaDataOptions: [],
-      areaOptions: [],
+      groupTypeOptions,
+
       chartData: {},
       userTimeLinelist: null,
       activeName: 'first',
