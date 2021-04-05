@@ -133,7 +133,7 @@
 
       <el-table-column :label="$t('employee.address')" width="210px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.current_area_name }}</span>
+          <span>{{ scope.row.address }}</span>
         </template>
       </el-table-column>
 

@@ -11,25 +11,34 @@
         <!-- <el-input v-model.trim="user.name" /> -->
         {{ user.phone }}
       </el-form-item>
+      <el-form-item label="呼号">
+        <!-- <el-input v-model.trim="user.name" /> -->
+        {{ user.callsign }}
+      </el-form-item>
 
       <el-form-item label="密码">
-        <el-input v-model.trim="user.password" type="password" />
+        <el-input
+          v-model.trim="user.password"
+          type="password"
+        />
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submit">更新</el-button>
+        <el-button
+          type="primary"
+          @click="submit"
+        >更新</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-// import { changearea } from '@/api/employee'
+import { password } from '@/api/user'
 
 import { mapGetters } from 'vuex'
 
 export default {
-
   props: {
     user: {
       type: Object,
@@ -39,9 +48,7 @@ export default {
           name: '',
           email: '',
           phone: '',
-          area: '',
-          current_area: '',
-          current_area_name: '',
+          callsign: '',
           password: ''
         }
       }
@@ -50,7 +57,6 @@ export default {
   data() {
     return {
       list: [],
-      source_rem: '领取小礼品',
       // url: '',
       // uri: '',
       key: '',
@@ -68,37 +74,20 @@ export default {
   computed: {
     ...mapGetters([
       'device'
-      // 'id',
       // 'name',
-      // 'avatar',
-      // 'roles',
-      // 'phone',
-      // 'current_area',
+      //  'avatar',
+      //  'roles',
+      //  'phone',
+      //  'callsign',
       // 'current_area_name',
       // 'area'
-    ]),
-    uri: {
-      get() {
-        const tempurl = window.location.href.split('#')[0] +
-        '#/getcustomer?' +
-        'id=' +
-        this.user.id +
-        '&source_rem=' +
-        this.source_rem +
-        '&salsename=' +
-        this.user.name
-
-        // this.key = 'Greatbit'
-        //  console.log(tempurl)
-        return encodeURI(tempurl)
-      },
-      set() {}
-    }
+    ])
   },
   created() {
     this.getList()
   },
   methods: {
+    password,
     getList() {
       this.listLoading = true
     },
@@ -124,6 +113,15 @@ export default {
     //   return this.uri
     // },
     submit() {
+      password(this.user).then(response => {
+        this.$notify({
+          title: '成功',
+          message: response.data.message,
+          type: 'success',
+          duration: 2000
+        })
+      })
+
       // this.user.current_area_name = changearea(this.user).then(response => {
       //   this.$message(response.data.message)
 

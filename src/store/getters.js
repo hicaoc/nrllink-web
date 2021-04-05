@@ -10,6 +10,7 @@ const getters = {
   id: state => state.user.id,
   name: state => state.user.name,
   phone: state => state.user.phone,
+  callsign: state => state.user.callsign,
   status: state => state.user.status,
   // area_status: state => state.user.area_status,
   introduction: state => state.user.introduction,

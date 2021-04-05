@@ -13,13 +13,14 @@
       <template v-if="device!=='mobile'">
         <!-- <div class="right-menu-item">{{ areaname }}</div> -->
         <div class="right-menu-item">{{ this.$store.state.user.name }}</div>
+        <div class="right-menu-item">{{ this.$store.state.user.callsign }}</div>
         <!-- <div class="right-menu-item">
 
             <el-select v-model="current_area" class="filter-item" placeholder="请选择">
               <el-option v-for="item in list" :key="item.id" :label="item.name" :value="item.id"/>
             </el-select>
 
-        </div>-->
+        </div> -->
         <!-- <search id="header-search" class="right-menu-item"/> -->
 
         <!-- <error-log class="errLog-container right-menu-item hover-effect"/> -->
@@ -81,15 +82,15 @@ export default {
     return {
       list: [],
       total: 0,
-      current_area_name: '',
-      current_area: 0
+      callsign: ''
+
     }
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar', 'device']),
-    areaname() {
-      return this.$store.state.user.current_area_name
-    }
+    ...mapGetters(['sidebar', 'avatar', 'device'])
+    // callsign() {
+    //   return this.$store.state.user.callsign
+    // }
   },
   // create() {
   //   this.getList();

@@ -30,9 +30,7 @@ export default {
           name: '',
           email: '',
           phone: '',
-          area: '',
-          current_area: '',
-          current_area_name: '',
+          callsign: '',
           password: ''
         }
       }

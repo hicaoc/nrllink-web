@@ -7,6 +7,7 @@ const state = {
   id: '',
   name: '',
   phone: '',
+  callsign: '',
   status: '',
   // area: '',
   // current_area: '',
@@ -38,12 +39,15 @@ const mutations = {
   SET_PHONE: (state, phone) => {
     state.phone = phone
   },
+  SET_CALLSIGN: (state, callsign) => {
+    state.callsign = callsign
+  },
   SET_STATUS: (state, status) => {
     state.status = status
   },
-  SET_AREA_STATUS: (state, area_status) => {
-    state.area_status = area_status
-  },
+  // SET_AREA_STATUS: (state, area_status) => {
+  //     state.area_status = area_status
+  // },
   // SET_AREA: (state, area) => {
   //   state.area = area
   // },
@@ -90,7 +94,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { routes, roles, id, name, phone, status, package_type, avatar, introduction } = data
+        const { routes, roles, id, name, phone, callsign, status, package_type, avatar, introduction } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -101,8 +105,8 @@ const actions = {
         commit('SET_ID', id)
         commit('SET_NAME', name)
         commit('SET_PHONE', phone)
+        commit('SET_CALLSIGN', callsign)
         commit('SET_STATUS', status)
-
         commit('SET_PACKAGE_TYPE', package_type)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
@@ -122,9 +126,8 @@ const actions = {
         commit('SET_ID', 0)
         commit('SET_NAME', '')
         commit('SET_PHONE', '')
+        commit('SET_CALLSIGN', '')
         commit('SET_STATUS', 0)
-        commit('SET_STATUS', 0)
-
         commit('SET_PACKAGE_TYPE', 0)
         commit('SET_AVATAR', '')
         commit('SET_INTRODUCTION', '')

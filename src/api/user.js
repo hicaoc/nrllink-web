@@ -33,3 +33,11 @@ export function addUser(optype, data) {
     }
   })
 }
+
+export function password(data) {
+  return request({
+    url: '/user/password',
+    method: 'post',
+    data
+  })
+}

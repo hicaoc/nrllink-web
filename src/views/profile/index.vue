@@ -56,9 +56,8 @@ export default {
       'roles',
       'phone',
       'schname',
-      'current_area',
-      'current_area_name',
-      'area'
+      'callsign'
+
     ])
   },
   created() {
@@ -71,9 +70,7 @@ export default {
         name: this.name,
         role: this.roles.join(' | '),
         phone: this.phone,
-        area: this.area,
-        current_area: this.current_area,
-        current_area_name: this.current_area_name,
+        callsign: this.callsign,
         email: 'caoc@live.com',
         avatar: this.avatar
       }
