@@ -191,7 +191,7 @@
           prop="public_group_id"
           width="180px"
           align="center"
-          sortable="true"
+          :sortable="true"
         >
           <template slot-scope="scope">
             <span>{{ (scope.row.public_group_id === 0 && scope.row.group_id !== 0) ? '私有组' : ValueFilter(scope.row.public_group_id,groupsOptions) }}</span>
