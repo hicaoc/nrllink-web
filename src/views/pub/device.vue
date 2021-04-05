@@ -394,7 +394,7 @@ export default {
       list: [],
 
       currentPage: 1,
-      pageSize: 5,
+      pageSize: 10,
       display_list: [],
       groupsOptions: [],
       DevTypeOptions,
