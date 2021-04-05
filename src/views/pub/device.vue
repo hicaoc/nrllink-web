@@ -119,7 +119,7 @@
       <el-table
         :key="tableKey"
         v-loading="listLoading"
-        :data="display_list"
+        :data="display_list.slice((currentPage-1)*pageSize,currentPage*pageSize)"
         border
         fit
         stripe
@@ -332,13 +332,14 @@
     </div>
 
     <div>
-      <pagination
-        v-show="total>0"
-        style="margin-top: -24px;"
-        :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
-        @pagination="getList"
+      <el-pagination
+        :current-page="currentPage"
+        :page-sizes="[5, 10, 20, 40]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="display_list.length"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
       />
     </div>
 
@@ -360,12 +361,12 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 
 import waves from '@/directive/waves' // waves directive
 import { parseTime, AreaValueFilter, ValueFilter } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+// import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  // components: { Pagination },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -391,9 +392,10 @@ export default {
     return {
       tableKey: 0,
       list: [],
+
+      currentPage: 1,
+      pageSize: 5,
       display_list: [],
-      online_list: [],
-      offline_list: [],
       groupsOptions: [],
       DevTypeOptions,
       DevModelOptions,
@@ -462,11 +464,10 @@ export default {
       this.userOptions = response.data.items
     })
 
-    this.getList()
-
     this.fetchGroupList({}).then(response => {
       this.groupsOptions = Object.values(response.data.items)
     })
+    this.getList()
   },
 
   methods: {
@@ -502,7 +503,7 @@ export default {
     },
     handleFilter() {
       this.display_list = []
-      console.log(this.listQuery)
+      // console.log(this.listQuery)
       for (const id in this.list) {
         if (
           this.filterOnline(this.list[id]) &&
@@ -513,6 +514,7 @@ export default {
           this.display_list.push(this.list[id])
         }
       }
+      this.diplay_copy_list = this.display_list
     },
 
     filterOnline(dev) {
@@ -571,6 +573,15 @@ export default {
       }
       this.handleFilter()
     },
+    handleSizeChange: function(size) {
+      this.pageSize = size
+      // console.log(this.pageSize) //每页下拉显示数据
+    },
+    handleCurrentChange: function(currentPage) {
+      this.currentPage = currentPage
+      // console.log(this.currentPage) //点击第几页
+    },
+
     resetTemp() {
       this.temp = {
         id: undefined,

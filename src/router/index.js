@@ -83,8 +83,7 @@ export const constantRoutes = [{
       import ('@/views/dashboard/index'),
     name: 'Dashboard',
     meta: { title: 'dashboard', icon: 'dashboard', affix: true, noCache: true }
-  }
-  ]
+  }]
 },
 
 {
@@ -138,29 +137,28 @@ export const asyncRoutes = [{
   meta: {
     title: 'public',
     icon: 'people',
-    roles: ['master'] // you can set roles in root nav
+    roles: ['ham'] // you can set roles in root nav
   },
-  children: [
-    {
-      path: 'totaldevices',
-      component: () =>
-        import ('@/views/pub/device'),
-      name: 'totaldevices',
-      meta: {
-        title: 'totaldevices',
-        roles: ['ham']
-      }
-    },
-    {
-      path: 'groups',
-      component: () =>
-        import ('@/views/pub/groups'),
-      name: 'groups',
-      meta: {
-        title: 'groups',
-        roles: ['ham']
-      }
+  children: [{
+    path: 'totaldevices',
+    component: () =>
+      import ('@/views/pub/device'),
+    name: 'totaldevices',
+    meta: {
+      title: 'totaldevices',
+      roles: ['ham']
     }
+  },
+  {
+    path: 'groups',
+    component: () =>
+      import ('@/views/pub/groups'),
+    name: 'groups',
+    meta: {
+      title: 'groups',
+      roles: ['ham']
+    }
+  }
 
   ]
 },
