@@ -32,7 +32,7 @@ import { fetchGroupList } from '@/api/groups'
 import checkPermission from '@/utils/permission' // 权限判断函数
 
 import waves from '@/directive/waves' // waves directive
-import { parseTime, AreaValueFilter, ValueFilter } from '@/utils'
+import { parseTime, ValueFilter } from '@/utils'
 import { groupTypeOptions } from '@/utils/system'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapGetters } from 'vuex'
@@ -123,7 +123,6 @@ export default {
 
     fetchGroupList,
     ValueFilter,
-    AreaValueFilter,
     getList() {
       this.fetchGroupList({}).then(response => {
         this.list = Object.values(response.data.items)

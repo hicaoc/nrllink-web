@@ -432,16 +432,6 @@ export function ValueFilter(type, array) {
   return '未知'
 }
 
-export function AreaValueFilter(type, array) {
-  //  console.log('&&&&&&&&&', type, array)
-  for (const v of array) {
-    if (v.schname === type) {
-      return v.name
-    }
-  }
-  return type
-}
-
 export function jsGetAge(strBirthday) {
   var begintime_ms = new Date(Date.parse(strBirthday.replace(/-/g, '/')))
 
@@ -472,4 +462,3 @@ export function formatFileSize(fileSize) {
     return temp + 'GB'
   }
 }
-

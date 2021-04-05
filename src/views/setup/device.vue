@@ -821,6 +821,7 @@
 
       </div>
     </el-dialog>
+
   </div>
 </template>
 
@@ -845,7 +846,7 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 // import PanelGroup from './components/PanelGroup'
 
 import waves from '@/directive/waves' // waves directive
-import { parseTime, AreaValueFilter, ValueFilter } from '@/utils'
+import { parseTime, ValueFilter } from '@/utils'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapGetters } from 'vuex'
 
@@ -944,7 +945,6 @@ export default {
     fetchDeviceList,
     queryDevice,
     ValueFilter,
-    AreaValueFilter,
     fetchGroupList,
     getList() {
       this.fetchDeviceList({}).then(response => {
