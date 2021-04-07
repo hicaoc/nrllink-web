@@ -5,19 +5,45 @@
     <div>
       <el-card v-for="g in list" :key="g.id" class="box-card">
         <div slot="header" class="clearfix">
-          <span>{{ g.name + "-" + ValueFilter(g.type,groupTypeOptions)+" "+ g.note }}</span>
-          <el-button
-            style="float: right; padding: 3px 0"
-            type="text"
-          >操作按钮</el-button>
+          <span>{{
+            g.name + "-" + ValueFilter(g.type, groupTypeOptions) + " " + g.note
+          }}</span>
         </div>
+        <div
+          v-for="mydev,index in mydevicesOptions"
+          :key="index"
+          class="text item"
+        >
+          <span
+            v-if="!hasindevlist(mydev.id, g.devmap)"
+          ><el-tag :type="mydev.is_online === true ? '' : 'info'">{{
+             mydev.id +
+               " " +
+               mydev.name +
+               " " +
+               mydev.callsign +
+               "-" +
+               mydev.ssid
+           }} </el-tag>
+            <el-button
+              size="mini"
+              type="primary"
+              @click="changeGroup(mydev, g.id)"
+            >加入</el-button>
+          </span>
+        </div>
+        <el-divider />
         <div v-for="d in g.devmap" :key="d.id" class="text item">
           <span
             v-if="(d.group_id !== 0 && d.public_group_id === 0) === false"
-          >{{ d.id + " " + d.name + " " + d.callsign + "-" + d.ssid }}
-            <el-tag :type="d.is_online === true ? '' : 'info'">
-              {{ d.is_online ? "在线" : "离线" }}
-            </el-tag>
+          >  <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.name + " " + d.callsign + "-" + d.ssid }} </el-tag>
+
+            <!-- <el-button
+              v-if="hasindevlist(d.id, mydevicesOptions) && "
+              size="mini"
+              type="primary"
+              @click="changeGroup(mydev, g.id)"
+              >离开</el-button > -->
           </span>
         </div>
       </el-card>
@@ -27,6 +53,10 @@
 
 <script>
 import { fetchGroupList } from '@/api/groups'
+import {
+  fetchMyDeviceList,
+  updateDevice
+} from '@/api/device'
 
 // import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
@@ -68,6 +98,8 @@ export default {
         name: ''
       },
       groupTypeOptions,
+      mydevicesOptions: [],
+      groupodevlist: [],
 
       chartData: {},
       userTimeLinelist: null,
@@ -114,19 +146,22 @@ export default {
 
     this.fetchGroupList({}).then(response => {
       this.list = Object.values(response.data.items)
-      console.log(this.list)
+    })
+
+    this.fetchMyDeviceList({}).then(response => {
+      this.mydevicesOptions = Object.values(response.data.items)
     })
   },
 
   methods: {
     checkPermission,
-
+    fetchMyDeviceList,
+    updateDevice,
     fetchGroupList,
     ValueFilter,
     getList() {
       this.fetchGroupList({}).then(response => {
         this.list = Object.values(response.data.items)
-        console.log(this.list)
       })
     },
     handleFilter() {
@@ -139,6 +174,22 @@ export default {
         type: 'success'
       })
       row.status = status
+    },
+    changeGroup(tempData, groupid) {
+      tempData.public_group_id = groupid
+
+      //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+      updateDevice(tempData).then(response => {
+        this.getList()
+
+        this.dialogFormVisible = false
+        this.$notify({
+          title: '成功',
+          message: response.data.message,
+          type: 'success',
+          duration: 2000
+        })
+      })
     },
     sortChange(data) {
       const { prop, order } = data
@@ -230,6 +281,15 @@ export default {
       }
       // console.log("return 0")
       return 0
+    },
+
+    hasindevlist(id, devlist) {
+      for (const i in devlist) {
+        if (devlist[i].id === id) {
+          return true
+        }
+      }
+      return false
     },
 
     hasin(id, array) {
