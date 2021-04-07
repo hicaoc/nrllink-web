@@ -6,9 +6,10 @@
       <el-card v-for="g in list" :key="g.id" class="box-card">
         <div slot="header" class="clearfix">
           <span>{{
-            g.name + "-" + ValueFilter(g.type, groupTypeOptions) + " " + g.note
+            g.name + "-" + ValueFilter(g.type, groupTypeOptions) +" " + g.note
           }}</span>
         </div>
+        <!-- <el-divider >未加入设备</el-divider> -->
         <div
           v-for="mydev,index in mydevicesOptions"
           :key="index"
@@ -19,11 +20,11 @@
           ><el-tag :type="mydev.is_online === true ? '' : 'info'">{{
              mydev.id +
                " " +
-               mydev.name +
-               " " +
                mydev.callsign +
                "-" +
-               mydev.ssid
+               mydev.ssid +
+               " " +
+               mydev.name
            }} </el-tag>
             <el-button
               size="mini"
@@ -32,11 +33,11 @@
             >加入</el-button>
           </span>
         </div>
-        <el-divider />
+        <el-divider>已加入设备 {{ (g.devmap == null ? "0" : Object.keys(g.devmap).length) +"台 " }}</el-divider>
         <div v-for="d in g.devmap" :key="d.id" class="text item">
           <span
             v-if="(d.group_id !== 0 && d.public_group_id === 0) === false"
-          >  <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.name + " " + d.callsign + "-" + d.ssid }} </el-tag>
+          >  <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " + d.name }} </el-tag>
 
             <!-- <el-button
               v-if="hasindevlist(d.id, mydevicesOptions) && "
