@@ -3,50 +3,64 @@
     <div class="filter-container" />
 
     <div>
-      <el-card v-for="g in list" :key="g.id" class="box-card">
-        <div slot="header" class="clearfix">
+      <el-card
+        v-for="g in list"
+        :key="g.id"
+        class="box-card"
+      >
+        <div style="padding-bottom: 10px;">
           <span>{{
             g.name + "-" + ValueFilter(g.type, groupTypeOptions) +" " + g.note
           }}</span>
         </div>
-        <!-- <el-divider >未加入设备</el-divider> -->
-        <div
-          v-for="mydev,index in mydevicesOptions"
-          :key="index"
-          class="text item"
-        >
-          <span
-            v-if="!hasindevlist(mydev.id, g.devmap)"
-          ><el-tag :type="mydev.is_online === true ? '' : 'info'">{{
-             mydev.id +
-               " " +
-               mydev.callsign +
-               "-" +
-               mydev.ssid +
-               " " +
-               mydev.name
-           }} </el-tag>
-            <el-button
-              size="mini"
-              type="primary"
-              @click="changeGroup(mydev, g.id)"
-            >加入</el-button>
-          </span>
-        </div>
-        <el-divider>已加入设备 {{ (g.devmap == null ? "0" : Object.keys(g.devmap).length) +"台 " }}</el-divider>
-        <div v-for="d in g.devmap" :key="d.id" class="text item">
-          <span
-            v-if="(d.group_id !== 0 && d.public_group_id === 0) === false"
-          >  <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " + d.name }} </el-tag>
+        <el-collapse accordion>
+          <el-collapse-item
+            title="我要加入"
+            name="1"
+          >
+            <div
+              v-for="mydev,index in mydevicesOptions"
+              :key="index"
+              class="text item"
+            >
+              <span v-if="!hasindevlist(mydev.id, g.devmap)">
+                <el-button
+                  size="mini"
+                  :type="mydev.is_online === true ? '' : 'primary'"
+                  @click="changeGroup(mydev, g.id)"
+                > {{ mydev.id +
+                  " " +
+                  mydev.callsign +
+                  "-" +
+                  mydev.ssid +
+                  " " +
+                  mydev.name }}</el-button>
+              </span>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item
+            :title="'已加入设备'+ (g.devmap == null ? '0' : Object.keys(g.devmap).length) +'台' "
+            name="2"
+          >
+            <!-- <el-divider>已加入设备 {{ (g.devmap == null ? "0" : Object.keys(g.devmap).length) +"台 " }}</el-divider> -->
+            <div
+              v-for="d in g.devmap"
+              :key="d.id"
+              class="text item"
+            >
+              <span v-if="(d.group_id !== 0 && d.public_group_id === 0) === false">
+                <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " + d.name }} </el-tag>
 
-            <!-- <el-button
+                <!-- <el-button
               v-if="hasindevlist(d.id, mydevicesOptions) && "
               size="mini"
               type="primary"
               @click="changeGroup(mydev, g.id)"
               >离开</el-button > -->
-          </span>
-        </div>
+              </span>
+            </div>
+          </el-collapse-item>
+        </el-collapse>
       </el-card>
     </div>
   </div>
@@ -54,10 +68,7 @@
 
 <script>
 import { fetchGroupList } from '@/api/groups'
-import {
-  fetchMyDeviceList,
-  updateDevice
-} from '@/api/device'
+import { fetchMyDeviceList, updateDevice } from '@/api/device'
 
 // import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
