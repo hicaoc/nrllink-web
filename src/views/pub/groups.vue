@@ -26,7 +26,8 @@
               <span v-if="!hasindevlist(mydev.id, g.devmap)">
                 <el-button
                   size="mini"
-                  :type="mydev.is_online === true ? '' : 'primary'"
+                  plain
+                  :type="mydev.is_online === true ? 'primary' : ''"
                   @click="changeGroup(mydev, g.id)"
                 > {{ mydev.id +
                   " " +
