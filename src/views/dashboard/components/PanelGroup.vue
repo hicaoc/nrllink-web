@@ -16,7 +16,7 @@
           <br>在线
           <count-to
             :start-val="0"
-            :end-val="0"
+            :end-val="list.online_dev_number"
             :duration="2600"
             class="card-panel-num"
           />个
@@ -89,14 +89,14 @@
             :decimals="0"
             class="card-panel-num"
           />个包
-          <br> 丢包率:
+          <br>
           <count-to
             :start-val="0"
-            :end-val="0.1"
+            :end-val="list.traffic"
             :duration="2000"
-            :decimals="1"
+            :decimals="0"
             class="card-panel-num"
-          />%
+          />字节
 
         </div>
       </div>

@@ -12,6 +12,7 @@
       /> -->
 
       <el-select
+        v-if="checkPermission(['admin'])"
         v-model="listQuery.ower_id"
         filterable
         clearable
@@ -125,9 +126,11 @@
         stripe
         highlight-current-row
         style="width: 100%;"
+
         :default-sort="{prop: 'id', order: 'descending'}"
       >
         <el-table-column
+          fixed
           :label="$t('Account.id')"
           prop="id"
           :sortable="true"
@@ -136,6 +139,19 @@
         >
           <template slot-scope="scope">
             <span>{{ scope.row.id }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          fixed
+          prop="callsign"
+          label="呼号"
+          width="110px"
+          align="center"
+          :sortable="true"
+        >
+          <template slot-scope="scope">
+            <span>{{ scope.row.callsign+"-"+scope.row.ssid }}</span>
           </template>
         </el-table-column>
 
@@ -164,6 +180,7 @@
         </el-table-column> -->
 
         <el-table-column
+          v-if="checkPermission(['admin'])"
           label="所有者"
           prop="ower_id"
           width="90px"
@@ -175,17 +192,6 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          prop="callsign"
-          label="呼号"
-          width="110px"
-          align="center"
-          :sortable="true"
-        >
-          <template slot-scope="scope">
-            <span>{{ scope.row.callsign+"-"+scope.row.ssid }}</span>
-          </template>
-        </el-table-column>
         <el-table-column
           label="当前群组"
           prop="public_group_id"
@@ -222,7 +228,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column
+        <!-- <el-table-column
           label="丢包"
           prop="lost"
           width="80px"
@@ -232,7 +238,7 @@
           <template slot-scope="scope">
             <span>{{ scope.row.lost }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column
           label="在线"
@@ -249,6 +255,18 @@
         </el-table-column>
 
         <el-table-column
+          label="流量"
+          prop="traffic"
+          width="120px"
+          align="center"
+          :sortable="true"
+        >
+          <template slot-scope="scope">
+            <span>{{ formatFileSize(scope.row.traffic) }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
           label="状态"
           prop="status"
           width="80px"
@@ -261,7 +279,19 @@
         </el-table-column>
 
         <el-table-column
-          label="上线时间"
+          label="最近通联"
+          prop="last_voice_time"
+          width="155px"
+          align="center"
+          :sortable="true"
+        >
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.last_voice_time) }}</span>
+          </template>
+        </el-table-column>
+
+        <!-- <el-table-column
+          label="绑定时间"
           prop="online_time"
           width="155px"
           align="center"
@@ -282,7 +312,7 @@
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.last_packet_time) }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <!-- <el-table-column label="加入时间" width="180px" align="center">
           <template slot-scope="scope">
@@ -296,7 +326,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column
+        <!-- <el-table-column
           label="备注"
           width="100px"
           align="center"
@@ -304,7 +334,7 @@
           <template slot-scope="scope">
             <span>{{ scope.row.note }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <!-- <el-table-column
           :label="$t('Account.actions')"
@@ -360,7 +390,7 @@ import {
 import checkPermission from '@/utils/permission' // 权限判断函数
 
 import waves from '@/directive/waves' // waves directive
-import { parseTime, ValueFilter } from '@/utils'
+import { parseTime, ValueFilter, formatFileSize } from '@/utils'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapGetters } from 'vuex'
 
@@ -477,6 +507,7 @@ export default {
     fetchGroupList,
     ValueFilter,
     parseTime,
+    formatFileSize,
 
     getList() {
       this.fetchDeviceList({}).then(response => {
@@ -677,6 +708,14 @@ export default {
 .text {
   font-size: 14px;
 }
+
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+    background: #0df3e8;
+  }
 
 .item {
   margin-bottom: 18px;
