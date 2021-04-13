@@ -270,6 +270,30 @@
           :label="$t('device.public_group')"
           prop="type"
         >
+
+          <el-select
+            v-model="temp.public_group_id"
+            filterable
+            clearable
+            style="width: 320px;"
+            class="filter-item"
+            @change="handleFilter"
+          >
+            <el-option
+              v-for="item in groupsOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+
+            <el-option
+              v-for="item in userOptions"
+              :key="item.id"
+              :label=" d.id == 0 ? '不加入' : item.name"
+              :value="item.callsign"
+            />
+          </el-select>
+          <!--
           <el-radio-group v-model="temp.public_group_id">
             <el-radio
               v-for="d in groupsOptions"
@@ -278,7 +302,7 @@
             >{{
               d.id == 0 ? "不加入" : d.name
             }}</el-radio>
-          </el-radio-group>
+          </el-radio-group> -->
         </el-form-item>
 
         <el-form-item
@@ -895,6 +919,7 @@ export default {
 
         // sort: "+id"
       },
+      userOptions: [],
       showReviewer: false,
       temp: {
         id: undefined,

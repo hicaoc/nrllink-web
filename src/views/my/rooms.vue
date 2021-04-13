@@ -3,151 +3,80 @@
     <div class="filter-container" />
 
     <div>
-
-      <el-card class="box-card">
-        <div
-          slot="header"
-          class="clearfix"
-        >
-          <span>未分配设备</span>
-          <el-button
-            style="float: right; padding: 3px 0"
-            type="text"
-          >操作按钮</el-button>
+      <el-card v-for="r in rooms" :key="r.id" class="box-card">
+        <div slot="header" class="clearfix">
+          <span>{{ r.name }}</span>
         </div>
-        <div
-          v-for="dev in list"
-          :key="dev.id"
-          class="text item"
-        >
-          <span v-if="dev.group_id==0 ">{{ dev.id+" "+dev.callsign+"-"+dev.ssid+" "+dev.name }}
+        <el-collapse accordion>
+          <el-collapse-item
+            title="我要加入"
+            name="1"
+          >
+            <div
+              v-for="mydev,index in list"
+              :key="index"
+              class="text item"
+            >
+              <span v-if="mydev.group_id !== r.id">
+                <el-button
+                  size="mini"
+                  plain
+                  :type="mydev.is_online === true ? 'primary' : ''"
+                  @click="changeGroup(mydev, r.id)"
+                > {{ mydev.id +
+                  " " +
+                  mydev.callsign +
+                  "-" +
+                  mydev.ssid +
+                  " " +
+                  mydev.name }}</el-button>
+              </span>
+            </div>
+          </el-collapse-item>
+          <el-collapse-item
+            :title="'已加入设备' "
+            name="2"
+          >
+
+            <div
+              v-for="d in list"
+              :key="d.id"
+              class="text item"
+            >
+              <span v-if="d.group_id === r.id">
+                <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " + d.name }} </el-tag>
+
+                <!-- <el-button
+              v-if="hasindevlist(d.id, mydevicesOptions) && "
+              size="mini"
+              type="primary"
+              @click="changeGroup(mydev, g.id)"
+              >离开</el-button > -->
+              </span>
+            </div>
+          </el-collapse-item>
+
+        </el-collapse>
+        <!-- <div v-for="dev in list" :key="dev.id" class="text item">
+          <span v-if="dev.group_id == r.id"
+            >{{ dev.id + " " + dev.callsign + "-" + dev.ssid + " " + dev.name }}
             <el-switch
               v-model="dev.switch"
               active-text="继电器"
               active-color="#13ce66"
               inactive-color="#ff4949"
             />
-
-            <!-- <el-slider
-              v-model="dev.rate"
-              :max="3"
-              :min="1"
-              :step="1"
-              show-stops
-            /> -->
           </span>
-        </div>
-      </el-card>
-
-      <el-card class="box-card">
-        <div
-          slot="header"
-          class="clearfix"
-        >
-          <span>一号房间</span>
-          <el-button
-            style="float: right; padding: 3px 0"
-            type="text"
-          >操作按钮</el-button>
-        </div>
-        <div
-          v-for="dev in list"
-          :key="dev.id"
-          class="text item"
-        >
-          <span v-if="dev.group_id==1 ">{{ dev.name }}
-            <el-switch
-              v-model="dev.switch"
-              active-text="继电器"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-            />
-            <el-slider
-              v-model="dev.rate"
-              :max="3"
-              :min="1"
-              :step="1"
-              show-stops
-            />
-          </span>
-        </div>
-      </el-card>
-
-      <el-card class="box-card">
-        <div
-          slot="header"
-          class="clearfix"
-        >
-          <span>二号房间</span>
-          <el-button
-            style="float: right; padding: 3px 0"
-            type="text"
-          >操作按钮</el-button>
-        </div>
-        <div
-          v-for="dev in list"
-          :key="dev.id"
-          class="text item"
-        >
-          <span v-if="dev.group_id==2 ">{{ dev.name }}
-            <el-switch
-              v-model="dev.switch"
-              active-text="继电器"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-            />
-            <el-slider
-              v-model="dev.rate"
-              :max="3"
-              :min="1"
-              :step="1"
-              show-stops
-            />
-          </span>
-        </div>
-      </el-card>
-
-      <el-card class="box-card">
-        <div
-          slot="header"
-          class="clearfix"
-        >
-          <span>三号房间</span>
-          <el-button
-            style="float: right; padding: 3px 0"
-            type="text"
-          >操作按钮</el-button>
-        </div>
-        <div
-          v-for="dev in list"
-          :key="dev.id"
-          class="text item"
-        >
-          <span v-if="dev.group_id==3">{{ dev.name }}
-            <el-switch
-              v-model="dev.switch"
-              active-text="继电器"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-            />
-            <el-slider
-              v-model="dev.rate"
-              :max="3"
-              :min="1"
-              :step="1"
-              show-stops
-            /> {{ dev.public_group_id !== 0 ? '在公共组' : "" }}
-          </span>
-        </div>
+        </div> -->
       </el-card>
 
     </div>
-
   </div>
 </template>
 
 <script>
 import { fetchMyGroupList } from '@/api/groups'
+import { updateDevice } from '@/api/device'
 
 // import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
@@ -188,10 +117,7 @@ export default {
         name: ''
       },
       switch: false,
-      areaDataOptions: [],
-      areaOptions: [],
-      chartData: {},
-      userTimeLinelist: null,
+
       activeName: 'first',
       total: 0,
       listLoading: false,
@@ -205,6 +131,18 @@ export default {
         id: undefined,
         name: ''
       },
+      rooms: [
+        {
+          id: 0,
+          name: '未分配设备'
+        },
+        {
+          id: 1,
+          name: '房间1'
+        },
+        { id: 2, name: '房间2' },
+        { id: 3, name: '房间3' }
+      ],
 
       //  roles: ["admin", "editer", "guest"],
       dialogFormVisible: false,
@@ -243,10 +181,27 @@ export default {
     checkPermission,
     fetchMyGroupList,
     ValueFilter,
+    updateDevice,
     getList() {
       this.fetchMyGroupList({}).then(response => {
         this.list = Object.values(response.data.items)
         console.log(this.list)
+      })
+    },
+    changeGroup(tempData, groupid) {
+      tempData.group_id = groupid
+
+      //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+      updateDevice(tempData).then(response => {
+        this.getList()
+
+        this.dialogFormVisible = false
+        this.$notify({
+          title: '成功',
+          message: response.data.message,
+          type: 'success',
+          duration: 2000
+        })
       })
     },
     handleFilter() {
@@ -339,6 +294,15 @@ export default {
           }
         })
       )
+    },
+
+    hasindevlist(id, devlist) {
+      for (const i in devlist) {
+        if (devlist[i].id === id) {
+          return true
+        }
+      }
+      return false
     },
 
     returnIndex(id, array) {
