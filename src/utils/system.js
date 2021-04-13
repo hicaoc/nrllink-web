@@ -23,9 +23,10 @@ export const groupTypeOptions = [
   { id: 1, name: '中继互联' },
   { id: 2, name: '设备互联' },
   { id: 3, name: '守听' },
-  { id: 4, name: '俱乐部' },
-  { id: 5, name: '车友会' },
-  { id: 6, name: '会议组' },
+  { id: 4, name: '数模互联' },
+  { id: 5, name: '俱乐部' },
+  { id: 6, name: '车友会' },
+  { id: 7, name: '会议组' },
   { id: 100, name: '其他' }
 ]
 
