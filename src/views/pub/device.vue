@@ -390,7 +390,7 @@
         :label="item.name"
         :name="item.name"
         class="box-card"
-        :body-style="{ padding: '0px' }"
+        :body-style="{ padding: '20px' }"
       >
         <div slot="header" class="clearfix">
           <el-tag
@@ -399,28 +399,18 @@
 
         </div>
 
-        <el-card>
-          <span>{{
-            item.public_group_id === 0 && item.group_id !== 0
-              ? "私有组"
-              : ValueFilter(item.public_group_id, groupsOptions)
-          }}</span><br>
-          <span>{{ parseTime(item.last_voice_time) }}</span>
-        </el-card>
+        <span>公共组：{{
+          item.public_group_id === 0 && item.group_id !== 0
+            ? "私有组"
+            : ValueFilter(item.public_group_id, groupsOptions)
+        }}</span><br>
+        <span>最后通联：{{ parseTime(item.last_voice_time) }}</span><br>
 
-        <el-card>
+        <span> 流量：{{ formatFileSize(item.traffic) }}</span><br>
 
-          流量： <span>{{ formatFileSize(item.traffic) }}</span><br>
-
-          所有者：
-          <span style="padding: 4px; font-size: 12px">{{
-            ValueFilter(item.ower_id, userOptions)
-          }}</span>
-        </el-card>
-
-        <el-card style="margin-top: 1px">
-          <span>{{ item.note }}</span>
-        </el-card>
+        <span> 所有者：{{
+          ValueFilter(item.ower_id, userOptions)
+        }}</span>
 
         <div class="bottom" />
       </el-card>
@@ -790,6 +780,10 @@ export default {
 }
 .clearfix:after {
   clear: both;
+}
+
+.el-card__body {
+    padding: 20px;
 }
 
 .box-card {
