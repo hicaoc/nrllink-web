@@ -5,6 +5,7 @@ export default {
     public: '公共区域',
     devicemgr: '设备管理',
     publicgroup: '公共群组',
+    server: '服务器管理',
     myhome: '私有区域',
     groups: '公共群组',
     totaldevices: '设备列表',
@@ -68,6 +69,7 @@ export default {
     profile: '个人中心'
   },
   device: {
+    showtable: '表格',
     callsign: '呼号',
     public_group_id: '公共群组',
     public_group: '公共群组',

@@ -1,7 +1,6 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-
       <!-- <el-input
         v-model="listQuery.callsign"
         :placeholder="$t('device.callsign')"
@@ -17,11 +16,10 @@
         filterable
         clearable
         placeholder="姓名"
-        style="width: 320px;"
+        style="width: 320px"
         class="filter-item"
         @change="handleFilter"
       >
-
         <el-option
           v-for="item in userOptions"
           :key="item.id"
@@ -35,11 +33,10 @@
         filterable
         clearable
         placeholder="呼号"
-        style="width: 320px;"
+        style="width: 320px"
         class="filter-item"
         @change="handleFilter"
       >
-
         <el-option
           v-for="item in userOptions"
           :key="item.id"
@@ -62,14 +59,11 @@
         filterable
         clearable
         placeholder="请选择组"
-        style="width: 320px;"
+        style="width: 320px"
         class="filter-item"
         @change="handleFilter"
       >
-        <el-option
-          label="私有组"
-          value="0"
-        />
+        <el-option label="私有组" value="0" />
         <el-option
           v-for="item in groupsOptions"
           :key="item.id"
@@ -87,6 +81,7 @@
 
       <el-switch
         v-model="listQuery.displayOnline"
+        class="filter-item"
         active-text="显示在线"
         active-color="#1890ff"
         inactive-color="#dcdfe6"
@@ -95,6 +90,12 @@
         @change="handleFilter"
       />
 
+      <el-switch
+        v-model="showtable"
+        class="filter-item"
+        :active-text="$t('device.showtable')"
+        inactive-text
+      />
     </div>
 
     <!-- <div>
@@ -116,18 +117,22 @@
 
     <!-- <panel-group :list="list" /> -->
 
-    <div>
+    <div v-if="showtable">
       <el-table
         :key="tableKey"
         v-loading="listLoading"
-        :data="display_list.slice((currentPage-1)*pageSize,currentPage*pageSize)"
+        :data="
+          display_list.slice(
+            (currentPage - 1) * pageSize,
+            currentPage * pageSize
+          )
+        "
         border
         fit
         stripe
         highlight-current-row
-        style="width: 100%;"
-
-        :default-sort="{prop: 'id', order: 'descending'}"
+        style="width: 100%"
+        :default-sort="{ prop: 'id', order: 'descending' }"
       >
         <el-table-column
           fixed
@@ -151,7 +156,7 @@
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.callsign+"-"+scope.row.ssid }}</span>
+            <span>{{ scope.row.callsign + "-" + scope.row.ssid }}</span>
           </template>
         </el-table-column>
 
@@ -188,7 +193,7 @@
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ ValueFilter(scope.row.ower_id,userOptions) }}</span>
+            <span>{{ ValueFilter(scope.row.ower_id, userOptions) }}</span>
           </template>
         </el-table-column>
 
@@ -200,7 +205,11 @@
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ (scope.row.public_group_id === 0 && scope.row.group_id !== 0) ? '私有组' : ValueFilter(scope.row.public_group_id,groupsOptions) }}</span>
+            <span>{{
+              scope.row.public_group_id === 0 && scope.row.group_id !== 0
+                ? "私有组"
+                : ValueFilter(scope.row.public_group_id, groupsOptions)
+            }}</span>
           </template>
         </el-table-column>
 
@@ -212,7 +221,7 @@
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ ValueFilter(scope.row.dev_type,DevTypeOptions) }}</span>
+            <span>{{ ValueFilter(scope.row.dev_type, DevTypeOptions) }}</span>
           </template>
         </el-table-column>
 
@@ -224,7 +233,7 @@
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ ValueFilter(scope.row.dev_model,DevModelOptions) }}</span>
+            <span>{{ ValueFilter(scope.row.dev_model, DevModelOptions) }}</span>
           </template>
         </el-table-column>
 
@@ -249,7 +258,9 @@
         >
           <template slot-scope="scope">
             <span>
-              <el-tag :type=" scope.row.is_online === true ? '' : 'info'">{{ scope.row.is_online === true ? "在线" : "离线" }}</el-tag>
+              <el-tag :type="scope.row.is_online === true ? '' : 'info'">{{
+                scope.row.is_online === true ? "在线" : "离线"
+              }}</el-tag>
             </span>
           </template>
         </el-table-column>
@@ -274,7 +285,7 @@
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ ValueFilter(scope.row.status,DevStatusOptions) }}</span>
+            <span>{{ ValueFilter(scope.row.status, DevStatusOptions) }}</span>
           </template>
         </el-table-column>
 
@@ -357,11 +368,10 @@
 
           </template>
         </el-table-column> -->
-
       </el-table>
     </div>
 
-    <div>
+    <div v-if="showtable">
       <el-pagination
         :current-page="currentPage"
         :page-sizes="[5, 10, 20, 40]"
@@ -373,6 +383,48 @@
       />
     </div>
 
+    <div v-if="showtable == false">
+      <el-card
+        v-for="item in display_list"
+        :key="item.id"
+        :label="item.name"
+        :name="item.name"
+        class="box-card"
+        :body-style="{ padding: '0px' }"
+      >
+        <div slot="header" class="clearfix">
+          <el-tag
+            :type="item.is_online === true ? '' : 'info'"
+          >{{ item.id }}. {{ item.callsign + "-" + item.ssid + " " }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{ ValueFilter(item.dev_type, DevTypeOptions) }}</el-tag>
+
+        </div>
+
+        <el-card>
+          <span>{{
+            item.public_group_id === 0 && item.group_id !== 0
+              ? "私有组"
+              : ValueFilter(item.public_group_id, groupsOptions)
+          }}</span><br>
+          <span>{{ parseTime(item.last_voice_time) }}</span>
+        </el-card>
+
+        <el-card>
+
+          流量： <span>{{ formatFileSize(item.traffic) }}</span><br>
+
+          所有者：
+          <span style="padding: 4px; font-size: 12px">{{
+            ValueFilter(item.ower_id, userOptions)
+          }}</span>
+        </el-card>
+
+        <el-card style="margin-top: 1px">
+          <span>{{ item.note }}</span>
+        </el-card>
+
+        <div class="bottom" />
+      </el-card>
+    </div>
   </div>
 </template>
 
@@ -399,10 +451,19 @@ export default {
   // components: { Pagination },
   directives: { waves },
   filters: {
+    // statusFilter(status) {
+    //   const statusMap = {
+    //     0: 'background: #2625241f',
+    //     1: 'background: #7eaae300'
+    //   }
+    //   return statusMap[status]
+    // },
     statusFilter(status) {
       const statusMap = {
-        0: 'background: #2625241f',
-        1: 'background: #7eaae300'
+        9: 'success',
+        0: 'info',
+        2: 'info',
+        1: 'danger'
       }
       return statusMap[status]
     },
@@ -437,6 +498,7 @@ export default {
       activeName: 'first',
       total: 0,
       listLoading: false,
+      showtable: true,
       listQuery: {
         callsign: '',
         displayOnline: false,
@@ -709,13 +771,13 @@ export default {
   font-size: 14px;
 }
 
-  .el-table .warning-row {
-    background: oldlace;
-  }
+.el-table .warning-row {
+  background: oldlace;
+}
 
-  .el-table .success-row {
-    background: #0df3e8;
-  }
+.el-table .success-row {
+  background: #0df3e8;
+}
 
 .item {
   margin-bottom: 18px;
