@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('account')">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
@@ -23,7 +23,7 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('delay')">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="tcp_delay" class-name="card-panel-icon" />
@@ -52,7 +52,7 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('bas')">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="drag" class-name="card-panel-icon" />
@@ -75,7 +75,7 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="24" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('sessions')">
         <div class="card-panel-icon-wrapper icon-shopping">
           <svg-icon icon-class="star" class-name="card-panel-icon" />

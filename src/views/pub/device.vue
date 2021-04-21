@@ -419,12 +419,8 @@
         当前组:
 
         <span v-if="item.group_id > 0 && item.group_id < 1000"> 私有组 </span>
-        <span
-          v-else
-        >{{ ValueFilter(item.public_group_id, groupsOptions) }}
-        </span>
-
-        ><br>
+        <span v-else>{{ ValueFilter(item.group_id, groupsOptions) }}
+        </span><br>
         <span>最后通联：{{ parseTime(item.last_voice_time) }}</span><br>
 
         <span> 流量：{{ formatFileSize(item.traffic) }}</span><br>
@@ -444,23 +440,23 @@
         :rules="rules"
         :model="temp"
         label-position="right"
-        label-width="140px"
+        label-width="120px"
         style="width: 95%; margin-left: 5px"
       >
         <el-form-item :label="$t('device.name')" prop="name">
-          <el-input v-model="temp.name" style="width: 320px" />
+          <el-input v-model="temp.name" style="width: 90%" />
         </el-form-item>
 
         <!-- <el-form-item :label="$t('device.callsign')" prop="callsign">
           {{ temp.callsign }}
         </el-form-item> -->
 
-        <el-form-item :label="$t('device.grouproom')" prop="type">
+        <el-form-item :label="$t('device.grouproom')" prop="group_id">
           <el-select
             v-model="temp.group_id"
             filterable
             clearable
-            style="width: 320px"
+            style="width: 90%"
             class="filter-item"
             @change="handleFilter"
           >
