@@ -522,7 +522,7 @@
         :model="temp"
         label-position="right"
         label-width="100px"
-        style="width: 90%; margin-left: 50px"
+        style="width: 90%; margin-left: 5px"
       >
 
         <el-form-item label="设备:" prop="dev">

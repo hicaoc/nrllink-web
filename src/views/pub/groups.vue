@@ -125,17 +125,22 @@
       </el-card>
     </div>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog
+      :title="textMap[dialogStatus]"
+      :visible.sync="dialogFormVisible"
+      :center="device === 'mobile'"
+      :fullscreen="device === 'mobile'"
+    >
       <el-form
         ref="dataForm"
         :rules="rules"
         :model="temp"
         label-position="right"
-        label-width="140px"
-        style="width: 400px; margin-left: 50px"
+        label-width="120px"
+        style="width: 95%; margin-left: 5px"
       >
         <el-form-item :label="$t('group.name')" prop="name">
-          <el-input v-model="temp.name" />
+          <el-input v-model="temp.name" style="width: 80%;" />
         </el-form-item>
 
         <el-form-item :label="$t('server.master_server')" prop="type">
