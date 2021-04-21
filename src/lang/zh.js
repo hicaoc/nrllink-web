@@ -2,10 +2,10 @@ export default {
   route: {
     chat: '聊天对讲',
     all: '全部排名',
-    public: '公共区域',
-    devicemgr: '设备管理',
-    publicgroup: '公共群组',
-    server: '服务器管理',
+    devgroup: '设备群组',
+    server: '节点管理',
+    publicgroup: '群组管理',
+    grouproom: '群组房间',
     myhome: '私有区域',
     groups: '公共群组',
     totaldevices: '设备列表',
@@ -68,7 +68,13 @@ export default {
     externalLink: '外链',
     profile: '个人中心'
   },
+  server: {
+    name: '名称',
+    master_server: '主服务器',
+    slave_server: '从服务器'
+  },
   device: {
+    grouproom: '群组房间',
     showtable: '表格',
     callsign: '呼号',
     public_group_id: '公共群组',

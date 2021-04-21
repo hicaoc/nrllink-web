@@ -1,7 +1,6 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-
       <!-- <el-input
         v-model="listQuery.callsign"
         :placeholder="$t('device.callsign')"
@@ -17,16 +16,15 @@
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >{{ $t('Account.search') }}</el-button>
+      >{{ $t("Account.search") }}</el-button>
 
       <el-button
         class="filter-item"
-        style="margin-left: 10px;"
+        style="margin-left: 10px"
         type="primary"
         icon="el-icon-edit"
         @click="handleCreate"
-      >{{ $t('employee.add') }}</el-button>
-
+      >{{ $t("employee.add") }}</el-button>
     </div>
 
     <div>
@@ -38,7 +36,7 @@
         fit
         stripe
         highlight-current-row
-        style="width: 100%;"
+        style="width: 100%"
         @sort-change="sortChange"
       >
         <el-table-column
@@ -53,91 +51,73 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="群组名称"
-          width="120px"
-          align="center"
-        >
+        <el-table-column label="群组名称" width="120px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="类型"
-          width="110px"
-          align="center"
-        >
+        <el-table-column label="主服务器" width="110px" align="center">
           <template slot-scope="scope">
-            <span>{{ ValueFilter(scope.row.type,groupTypeOptions) }}</span>
+            <span>{{
+              ValueFilter(scope.row.master_server, serversOptions)
+            }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="允许设备"
-          width="200px"
-          align="center"
-        >
+        <el-table-column label="从服务器" width="110px" align="center">
           <template slot-scope="scope">
-            <span>{{ cpuidValueFilter(scope.row.allow_cpuid,devicesOptions) }}</span>
+            <span>{{
+              ValueFilter(scope.row.slave_server, serversOptions)
+            }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="创建者呼号"
-          width="110px"
-          align="center"
-        >
+        <el-table-column label="类型" width="110px" align="center">
+          <template slot-scope="scope">
+            <span>{{ ValueFilter(scope.row.type, groupTypeOptions) }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="允许设备" width="200px" align="center">
+          <template slot-scope="scope">
+            <span>{{
+              cpuidValueFilter(scope.row.allow_cpuid, devicesOptions)
+            }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="创建者呼号" width="110px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.callsign }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="创建者"
-          width="110px"
-          align="center"
-        >
+        <el-table-column label="创建者" width="110px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.ower_id }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="状态"
-          width="110px"
-          align="center"
-        >
+        <el-table-column label="状态" width="110px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.status }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="创建时间"
-          width="100px"
-          align="center"
-        >
+        <el-table-column label="创建时间" width="100px" align="center">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.create_time) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="更新时间"
-          width="100px"
-          align="center"
-        >
+        <el-table-column label="更新时间" width="100px" align="center">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.update_time) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="备注"
-          width="100px"
-          align="center"
-        >
+        <el-table-column label="备注" width="100px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.note }}</span>
           </template>
@@ -148,60 +128,66 @@
           align="center"
           class-name="small-padding fixed-width"
         >
-          <template slot-scope="{row}">
-            <el-button
-              size="mini"
-              type="primary"
-              @click="handleUpdate(row)"
-            >{{ $t('device.edit') }}</el-button>
+          <template slot-scope="{ row }">
+            <el-button size="mini" type="primary" @click="handleUpdate(row)">{{
+              $t("device.edit")
+            }}</el-button>
 
-            <el-button
-              size="mini"
-              type="primary"
-              @click="handleDelete(row)"
-            >{{ $t('device.delete') }}</el-button>
-
+            <el-button size="mini" type="primary" @click="handleDelete(row)">{{
+              $t("device.delete")
+            }}</el-button>
           </template>
         </el-table-column>
-
       </el-table>
     </div>
 
-    <el-dialog
-      :title="textMap[dialogStatus]"
-      :visible.sync="dialogFormVisible"
-    >
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
         :rules="rules"
         :model="temp"
         label-position="right"
         label-width="140px"
-        style="width: 400px; margin-left:50px;"
+        style="width: 400px; margin-left: 50px"
       >
-
-        <el-form-item
-          :label="$t('group.name')"
-          prop="name"
-        >
+        <el-form-item :label="$t('group.name')" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
 
-        <el-form-item
-          :label="$t('group.type')"
-          prop="sex"
-        >
+        <el-form-item :label="$t('server.master_server')" prop="type">
+          <el-select v-model="temp.master_server" filterable>
+            <el-option
+              v-for="item in serversOptions"
+              :key="item.id"
+              :label="d.id == 0 ? '当前服务器' : item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item :label="$t('server.slave_server')" prop="type">
+          <el-select v-model="temp.slave_server" filterable>
+            <el-option
+              v-for="item in serversOptions"
+              :key="item.id"
+              :label="d.id == 0 ? '当前服务器' : item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item :label="$t('group.type')" prop="sex">
           <el-radio-group v-model="temp.type">
             <el-radio
               v-for="item in groupTypeOptions"
               :key="item.id"
               :label="item.id"
             >{{ item.name }}</el-radio>
-
           </el-radio-group>
         </el-form-item>
+
         <el-form-item
-          v-if="temp.type===3"
+          v-if="temp.type === 3"
           :label="$t('group.allow_cpuid')"
           prop="allow_cpuid"
         >
@@ -209,17 +195,14 @@
             v-model="temp.allow_cpuid"
             filterable
             placeholder="请选择设备ID"
-            style="width: 320px;"
+            style="width: 320px"
             class="filter-item"
           >
-            <el-option
-              label="没有限制"
-              value=""
-            />
+            <el-option label="没有限制" value="" />
             <el-option
               v-for="item in devicesOptions"
               :key="item.id"
-              :label="item.callsign+'-'+item.ssid+' '+item.name"
+              :label="item.callsign + '-' + item.ssid + ' ' + item.name"
               :value="item.cpuid"
             />
           </el-select>
@@ -239,21 +222,18 @@
             <el-option v-for="item in roles" :key="item.id" :value="item.id" :label="item.name"/>
           </el-select>
         </el-form-item>-->
-
       </el-form>
 
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">{{
+          $t("employee.cancel")
+        }}</el-button>
         <el-button
           type="primary"
-          @click="dialogStatus==='create'?createData():updateData()"
-        >{{ $t('employee.confirm') }}</el-button>
+          @click="dialogStatus === 'create' ? createData() : updateData()"
+        >{{ $t("employee.confirm") }}</el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -264,6 +244,8 @@ import {
   updateGroup,
   deleteGroup
 } from '@/api/groups'
+
+import { fetchServerList } from '@/api/server'
 import { fetchDeviceList } from '@/api/device'
 // import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
@@ -307,6 +289,7 @@ export default {
 
       chartData: {},
       devicesOptions: [],
+      serversOptions: [],
       groupTypeOptions,
 
       activeName: 'first',
@@ -355,12 +338,17 @@ export default {
     this.fetchDeviceList({}).then(response => {
       this.devicesOptions = Object.values(response.data.items)
     })
+
+    this.fetchServerList({}).then(response => {
+      this.serversOptions = Object.values(response.data.items)
+    })
   },
 
   methods: {
     checkPermission,
     fetchGroupList,
     fetchDeviceList,
+    fetchServerList,
     createGroup,
     updateGroup,
     deleteGroup,

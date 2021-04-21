@@ -112,11 +112,8 @@
           align="center"
         >
           <template slot-scope="scope">
-            <span>{{
-              scope.row.public_group_id === 0 && scope.row.group_id !== 0
-                ? "房间" + scope.row.group_id
-                : ValueFilter(scope.row.public_group_id, groupsOptions)
-            }}</span>
+            <span v-if="scope.row.group_id < 1000 && scope.row.group_id > 0 ">{{ "房间" + scope.row.group_id }} </span>
+            <span v-else>{{ ValueFilter(scope.row.group_id, groupsOptions) }}</span>
           </template>
         </el-table-column>
 
@@ -205,6 +202,11 @@
           class-name="small-padding fixed-width"
         >
           <template slot-scope="{ row }">
+            <el-button
+              size="mini"
+              type="primary"
+              @click="handleBingDevice(row)"
+            >{{ $t("device.bind") }}</el-button>
 
             <el-button
               size="mini"
@@ -250,30 +252,30 @@
         </el-form-item> -->
 
         <el-form-item
-          :label="$t('device.group')"
+          :label="$t('device.grouproom')"
           prop="type"
         >
-          <el-radio-group v-model="temp.group_id">
-            <el-radio :label="0"> 未加入 </el-radio>
-            <el-radio :label="1"> 房间1 </el-radio>
-            <el-radio :label="2"> 房间2 </el-radio>
-            <el-radio :label="3"> 房间3 </el-radio>
-          </el-radio-group>
-        </el-form-item>
 
-        <el-form-item
-          :label="$t('device.public_group')"
-          prop="type"
-        >
-          <el-radio-group v-model="temp.public_group_id">
-            <el-radio
-              v-for="d in groupsOptions"
-              :key="d.id"
-              :label="d.id"
-            >{{
-              d.id == 0 ? "不加入" : d.name
-            }}</el-radio>
-          </el-radio-group>
+          <el-select
+            v-model="temp.group_id"
+            filterable
+            clearable
+            style="width: 320px;"
+            class="filter-item"
+            @change="handleFilter"
+          >
+            <el-option label="私人房间1" :value="1" />
+            <el-option label="私人房间2" :value="2" />
+            <el-option label="私人房间3" :value="3" />
+            <el-option
+              v-for="item in groupsOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+
+          </el-select>
+
         </el-form-item>
 
         <el-form-item
@@ -438,8 +440,8 @@
             >
               <el-select v-model="temp.device_parm.dest_domainname" :disabled="true">
                 <el-option
-                  label="bg6fcs.nrllink.net"
-                  value="121.005.149.170"
+                  label="bg6fcs.allazy.com"
+                  value="121.005.120.167"
                 />
                 <el-option
                   label="bh4aiu.allazy.com"
@@ -821,13 +823,12 @@
 
       </div>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
 import {
-  fetchDeviceList,
+  fetchMyDeviceList,
   bingDevice,
   updateDevice,
   queryDevice,
@@ -891,6 +892,7 @@ export default {
 
         // sort: "+id"
       },
+      userOptions: [],
       showReviewer: false,
       temp: {
         id: undefined,
@@ -936,18 +938,21 @@ export default {
       this.groupsOptions = Object.values(response.data.items)
     })
 
-    this.getList()
+    this.fetchMyDeviceList({}).then(response => {
+      this.list = Object.values(response.data.items)
+      // console.log(this.list)
+    })
   },
 
   methods: {
     parseTime,
     checkPermission,
-    fetchDeviceList,
+    fetchMyDeviceList,
     queryDevice,
     ValueFilter,
     fetchGroupList,
     getList() {
-      this.fetchDeviceList({}).then(response => {
+      this.fetchMyDeviceList({}).then(response => {
         this.list = Object.values(response.data.items)
         // console.log(this.list)
       })

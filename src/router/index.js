@@ -135,9 +135,9 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/pub/device',
     alwaysShow: true, // will always show the root menu
-    name: 'public',
+    name: 'devgroup',
     meta: {
-      title: 'public',
+      title: 'devgroup',
       icon: 'people',
       roles: ['ham'] // you can set roles in root nav
     },
@@ -155,48 +155,22 @@ export const asyncRoutes = [
       path: 'groups',
       component: () =>
         import ('@/views/pub/groups'),
-      name: 'groups',
+      name: 'grouproom',
       meta: {
-        title: 'groups',
+        title: 'grouproom',
+        roles: ['ham']
+      }
+    },
+    {
+      path: 'mydevices',
+      component: () =>
+        import ('@/views/pub/mydevice'),
+      name: 'mydevices',
+      meta: {
+        title: 'mydevices',
         roles: ['ham']
       }
     }
-
-    ]
-  },
-  {
-    path: '/myhome',
-    component: Layout,
-    redirect: '/myhome/device',
-    alwaysShow: true, // will always show the root menu
-    name: 'myhome',
-    meta: {
-      title: 'myhome',
-      icon: 'people',
-      roles: ['ham'] // you can set roles in root nav
-    },
-    children: [
-
-      {
-        path: 'mydevices',
-        component: () =>
-          import ('@/views/my/mydevice'),
-        name: 'mydevices',
-        meta: {
-          title: 'mydevices',
-          roles: ['ham']
-        }
-      },
-      {
-        path: 'rooms',
-        component: () =>
-          import ('@/views/my/rooms'),
-        name: 'rooms',
-        meta: {
-          title: 'rooms',
-          roles: ['ham']
-        }
-      }
 
     ]
   },
@@ -232,17 +206,6 @@ export const asyncRoutes = [
         name: 'server',
         meta: {
           title: 'server',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
-      },
-
-      {
-        path: 'devicemgr',
-        component: () =>
-          import ('@/views/setup/device'),
-        name: 'devicemgr',
-        meta: {
-          title: 'devicemgr',
           roles: ['admin'] // or you can only set roles in sub nav
         }
       },

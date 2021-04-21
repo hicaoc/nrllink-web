@@ -363,7 +363,7 @@ import {
   createServer,
   updateServer,
   deleteServer
-} from '@/api/servers'
+} from '@/api/server'
 // import { fetchDeviceList } from '@/api/device'
 // import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
