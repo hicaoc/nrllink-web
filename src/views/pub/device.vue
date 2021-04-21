@@ -63,7 +63,9 @@
         class="filter-item"
         @change="handleFilter"
       >
-        <el-option label="私有组" value="0" />
+        <el-option label="私人房间1" value="1" />
+        <el-option label="私人房间2" value="2" />
+        <el-option label="私人房间3" value="3" />
         <el-option
           v-for="item in groupsOptions"
           :key="item.id"
@@ -205,8 +207,8 @@
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span v-if="scope.rowgroup_id > 0 && scope.row.group_id < 1000">
-              私有组</span>
+            <span v-if="scope.row.group_id > 0 && scope.row.group_id < 1000">
+              私人房间{{ scope.row.group_id }}</span>
             <span v-else>{{
               ValueFilter(scope.row.group_id, groupsOptions)
             }}</span>
