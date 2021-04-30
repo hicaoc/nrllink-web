@@ -165,6 +165,10 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item :label="$t('group.keep_time')" prop="keep_time">
+          <el-input v-model="temp.keep_time" style="width: 80%;" />毫秒
+        </el-form-item>
+
         <el-form-item :label="$t('group.type')" prop="sex">
           <el-radio-group v-model="temp.type">
             <el-radio

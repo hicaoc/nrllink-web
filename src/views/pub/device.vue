@@ -419,8 +419,7 @@
         当前组:
 
         <span v-if="item.group_id > 0 && item.group_id < 1000"> 私有组 </span>
-        <span v-else>{{ ValueFilter(item.group_id, groupsOptions) }}
-        </span><br>
+        <span v-else>{{ ValueFilter(item.group_id, groupsOptions) }} </span><br>
         <span>最后通联：{{ parseTime(item.last_voice_time) }}</span><br>
 
         <span> 流量：{{ formatFileSize(item.traffic) }}</span><br>
@@ -522,7 +521,6 @@
         label-width="100px"
         style="width: 90%; margin-left: 5px"
       >
-
         <el-form-item label="设备:" prop="dev">
           {{ temp.callsign }}-{{ temp.ssid }} {{ temp.name }}
         </el-form-item>
@@ -540,7 +538,6 @@
 
             <el-form-item label="呼号:" prop="callsign">
               <el-input
-
                 v-model="temp.device_parm.callsign"
                 placeholder="呼号"
                 style="width: 100px"
@@ -573,11 +570,19 @@
             </el-form-item>
 
             <el-form-item label="掩码:" prop="name">
-              <el-input v-model="temp.device_parm.netmask" :disabled="true" style="width: 150px" />
+              <el-input
+                v-model="temp.device_parm.netmask"
+                :disabled="true"
+                style="width: 150px"
+              />
             </el-form-item>
 
             <el-form-item label="网关:" prop="name">
-              <el-input v-model="temp.device_parm.gateway" :disabled="true" style="width: 150px" />
+              <el-input
+                v-model="temp.device_parm.gateway"
+                :disabled="true"
+                style="width: 150px"
+              />
             </el-form-item>
 
             <el-form-item label="DNS地址:" prop="name">
@@ -746,7 +751,6 @@
           </el-collapse-item>
 
           <el-collapse-item title="1W模块设置" name="3">
-
             <el-form-item label="内置UV电源:" prop="one_uv_power">
               <el-switch
                 v-model="temp.device_parm.one_uv_power"
@@ -759,23 +763,38 @@
             </el-form-item>
 
             <el-form-item label="1w接收频率:" prop="name">
-              <el-input v-model="temp.device_parm.one_recive_freq" style="width: 150px" />
+              <el-input
+                v-model="temp.device_parm.one_recive_freq"
+                style="width: 150px"
+              />
             </el-form-item>
 
             <el-form-item label="1w发送频率:" prop="transimit_freq">
-              <el-input v-model="temp.device_parm.one_transimit_freq" style="width: 150px" />
+              <el-input
+                v-model="temp.device_parm.one_transimit_freq"
+                style="width: 150px"
+              />
             </el-form-item>
 
             <el-form-item label="1w接收哑音:" prop="recive_dumb">
-              <el-input v-model="temp.device_parm.one_recive_cxcss" style="width: 150px" />
+              <el-input
+                v-model="temp.device_parm.one_recive_cxcss"
+                style="width: 150px"
+              />
             </el-form-item>
 
             <el-form-item label="1w发射哑音:" prop="transmit_dumb">
-              <el-input v-model="temp.device_parm.one_transmit_cxcss" style="width: 150px" />
+              <el-input
+                v-model="temp.device_parm.one_transmit_cxcss"
+                style="width: 150px"
+              />
             </el-form-item>
 
             <el-form-item label="1W音量:" prop="one_volume">
-              <el-select v-model="temp.device_parm.one_volume" style="width: 150px">
+              <el-select
+                v-model="temp.device_parm.one_volume"
+                style="width: 150px"
+              >
                 <el-option
                   v-for="item in 9"
                   :key="item"
@@ -786,7 +805,10 @@
             </el-form-item>
 
             <el-form-item label="1W SQL:" prop="one_sql_level">
-              <el-select v-model="temp.device_parm.one_sql_level" style="width: 150px">
+              <el-select
+                v-model="temp.device_parm.one_sql_level"
+                style="width: 150px"
+              >
                 <el-option
                   v-for="item in 9"
                   :key="item"
@@ -797,7 +819,10 @@
             </el-form-item>
 
             <el-form-item label="1w话筒增益:" prop="one_mic_sensitivity">
-              <el-select v-model="temp.device_parm.one_mic_sensitivity" style="width: 150px">
+              <el-select
+                v-model="temp.device_parm.one_mic_sensitivity"
+                style="width: 150px"
+              >
                 <el-option
                   v-for="item in 8"
                   :key="item"
@@ -810,23 +835,38 @@
 
           <el-collapse-item title="2W模块设置" name="4">
             <el-form-item label="2W接收频率:" prop="name">
-              <el-input v-model="temp.device_parm.two_recive_freq" style="width: 150px" />
+              <el-input
+                v-model="temp.device_parm.two_recive_freq"
+                style="width: 150px"
+              />
             </el-form-item>
 
             <el-form-item label="2W发送频率:" prop="transimit_freq">
-              <el-input v-model="temp.device_parm.two_transimit_freq" style="width: 150px" />
+              <el-input
+                v-model="temp.device_parm.two_transimit_freq"
+                style="width: 150px"
+              />
             </el-form-item>
 
             <el-form-item label="2w接收哑音:" prop="recive_dumb">
-              <el-input v-model="temp.device_parm.two_recive_cxcss" style="width: 150px" />
+              <el-input
+                v-model="temp.device_parm.two_recive_cxcss"
+                style="width: 150px"
+              />
             </el-form-item>
 
             <el-form-item label="2w发射哑音:" prop="transmit_dumb">
-              <el-input v-model="temp.device_parm.two_transmit_cxcss" style="width: 150px" />
+              <el-input
+                v-model="temp.device_parm.two_transmit_cxcss"
+                style="width: 150px"
+              />
             </el-form-item>
 
             <el-form-item label="2W音量:" prop="name">
-              <el-select v-model="temp.device_parm.two_volume" style="width: 150px">
+              <el-select
+                v-model="temp.device_parm.two_volume"
+                style="width: 150px"
+              >
                 <el-option
                   v-for="item in 9"
                   :key="item"
@@ -837,7 +877,10 @@
             </el-form-item>
 
             <el-form-item label="2W SQL:" prop="transimit_freq">
-              <el-select v-model="temp.device_parm.two_sql_level" style="width: 150px">
+              <el-select
+                v-model="temp.device_parm.two_sql_level"
+                style="width: 150px"
+              >
                 <el-option
                   v-for="item in 9"
                   :key="item"
@@ -848,7 +891,10 @@
             </el-form-item>
 
             <el-form-item label="2w话筒增益:" prop="recive_dumb">
-              <el-select v-model="temp.device_parm.two_mic_level" style="width: 150px">
+              <el-select
+                v-model="temp.device_parm.two_mic_level"
+                style="width: 150px"
+              >
                 <el-option
                   v-for="item in 9"
                   :key="item"
@@ -1219,9 +1265,31 @@ export default {
       } else if (this.listQuery.ower_id === '') {
         return true
       }
+
       return false
     },
+
+    // GetAsciiCode(str) {
+    //   var strAscii = new Array() // 用于接收ASCII码
+    //   for (var i = 0; i < str.length; i++) {
+    //     strAscii[i] = str.charCodeAt(i) // 只能把字符串中的字符一个一个的解码
+    //   }
+    //   var getAscii = '' // 把这些ASCII码按顺序排列
+    //   for (var i = 0; i < strAscii.length; i++) {
+    //     getAscii += strAscii[i]
+    //     getAscii += ' '
+    //   }
+    //   return getAscii
+    // },
     filterCallsign(dev) {
+      // console.log(
+      //   dev.callsign,
+      //   this.GetAsciiCode(dev.callsign),
+      //   this.listQuery.callsign,
+      //   this.GetAsciiCode(this.listQuery.callsign),
+      //   dev.callsign === this.listQuery.callsign
+      // )
+
       if (
         this.listQuery.callsign !== '' &&
         dev.callsign === this.listQuery.callsign

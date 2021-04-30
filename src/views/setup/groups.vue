@@ -73,6 +73,12 @@
           </template>
         </el-table-column>
 
+        <el-table-column label="话权延时" width="120px" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.keep_time }}毫秒</span>
+          </template>
+        </el-table-column>
+
         <el-table-column label="类型" width="110px" align="center">
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.type, groupTypeOptions) }}</span>
@@ -174,6 +180,10 @@
               :value="item.id"
             />
           </el-select>
+        </el-form-item>
+
+        <el-form-item :label="$t('group.keep_time')" prop="keep_time">
+          <el-input v-model="temp.keep_time" style="width: 80%;" />毫秒
         </el-form-item>
 
         <el-form-item :label="$t('group.type')" prop="sex">
