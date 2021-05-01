@@ -94,7 +94,8 @@ export default {
     name: '名称',
     type: '类型',
     keep_time: '话权延时',
-    allow_cpuid: '允许设备'
+    allow_cpuid: '允许设备',
+    note: '备注'
 
   },
   navbar: {
