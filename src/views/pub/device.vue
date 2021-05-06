@@ -723,15 +723,15 @@
               <el-input
                 v-model="temp.device_parm.add_tail_voice"
                 style="width: 150px"
-                @change="addTailVoice"
+                @keyup.enter.native="addTailVoice"
               />
             </el-form-item>
 
             <el-form-item label="消除尾音:" prop="name">
               <el-input
-                v-model="temp.device_parm.add_tail_voice"
+                v-model="temp.device_parm.remove_tail_voice"
                 style="width: 150px"
-                @change="removeTailVoice"
+                @keyup.enter.native="removeTailVoice"
               />
             </el-form-item>
 
@@ -1227,7 +1227,7 @@ export default {
       console.log(val)
       changeDeviceParm(
         'add_tail_voice=' +
-          val +
+          this.temp.device_parm.add_tail_voice +
           '&CPUID=' +
           this.temp.cpuid +
           '&callsign=' +
@@ -1238,7 +1238,7 @@ export default {
       console.log(val)
       changeDeviceParm(
         'remove_tail_voice=' +
-          val +
+           this.temp.device_parm.remove_tail_voice +
           '&CPUID=' +
           this.temp.cpuid +
           '&callsign=' +
