@@ -284,7 +284,7 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label="设备编号:" prop="name">
-              <el-input v-model="temp.device_parm.ssid" :disabled="true" />
+              <el-input v-model="temp.device_parm.ssid" @keyup.enter.native="changeSSID" />
             </el-form-item>
           </el-col>
 
@@ -930,6 +930,18 @@ export default {
       changeDeviceParm(
         'remove_tail_voice=' +
           this.temp.device_parm.remove_tail_voice +
+          '&CPUID=' +
+          this.temp.cpuid +
+          '&callsign=' +
+          this.temp.callsign
+      )
+    },
+
+    changeSSID(val) {
+      console.log(val)
+      changeDeviceParm(
+        'ssid=' +
+          this.temp.device_parm.ssid +
           '&CPUID=' +
           this.temp.cpuid +
           '&callsign=' +
