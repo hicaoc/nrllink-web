@@ -63,9 +63,9 @@
         class="filter-item"
         @change="handleFilter"
       >
-        <el-option label="私人房间1" value="1" />
-        <el-option label="私人房间2" value="2" />
-        <el-option label="私人房间3" value="3" />
+        <el-option label="私人房间1" :value="1" />
+        <el-option label="私人房间2" :value="2" />
+        <el-option label="私人房间3" :value="3" />
         <el-option
           v-for="item in groupsOptions"
           :key="item.id"
