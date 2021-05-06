@@ -93,7 +93,6 @@ export default {
   group: {
     name: '名称',
     type: '类型',
-    keep_time: '话权延时',
     allow_cpuid: '允许设备'
 
   },
