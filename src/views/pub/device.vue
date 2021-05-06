@@ -549,7 +549,7 @@
               <el-input
                 v-model="temp.device_parm.ssid"
                 style="width: 80px"
-                :disabled="true"
+                @keyup.enter.native="changeSSID"
               />
             </el-form-item>
 
@@ -1165,6 +1165,18 @@ export default {
         }
       }) // copy obj
       //  this.temp.timestamp = new Date(this.temp.timestamp);
+    },
+
+    changeSSID(val) {
+      console.log(val)
+      changeDeviceParm(
+        'ssid=' +
+          this.temp.device_parm.ssid +
+          '&CPUID=' +
+          this.temp.cpuid +
+          '&callsign=' +
+          this.temp.callsign
+      )
     },
 
     SwitchRealy(val) {
