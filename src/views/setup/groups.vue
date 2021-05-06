@@ -208,6 +208,10 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item :label="$t('group.note')" prop="name">
+          <el-input v-model="temp.note" />
+        </el-form-item>
+
         <!-- <el-form-item :label="$t('employee.employee_id')" prop="employee_id">
           <el-input v-model="temp.employee_id"/>
         </el-form-item>-->
@@ -383,7 +387,8 @@ export default {
       this.temp = {
         id: undefined,
         name: '',
-        name_pref: '',
+        master_server: '',
+        slave_server: '',
         type: 0,
         status: 1
 
