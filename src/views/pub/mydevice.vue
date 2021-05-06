@@ -52,21 +52,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="设备名称"
-          width="120px"
-          align="center"
-        >
+        <el-table-column label="设备名称" width="120px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="CPUID"
-          width="150px"
-          align="center"
-        >
+        <el-table-column label="CPUID" width="150px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.cpuid }}</span>
           </template>
@@ -80,7 +72,7 @@
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ ValueFilter(scope.row.dev_type,DevTypeOptions) }}</span>
+            <span>{{ ValueFilter(scope.row.dev_type, DevTypeOptions) }}</span>
           </template>
         </el-table-column>
 
@@ -92,105 +84,70 @@
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ ValueFilter(scope.row.dev_model,DevModelOptions) }}</span>
+            <span>{{ ValueFilter(scope.row.dev_model, DevModelOptions) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="呼号"
-          width="110px"
-          align="center"
-        >
+        <el-table-column label="呼号" width="110px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.callsign + "-" + scope.row.ssid }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="所在组"
-          width="110px"
-          align="center"
-        >
+        <el-table-column label="所在组" width="110px" align="center">
           <template slot-scope="scope">
-            <span v-if="scope.row.group_id < 1000 && scope.row.group_id > 0 ">{{ "房间" + scope.row.group_id }} </span>
-            <span v-else>{{ ValueFilter(scope.row.group_id, groupsOptions) }}</span>
+            <span
+              v-if="scope.row.group_id < 1000 && scope.row.group_id > 0"
+            >{{ "房间" + scope.row.group_id }}
+            </span>
+            <span v-else>{{
+              ValueFilter(scope.row.group_id, groupsOptions)
+            }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="绑定"
-          width="80px"
-          align="center"
-        >
+        <el-table-column label="绑定" width="80px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.ower_id === 0 ? "未绑定" : "已绑定" }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="丢包"
-          width="60px"
-          align="center"
-        >
+        <el-table-column label="丢包" width="60px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.lost }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="状态"
-          width="60px"
-          align="center"
-        >
+        <el-table-column label="状态" width="60px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.status === 0 ? "启用" : "禁用" }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="在线"
-          width="60px"
-          align="center"
-        >
+        <el-table-column label="在线" width="60px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.is_online === true ? "在线" : "离线" }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="上线时间"
-          width="155px"
-          align="center"
-        >
+        <el-table-column label="上线时间" width="155px" align="center">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.online_time) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="加入时间"
-          width="155px"
-          align="center"
-        >
+        <el-table-column label="加入时间" width="155px" align="center">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.creatre_time) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="更新时间"
-          width="155px"
-          align="center"
-        >
+        <el-table-column label="更新时间" width="155px" align="center">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.update_time) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="备注"
-          width="100px"
-          align="center"
-        >
+        <el-table-column label="备注" width="100px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.note }}</span>
           </template>
@@ -208,19 +165,11 @@
               @click="handleBingDevice(row)"
             >{{ $t("device.bind") }}</el-button>
 
-            <el-button
-              size="mini"
-              type="primary"
-              @click="handleUpdate(row)"
-            >{{
+            <el-button size="mini" type="primary" @click="handleUpdate(row)">{{
               $t("device.edit")
             }}</el-button>
 
-            <el-button
-              size="mini"
-              type="primary"
-              @click="handleChange(row)"
-            >{{
+            <el-button size="mini" type="primary" @click="handleChange(row)">{{
               $t("device.change")
             }}</el-button>
           </template>
@@ -228,10 +177,7 @@
       </el-table>
     </div>
 
-    <el-dialog
-      :title="textMap[dialogStatus]"
-      :visible.sync="dialogFormVisible"
-    >
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -240,10 +186,7 @@
         label-width="140px"
         style="width: 400px; margin-left: 50px"
       >
-        <el-form-item
-          :label="$t('device.name')"
-          prop="name"
-        >
+        <el-form-item :label="$t('device.name')" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
 
@@ -251,16 +194,12 @@
           {{ temp.callsign }}
         </el-form-item> -->
 
-        <el-form-item
-          :label="$t('device.grouproom')"
-          prop="type"
-        >
-
+        <el-form-item :label="$t('device.grouproom')" prop="type">
           <el-select
             v-model="temp.group_id"
             filterable
             clearable
-            style="width: 320px;"
+            style="width: 320px"
             class="filter-item"
             @change="handleFilter"
           >
@@ -273,61 +212,35 @@
               :label="item.name"
               :value="item.id"
             />
-
           </el-select>
-
         </el-form-item>
 
-        <el-form-item
-          :label="$t('device.type')"
-          prop="type"
-        >
+        <el-form-item :label="$t('device.type')" prop="type">
           <el-radio-group v-model="temp.dev_type">
-            <el-radio
-              v-for="d in DevTypeOptions"
-              :key="d.id"
-              :label="d.id"
-            >{{
+            <el-radio v-for="d in DevTypeOptions" :key="d.id" :label="d.id">{{
               d.name
             }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item
-          :label="$t('device.model')"
-          prop="model"
-        >
+        <el-form-item :label="$t('device.model')" prop="model">
           <el-radio-group v-model="temp.dev_model">
-            <el-radio
-              v-for="d in DevModelOptions"
-              :key="d.id"
-              :label="d.id"
-            >{{
+            <el-radio v-for="d in DevModelOptions" :key="d.id" :label="d.id">{{
               d.name
             }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item
-          :label="$t('device.status')"
-          prop="status"
-        >
+        <el-form-item :label="$t('device.status')" prop="status">
           <el-radio-group v-model="temp.status">
-            <el-radio
-              v-for="d in DevStatusOptions"
-              :key="d.id"
-              :label="d.id"
-            >{{
+            <el-radio v-for="d in DevStatusOptions" :key="d.id" :label="d.id">{{
               d.name
             }}</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
 
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{
           $t("employee.cancel")
         }}</el-button>
@@ -338,10 +251,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog
-      title="参数修改"
-      :visible.sync="dialogFormChangeVisible"
-    >
+    <el-dialog title="参数修改" :visible.sync="dialogFormChangeVisible">
       <el-form
         ref="devicedataForm"
         :rules="parmrules"
@@ -350,10 +260,7 @@
         label-width="100px"
         style="width: 900px; margin-left: 50px"
       >
-        <el-form-item
-          :label="$t('device.name')"
-          prop="callsign"
-        >
+        <el-form-item :label="$t('device.name')" prop="callsign">
           {{ temp.callsign }}-{{ temp.ssid }} {{ temp.name }}
         </el-form-item>
         <!--
@@ -367,10 +274,7 @@
 
         <el-row :gutter="2">
           <el-col :span="8">
-            <el-form-item
-              label="呼号:"
-              prop="name"
-            >
+            <el-form-item label="呼号:" prop="name">
               <el-input
                 v-model="temp.device_parm.callsign"
                 placeholder="呼号"
@@ -379,104 +283,86 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item
-              label="设备编号:"
-              prop="name"
-            >
+            <el-form-item label="设备编号:" prop="name">
               <el-input v-model="temp.device_parm.ssid" :disabled="true" />
             </el-form-item>
           </el-col>
 
           <el-col :span="6">
-            <el-form-item
-              label="本机密码:"
-              prop="name"
-            >
-              <el-input v-model="temp.device_parm.local_password" :disabled="true" />
+            <el-form-item label="本机密码:" prop="name">
+              <el-input
+                v-model="temp.device_parm.local_password"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row :gutter="2">
           <el-col :span="7">
-            <el-form-item
-              label="本机IP:"
-              prop="name"
-            >
-              <el-input v-model="temp.device_parm.local_ipaddr" :disabled="true" />
+            <el-form-item label="本机IP:" prop="name">
+              <el-input
+                v-model="temp.device_parm.local_ipaddr"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="7">
-            <el-form-item
-              label="掩码:"
-              prop="name"
-            >
+            <el-form-item label="掩码:" prop="name">
               <el-input v-model="temp.device_parm.netmask" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="7">
-            <el-form-item
-              label="网关:"
-              prop="name"
-            >
+            <el-form-item label="网关:" prop="name">
               <el-input v-model="temp.device_parm.gateway" :disabled="true" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="DNS地址:"
-              prop="name"
-            >
-              <el-input v-model="temp.device_parm.dns_ipaddr" :disabled="true" />
+            <el-form-item label="DNS地址:" prop="name">
+              <el-input
+                v-model="temp.device_parm.dns_ipaddr"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row :gutter="2">
           <el-col :span="9">
-            <el-form-item
-              label="目标地址:"
-              prop="name"
-            >
-              <el-select v-model="temp.device_parm.dest_domainname" :disabled="true">
-                <el-option
-                  label="bg6fcs.allazy.com"
-                  value="121.005.120.167"
-                />
+            <el-form-item label="目标地址:" prop="name">
+              <el-select
+                v-model="temp.device_parm.dest_domainname"
+                :disabled="true"
+              >
+                <el-option label="bg6fcs.allazy.com" value="121.005.120.167" />
                 <el-option
                   label="bh4aiu.allazy.com"
                   value="bh4aiu.allazy.com"
                 />
-                <el-option
-                  label="ham.bi4qzw.com"
-                  value="ham.bi4qzw.com"
-                />
+                <el-option label="ham.bi4qzw.com" value="ham.bi4qzw.com" />
               </el-select>
             </el-form-item>
           </el-col>
 
           <el-col :span="7">
-            <el-form-item
-              label="对端CPUID:"
-              prop="name"
-            >
-              <el-input v-model="temp.device_parm.peer_cpuid" :disabled="true" />
+            <el-form-item label="对端CPUID:" prop="name">
+              <el-input
+                v-model="temp.device_parm.peer_cpuid"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="7">
-            <el-form-item
-              label="对端密码:"
-              prop="name"
-            >
-              <el-input v-model="temp.device_parm.peer_password" :disabled="true" />
+            <el-form-item label="对端密码:" prop="name">
+              <el-input
+                v-model="temp.device_parm.peer_password"
+                :disabled="true"
+              />
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-form-item
-          label="DCD选择:"
-          prop="name"
-        >
+        <el-form-item label="DCD选择:" prop="name">
           <el-radio-group
             v-model="temp.device_parm.dcd_select"
             @change="change_dcd_select"
@@ -491,10 +377,7 @@
 
         <el-row :gutter="2">
           <el-col :span="4">
-            <el-form-item
-              label="PTT允许:"
-              prop="name"
-            >
+            <el-form-item label="PTT允许:" prop="name">
               <el-switch
                 v-model="temp.device_parm.ptt_enable"
                 active-color="#1890ff"
@@ -505,10 +388,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="PTT电平:"
-              prop="name"
-            >
+            <el-form-item label="PTT电平:" prop="name">
               <el-radio-group v-model="temp.device_parm.ptt_level_reversed">
                 <el-radio :label="1">高电平</el-radio>
                 <el-radio :label="0">低电平</el-radio>
@@ -516,10 +396,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item
-              label="M/Y PTT:"
-              prop="name"
-            >
+            <el-form-item label="M/Y PTT:" prop="name">
               <el-switch
                 v-model="temp.device_parm.ptt_resistive"
                 active-color="#1890ff"
@@ -532,10 +409,7 @@
         </el-row>
         <el-row :gutter="2">
           <el-col :span="4">
-            <el-form-item
-              label="监听:"
-              prop="name"
-            >
+            <el-form-item label="监听:" prop="name">
               <el-switch
                 v-model="temp.device_parm.monitor"
                 active-color="#1890ff"
@@ -547,10 +421,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item
-              label="继电器:"
-              prop="name"
-            >
+            <el-form-item label="继电器:" prop="name">
               <el-switch
                 v-model="temp.device_parm.realy_status"
                 active-color="#1890ff"
@@ -563,10 +434,7 @@
           </el-col>
 
           <el-col :span="4">
-            <el-form-item
-              label="内置UV:"
-              prop="one_uv_power"
-            >
+            <el-form-item label="内置UV:" prop="one_uv_power">
               <el-switch
                 v-model="temp.device_parm.one_uv_power"
                 active-color="#1890ff"
@@ -579,10 +447,7 @@
           </el-col>
 
           <el-col :span="8">
-            <el-form-item
-              label="按键功能:"
-              prop="key_func"
-            >
+            <el-form-item label="按键功能:" prop="key_func">
               <el-switch
                 v-model="temp.device_parm.key_func"
                 inactive-text="继电器"
@@ -599,20 +464,20 @@
 
         <el-row :gutter="2">
           <el-col :span="7">
-            <el-form-item
-              label="添加尾音:"
-              prop="name"
-            >
-              <el-input v-model="temp.device_parm.add_tail_voice" @change="addTailVoice" />
+            <el-form-item label="添加尾音:" prop="name">
+              <el-input
+                v-model="temp.device_parm.add_tail_voice"
+                @change="addTailVoice"
+              />
             </el-form-item>
           </el-col>
 
           <el-col :span="7">
-            <el-form-item
-              label="消除尾音:"
-              prop="name"
-            >
-              <el-input v-model="temp.device_parm.add_tail_voice" @change="removeTailVoice" />
+            <el-form-item label="消除尾音:" prop="name">
+              <el-input
+                v-model="temp.device_parm.add_tail_voice"
+                @change="removeTailVoice"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -650,34 +515,22 @@
 
         <el-row :gutter="2">
           <el-col :span="6">
-            <el-form-item
-              label="1w接收频率:"
-              prop="name"
-            >
+            <el-form-item label="1w接收频率:" prop="name">
               <el-input v-model="temp.device_parm.one_recive_freq" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item
-              label="1w发送频率:"
-              prop="transimit_freq"
-            >
+            <el-form-item label="1w发送频率:" prop="transimit_freq">
               <el-input v-model="temp.device_parm.one_transimit_freq" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item
-              label="1w接收哑音:"
-              prop="recive_dumb"
-            >
+            <el-form-item label="1w接收哑音:" prop="recive_dumb">
               <el-input v-model="temp.device_parm.one_recive_cxcss" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item
-              label="1w发射哑音:"
-              prop="transmit_dumb"
-            >
+            <el-form-item label="1w发射哑音:" prop="transmit_dumb">
               <el-input v-model="temp.device_parm.one_transmit_cxcss" />
             </el-form-item>
           </el-col>
@@ -685,10 +538,7 @@
 
         <el-row :gutter="2">
           <el-col :span="6">
-            <el-form-item
-              label="1W音量:"
-              prop="one_volume"
-            >
+            <el-form-item label="1W音量:" prop="one_volume">
               <el-select v-model="temp.device_parm.one_volume">
                 <el-option
                   v-for="item in 9"
@@ -700,10 +550,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item
-              label="1W SQL:"
-              prop="one_sql_level"
-            >
+            <el-form-item label="1W SQL:" prop="one_sql_level">
               <el-select v-model="temp.device_parm.one_sql_level">
                 <el-option
                   v-for="item in 9"
@@ -715,10 +562,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item
-              label="1w话筒增益:"
-              prop="one_mic_sensitivity"
-            >
+            <el-form-item label="1w话筒增益:" prop="one_mic_sensitivity">
               <el-select v-model="temp.device_parm.one_mic_sensitivity">
                 <el-option
                   v-for="item in 8"
@@ -729,38 +573,33 @@
               </el-select>
             </el-form-item>
           </el-col>
+
+          <el-col :span="5">
+            <el-button
+              type="primary"
+              @click="update1w(temp.device_parm)"
+            >1w参数保存</el-button>
+          </el-col>
         </el-row>
 
         <el-row :gutter="2">
           <el-col :span="6">
-            <el-form-item
-              label="2W接收频率:"
-              prop="name"
-            >
+            <el-form-item label="2W接收频率:" prop="name">
               <el-input v-model="temp.device_parm.two_recive_freq" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item
-              label="2W发送频率:"
-              prop="transimit_freq"
-            >
+            <el-form-item label="2W发送频率:" prop="transimit_freq">
               <el-input v-model="temp.device_parm.two_transimit_freq" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item
-              label="2w接收哑音:"
-              prop="recive_dumb"
-            >
+            <el-form-item label="2w接收哑音:" prop="recive_dumb">
               <el-input v-model="temp.device_parm.two_recive_cxcss" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item
-              label="2w发射哑音:"
-              prop="transmit_dumb"
-            >
+            <el-form-item label="2w发射哑音:" prop="transmit_dumb">
               <el-input v-model="temp.device_parm.two_transmit_cxcss" />
             </el-form-item>
           </el-col>
@@ -768,10 +607,7 @@
 
         <el-row :gutter="2">
           <el-col :span="6">
-            <el-form-item
-              label="2W音量:"
-              prop="name"
-            >
+            <el-form-item label="2W音量:" prop="name">
               <el-select v-model="temp.device_parm.two_volume">
                 <el-option
                   v-for="item in 9"
@@ -783,10 +619,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item
-              label="2W SQL:"
-              prop="transimit_freq"
-            >
+            <el-form-item label="2W SQL:" prop="transimit_freq">
               <el-select v-model="temp.device_parm.two_sql_level">
                 <el-option
                   v-for="item in 9"
@@ -798,10 +631,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item
-              label="2w话筒增益:"
-              prop="recive_dumb"
-            >
+            <el-form-item label="2w话筒增益:" prop="recive_dumb">
               <el-select v-model="temp.device_parm.two_mic_level">
                 <el-option
                   v-for="item in 9"
@@ -815,12 +645,8 @@
         </el-row>
       </el-form>
 
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormChangeVisible = false">关闭</el-button>
-
       </div>
     </el-dialog>
   </div>
@@ -832,6 +658,7 @@ import {
   bingDevice,
   updateDevice,
   queryDevice,
+  changeDevice1w,
   changeDeviceParm
 } from '@/api/device'
 import {
@@ -949,6 +776,7 @@ export default {
     checkPermission,
     fetchMyDeviceList,
     queryDevice,
+    changeDevice1w,
     ValueFilter,
     fetchGroupList,
     getList() {
@@ -991,6 +819,20 @@ export default {
       })
     },
 
+    update1w(device_parm) {
+      //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+      changeDevice1w(device_parm).then(response => {
+        this.getList()
+
+        this.$notify({
+          title: '1w模块参数:',
+          message: response.data.message === undefined ? '保存成功' : response.data.message,
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
+
     handleChange(row) {
       queryDevice(row).then(response => {
         this.temp = response.data.items
@@ -1018,32 +860,81 @@ export default {
 
     SwitchRealy(val) {
       console.log(val)
-      changeDeviceParm('realy_status=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
+      changeDeviceParm(
+        'realy_status=' +
+          val +
+          '&CPUID=' +
+          this.temp.cpuid +
+          '&callsign=' +
+          this.temp.callsign
+      )
     },
     SwitchMonitor(val) {
       console.log(val)
-      changeDeviceParm('monitor_out=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
+      changeDeviceParm(
+        'monitor_out=' +
+          val +
+          '&CPUID=' +
+          this.temp.cpuid +
+          '&callsign=' +
+          this.temp.callsign
+      )
     },
     change_dcd_select(val) {
       console.log(val)
-      changeDeviceParm('dcd_select=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
+      changeDeviceParm(
+        'dcd_select=' +
+          val +
+          '&CPUID=' +
+          this.temp.cpuid +
+          '&callsign=' +
+          this.temp.callsign
+      )
     },
     Switch_key_func(val) {
       console.log(val)
-      changeDeviceParm('key_func=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
+      changeDeviceParm(
+        'key_func=' +
+          val +
+          '&CPUID=' +
+          this.temp.cpuid +
+          '&callsign=' +
+          this.temp.callsign
+      )
     },
 
     Switch_one_uv_power(val) {
       console.log(val)
-      changeDeviceParm('one_uv_power=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
+      changeDeviceParm(
+        'one_uv_power=' +
+          val +
+          '&CPUID=' +
+          this.temp.cpuid +
+          '&callsign=' +
+          this.temp.callsign
+      )
     },
     addTailVoice(val) {
       console.log(val)
-      changeDeviceParm('add_tail_voice=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
+      changeDeviceParm(
+        'add_tail_voice=' +
+          val +
+          '&CPUID=' +
+          this.temp.cpuid +
+          '&callsign=' +
+          this.temp.callsign
+      )
     },
     removeTailVoice(val) {
       console.log(val)
-      changeDeviceParm('remove_tail_voice=' + val + '&CPUID=' + this.temp.cpuid + '&callsign=' + this.temp.callsign)
+      changeDeviceParm(
+        'remove_tail_voice=' +
+          val +
+          '&CPUID=' +
+          this.temp.cpuid +
+          '&callsign=' +
+          this.temp.callsign
+      )
     },
 
     handleFilter() {

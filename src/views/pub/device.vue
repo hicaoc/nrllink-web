@@ -678,6 +678,7 @@
             </el-form-item>
 
             <el-form-item label="继电器:" prop="name">
+
               <el-switch
                 v-model="temp.device_parm.realy_status"
                 active-color="#1890ff"
@@ -688,8 +689,25 @@
               />
             </el-form-item>
 
-            <el-form-item label="按键功能:" prop="key_func">
+            <el-form-item label="1w电源:" prop="one_uv_power">
               <el-switch
+                v-model="temp.device_parm.one_uv_power"
+                active-color="#1890ff"
+                inactive-color="#dcdfe6"
+                :active-value="1"
+                :inactive-value="0"
+                @change="Switch_one_uv_power"
+              />
+            </el-form-item>
+
+            <el-form-item label="按键功能:" prop="key_func">
+
+              <el-radio-group v-model="temp.device_parm.realy_status">
+                <el-radio :label="0">继电器</el-radio>
+                <el-radio :label="1">PTT</el-radio>
+              </el-radio-group>
+
+              <!-- <el-switch
                 v-model="temp.device_parm.key_func"
                 inactive-text="继电器"
                 active-text="PTT"
@@ -698,7 +716,7 @@
                 :active-value="1"
                 :inactive-value="0"
                 @change="Switch_key_func"
-              />
+              /> -->
             </el-form-item>
 
             <el-form-item label="添加尾音:" prop="name">
@@ -750,17 +768,7 @@
         </el-row> -->
           </el-collapse-item>
 
-          <el-collapse-item title="1W模块设置" name="3">
-            <el-form-item label="内置UV电源:" prop="one_uv_power">
-              <el-switch
-                v-model="temp.device_parm.one_uv_power"
-                active-color="#1890ff"
-                inactive-color="#dcdfe6"
-                :active-value="1"
-                :inactive-value="0"
-                @change="Switch_one_uv_power"
-              />
-            </el-form-item>
+          <el-collapse-item title="内置1W模块参数设置" name="3">
 
             <el-form-item label="1w接收频率:" prop="name">
               <el-input
@@ -831,9 +839,14 @@
                 />
               </el-select>
             </el-form-item>
+
+            <el-button
+              type="primary"
+              @click="update1w(temp.device_parm)"
+            >1w参数保存</el-button>
           </el-collapse-item>
 
-          <el-collapse-item title="2W模块设置" name="4">
+          <el-collapse-item title="内置2W模块参数设置" name="4">
             <el-form-item label="2W接收频率:" prop="name">
               <el-input
                 v-model="temp.device_parm.two_recive_freq"
@@ -919,7 +932,8 @@ import {
   fetchDeviceList,
   updateDevice,
   queryDevice,
-  changeDeviceParm
+  changeDeviceParm,
+  changeDevice1w
 } from '@/api/device'
 
 import { fetchGroupList } from '@/api/groups'
@@ -1071,6 +1085,7 @@ export default {
     updateDevice,
     queryDevice,
     changeDeviceParm,
+    changeDevice1w,
 
     getList() {
       this.fetchDeviceList({}).then(response => {
@@ -1114,13 +1129,26 @@ export default {
       })
     },
 
+    update1w(device_parm) {
+      //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+      changeDevice1w(device_parm).then(response => {
+        this.getList()
+
+        this.$notify({
+          title: '1w模块参数:',
+          message: response.data.message === undefined ? '保存成功' : response.data.message,
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
     handleChange(row) {
       queryDevice(row).then(response => {
         this.temp = response.data.items
 
         if (this.temp.device_parm === null) {
           this.$notify({
-            title: '加载参数失败,可能是设备固件版本太低，请先升级固件!',
+            title: '加载参数失败,可能是设备固件版本太低，或者设备不在线',
             message: response.data.message,
             type: 'warning',
             duration: 5000

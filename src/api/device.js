@@ -40,6 +40,14 @@ export function changeDeviceParm(data) {
   })
 }
 
+export function changeDevice1w(data) {
+  return request({
+    url: '/device/change1w',
+    method: 'post',
+    data
+  })
+}
+
 export function fetchDeviceStats(data) {
   return request({
     url: '/device/stats',
