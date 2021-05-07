@@ -153,12 +153,12 @@
           fixed
           prop="callsign"
           label="呼号"
-          width="110px"
+          width="120px"
           align="center"
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.callsign + "-" + scope.row.ssid }}</span>
+            <span><el-tag :type="scope.row.is_online === true ? '' : 'info'">{{ scope.row.callsign + "-" + scope.row.ssid }}{{ scope.row.status==1 ? '🈲':'' }} </el-tag></span>
           </template>
         </el-table-column>
 
@@ -250,7 +250,7 @@
             <span>{{ scope.row.lost }}</span>
           </template>
         </el-table-column> -->
-
+        <!--
         <el-table-column
           label="在线"
           width="80px"
@@ -265,7 +265,7 @@
               }}</el-tag>
             </span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column
           label="流量"
@@ -279,7 +279,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column
+        <!-- <el-table-column
           label="状态"
           prop="status"
           width="80px"
@@ -289,7 +289,7 @@
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.status, DevStatusOptions) }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column
           label="最近通联"
@@ -396,7 +396,7 @@
           <el-tag
             :type="item.is_online === true ? '' : 'info'"
           >{{ item.id }}. {{ item.callsign + "-" + item.ssid + " "
-          }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
+          }}{{ item.status==1 ? '🈲':'' }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
             ValueFilter(item.dev_type, DevTypeOptions)
           }}</el-tag>
 
@@ -415,6 +415,8 @@
             @click="handleUpdate(item)"
           >{{ $t("device.edit") }}</el-button>
         </div>
+
+        <span>名称:{{ item.name }}</span><br>
 
         当前组:
 
@@ -1172,13 +1174,13 @@ export default {
 
         if (this.temp.device_parm === null) {
           this.$notify({
-            title: '加载参数失败,可能是设备固件版本太低，或者设备不在线',
+            title: '加载参数失败,可能是设备固件不支持，或者设备不在线',
             message: response.data.message,
             type: 'warning',
             duration: 5000
           })
 
-          this.temp.device_parm = this.device_parm
+          this.temp.device_parm = { callsign: '' }
           return
         } else {
           this.devicedialogStatus = 'change'
