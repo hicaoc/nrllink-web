@@ -785,17 +785,39 @@
             </el-form-item>
 
             <el-form-item label="1w接收哑音:" prop="recive_dumb">
-              <el-input
+              <!-- <el-input
                 v-model="temp.device_parm.one_recive_cxcss"
                 style="width: 150px"
-              />
+              /> -->
+              <el-select
+                v-model="temp.device_parm.one_recive_cxcss"
+                style="width: 150px"
+              >
+                <el-option
+                  v-for="item in ctcssOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
             </el-form-item>
 
             <el-form-item label="1w发射哑音:" prop="transmit_dumb">
-              <el-input
+              <!-- <el-input
                 v-model="temp.device_parm.one_transmit_cxcss"
                 style="width: 150px"
-              />
+              /> -->
+              <el-select
+                v-model="temp.device_parm.one_transmit_cxcss"
+                style="width: 150px"
+              >
+                <el-option
+                  v-for="item in ctcssOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
             </el-form-item>
 
             <el-form-item label="1W音量:" prop="one_volume">
@@ -937,6 +959,7 @@ import {
 } from '@/api/device'
 
 import { fetchGroupList } from '@/api/groups'
+import { ctcssOptions } from '@/utils/ctcss'
 import { fetchEmployeeAllList } from '@/api/employee'
 import {
   DevTypeOptions,
@@ -997,6 +1020,7 @@ export default {
       DevTypeOptions,
       DevModelOptions,
       DevStatusOptions,
+      ctcssOptions,
       userOptions: [],
       chartData: {},
 

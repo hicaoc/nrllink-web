@@ -526,12 +526,30 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label="1w接收哑音:" prop="recive_dumb">
-              <el-input v-model="temp.device_parm.one_recive_cxcss" />
+              <el-select
+                v-model="temp.device_parm.one_recive_cxcss"
+              >
+                <el-option
+                  v-for="item in ctcssOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="1w发射哑音:" prop="transmit_dumb">
-              <el-input v-model="temp.device_parm.one_transmit_cxcss" />
+              <el-select
+                v-model="temp.device_parm.one_transmit_cxcss"
+              >
+                <el-option
+                  v-for="item in ctcssOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -666,6 +684,7 @@ import {
   DevModelOptions,
   DevStatusOptions
 } from '@/utils/system'
+import { ctcssOptions } from '@/utils/ctcss'
 import { fetchGroupList } from '@/api/groups'
 
 // import permission from '@/directive/permission/index.js' // 权限判断指令
@@ -709,6 +728,7 @@ export default {
       DevTypeOptions,
       DevModelOptions,
       DevStatusOptions,
+      ctcssOptions,
       groupsOptions: [],
       chartData: {},
       activeName: 'first',
