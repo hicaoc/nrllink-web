@@ -126,6 +126,7 @@
     </div>
 
     <el-dialog
+      width="70%"
       :title="textMap[dialogStatus]"
       :visible.sync="dialogFormVisible"
       :center="device === 'mobile'"

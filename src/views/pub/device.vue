@@ -440,6 +440,7 @@
       :visible.sync="dialogFormVisible"
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"
+      width="70%"
     >
       <el-form
         ref="dataForm"
@@ -516,6 +517,7 @@
 
     <el-dialog
       title="参数修改"
+      width="70%"
       :visible.sync="dialogFormChangeVisible"
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"

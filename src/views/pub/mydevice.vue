@@ -177,7 +177,7 @@
       </el-table>
     </div>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog width="70%" :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -251,7 +251,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="参数修改" :visible.sync="dialogFormChangeVisible">
+    <el-dialog title="参数修改" width="70%" :visible.sync="dialogFormChangeVisible">
       <el-form
         ref="devicedataForm"
         :rules="parmrules"
