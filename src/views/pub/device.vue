@@ -158,7 +158,11 @@
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span><el-tag :type="scope.row.is_online === true ? '' : 'info'">{{ scope.row.callsign + "-" + scope.row.ssid }}{{ scope.row.status==1 ? '🈲':'' }} </el-tag></span>
+            <span><el-tag
+              :type="scope.row.is_online === true ? '' : 'info'"
+            >{{ scope.row.callsign + "-" + scope.row.ssid
+            }}{{ scope.row.status == 1 ? "🈲" : "" }}
+            </el-tag></span>
           </template>
         </el-table-column>
 
@@ -396,7 +400,8 @@
           <el-tag
             :type="item.is_online === true ? '' : 'info'"
           >{{ item.id }}. {{ item.callsign + "-" + item.ssid + " "
-          }}{{ item.status==1 ? '🈲':'' }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
+          }}{{ item.status == 1 ? "🈲" : ""
+          }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
             ValueFilter(item.dev_type, DevTypeOptions)
           }}</el-tag>
 
@@ -680,7 +685,6 @@
             </el-form-item>
 
             <el-form-item label="继电器:" prop="name">
-
               <el-switch
                 v-model="temp.device_parm.realy_status"
                 active-color="#1890ff"
@@ -703,7 +707,6 @@
             </el-form-item>
 
             <el-form-item label="按键功能:" prop="key_func">
-
               <el-radio-group v-model="temp.device_parm.realy_status">
                 <el-radio :label="0">继电器</el-radio>
                 <el-radio :label="1">PTT</el-radio>
@@ -722,18 +725,25 @@
             </el-form-item>
 
             <el-form-item label="添加尾音:" prop="name">
-              <el-input
+              <el-slider
                 v-model="temp.device_parm.add_tail_voice"
-                style="width: 150px"
-                @keyup.enter.native="addTailVoice"
+                :min="15"
+                :max="1000"
+                show-input
+                :format-tooltip="formatTailVoice"
+                style="width: 95%"
+                @change="addTailVoice"
               />
             </el-form-item>
 
             <el-form-item label="消除尾音:" prop="name">
-              <el-input
+              <el-slider
                 v-model="temp.device_parm.remove_tail_voice"
-                style="width: 150px"
-                @keyup.enter.native="removeTailVoice"
+                :max="1000"
+                show-input
+                :format-tooltip="formatTailVoice"
+                style="width: 95%"
+                @change="removeTailVoice"
               />
             </el-form-item>
 
@@ -771,7 +781,6 @@
           </el-collapse-item>
 
           <el-collapse-item title="内置1W模块参数设置" name="3">
-
             <el-form-item label="1w接收频率:" prop="name">
               <el-input
                 v-model="temp.device_parm.one_recive_freq"
@@ -823,45 +832,30 @@
             </el-form-item>
 
             <el-form-item label="1W音量:" prop="one_volume">
-              <el-select
+              <el-slider
                 v-model="temp.device_parm.one_volume"
-                style="width: 150px"
-              >
-                <el-option
-                  v-for="item in 9"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
-              </el-select>
+                :max="9"
+                show-input
+                style="width: 95%"
+              />
             </el-form-item>
 
             <el-form-item label="1W SQL:" prop="one_sql_level">
-              <el-select
+              <el-slider
                 v-model="temp.device_parm.one_sql_level"
-                style="width: 150px"
-              >
-                <el-option
-                  v-for="item in 9"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
-              </el-select>
+                :max="9"
+                show-input
+                style="width: 95%"
+              />
             </el-form-item>
 
             <el-form-item label="1w话筒增益:" prop="one_mic_sensitivity">
-              <el-select
+              <el-slider
                 v-model="temp.device_parm.one_mic_sensitivity"
-                style="width: 150px"
-              >
-                <el-option
-                  v-for="item in 8"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
-              </el-select>
+                :max="8"
+                show-input
+                style="width: 95%"
+              />
             </el-form-item>
 
             <el-button
@@ -1162,7 +1156,10 @@ export default {
 
         this.$notify({
           title: '1w模块参数:',
-          message: response.data.message === undefined ? '保存成功' : response.data.message,
+          message:
+            response.data.message === undefined
+              ? '保存成功'
+              : response.data.message,
           type: 'success',
           duration: 2000
         })
@@ -1276,7 +1273,7 @@ export default {
       console.log(val)
       changeDeviceParm(
         'remove_tail_voice=' +
-           this.temp.device_parm.remove_tail_voice +
+          this.temp.device_parm.remove_tail_voice +
           '&CPUID=' +
           this.temp.cpuid +
           '&callsign=' +
@@ -1399,6 +1396,9 @@ export default {
     handleCurrentChange: function(currentPage) {
       this.currentPage = currentPage
       // console.log(this.currentPage) //点击第几页
+    },
+    formatTailVoice(val) {
+      return val * 5 + 'ms'
     },
 
     resetTemp() {
