@@ -284,7 +284,7 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label="设备编号:" prop="name">
-              <el-input v-model="temp.device_parm.ssid" @keyup.enter.native="changeSSID" />
+              <el-input v-model="temp.device_parm.ssid" @keyup.enter.native="changeByte('ssid',temp.device_parm.ssid)" />
             </el-form-item>
           </el-col>
 
@@ -345,7 +345,7 @@
           </el-col>
 
           <el-col :span="7">
-            <el-form-item label="对端CPUID:" prop="name">
+            <el-form-item label="对端CPUID:" prop="peer_cpuid">
               <el-input
                 v-model="temp.device_parm.peer_cpuid"
                 :disabled="true"
@@ -353,7 +353,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="7">
-            <el-form-item label="对端密码:" prop="name">
+            <el-form-item label="对端密码:" prop="peer_password">
               <el-input
                 v-model="temp.device_parm.peer_password"
                 :disabled="true"
@@ -365,7 +365,7 @@
         <el-form-item label="DCD选择:" prop="name">
           <el-radio-group
             v-model="temp.device_parm.dcd_select"
-            @change="change_dcd_select"
+            @change="changeByte('dcd_select',temp.device_parm.dcd_select)"
           >
             <el-radio :label="0">关闭</el-radio>
             <el-radio :label="1">手动</el-radio>
@@ -377,58 +377,60 @@
 
         <el-row :gutter="2">
           <el-col :span="4">
-            <el-form-item label="PTT允许:" prop="name">
+            <el-form-item label="PTT允许:" prop="ptt_enable">
               <el-switch
                 v-model="temp.device_parm.ptt_enable"
                 active-color="#1890ff"
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
+                @change="changeByte('ptt_enable',temp.device_parm.ptt_enable)"
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="PTT电平:" prop="name">
-              <el-radio-group v-model="temp.device_parm.ptt_level_reversed">
+            <el-form-item label="PTT电平:" prop="ptt_level_reversed">
+              <el-radio-group v-model="temp.device_parm.ptt_level_reversed" @change="changeByte('ptt_level_reversed',temp.device_parm.ptt_level_reversed)">
                 <el-radio :label="1">高电平</el-radio>
                 <el-radio :label="0">低电平</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="M/Y PTT:" prop="name">
+            <el-form-item label="M/Y PTT:" prop="ptt_resistive">
               <el-switch
                 v-model="temp.device_parm.ptt_resistive"
                 active-color="#1890ff"
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
+                @change="changeByte('ptt_resistive',temp.device_parm.ptt_resistive)"
               />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="2">
           <el-col :span="4">
-            <el-form-item label="监听:" prop="name">
+            <el-form-item label="监听:" prop="monitor">
               <el-switch
                 v-model="temp.device_parm.monitor"
                 active-color="#1890ff"
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
-                @change="SwitchMonitor"
+                @change="changeByte('monitor',temp.device_parm.monitor)"
               />
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="继电器:" prop="name">
+            <el-form-item label="继电器:" prop="realy_status">
               <el-switch
                 v-model="temp.device_parm.realy_status"
                 active-color="#1890ff"
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
-                @change="SwitchRealy"
+                @change="changeByte('realy_status',temp.device_parm.realy_status)"
               />
             </el-form-item>
           </el-col>
@@ -441,7 +443,7 @@
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
-                @change="Switch_one_uv_power"
+                @change="changeByte('one_uv_power',temp.device_parm.one_uv_power)"
               />
             </el-form-item>
           </el-col>
@@ -456,7 +458,7 @@
                 inactive-color="#1890ff"
                 :active-value="1"
                 :inactive-value="0"
-                @change="Switch_key_func"
+                @change="changeByte('key_func',temp.device_parm.key_func)"
               />
             </el-form-item>
           </el-col>
@@ -464,19 +466,19 @@
 
         <el-row :gutter="2">
           <el-col :span="7">
-            <el-form-item label="添加尾音:" prop="name">
+            <el-form-item label="添加尾音:" prop="add_tail_voice">
               <el-input
                 v-model="temp.device_parm.add_tail_voice"
-                @keyup.enter.native="addTailVoice"
+                @keyup.enter.native="changeByte('add_tail_voice',temp.device_parm.add_tail_voice)"
               />
             </el-form-item>
           </el-col>
 
           <el-col :span="7">
-            <el-form-item label="消除尾音:" prop="name">
+            <el-form-item label="消除尾音:" prop="remove_tail_voice">
               <el-input
                 v-model="temp.device_parm.remove_tail_voice"
-                @keyup.enter.native="removeTailVoice"
+                @keyup.enter.native="changeByte('remove_tail_voice',temp.device_parm.remove_tail_voice)"
               />
             </el-form-item>
           </el-col>
@@ -878,94 +880,16 @@ export default {
       //  this.temp.timestamp = new Date(this.temp.timestamp);
     },
 
-    SwitchRealy(val) {
-      console.log(val)
+    changeByte(name, val) {
       changeDeviceParm(
-        'realy_status=' +
-          val +
-          '&CPUID=' +
+        'CPUID=' +
           this.temp.cpuid +
           '&callsign=' +
-          this.temp.callsign
-      )
-    },
-    SwitchMonitor(val) {
-      console.log(val)
-      changeDeviceParm(
-        'monitor_out=' +
-          val +
-          '&CPUID=' +
-          this.temp.cpuid +
-          '&callsign=' +
-          this.temp.callsign
-      )
-    },
-    change_dcd_select(val) {
-      console.log(val)
-      changeDeviceParm(
-        'dcd_select=' +
-          val +
-          '&CPUID=' +
-          this.temp.cpuid +
-          '&callsign=' +
-          this.temp.callsign
-      )
-    },
-    Switch_key_func(val) {
-      console.log(val)
-      changeDeviceParm(
-        'key_func=' +
-          val +
-          '&CPUID=' +
-          this.temp.cpuid +
-          '&callsign=' +
-          this.temp.callsign
-      )
-    },
-
-    Switch_one_uv_power(val) {
-      console.log(val)
-      changeDeviceParm(
-        'one_uv_power=' +
-          val +
-          '&CPUID=' +
-          this.temp.cpuid +
-          '&callsign=' +
-          this.temp.callsign
-      )
-    },
-    addTailVoice(val) {
-      console.log(val)
-      changeDeviceParm(
-        'add_tail_voice=' +
-          this.temp.device_parm.add_tail_voice +
-          '&CPUID=' +
-          this.temp.cpuid +
-          '&callsign=' +
-          this.temp.callsign
-      )
-    },
-    removeTailVoice(val) {
-      console.log(val)
-      changeDeviceParm(
-        'remove_tail_voice=' +
-          this.temp.device_parm.remove_tail_voice +
-          '&CPUID=' +
-          this.temp.cpuid +
-          '&callsign=' +
-          this.temp.callsign
-      )
-    },
-
-    changeSSID(val) {
-      console.log(val)
-      changeDeviceParm(
-        'ssid=' +
-          this.temp.device_parm.ssid +
-          '&CPUID=' +
-          this.temp.cpuid +
-          '&callsign=' +
-          this.temp.callsign
+          this.temp.callsign +
+          '&' +
+          name +
+          '=' +
+          val
       )
     },
 
