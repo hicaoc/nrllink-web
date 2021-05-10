@@ -558,8 +558,7 @@
               <el-input
                 v-model="temp.device_parm.ssid"
                 style="width: 80px"
-                @keyup.enter.native="changeByte('ssid',temp.device_parm.ssid)"
-              />
+              /><el-button type="primary" @click="changeByte('ssid',temp.device_parm.ssid)">保存</el-button>
             </el-form-item>
 
             <el-form-item label="本机密码::" prop="local_password">
@@ -570,7 +569,7 @@
               />
             </el-form-item>
 
-            <el-form-item label="本机IP:" prop="name">
+            <el-form-item label="本机IP:" prop="local_ipaddr">
               <el-input
                 v-model="temp.device_parm.local_ipaddr"
                 style="width: 150px"
@@ -578,7 +577,7 @@
               />
             </el-form-item>
 
-            <el-form-item label="掩码:" prop="name">
+            <el-form-item label="掩码:" prop="netmask">
               <el-input
                 v-model="temp.device_parm.netmask"
                 :disabled="true"
@@ -586,7 +585,7 @@
               />
             </el-form-item>
 
-            <el-form-item label="网关:" prop="name">
+            <el-form-item label="网关:" prop="gateway">
               <el-input
                 v-model="temp.device_parm.gateway"
                 :disabled="true"
@@ -594,7 +593,7 @@
               />
             </el-form-item>
 
-            <el-form-item label="DNS地址:" prop="name">
+            <el-form-item label="DNS地址:" prop="dns_ipaddr">
               <el-input
                 v-model="temp.device_parm.dns_ipaddr"
                 :disabled="true"
@@ -602,13 +601,13 @@
               />
             </el-form-item>
 
-            <el-form-item label="目标地址:" prop="name">
+            <el-form-item label="目标地址:" prop="dest_domainname">
               <el-select
                 v-model="temp.device_parm.dest_domainname"
                 :disabled="true"
                 style="width: 250px"
               >
-                <el-option label="bg6fcs.allazy.com" value="121.005.149.170" />
+                <el-option label="bg6fcs.nrllink.com" value="121.005.149.170" />
                 <el-option
                   label="bh4aiu.allazy.com"
                   value="bh4aiu.allazy.com"
