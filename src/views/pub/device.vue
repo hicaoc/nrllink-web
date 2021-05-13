@@ -918,9 +918,10 @@
                 style="width: 95%"
                 filterable
                 clearable
+                value-key="id"
                 @change="applyrelay"
               >
-                <el-option label="空模板" :value="{up_freq:'430.0000',down_freq:'430.0000',send_ctss:'0',recive_ctss:'0'}" />
+                <el-option label="空模板" :value="{id:0, up_freq:'430.0000',down_freq:'430.0000',send_ctss:'0',recive_ctss:'0'}" />
                 <el-option
                   v-for="item in relayOptions"
                   :key="item.id"
