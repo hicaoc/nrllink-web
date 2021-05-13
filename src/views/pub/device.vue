@@ -938,28 +938,28 @@
           </el-collapse-item>
 
           <el-collapse-item title="内置2W模块参数设置" name="4">
-            <el-form-item label="2W接收频率:" prop="name">
+            <el-form-item label="2W接收频率:" prop="two_recive_freq">
               <el-input
                 v-model="temp.device_parm.two_recive_freq"
                 style="width: 150px"
               />
             </el-form-item>
 
-            <el-form-item label="2W发送频率:" prop="transimit_freq">
+            <el-form-item label="2W发送频率:" prop="two_transimit_freq">
               <el-input
                 v-model="temp.device_parm.two_transimit_freq"
                 style="width: 150px"
               />
             </el-form-item>
 
-            <el-form-item label="2w接收哑音:" prop="recive_dumb">
+            <el-form-item label="2w接收哑音:" prop="two_recive_cxcss">
               <el-input
                 v-model="temp.device_parm.two_recive_cxcss"
                 style="width: 150px"
               />
             </el-form-item>
 
-            <el-form-item label="2w发射哑音:" prop="transmit_dumb">
+            <el-form-item label="2w发射哑音:" prop="two_transmit_cxcss">
               <el-input
                 v-model="temp.device_parm.two_transmit_cxcss"
                 style="width: 150px"
@@ -980,7 +980,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="2W SQL:" prop="transimit_freq">
+            <el-form-item label="2W SQL:" prop="two_sql_level">
               <el-select
                 v-model="temp.device_parm.two_sql_level"
                 style="width: 150px"
@@ -994,7 +994,7 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="2w话筒增益:" prop="recive_dumb">
+            <el-form-item label="2w话筒增益:" prop="two_mic_level">
               <el-select
                 v-model="temp.device_parm.two_mic_level"
                 style="width: 150px"
