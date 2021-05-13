@@ -272,7 +272,19 @@
         </el-table-column> -->
 
         <el-table-column
-          label="流量"
+          label="总呼叫时长"
+          prop="voice_time"
+          width="120px"
+          align="center"
+          :sortable="true"
+        >
+          <template slot-scope="scope">
+            <span>{{ formatVoiceTime(scope.row.voice_time) }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="总流量"
           prop="traffic"
           width="120px"
           align="center"
@@ -296,14 +308,26 @@
         </el-table-column> -->
 
         <el-table-column
-          label="最近通联"
-          prop="last_voice_time"
+          label="上次呼叫时长"
+          prop="last_voice_duration"
           width="155px"
           align="center"
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.last_voice_time) }}</span>
+            <span>{{ formatVoiceTime(scope.row.last_voice_duration) }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          label="最近通联时间"
+          prop="last_voice_end_time"
+          width="155px"
+          align="center"
+          :sortable="true"
+        >
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.last_voice_end_time) }}</span>
           </template>
         </el-table-column>
 
@@ -427,8 +451,9 @@
 
         <span v-if="item.group_id > 0 && item.group_id < 1000"> 私有组 </span>
         <span v-else>{{ ValueFilter(item.group_id, groupsOptions) }} </span><br>
-        <span>最后通联：{{ parseTime(item.last_voice_time) }}</span><br>
-
+        <span>上次通联时长：{{ formatVoiceTime(item.last_voice_duration) }}</span><br>
+        <span>上次通联时间：{{ parseTime(item.last_voice_end_time) }}</span><br>
+        <span> 时长：{{ formatVoiceTime(item.voice_time) }}</span><br>
         <span> 流量：{{ formatFileSize(item.traffic) }}</span><br>
 
         <span> 所有者：{{ ValueFilter(item.ower_id, userOptions) }}</span>
@@ -558,7 +583,10 @@
               <el-input
                 v-model="temp.device_parm.ssid"
                 style="width: 80px"
-              /><el-button type="primary" @click="changeByte('ssid',temp.device_parm.ssid)">保存</el-button>
+              /><el-button
+                type="primary"
+                @click="changeByte('ssid', temp.device_parm.ssid)"
+              >保存</el-button>
             </el-form-item>
 
             <el-form-item label="本机密码::" prop="local_password">
@@ -637,7 +665,7 @@
             <el-form-item label="DCD选择:" prop="name">
               <el-radio-group
                 v-model="temp.device_parm.dcd_select"
-                @change="changeByte('dcd_select',temp.device_parm.dcd_select)"
+                @change="changeByte('dcd_select', temp.device_parm.dcd_select)"
               >
                 <el-radio :label="0">关闭</el-radio>
                 <el-radio :label="1">手动</el-radio>
@@ -654,14 +682,19 @@
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
-                @change="changeByte('ptt_enable',temp.device_parm.ptt_enable)"
+                @change="changeByte('ptt_enable', temp.device_parm.ptt_enable)"
               />
             </el-form-item>
 
             <el-form-item label="PTT电平:" prop="ptt_level_reversed">
               <el-radio-group
                 v-model="temp.device_parm.ptt_level_reversed"
-                @change="changeByte('ptt_level_reversed',temp.device_parm.ptt_level_reversed)"
+                @change="
+                  changeByte(
+                    'ptt_level_reversed',
+                    temp.device_parm.ptt_level_reversed
+                  )
+                "
               >
                 <el-radio :label="1">高电平</el-radio>
                 <el-radio :label="0">低电平</el-radio>
@@ -675,7 +708,9 @@
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
-                @change="changeByte('ptt_resistive',temp.device_parm.ptt_resistive)"
+                @change="
+                  changeByte('ptt_resistive', temp.device_parm.ptt_resistive)
+                "
               />
             </el-form-item>
 
@@ -686,7 +721,7 @@
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
-                @change="changeByte('monitor',temp.device_parm.monitor)"
+                @change="changeByte('monitor', temp.device_parm.monitor)"
               />
             </el-form-item>
 
@@ -697,7 +732,9 @@
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
-                @change="changeByte('realy_status',temp.device_parm.realy_status)"
+                @change="
+                  changeByte('realy_status', temp.device_parm.realy_status)
+                "
               />
             </el-form-item>
 
@@ -708,14 +745,16 @@
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
-                @change="changeByte('one_uv_power',temp.device_parm.one_uv_power)"
+                @change="
+                  changeByte('one_uv_power', temp.device_parm.one_uv_power)
+                "
               />
             </el-form-item>
 
             <el-form-item label="按键功能:" prop="key_func">
               <el-radio-group
                 v-model="temp.device_parm.key_func"
-                @change="changeByte('key_func',temp.device_parm.key_func)"
+                @change="changeByte('key_func', temp.device_parm.key_func)"
               >
                 <el-radio :label="0">继电器</el-radio>
                 <el-radio :label="1">PTT</el-radio>
@@ -741,7 +780,9 @@
                 show-input
                 :format-tooltip="formatTailVoice"
                 style="width: 95%"
-                @change="changeByte('add_tail_voice',temp.device_parm.add_tail_voice)"
+                @change="
+                  changeByte('add_tail_voice', temp.device_parm.add_tail_voice)
+                "
               />
             </el-form-item>
 
@@ -752,7 +793,12 @@
                 show-input
                 :format-tooltip="formatTailVoice"
                 style="width: 95%"
-                @change="changeByte('remove_tail_voice',temp.device_parm.remove_tail_voice)"
+                @change="
+                  changeByte(
+                    'remove_tail_voice',
+                    temp.device_parm.remove_tail_voice
+                  )
+                "
               />
             </el-form-item>
 
@@ -797,9 +843,9 @@
               />
             </el-form-item>
 
-            <el-form-item label="1w发送频率:" prop="transimit_freq">
+            <el-form-item label="1w发射频率:" prop="transimit_freq">
               <el-input
-                v-model="temp.device_parm.one_transimit_freq"
+                v-model="temp.device_parm.one_transmit_freq"
                 style="width: 150px"
               />
             </el-form-item>
@@ -865,6 +911,23 @@
                 show-input
                 style="width: 95%"
               />
+            </el-form-item>
+            <el-form-item label="频点模板:" prop="current_relay">
+              <el-select
+                v-model="current_relay"
+                style="width: 95%"
+                filterable
+                clearable
+                @change="applyrelay"
+              >
+                <el-option label="空模板" :value="{up_freq:'430.0000',down_freq:'430.0000',send_ctss:'0',recive_ctss:'0'}" />
+                <el-option
+                  v-for="item in relayOptions"
+                  :key="item.id"
+                  :label="item.name + ' ' + item.up_freq + ' ' + item.down_freq"
+                  :value="item"
+                />
+              </el-select>
             </el-form-item>
 
             <el-button
@@ -972,11 +1035,18 @@ import {
   DevStatusOptions
 } from '@/utils/system'
 
+import { fetchRelayList } from '@/api/relay'
+
 // import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
 
 import waves from '@/directive/waves' // waves directive
-import { parseTime, ValueFilter, formatFileSize } from '@/utils'
+import {
+  parseTime,
+  ValueFilter,
+  formatFileSize,
+  formatVoiceTime
+} from '@/utils'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapGetters } from 'vuex'
 
@@ -1017,7 +1087,7 @@ export default {
     return {
       tableKey: 0,
       list: [],
-
+      current_relay: { up_freq: '430.0000', down_freq: '430.0000', send_ctss: '0', recive_ctss: '0' },
       currentPage: 1,
       pageSize: 10,
       display_list: [],
@@ -1026,6 +1096,7 @@ export default {
       DevModelOptions,
       DevStatusOptions,
       ctcssOptions,
+      relayOptions: [],
       userOptions: [],
       chartData: {},
 
@@ -1097,6 +1168,10 @@ export default {
       this.userOptions = response.data.items
     })
 
+    this.fetchRelayList({}).then(response => {
+      this.relayOptions = response.data.items
+    })
+
     this.fetchGroupList({}).then(response => {
       this.groupsOptions = Object.values(response.data.items)
     })
@@ -1111,10 +1186,12 @@ export default {
     ValueFilter,
     parseTime,
     formatFileSize,
+    formatVoiceTime,
     updateDevice,
     queryDevice,
     changeDeviceParm,
     changeDevice1w,
+    fetchRelayList,
 
     getList() {
       this.fetchDeviceList({}).then(response => {
@@ -1197,6 +1274,15 @@ export default {
         }
       }) // copy obj
       //  this.temp.timestamp = new Date(this.temp.timestamp);
+    },
+
+    applyrelay(val) {
+      if (val !== 0) {
+        this.temp.device_parm.one_recive_freq = val.down_freq
+        this.temp.device_parm.one_transmit_freq = val.up_freq
+        this.temp.device_parm.one_recive_cxcss = val.recive_ctss
+        this.temp.device_parm.one_transmit_cxcss = val.send_ctss
+      }
     },
 
     changeByte(name, val) {

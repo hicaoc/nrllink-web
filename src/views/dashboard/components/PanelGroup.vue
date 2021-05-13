@@ -29,26 +29,15 @@
           <svg-icon icon-class="tcp_delay" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">语音</div>
-          <count-to
+          <div class="card-panel-text">语音</div> <div style="font-size: 20px;">{{ formatVoiceTime(list.voice_time) }} </div>
+          <!-- <count-to
             :start-val="0"
-            :end-val="0"
+            :end-val="formatVoiceTime(list.voice_time)"
             :duration="3000"
+             :decimals="2"
             class="card-panel-num"
-          />次
-          <count-to
-            :start-val="0"
-            :end-val="0"
-            :duration="3000"
-            class="card-panel-num"
-          />
-          <br>
-          <count-to
-            :start-val="0"
-            :end-val="0"
-            :duration="3000"
-            class="card-panel-num"
-          />个
+          />  -->
+
         </div>
       </div>
     </el-col>
@@ -106,6 +95,7 @@
 
 <script>
 import CountTo from 'vue-count-to'
+import { formatVoiceTime } from '@/utils'
 
 export default {
   components: {
@@ -122,6 +112,7 @@ export default {
   },
 
   methods: {
+    formatVoiceTime,
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
     }

@@ -209,6 +209,16 @@ export const asyncRoutes = [
           roles: ['admin'] // or you can only set roles in sub nav
         }
       },
+      {
+        path: 'relay',
+        component: () =>
+          import ('@/views/setup/relay'),
+        name: 'relay',
+        meta: {
+          title: 'relay',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
+      },
 
       {
         path: 'users',

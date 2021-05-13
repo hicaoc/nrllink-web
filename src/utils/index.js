@@ -462,3 +462,21 @@ export function formatFileSize(fileSize) {
     return temp + 'GB'
   }
 }
+
+export function formatVoiceTime(voicetime) {
+  if (voicetime < 1000) {
+    return voicetime + '毫秒'
+  } else if (voicetime < (1000 * 60)) {
+    let temp = voicetime / 1000
+    temp = temp.toFixed(2)
+    return temp + '秒'
+  } else if (voicetime < (1000 * 60 * 60)) {
+    let temp = voicetime / (1000 * 60)
+    temp = temp.toFixed(2)
+    return temp + '分钟'
+  } else {
+    let temp = voicetime / (1000 * 60 * 60)
+    temp = temp.toFixed(2)
+    return temp + '小时'
+  }
+}

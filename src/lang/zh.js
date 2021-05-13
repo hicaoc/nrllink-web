@@ -2,6 +2,7 @@ export default {
   route: {
     chat: '聊天对讲',
     all: '全部排名',
+    relay: '频点管理',
     devgroup: '设备群组',
     server: '节点管理',
     publicgroup: '群组管理',
@@ -88,12 +89,21 @@ export default {
     status: '状态',
     name: '名称',
     edit: '编辑',
-    delete: '删除'
+    delete: '删除',
+    active: '动作'
   },
   group: {
     name: '名称',
     type: '类型',
     allow_cpuid: '允许设备',
+    note: '备注'
+
+  },
+  relay: {
+    name: '名称',
+    up_freq: '上行频率',
+    down_freq: '下行频率',
+    ower_callsign: '创建者',
     note: '备注'
 
   },
