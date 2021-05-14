@@ -170,6 +170,16 @@ export const asyncRoutes = [
         title: 'mydevices',
         roles: ['ham']
       }
+    },
+    {
+      path: 'relay',
+      component: () =>
+        import ('@/views/pub/relay'),
+      name: 'relay',
+      meta: {
+        title: 'relay',
+        roles: ['ham'] // or you can only set roles in sub nav
+      }
     }
 
     ]
@@ -206,16 +216,6 @@ export const asyncRoutes = [
         name: 'server',
         meta: {
           title: 'server',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'relay',
-        component: () =>
-          import ('@/views/setup/relay'),
-        name: 'relay',
-        meta: {
-          title: 'relay',
           roles: ['admin'] // or you can only set roles in sub nav
         }
       },

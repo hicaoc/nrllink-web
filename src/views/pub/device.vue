@@ -378,12 +378,12 @@
         </el-table-column> -->
 
         <el-table-column
-          v-if="checkPermission(['admin']) || scope.row.callsign === this.$store.state.user.callsign "
+
           :label="$t('Account.actions')"
           align="center"
           class-name="small-padding fixed-width"
         >
-          <template slot-scope="{ row }">
+          <template v-if="checkPermission(['admin']) || scope.row.callsign === this.$store.state.user.callsign " slot-scope="{ row }">
             <el-button size="mini" type="primary" @click="handleUpdate(row)">{{
               $t("device.edit")
             }}</el-button>
@@ -430,7 +430,7 @@
           }}</el-tag>
 
           <el-button
-            v-if="checkPermission(['admin'])"
+            v-if="checkPermission(['admin']) || scope.row.callsign === this.$store.state.user.callsign "
             style="float: right; padding: 3px 3px"
             type="text"
             :disabled="item.is_online === false"
@@ -438,7 +438,7 @@
           >{{ $t("device.change") }}</el-button>
 
           <el-button
-            v-if="checkPermission(['admin'])"
+            v-if="checkPermission(['admin']) || scope.row.callsign === this.$store.state.user.callsign "
             style="float: right; padding: 3px 0"
             type="text"
             @click="handleUpdate(item)"

@@ -62,7 +62,7 @@
 
         <el-table-column
           label="频点名称"
-          width="120px"
+          width="150px"
           align="center"
         >
           <template slot-scope="scope">
@@ -82,7 +82,7 @@
 
         <el-table-column
           label="下行频率"
-          width="200px"
+          width="110px"
           align="center"
         >
           <template slot-scope="scope">
@@ -132,7 +132,7 @@
 
         <el-table-column
           label="创建时间"
-          width="100px"
+          width="160px"
           align="center"
         >
           <template slot-scope="scope">
@@ -142,7 +142,7 @@
 
         <el-table-column
           label="更新时间"
-          width="100px"
+          width="160px"
           align="center"
         >
           <template slot-scope="scope">
@@ -167,14 +167,16 @@
         >
           <template slot-scope="{row}">
             <el-button
+              v-if="checkPermission(['admin']) || scope.row.ower_callsign === this.$store.state.user.callsign "
               size="mini"
               type="primary"
               @click="handleUpdate(row)"
             >{{ $t('device.edit') }}</el-button>
 
             <el-button
+              v-if="checkPermission(['admin']) || scope.row.ower_callsign === this.$store.state.user.callsign "
               size="mini"
-              type="primary"
+              type="danger"
               @click="handleDelete(row)"
             >{{ $t('device.delete') }}</el-button>
 
@@ -266,6 +268,7 @@
       >
         <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
         <el-button
+          v-if="checkPermission(['admin']) || scope.row.ower_callsign === this.$store.state.user.callsign "
           type="primary"
           @click="dialogStatus==='create'?createData():updateData()"
         >{{ $t('employee.confirm') }}</el-button>
