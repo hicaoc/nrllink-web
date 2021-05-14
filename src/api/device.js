@@ -48,6 +48,14 @@ export function changeDevice1w(data) {
   })
 }
 
+export function changeDevice2w(data) {
+  return request({
+    url: '/device/change2w',
+    method: 'post',
+    data
+  })
+}
+
 export function fetchDeviceStats(data) {
   return request({
     url: '/device/stats',

@@ -378,7 +378,7 @@
         </el-table-column> -->
 
         <el-table-column
-          v-if="checkPermission(['admin'])"
+          v-if="checkPermission(['admin']) || scope.row.callsign === this.$store.state.user.callsign "
           :label="$t('Account.actions')"
           align="center"
           class-name="small-padding fixed-width"
@@ -947,7 +947,7 @@
 
             <el-form-item label="2W发送频率:" prop="two_transimit_freq">
               <el-input
-                v-model="temp.device_parm.two_transimit_freq"
+                v-model="temp.device_parm.two_transmit_freq"
                 style="width: 150px"
               />
             </el-form-item>
@@ -1007,6 +1007,31 @@
                 />
               </el-select>
             </el-form-item>
+
+            <el-form-item label="频点模板:" prop="current_relay">
+              <el-select
+                v-model="current_relay"
+                style="width: 95%"
+                filterable
+                clearable
+                value-key="id"
+                @change="applyrelay2w"
+              >
+                <el-option label="空模板" :value="{id:0, up_freq:'430.0000',down_freq:'430.0000',send_ctss:'0',recive_ctss:'0'}" />
+                <el-option
+                  v-for="item in relayOptions"
+                  :key="item.id"
+                  :label="item.name + ' ' + item.up_freq + ' ' + item.down_freq"
+                  :value="item"
+                />
+              </el-select>
+            </el-form-item>
+
+            <el-button
+              type="primary"
+              @click="update2w(temp.device_parm)"
+            >2w参数保存</el-button>
+
           </el-collapse-item>
         </el-collapse>
       </el-form>
@@ -1024,7 +1049,8 @@ import {
   updateDevice,
   queryDevice,
   changeDeviceParm,
-  changeDevice1w
+  changeDevice1w,
+  changeDevice2w
 } from '@/api/device'
 
 import { fetchGroupList } from '@/api/groups'
@@ -1192,6 +1218,7 @@ export default {
     queryDevice,
     changeDeviceParm,
     changeDevice1w,
+    changeDevice2w,
     fetchRelayList,
 
     getList() {
@@ -1252,6 +1279,23 @@ export default {
         })
       })
     },
+
+    update2w(device_parm) {
+      //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+      changeDevice2w(device_parm).then(response => {
+        this.getList()
+
+        this.$notify({
+          title: '2w模块参数:',
+          message:
+            response.data.message === undefined
+              ? '保存成功'
+              : response.data.message,
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
     handleChange(row) {
       queryDevice(row).then(response => {
         this.temp = response.data.items
@@ -1283,6 +1327,15 @@ export default {
         this.temp.device_parm.one_transmit_freq = val.up_freq
         this.temp.device_parm.one_recive_cxcss = val.recive_ctss
         this.temp.device_parm.one_transmit_cxcss = val.send_ctss
+      }
+    },
+
+    applyrelay2w(val) {
+      if (val !== 0) {
+        this.temp.device_parm.two_recive_freq = val.down_freq
+        this.temp.device_parm.two_transmit_freq = val.up_freq
+        this.temp.device_parm.two_recive_cxcss = this.ValueFilter(val.recive_ctss, ctcssOptions)
+        this.temp.device_parm.two_transmit_cxcss = this.ValueFilter(val.send_ctss, ctcssOptions)
       }
     },
 

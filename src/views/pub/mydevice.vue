@@ -523,7 +523,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="1w发送频率:" prop="transimit_freq">
-              <el-input v-model="temp.device_parm.one_transimit_freq" />
+              <el-input v-model="temp.device_parm.one_transmit_freq" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
@@ -609,17 +609,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="2W发送频率:" prop="transimit_freq">
-              <el-input v-model="temp.device_parm.two_transimit_freq" />
+            <el-form-item label="2W发送频率:" prop="transmit_freq">
+              <el-input v-model="temp.device_parm.two_transmit_freq" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="2w接收哑音:" prop="recive_dumb">
+            <el-form-item label="2w接收哑音:" prop="two_recive_cxcss">
               <el-input v-model="temp.device_parm.two_recive_cxcss" />
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="2w发射哑音:" prop="transmit_dumb">
+            <el-form-item label="2w发射哑音:" prop="two_transmit_cxcss">
               <el-input v-model="temp.device_parm.two_transmit_cxcss" />
             </el-form-item>
           </el-col>
@@ -627,7 +627,7 @@
 
         <el-row :gutter="2">
           <el-col :span="6">
-            <el-form-item label="2W音量:" prop="name">
+            <el-form-item label="2W音量:" prop="two_volume">
               <el-select v-model="temp.device_parm.two_volume">
                 <el-option
                   v-for="item in 9"
@@ -639,7 +639,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="2W SQL:" prop="transimit_freq">
+            <el-form-item label="2W SQL:" prop="two_sql_level">
               <el-select v-model="temp.device_parm.two_sql_level">
                 <el-option
                   v-for="item in 9"
@@ -651,8 +651,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-            <el-form-item label="2w话筒增益:" prop="recive_dumb">
-              <el-select v-model="temp.device_parm.two_mic_level">
+            <el-form-item label="2w话筒增益:" prop="two_sql_level">
+              <el-select v-model="temp.device_parm.two_sql_level">
                 <el-option
                   v-for="item in 9"
                   :key="item"
@@ -661,6 +661,13 @@
                 />
               </el-select>
             </el-form-item>
+          </el-col>
+
+          <el-col :span="5">
+            <el-button
+              type="primary"
+              @click="update2w(temp.device_parm)"
+            >2w参数保存</el-button>
           </el-col>
         </el-row>
       </el-form>
@@ -679,6 +686,7 @@ import {
   updateDevice,
   queryDevice,
   changeDevice1w,
+  changeDevice2w,
   changeDeviceParm
 } from '@/api/device'
 import {
@@ -799,6 +807,7 @@ export default {
     fetchMyDeviceList,
     queryDevice,
     changeDevice1w,
+    changeDevice2w,
     ValueFilter,
     fetchGroupList,
     getList() {
@@ -848,6 +857,20 @@ export default {
 
         this.$notify({
           title: '1w模块参数:',
+          message: response.data.message === undefined ? '保存成功' : response.data.message,
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
+
+    update2w(device_parm) {
+      //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+      changeDevice2w(device_parm).then(response => {
+        this.getList()
+
+        this.$notify({
+          title: '2w模块参数:',
           message: response.data.message === undefined ? '保存成功' : response.data.message,
           type: 'success',
           duration: 2000
