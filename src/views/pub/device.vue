@@ -565,7 +565,7 @@
           {{ temp.callsign }}-{{ temp.ssid }} {{ temp.name }}
         </el-form-item>
 
-        <el-collapse v-model="activeName" accordion>
+        <el-collapse accordion>
           <el-collapse-item title="IP和密码设置" name="1">
             <!--
         <el-switch
