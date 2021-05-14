@@ -167,14 +167,14 @@
         >
           <template slot-scope="{row}">
             <el-button
-              v-if="checkPermission(['admin']) || scope.row.ower_callsign === this.$store.state.user.callsign "
+              v-if="checkPermission(['admin']) || row.ower_callsign === callsign "
               size="mini"
               type="primary"
               @click="handleUpdate(row)"
             >{{ $t('device.edit') }}</el-button>
 
             <el-button
-              v-if="checkPermission(['admin']) || scope.row.ower_callsign === this.$store.state.user.callsign "
+              v-if="checkPermission(['admin']) || row.ower_callsign === callsign "
               size="mini"
               type="danger"
               @click="handleDelete(row)"
@@ -268,7 +268,6 @@
       >
         <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
         <el-button
-          v-if="checkPermission(['admin']) || scope.row.ower_callsign === this.$store.state.user.callsign "
           type="primary"
           @click="dialogStatus==='create'?createData():updateData()"
         >{{ $t('employee.confirm') }}</el-button>
@@ -364,7 +363,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['device'])
+    ...mapGetters(['device', 'callsign'])
   },
 
   created() {

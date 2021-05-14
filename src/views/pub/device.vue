@@ -383,12 +383,18 @@
           align="center"
           class-name="small-padding fixed-width"
         >
-          <template v-if="checkPermission(['admin']) || scope.row.callsign === this.$store.state.user.callsign " slot-scope="{ row }">
-            <el-button size="mini" type="primary" @click="handleUpdate(row)">{{
+          <template slot-scope="{ row }">
+            <el-button
+              v-if="checkPermission(['admin']) || row.callsign === callsign "
+              size="mini"
+              type="primary"
+              @click="handleUpdate(row)"
+            >{{
               $t("device.edit")
             }}</el-button>
 
             <el-button
+              v-if="checkPermission(['admin']) || row.callsign === callsign "
               :disabled="row.is_online === false"
               size="mini"
               type="primary"
@@ -430,7 +436,7 @@
           }}</el-tag>
 
           <el-button
-            v-if="checkPermission(['admin']) || scope.row.callsign === this.$store.state.user.callsign "
+            v-if="checkPermission(['admin']) || item.callsign === callsign "
             style="float: right; padding: 3px 3px"
             type="text"
             :disabled="item.is_online === false"
@@ -438,7 +444,7 @@
           >{{ $t("device.change") }}</el-button>
 
           <el-button
-            v-if="checkPermission(['admin']) || scope.row.callsign === this.$store.state.user.callsign "
+            v-if="checkPermission(['admin']) || item.callsign === callsign "
             style="float: right; padding: 3px 0"
             type="text"
             @click="handleUpdate(item)"
@@ -1167,7 +1173,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['device'])
+    ...mapGetters(['device', 'callsign'])
   },
 
   // watch: {
