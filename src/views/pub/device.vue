@@ -1338,8 +1338,8 @@ export default {
 
     applyrelay2w(val) {
       if (val !== 0) {
-        this.temp.device_parm.two_recive_freq = val.down_freq
-        this.temp.device_parm.two_transmit_freq = val.up_freq
+        this.temp.device_parm.two_recive_freq = val.down_freq + '0'
+        this.temp.device_parm.two_transmit_freq = val.up_freq + '0'
         this.temp.device_parm.two_recive_cxcss = this.ValueFilter(val.recive_ctss, ctcssOptions)
         this.temp.device_parm.two_transmit_cxcss = this.ValueFilter(val.send_ctss, ctcssOptions)
       }
