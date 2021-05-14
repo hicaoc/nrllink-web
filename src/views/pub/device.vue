@@ -744,7 +744,7 @@
               />
             </el-form-item>
 
-            <el-form-item label="1w电源:" prop="one_uv_power">
+            <el-form-item label="模块电源:" prop="one_uv_power">
               <el-switch
                 v-model="temp.device_parm.one_uv_power"
                 active-color="#1890ff"
