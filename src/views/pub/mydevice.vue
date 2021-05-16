@@ -106,12 +106,6 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="绑定" width="80px" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.ower_id === 0 ? "未绑定" : "已绑定" }}</span>
-          </template>
-        </el-table-column>
-
         <el-table-column label="丢包" width="60px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.lost }}</span>
@@ -159,11 +153,6 @@
           class-name="small-padding fixed-width"
         >
           <template slot-scope="{ row }">
-            <el-button
-              size="mini"
-              type="primary"
-              @click="handleBingDevice(row)"
-            >{{ $t("device.bind") }}</el-button>
 
             <el-button size="mini" type="primary" @click="handleUpdate(row)">{{
               $t("device.edit")

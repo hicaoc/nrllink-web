@@ -11,24 +11,6 @@
       /> -->
 
       <el-select
-        v-if="checkPermission(['admin'])"
-        v-model="listQuery.ower_id"
-        filterable
-        clearable
-        placeholder="姓名"
-        style="width: 320px"
-        class="filter-item"
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="item in userOptions"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
-        />
-      </el-select>
-
-      <el-select
         v-model="listQuery.callsign"
         filterable
         clearable
@@ -189,19 +171,6 @@
             <span>{{ scope.row.cpuid }}</span>
           </template>
         </el-table-column> -->
-
-        <el-table-column
-          v-if="checkPermission(['admin'])"
-          label="所有者"
-          prop="ower_id"
-          width="90px"
-          align="center"
-          :sortable="true"
-        >
-          <template slot-scope="scope">
-            <span>{{ ValueFilter(scope.row.ower_id, userOptions) }}</span>
-          </template>
-        </el-table-column>
 
         <el-table-column
           label="当前群组"
@@ -1195,8 +1164,6 @@ export default {
       this.showtable = true
     }
 
-    console.log(this.device)
-
     this.fetchEmployeeAllList({}).then(response => {
       this.userOptions = response.data.items
     })
@@ -1378,7 +1345,7 @@ export default {
       for (const id in this.list) {
         if (
           this.filterOnline(this.list[id]) &&
-          this.filterOwer(this.list[id]) &&
+
           this.filterCallsign(this.list[id]) &&
           this.filterGroup(this.list[id])
         ) {
@@ -1394,18 +1361,6 @@ export default {
       } else if (this.listQuery.displayOnline === false) {
         return true
       }
-      return false
-    },
-    filterOwer(dev) {
-      if (
-        this.listQuery.ower_id !== '' &&
-        dev.ower_id === this.listQuery.ower_id
-      ) {
-        return true
-      } else if (this.listQuery.ower_id === '') {
-        return true
-      }
-
       return false
     },
 
