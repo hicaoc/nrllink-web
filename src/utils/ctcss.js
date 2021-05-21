@@ -1,5 +1,5 @@
 export const ctcssOptions = [
-  { id: '0', name: '无' },
+  { id: '0', name: '000.0' },
   { id: '1', name: '067.0' },
   { id: '2', name: '071.9' },
   { id: '3', name: '077.0' },
@@ -40,4 +40,3 @@ export const ctcssOptions = [
   { id: '38', name: '250.3' }
 
 ]
-
