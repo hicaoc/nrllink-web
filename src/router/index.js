@@ -161,16 +161,16 @@ export const asyncRoutes = [
         roles: ['ham']
       }
     },
-    {
-      path: 'mydevices',
-      component: () =>
-        import ('@/views/pub/mydevice'),
-      name: 'mydevices',
-      meta: {
-        title: 'mydevices',
-        roles: ['ham']
-      }
-    },
+    // {
+    //   path: 'mydevices',
+    //   component: () =>
+    //     import ('@/views/pub/mydevice'),
+    //   name: 'mydevices',
+    //   meta: {
+    //     title: 'mydevices',
+    //     roles: ['ham']
+    //   }
+    // },
     {
       path: 'relay',
       component: () =>

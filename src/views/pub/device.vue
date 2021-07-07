@@ -841,7 +841,27 @@
         </el-row> -->
           </el-collapse-item>
 
-          <el-collapse-item title="内置1W模块参数设置" name="3">
+          <el-collapse-item title="Moto 3188/3688" name="3">
+            <el-form-item label="信道切换:" prop="moto_channel">
+              <el-select
+                v-model="temp.device_parm.moto_channel"
+                style="width: 95%"
+                @change="
+                  changeByte('moto_channel', temp.device_parm.moto_channel)
+                "
+              >
+
+                <el-option
+                  v-for="(item,index) in 16"
+                  :key="index"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
+            </el-form-item>
+          </el-collapse-item>
+
+          <el-collapse-item title="内置1W模块参数设置" name="4">
             <el-form-item label="1w接收频率:" prop="name">
               <el-input
                 v-model="temp.device_parm.one_recive_freq"
@@ -943,7 +963,7 @@
             >1w参数保存</el-button>
           </el-collapse-item>
 
-          <el-collapse-item title="内置2W模块参数设置" name="4">
+          <el-collapse-item title="内置2W模块参数设置" name="5">
             <el-form-item label="2W接收频率:" prop="two_recive_freq">
               <el-input
                 v-model="temp.device_parm.two_recive_freq"
@@ -1134,7 +1154,7 @@ export default {
       chartData: {},
 
       userTimeLinelist: null,
-      activeName: '1',
+      activeName: '',
       total: 0,
       listLoading: false,
       showtable: true,
