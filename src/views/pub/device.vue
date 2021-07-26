@@ -231,34 +231,6 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column
-          label="丢包"
-          prop="lost"
-          width="80px"
-          align="center"
-          :sortable="true"
-        >
-          <template slot-scope="scope">
-            <span>{{ scope.row.lost }}</span>
-          </template>
-        </el-table-column> -->
-        <!--
-        <el-table-column
-          label="在线"
-          width="80px"
-          prop="is_online"
-          align="center"
-          :sortable="true"
-        >
-          <template slot-scope="scope">
-            <span>
-              <el-tag :type="scope.row.is_online === true ? '' : 'info'">{{
-                scope.row.is_online === true ? "在线" : "离线"
-              }}</el-tag>
-            </span>
-          </template>
-        </el-table-column> -->
-
         <el-table-column
           label="总呼叫时长"
           prop="voice_time"
@@ -283,17 +255,24 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column
-          label="状态"
+        <el-table-column
+          label="禁用"
           prop="status"
           width="80px"
           align="center"
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span>{{ ValueFilter(scope.row.status, DevStatusOptions) }}</span>
+            <span><el-switch
+              v-model="scope.row.status"
+              active-color="#1890ff"
+              inactive-color="#dcdfe6"
+              :active-value="1"
+              :inactive-value="0"
+              @change="updateStatus(scope.row)"
+            /></span>
           </template>
-        </el-table-column> -->
+        </el-table-column>
 
         <el-table-column
           label="上次呼叫时长"
@@ -1290,6 +1269,18 @@ export default {
             })
           })
         }
+      })
+    },
+
+    updateStatus(tempData) {
+      //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+      updateDevice(tempData).then(response => {
+        this.$notify({
+          title: '成功',
+          message: response.data.message,
+          type: 'success',
+          duration: 2000
+        })
       })
     },
 
