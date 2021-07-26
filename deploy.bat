@@ -14,4 +14,7 @@ scp -p 9022 -r dist/* root@bh4aiu.cn:/udphub/www/
 
 
 
+echo update bh4tih....
+ssh   root@bh4tih.nrllink.net "rm -fr /udphub/www/*"
+scp  -r dist/* root@bh4tih.nrllink.net:/udphub/www/
 

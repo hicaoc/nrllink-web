@@ -189,6 +189,25 @@
         </el-table-column>
 
         <el-table-column
+          prop="tunner"
+          label="频率信道"
+          width="160px"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span
+              v-if="scope.row.device_parm !== null"
+            ><el-tag v-if="scope.row.device_parm.one_uv_power">
+               内置模块: {{ scope.row.device_parm.one_transmit_freq }}</el-tag>
+              <el-tag
+                v-else
+              >信道:{{ scope.row.device_parm.moto_channel }}
+              </el-tag>
+            </span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
           prop="dev_type"
           label="类型"
           width="100px"
@@ -347,23 +366,20 @@
         </el-table-column> -->
 
         <el-table-column
-
           :label="$t('Account.actions')"
           align="center"
           class-name="small-padding fixed-width"
         >
           <template slot-scope="{ row }">
             <el-button
-              v-if="checkPermission(['admin']) || row.callsign === callsign "
+              v-if="checkPermission(['admin']) || row.callsign === callsign"
               size="mini"
               type="primary"
               @click="handleUpdate(row)"
-            >{{
-              $t("device.edit")
-            }}</el-button>
+            >{{ $t("device.edit") }}</el-button>
 
             <el-button
-              v-if="checkPermission(['admin']) || row.callsign === callsign "
+              v-if="checkPermission(['admin']) || row.callsign === callsign"
               :disabled="row.is_online === false"
               size="mini"
               type="primary"
@@ -405,7 +421,7 @@
           }}</el-tag>
 
           <el-button
-            v-if="checkPermission(['admin']) || item.callsign === callsign "
+            v-if="checkPermission(['admin']) || item.callsign === callsign"
             style="float: right; padding: 3px 3px"
             type="text"
             :disabled="item.is_online === false"
@@ -413,7 +429,7 @@
           >{{ $t("device.change") }}</el-button>
 
           <el-button
-            v-if="checkPermission(['admin']) || item.callsign === callsign "
+            v-if="checkPermission(['admin']) || item.callsign === callsign"
             style="float: right; padding: 3px 0"
             type="text"
             @click="handleUpdate(item)"
@@ -819,9 +835,8 @@
                   changeByte('moto_channel', temp.device_parm.moto_channel)
                 "
               >
-
                 <el-option
-                  v-for="(item,index) in 16"
+                  v-for="(item, index) in 16"
                   :key="index"
                   :label="item"
                   :value="item"
@@ -916,7 +931,16 @@
                 value-key="id"
                 @change="applyrelay"
               >
-                <el-option label="空模板" :value="{id:0, up_freq:'430.0000',down_freq:'430.0000',send_ctss:'0',recive_ctss:'0'}" />
+                <el-option
+                  label="空模板"
+                  :value="{
+                    id: 0,
+                    up_freq: '430.0000',
+                    down_freq: '430.0000',
+                    send_ctss: '0',
+                    recive_ctss: '0',
+                  }"
+                />
                 <el-option
                   v-for="item in relayOptions"
                   :key="item.id"
@@ -1012,7 +1036,16 @@
                 value-key="id"
                 @change="applyrelay2w"
               >
-                <el-option label="空模板" :value="{id:0, up_freq:'430.0000',down_freq:'430.0000',send_ctss:'0',recive_ctss:'0'}" />
+                <el-option
+                  label="空模板"
+                  :value="{
+                    id: 0,
+                    up_freq: '430.0000',
+                    down_freq: '430.0000',
+                    send_ctss: '0',
+                    recive_ctss: '0',
+                  }"
+                />
                 <el-option
                   v-for="item in relayOptions"
                   :key="item.id"
@@ -1026,7 +1059,6 @@
               type="primary"
               @click="update2w(temp.device_parm)"
             >2w参数保存</el-button>
-
           </el-collapse-item>
         </el-collapse>
       </el-form>
@@ -1109,7 +1141,12 @@ export default {
     return {
       tableKey: 0,
       list: [],
-      current_relay: { up_freq: '430.0000', down_freq: '430.0000', send_ctss: '0', recive_ctss: '0' },
+      current_relay: {
+        up_freq: '430.0000',
+        down_freq: '430.0000',
+        send_ctss: '0',
+        recive_ctss: '0'
+      },
       currentPage: 1,
       pageSize: 10,
       display_list: [],
@@ -1327,8 +1364,14 @@ export default {
       if (val !== 0) {
         this.temp.device_parm.two_recive_freq = val.down_freq + '0'
         this.temp.device_parm.two_transmit_freq = val.up_freq + '0'
-        this.temp.device_parm.two_recive_cxcss = this.ValueFilter(val.recive_ctss, ctcssOptions)
-        this.temp.device_parm.two_transmit_cxcss = this.ValueFilter(val.send_ctss, ctcssOptions)
+        this.temp.device_parm.two_recive_cxcss = this.ValueFilter(
+          val.recive_ctss,
+          ctcssOptions
+        )
+        this.temp.device_parm.two_transmit_cxcss = this.ValueFilter(
+          val.send_ctss,
+          ctcssOptions
+        )
       }
     },
 
@@ -1365,7 +1408,6 @@ export default {
       for (const id in this.list) {
         if (
           this.filterOnline(this.list[id]) &&
-
           this.filterCallsign(this.list[id]) &&
           this.filterGroup(this.list[id])
         ) {
