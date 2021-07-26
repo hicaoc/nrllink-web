@@ -198,10 +198,10 @@
             <span
               v-if="scope.row.device_parm !== null"
             ><el-tag v-if="scope.row.device_parm.one_uv_power">
-               内置模块: {{ scope.row.device_parm.one_transmit_freq }}</el-tag>
+               1w: {{ scope.row.device_parm.one_recive_freq }}/{{ scope.row.device_parm.one_transmit_freq }} </el-tag>
               <el-tag
                 v-else
-              >信道:{{ scope.row.device_parm.moto_channel }}
+              >moto:{{ scope.row.device_parm.moto_channel }}
               </el-tag>
             </span>
           </template>
@@ -605,6 +605,7 @@
                 :disabled="true"
                 style="width: 250px"
               >
+                <el-option label="121.005.149.170" value="121.005.149.170" />
                 <el-option label="bg6fcs.nrllink.com" value="121.005.149.170" />
                 <el-option
                   label="bh4aiu.allazy.com"
