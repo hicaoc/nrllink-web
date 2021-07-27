@@ -191,17 +191,17 @@
         <el-table-column
           prop="tunner"
           label="频率信道"
-          width="160px"
+          width="190px"
           align="center"
         >
           <template slot-scope="scope">
             <span
               v-if="scope.row.device_parm !== null"
             ><el-tag v-if="scope.row.device_parm.one_uv_power">
-               1w: {{ scope.row.device_parm.one_recive_freq }}/{{ scope.row.device_parm.one_transmit_freq }} </el-tag>
+               1W:R{{ scope.row.device_parm.one_recive_freq }}/T{{ scope.row.device_parm.one_transmit_freq }} </el-tag>
               <el-tag
-                v-else
-              >moto:{{ scope.row.device_parm.moto_channel }}
+                v-if="scope.row.device_parm.moto_channel <= 16"
+              >MOTO:{{ scope.row.device_parm.moto_channel }}
               </el-tag>
             </span>
           </template>
