@@ -18,6 +18,19 @@ export const DevModelOptions = [
 
 ]
 
+// 连接的射频设备类型：  0:无连接， 1,内置1W模块，2，内置2W模块，3，外接moto3188，4,moto3688, 5，外接yaesu，6，外接，icom，7，外接其它
+export const DevRFtypeOptions = [
+  { id: 0, name: '无射频' },
+  { id: 1, name: '1W模块' },
+  { id: 2, name: '2W模块' },
+  { id: 3, name: 'Moto3188' },
+  { id: 4, name: 'Moto3688' },
+  { id: 5, name: 'Yaesu' },
+  { id: 6, name: 'ICOM' },
+  { id: 7, name: '其它' }
+
+]
+
 export const groupTypeOptions = [
   { id: 0, name: '公共房间' },
   { id: 1, name: '中继互联' },

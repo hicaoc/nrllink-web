@@ -83,6 +83,7 @@ export default {
     group: '私有群组',
     model: '型号',
     type: '类型',
+    rf_type: '射频类型',
     change: '参数',
     cpuid: '设备ID',
     bind: '绑定',

@@ -189,6 +189,18 @@
         </el-table-column>
 
         <el-table-column
+          prop="dev_rf_type"
+          label="射频类型"
+          width="140px"
+          align="center"
+          :sortable="true"
+        >
+          <template slot-scope="scope">
+            <span>{{ ValueFilter(scope.row.rf_type, DevRFtypeOptions) }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
           prop="tunner"
           label="频率信道"
           width="190px"
@@ -197,25 +209,21 @@
           <template slot-scope="scope">
             <span
               v-if="scope.row.device_parm !== null"
-            ><el-tag v-if="scope.row.device_parm.one_uv_power">
-               1W:R{{ scope.row.device_parm.one_recive_freq }}/T{{ scope.row.device_parm.one_transmit_freq }} </el-tag>
+            ><el-tag v-if="scope.row.rf_type == 1">
+               1W:R{{ scope.row.device_parm.one_recive_freq }}/T{{
+                 scope.row.device_parm.one_transmit_freq
+               }}
+             </el-tag>
+              <el-tag v-if="scope.row.rf_type == 2">
+                2W:R{{ scope.row.device_parm.two_recive_freq }}/T{{
+                  scope.row.device_parm.two_transmit_freq
+                }}
+              </el-tag>
               <el-tag
-                v-if="scope.row.device_parm.moto_channel <= 16"
-              >MOTO:{{ scope.row.device_parm.moto_channel }}
+                v-if="scope.row.rf_type == 3"
+              >MOTO:{{ scope.row.device_parm.moto_channel }} {{ scope.row.chan_name[scope.row.device_parm.moto_channel] }}
               </el-tag>
             </span>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          prop="dev_type"
-          label="类型"
-          width="100px"
-          align="center"
-          :sortable="true"
-        >
-          <template slot-scope="scope">
-            <span>{{ ValueFilter(scope.row.dev_type, DevTypeOptions) }}</span>
           </template>
         </el-table-column>
 
@@ -488,6 +496,78 @@
               d.name
             }}</el-radio>
           </el-radio-group>
+        </el-form-item>
+
+        <el-form-item :label="$t('device.rf_type')" prop="rf_type">
+          <el-radio-group v-model="temp.rf_type">
+            <el-radio v-for="d in DevRFtypeOptions" :key="d.id" :label="d.id">{{
+              d.name
+            }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item
+          v-if="temp.rf_type == 3"
+          label="频道1名称:"
+          prop="chan1_name"
+        >
+          <el-input v-model="temp.chan_name[1]" style="width: 80%" />
+        </el-form-item>
+
+        <el-form-item
+          v-if="temp.rf_type == 3"
+          label="频道2名称:"
+          prop="chan2_name"
+        >
+          <el-input v-model="temp.chan_name[2]" style="width: 80%" />
+        </el-form-item>
+
+        <el-form-item
+          v-if="temp.rf_type == 3"
+          label="频道3名称:"
+          prop="chan3_name"
+        >
+          <el-input v-model="temp.chan_name[3]" style="width: 80%" />
+        </el-form-item>
+
+        <el-form-item
+          v-if="temp.rf_type == 3"
+          label="频道4名称:"
+          prop="chan4_name"
+        >
+          <el-input v-model="temp.chan_name[4]" style="width: 80%" />
+        </el-form-item>
+
+        <el-form-item
+          v-if="temp.rf_type == 3"
+          label="频道5名称:"
+          prop="chan5_name"
+        >
+          <el-input v-model="temp.chan_name[5]" style="width: 80%" />
+        </el-form-item>
+
+        <el-form-item
+          v-if="temp.rf_type == 3"
+          label="频道6名称:"
+          prop="chan6_name"
+        >
+          <el-input v-model="temp.chan_name[6]" style="width: 80%" />
+        </el-form-item>
+
+        <el-form-item
+          v-if="temp.rf_type == 3"
+          label="频道7名称:"
+          prop="chan7_name"
+        >
+          <el-input v-model="temp.chan_name[7]" style="width: 80%" />
+        </el-form-item>
+
+        <el-form-item
+          v-if="temp.rf_type == 3"
+          label="频道8名称:"
+          prop="chan8_name"
+        >
+          <el-input v-model="temp.chan_name[8]" style="width: 80%" />
         </el-form-item>
 
         <el-form-item :label="$t('device.status')" prop="status">
@@ -1066,7 +1146,8 @@ import { fetchEmployeeAllList } from '@/api/employee'
 import {
   DevTypeOptions,
   DevModelOptions,
-  DevStatusOptions
+  DevStatusOptions,
+  DevRFtypeOptions
 } from '@/utils/system'
 
 import { fetchRelayList } from '@/api/relay'
@@ -1134,6 +1215,7 @@ export default {
       DevTypeOptions,
       DevModelOptions,
       DevStatusOptions,
+      DevRFtypeOptions,
       ctcssOptions,
       relayOptions: [],
       userOptions: [],
@@ -1156,6 +1238,7 @@ export default {
       temp: {
         id: undefined,
         name: '',
+        chan_name: [],
         device_parm: {
           callsign: ''
         }
