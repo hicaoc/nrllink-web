@@ -210,18 +210,18 @@
             <span
               v-if="scope.row.device_parm !== null"
             ><el-tag v-if="scope.row.rf_type == 1">
-               1W:R{{ scope.row.device_parm.one_recive_freq }}/T{{
+               R{{ scope.row.device_parm.one_recive_freq }}/T{{
                  scope.row.device_parm.one_transmit_freq
                }}
              </el-tag>
               <el-tag v-if="scope.row.rf_type == 2">
-                2W:R{{ scope.row.device_parm.two_recive_freq }}/T{{
+                R{{ scope.row.device_parm.two_recive_freq }}/T{{
                   scope.row.device_parm.two_transmit_freq
                 }}
               </el-tag>
               <el-tag
                 v-if="scope.row.rf_type == 3"
-              >MOTO:{{ scope.row.device_parm.moto_channel }} {{ scope.row.chan_name[scope.row.device_parm.moto_channel] }}
+              >信道{{ scope.row.device_parm.moto_channel }} {{ scope.row.chan_name[scope.row.device_parm.moto_channel] }}
               </el-tag>
             </span>
           </template>
@@ -424,6 +424,26 @@
         </div>
 
         <span>名称:{{ item.name }}</span><br>
+
+        <span>射频类型:{{ ValueFilter(item.rf_type, DevRFtypeOptions) }}</span><br>
+
+        信道频率: <span
+          v-if="item.device_parm !== null"
+        ><span v-if="item.rf_type == 1">
+           R{{ item.device_parm.one_recive_freq }}/T{{
+             item.device_parm.one_transmit_freq
+           }}
+         </span>
+          <span v-if="item.rf_type == 2">
+            R{{ item.device_parm.two_recive_freq }}/T{{
+              item.device_parm.two_transmit_freq
+            }}
+          </span>
+          <span
+            v-if="item.rf_type == 3"
+          >信道{{ item.device_parm.moto_channel }} {{ item.chan_name[item.device_parm.moto_channel] }}
+          </span>
+        </span><br>
 
         当前组:
 
