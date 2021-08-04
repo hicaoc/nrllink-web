@@ -273,6 +273,7 @@
           <template slot-scope="scope">
             <span><el-switch
               v-model="scope.row.status"
+              :disabled="!(checkPermission(['admin']) || item.callsign === callsign)"
               active-color="#1890ff"
               inactive-color="#dcdfe6"
               :active-value="1"
