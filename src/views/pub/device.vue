@@ -273,7 +273,7 @@
           <template slot-scope="scope">
             <span><el-switch
               v-model="scope.row.status"
-              :disabled="!(checkPermission(['admin']) || item.callsign === callsign)"
+              :disabled="!(checkPermission(['admin']) || scope.row.callsign === callsign)"
               active-color="#1890ff"
               inactive-color="#dcdfe6"
               :active-value="1"
@@ -455,7 +455,16 @@
         <span> 时长：{{ formatVoiceTime(item.voice_time) }}</span><br>
         <span> 流量：{{ formatFileSize(item.traffic) }}</span><br>
 
-        <span> 所有者：{{ ValueFilter(item.ower_id, userOptions) }}</span>
+        <span> 所有者：{{ ValueFilter(item.ower_id, userOptions) }}</span><br>
+        <span>禁用设备:<el-switch
+          v-model="item.status"
+          :disabled="!(checkPermission(['admin']) || item.callsign === callsign)"
+          active-color="#1890ff"
+          inactive-color="#dcdfe6"
+          :active-value="1"
+          :inactive-value="0"
+          @change="updateStatus(item)"
+        /></span>
       </el-card>
     </div>
 
