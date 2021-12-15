@@ -924,7 +924,7 @@
                 @change="
                   changeByte('moto_channel', temp.device_parm.moto_channel)
                 "
-              >
+              ><el-option lable="0" :value="0" />
                 <el-option
                   v-for="(item, index) in 16"
                   :key="index"
