@@ -221,7 +221,8 @@
               </el-tag>
               <el-tag
                 v-if="scope.row.rf_type == 3"
-              >信道{{ scope.row.device_parm.moto_channel }} {{ scope.row.chan_name[scope.row.device_parm.moto_channel] }}
+              >信道{{ scope.row.device_parm.moto_channel }}
+                {{ scope.row.chan_name[scope.row.device_parm.moto_channel] }}
               </el-tag>
             </span>
           </template>
@@ -273,7 +274,12 @@
           <template slot-scope="scope">
             <span><el-switch
               v-model="scope.row.status"
-              :disabled="!(checkPermission(['admin']) || scope.row.callsign === callsign)"
+              :disabled="
+                !(
+                  checkPermission(['admin']) ||
+                  scope.row.callsign === callsign
+                )
+              "
               active-color="#1890ff"
               inactive-color="#dcdfe6"
               :active-value="1"
@@ -428,7 +434,8 @@
 
         <span>射频类型:{{ ValueFilter(item.rf_type, DevRFtypeOptions) }}</span><br>
 
-        信道频率: <span
+        信道频率:
+        <span
           v-if="item.device_parm !== null"
         ><span v-if="item.rf_type == 1">
            R{{ item.device_parm.one_recive_freq }}/T{{
@@ -442,9 +449,9 @@
           </span>
           <span
             v-if="item.rf_type == 3"
-          >信道{{ item.device_parm.moto_channel }} {{ item.chan_name[item.device_parm.moto_channel] }}
-          </span>
-        </span><br>
+          >信道{{ item.device_parm.moto_channel }}
+            {{ item.chan_name[item.device_parm.moto_channel] }}
+          </span> </span><br>
 
         当前组:
 
@@ -458,7 +465,9 @@
         <span> 所有者：{{ ValueFilter(item.ower_id, userOptions) }}</span><br>
         <span>禁用设备:<el-switch
           v-model="item.status"
-          :disabled="!(checkPermission(['admin']) || item.callsign === callsign)"
+          :disabled="
+            !(checkPermission(['admin']) || item.callsign === callsign)
+          "
           active-color="#1890ff"
           inactive-color="#dcdfe6"
           :active-value="1"
@@ -681,14 +690,12 @@
               <el-input
                 v-model="temp.device_parm.local_ipaddr"
                 style="width: 150px"
-                :disabled="true"
               />
             </el-form-item>
 
             <el-form-item label="掩码:" prop="netmask">
               <el-input
                 v-model="temp.device_parm.netmask"
-                :disabled="true"
                 style="width: 150px"
               />
             </el-form-item>
@@ -696,7 +703,6 @@
             <el-form-item label="网关:" prop="gateway">
               <el-input
                 v-model="temp.device_parm.gateway"
-                :disabled="true"
                 style="width: 150px"
               />
             </el-form-item>
@@ -704,25 +710,26 @@
             <el-form-item label="DNS地址:" prop="dns_ipaddr">
               <el-input
                 v-model="temp.device_parm.dns_ipaddr"
-                :disabled="true"
                 style="width: 150px"
               />
             </el-form-item>
 
-            <el-form-item label="目标地址:" prop="dest_domainname">
-              <el-select
+            <el-form-item label="目标IP地址:" prop="dest_domainname">
+              <el-input
                 v-model="temp.device_parm.dest_domainname"
-                :disabled="true"
-                style="width: 250px"
+                style="width: 150px"
+              />
+
+              <el-popconfirm
+                title="请确认IP地址是否正确,错误后设备将找不到家！！！"
+                confirm-button-text="确定保存"
+                cancel-button-text="放弃"
+                icon="el-icon-info"
+                icon-color="red"
+                @onConfirm="changeIP(temp.device_parm)"
               >
-                <el-option label="121.005.149.170" value="121.005.149.170" />
-                <el-option label="bg6fcs.nrllink.com" value="121.005.149.170" />
-                <el-option
-                  label="bh4aiu.allazy.com"
-                  value="bh4aiu.allazy.com"
-                />
-                <el-option label="ham.bi4qzw.com" value="ham.bi4qzw.com" />
-              </el-select>
+                <el-button slot="reference" type="primary">保存</el-button>
+              </el-popconfirm>
             </el-form-item>
 
             <el-form-item label="对端CPUID:" prop="peer_password">
@@ -1490,6 +1497,25 @@ export default {
           name +
           '=' +
           val
+      )
+    },
+
+    changeIP(val) {
+      changeDeviceParm(
+        'CPUID=' +
+          this.temp.cpuid +
+          '&callsign=' +
+          this.temp.callsign +
+          '&local_ipaddr=' +
+          val.local_ipaddr +
+          '&gateway=' +
+          val.gateway +
+          '&netmask=' +
+          val.netmask +
+          '&dns_ipaddr=' +
+          val.dns_ipaddr +
+          '&dest_domainname=' +
+          val.dest_domainname
       )
     },
 
