@@ -1497,7 +1497,14 @@ export default {
           name +
           '=' +
           val
-      )
+      ).then(response => {
+        this.$notify({
+          title: '消息',
+          message: response.data.message,
+          type: 'info',
+          duration: 5000
+        })
+      })
     },
 
     changeIP(val) {
@@ -1516,7 +1523,14 @@ export default {
           val.dns_ipaddr +
           '&dest_domainname=' +
           val.dest_domainname
-      )
+      ).then(response => {
+        this.$notify({
+          title: '消息',
+          message: response.data.message,
+          type: 'info',
+          duration: 5000
+        })
+      })
     },
 
     handleModifiStatus(row, status) {
