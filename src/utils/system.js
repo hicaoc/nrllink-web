@@ -23,8 +23,7 @@ export const DevRFtypeOptions = [
   { id: 0, name: '无射频' },
   { id: 1, name: '1W模块' },
   { id: 2, name: '2W模块' },
-  { id: 3, name: 'Moto3188' },
-  { id: 4, name: 'Moto3688' },
+  { id: 3, name: 'Moto3188/3688' },
   { id: 5, name: 'Yaesu' },
   { id: 6, name: 'ICOM' },
   { id: 7, name: '其它' }
