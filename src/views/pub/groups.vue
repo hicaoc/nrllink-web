@@ -100,7 +100,7 @@
             </div>
           </el-collapse-item>
           <el-collapse-item
-            :title="'已加入设备'+ (g.devmap == null ? '0' : Object.keys(g.devmap).length) +'台' "
+            :title="'已加入设备'+ (g.devmap == null ? '0' : Object.values(g.devmap).filter( i => i.is_online).length) +'/'+ (g.devmap == null ? '0' : Object.keys(g.devmap).length) + '台' "
             name="2"
           >
             <!-- <el-divider>已加入设备 {{ (g.devmap == null ? "0" : Object.keys(g.devmap).length) +"台 " }}</el-divider> -->
