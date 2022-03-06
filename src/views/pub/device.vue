@@ -143,7 +143,7 @@
             <span><el-tag
               :type="scope.row.is_online === true ? '' : 'info'"
             >{{ scope.row.callsign + "-" + scope.row.ssid
-            }}{{ scope.row.status == 1 ? "🈲" : "" }}
+            }}{{ scope.row.status >= 1 ? "🈲" : "" }}
             </el-tag></span>
           </template>
         </el-table-column>
@@ -265,27 +265,25 @@
         </el-table-column>
 
         <el-table-column
-          label="禁用"
+          label="状态"
           prop="status"
-          width="80px"
+          width="100px"
           align="center"
           :sortable="true"
         >
           <template slot-scope="scope">
-            <span><el-switch
+            <el-select
               v-model="scope.row.status"
-              :disabled="
-                !(
-                  checkPermission(['admin']) ||
-                  scope.row.callsign === callsign
-                )
-              "
-              active-color="#1890ff"
-              inactive-color="#dcdfe6"
-              :active-value="1"
-              :inactive-value="0"
+              :disabled="!checkPermission(['admin']) && scope.row.callsign !== callsign"
               @change="updateStatus(scope.row)"
-            /></span>
+            >
+              <el-option
+                v-for="item in DevStatusOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
           </template>
         </el-table-column>
 
@@ -463,17 +461,12 @@
         <span> 流量：{{ formatFileSize(item.traffic) }}</span><br>
 
         <span> 所有者：{{ ValueFilter(item.ower_id, userOptions) }}</span><br>
-        <span>禁用设备:<el-switch
-          v-model="item.status"
-          :disabled="
-            !(checkPermission(['admin']) || item.callsign === callsign)
-          "
-          active-color="#1890ff"
-          inactive-color="#dcdfe6"
-          :active-value="1"
-          :inactive-value="0"
-          @change="updateStatus(item)"
-        /></span>
+        <span>状态:
+          <el-radio-group v-model="item.status">
+            <el-radio v-for="d in DevStatusOptions" :key="d.id" :label="d.id">{{
+              d.name
+            }}</el-radio>
+          </el-radio-group></span>
       </el-card>
     </div>
 
@@ -1321,15 +1314,15 @@ export default {
       this.showtable = true
     }
 
-    this.fetchEmployeeAllList({}).then(response => {
+    this.fetchEmployeeAllList({}).then((response) => {
       this.userOptions = response.data.items
     })
 
-    this.fetchRelayList({}).then(response => {
+    this.fetchRelayList({}).then((response) => {
       this.relayOptions = response.data.items
     })
 
-    this.fetchGroupList({}).then(response => {
+    this.fetchGroupList({}).then((response) => {
       this.groupsOptions = Object.values(response.data.items)
     })
     this.getList()
@@ -1352,7 +1345,7 @@ export default {
     fetchRelayList,
 
     getList() {
-      this.fetchDeviceList({}).then(response => {
+      this.fetchDeviceList({}).then((response) => {
         this.list = Object.values(response.data.items)
         this.handleFilter()
 
@@ -1374,11 +1367,11 @@ export default {
       })
     },
     updateData() {
-      this.$refs['dataForm'].validate(valid => {
+      this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateDevice(tempData).then(response => {
+          updateDevice(tempData).then((response) => {
             this.getList()
 
             this.dialogFormVisible = false
@@ -1395,7 +1388,7 @@ export default {
 
     updateStatus(tempData) {
       //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-      updateDevice(tempData).then(response => {
+      updateDevice(tempData).then((response) => {
         this.$notify({
           title: '成功',
           message: response.data.message,
@@ -1407,7 +1400,7 @@ export default {
 
     update1w(device_parm) {
       //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-      changeDevice1w(device_parm).then(response => {
+      changeDevice1w(device_parm).then((response) => {
         this.getList()
 
         this.$notify({
@@ -1424,7 +1417,7 @@ export default {
 
     update2w(device_parm) {
       //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-      changeDevice2w(device_parm).then(response => {
+      changeDevice2w(device_parm).then((response) => {
         this.getList()
 
         this.$notify({
@@ -1439,7 +1432,7 @@ export default {
       })
     },
     handleChange(row) {
-      queryDevice(row).then(response => {
+      queryDevice(row).then((response) => {
         this.temp = response.data.items
 
         if (this.temp.device_parm === null) {
@@ -1497,7 +1490,7 @@ export default {
           name +
           '=' +
           val
-      ).then(response => {
+      ).then((response) => {
         this.$notify({
           title: '消息',
           message: response.data.message,
@@ -1523,7 +1516,7 @@ export default {
           val.dns_ipaddr +
           '&dest_domainname=' +
           val.dest_domainname
-      ).then(response => {
+      ).then((response) => {
         this.$notify({
           title: '消息',
           message: response.data.message,
@@ -1661,7 +1654,7 @@ export default {
         this.downloadLoading = false
         return
       }
-      import('@/vendor/Export2Excel').then(excel => {
+      import('@/vendor/Export2Excel').then((excel) => {
         const tHeader = ['姓名', '电话', '性别', '出生年月日']
         const filterVal = ['name', 'phone', 'sex']
         const data = this.formatJson(filterVal, this.list)
@@ -1696,8 +1689,8 @@ export default {
     },
 
     formatJson(filterVal, jsonData) {
-      return jsonData.map(v =>
-        filterVal.map(j => {
+      return jsonData.map((v) =>
+        filterVal.map((j) => {
           if (j === 'timestamp') {
             return parseTime(v[j])
           } else {
