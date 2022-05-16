@@ -29,7 +29,12 @@
         />
       </el-form-item>
 
-      <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+      <el-tooltip
+        v-model="capsTooltip"
+        content="Caps lock is On"
+        placement="right"
+        manual
+      >
         <el-form-item prop="password">
           <span class="svg-container">
             <svg-icon icon-class="password" />
@@ -48,7 +53,9 @@
             @keyup.enter.native="handleLogin"
           />
           <span class="show-pwd" @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            <svg-icon
+              :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+            />
           </span>
         </el-form-item>
       </el-tooltip>
@@ -56,12 +63,13 @@
       <el-button
         :loading="loading"
         type="primary"
-        style="width:100%;margin-bottom:30px;"
+        style="width: 100%; margin-bottom: 30px"
         @click.native.prevent="handleLogin"
-      >{{ $t('login.logIn') }}</el-button>
-
+      >{{ $t("login.logIn") }}</el-button>
     </el-form>
-
+    <div v-if="icp !== ''" class="bottom_footer">
+      <a href="https://beian.miit.gov.cn">公信部ICP备案号：{{ icp }}</a>  技术支持：BH4TDV BG6FCS BA4RN BH4RPN...
+    </div>
   </div>
 </template>
 
@@ -93,6 +101,7 @@ export default {
     return {
       title: 'HAM互联',
       cs_qr_url: '',
+      icp: '',
       loginForm: {
         username: '',
         password: ''
@@ -129,6 +138,7 @@ export default {
     getplatforminfo().then(response => {
       this.title = response.data.items.name
       this.cs_qr_url = response.data.items.cs_qr_url
+      this.icp = response.data.items.icp
     })
   },
 
@@ -146,8 +156,8 @@ export default {
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         if (
-          (shiftKey && (key >= 'a' && key <= 'z')) ||
-          (!shiftKey && (key >= 'A' && key <= 'Z'))
+          (shiftKey && key >= 'a' && key <= 'z') ||
+          (!shiftKey && key >= 'A' && key <= 'Z')
         ) {
           this.capsTooltip = true
         } else {
@@ -288,6 +298,16 @@ $light_gray: #eee;
     }
   }
 
+  .bottom_footer {
+    color: #fff;
+
+    bottom: 10px;
+    position: absolute;
+    left: 30%;
+
+    margin: 0 auto; /*要居中的div的宽度的一半*/
+     overflow: hidden;
+  }
   .svg-container {
     padding: 6px 5px 6px 15px;
     color: $dark_gray;
