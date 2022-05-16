@@ -68,7 +68,7 @@
       >{{ $t("login.logIn") }}</el-button>
     </el-form>
     <div v-if="icp !== ''" class="bottom_footer">
-      <a href="https://beian.miit.gov.cn">公信部ICP备案号：{{ icp }}</a>  技术支持：BH4TDV BG6FCS BA4RN BH4RPN...
+      <a href="https://beian.miit.gov.cn" target="_blank">公信部ICP备案号：{{ icp }}</a> &nbsp; &nbsp; 技术支持：BH4TDV BG6FCS BA4RN   Copyright © 2017-2022 BH4RPN 版权所有
     </div>
   </div>
 </template>
@@ -303,7 +303,7 @@ $light_gray: #eee;
 
     bottom: 10px;
     position: absolute;
-    left: 30%;
+    left: 25%;
 
     margin: 0 auto; /*要居中的div的宽度的一半*/
      overflow: hidden;
