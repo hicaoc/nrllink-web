@@ -8,13 +8,29 @@ export const DevTypeOptions = [
 
 export const DevModelOptions = [
   { id: 0, name: '未知' },
-  { id: 1, name: 'NRL2100' },
-  { id: 2, name: 'NRL2200' },
-  { id: 3, name: 'NRL2300' },
+  { id: 1, name: 'NRL-2100' },
+  { id: 2, name: 'NRL-2200' },
+  { id: 3, name: 'NRL-2300' },
   { id: 4, name: 'win-PC' },
   { id: 5, name: 'IOS' },
   { id: 6, name: 'Android' },
-  { id: 7, name: '树莓派' }
+  { id: 7, name: '树莓派' },
+  { id: 8, name: 'NRL-2600' },
+  { id: 9, name: 'NR-3188' },
+  { id: 10, name: 'NRL-7100' },
+  { id: 11, name: 'NRL-FT891' },
+  { id: 12, name: 'NRL-TS480' },
+  { id: 13, name: 'NRL-IC2720' },
+  { id: 14, name: 'NRL-2730' },
+  { id: 15, name: 'NRL-FT7900' },
+  { id: 16, name: 'NRL-V71/D710' },
+  { id: 17, name: 'NRL-3100' },
+  { id: 18, name: 'NRL-8100-HF' },
+  { id: 19, name: 'DR-635' },
+  { id: 20, name: 'FTM-300D' },
+  { id: 21, name: 'FTM-400D' },
+  { id: 22, name: 'ESP32' },
+  { id: 23, name: 'MMDVM' }
 
 ]
 
