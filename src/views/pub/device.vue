@@ -719,7 +719,7 @@
                 cancel-button-text="放弃"
                 icon="el-icon-info"
                 icon-color="red"
-                @onConfirm="changeIP(temp.device_parm)"
+                @confirm="changeIP(temp.device_parm)"
               >
                 <el-button slot="reference" type="primary">保存</el-button>
               </el-popconfirm>
