@@ -4,8 +4,8 @@ rem yarn build:prod
 
 
 echo update bg6fcs  ....
-ssh root@150.158.20.247 "rm -fr /udphub/www/*"
-scp -r dist/* root@150.158.20.247:/udphub/www/
+ssh root@150.158.20.247 "rm -fr /nrllink/www/*"
+scp -r dist/* root@150.158.20.247:/nrllink/www/
 
 
 echo update bh4aiu....

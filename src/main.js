@@ -21,7 +21,7 @@ import './utils/error-log' // error log
 import * as filters from './filters' // global filters
 
 // import Print from 'vue-print-nb'
-import 'default-passive-events'
+// import 'default-passive-events'
 
 /**
  * If you don't want to use mock-server
