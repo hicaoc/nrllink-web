@@ -1,9 +1,19 @@
 <template>
   <div class="app-container">
-    <div class="filter-container" />
+    <div class="filter-container">
+      <el-input
+        v-model.trim="name"
+        :placeholder="$t('group.name')"
+        style="width: 200px"
+        class="filter-item"
+        clearable
+        @keyup.enter.native="handleFilter"
+      />
+
+    </div>
 
     <div>
-      <el-card v-for="r in rooms" :key="r.id" class="box-card">
+      <el-card v-for="r in rooms.filter(item => item.name.includes(name))" :key="r.id" class="box-card">
         <div style="padding-bottom: 10px;padding-top: 10px; background:#e9e979;">
           <span>{{ r.name }}</span>
 
@@ -57,7 +67,7 @@
       </el-card>
 
       <el-card
-        v-for="g in list"
+        v-for="g in list.filter(item => item.name.includes(name) )"
         :key="g.id"
         class="box-card"
       >
@@ -277,6 +287,7 @@ export default {
       list: {
         name: ''
       },
+      name: '',
       groupTypeOptions,
       serversOptions: [],
       mydevicesOptions: [],
