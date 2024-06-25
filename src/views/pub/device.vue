@@ -632,7 +632,7 @@
       <el-form
         ref="devicedataForm"
         :rules="parmrules"
-        :model="temp"
+        :model="temp.device_parm"
         label-position="right"
         label-width="100px"
         style="width: 90%; margin-left: 5px"
@@ -936,14 +936,14 @@
           </el-collapse-item>
 
           <el-collapse-item title="内置1W模块参数设置" name="4">
-            <el-form-item label="1w接收频率:" prop="name">
+            <el-form-item label="1w接收频率:" prop="one_recive_freq">
               <el-input
                 v-model="temp.device_parm.one_recive_freq"
                 style="width: 150px"
               />
             </el-form-item>
 
-            <el-form-item label="1w发射频率:" prop="transimit_freq">
+            <el-form-item label="1w发射频率:" prop="one_transmit_freq">
               <el-input
                 v-model="temp.device_parm.one_transmit_freq"
                 style="width: 150px"
@@ -1229,6 +1229,17 @@ export default {
     }
   },
   data() {
+    const validateFreq = (rule, value, callback) => {
+      if (!value) {
+        console.log('no value:', value, rule)
+        return callback(new Error('频率小数点后必须有4位'))
+      }
+      const regex = /^\d+(\.\d{4})?$/
+      if (!regex.test(value)) {
+        return callback(new Error('频率小数点后必须有4位'))
+      }
+      callback()
+    }
     return {
       tableKey: 0,
       list: [],
@@ -1270,7 +1281,15 @@ export default {
         name: '',
         chan_name: [],
         device_parm: {
-          callsign: ''
+          callsign: '',
+          one_recive_freq: '430.0000',
+          one_transmit_freq: '430.0000',
+          two_recive_freq: '430.0000',
+          two_transmit_freq: '430.0000',
+          one_recive_cxcss: '0',
+          one_transmit_cxcss: '0',
+          two_recive_cxcss: '0',
+          two_transmit_cxcss: '0'
         }
       },
 
@@ -1284,9 +1303,17 @@ export default {
         update: 'Edit',
         create: 'Create'
       },
+      rules: {
+      },
+      parmrules: {
+        one_recive_freq: [
+          { validator: validateFreq, trigger: 'blur' }
+        ],
+        one_transmit_freq: [
+          { validator: validateFreq, trigger: 'blur' }
+        ]
+      },
 
-      rules: {},
-      parmrules: {},
       downloadLoading: false,
       uploadLoading: false
     }
@@ -1399,20 +1426,28 @@ export default {
     },
 
     update1w(device_parm) {
-      //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-      changeDevice1w(device_parm).then((response) => {
-        this.getList()
+      this.$refs['devicedataForm'].validate((valid) => {
+        if (valid) {
+          changeDevice1w(device_parm).then((response) => {
+            this.getList()
 
-        this.$notify({
-          title: '1w模块参数:',
-          message:
+            this.$notify({
+              title: '1w模块参数:',
+              message:
             response.data.message === undefined
               ? '保存成功'
               : response.data.message,
-          type: 'success',
-          duration: 2000
-        })
+              type: 'success',
+              duration: 2000
+            })
+          })
+        } else {
+          alert('频率小数点后面必须有4位!')
+          // console.log('Form validation failed');
+          return false
+        }
       })
+      //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
     },
 
     update2w(device_parm) {
@@ -1443,7 +1478,7 @@ export default {
             duration: 5000
           })
 
-          this.temp.device_parm = { callsign: '' }
+          this.temp.device_parm = { callsign: '', one_recive_freq: '', one_transmit_freq: '' }
           return
         } else {
           this.devicedialogStatus = 'change'
