@@ -64,6 +64,16 @@
         </el-table-column>
 
         <el-table-column
+          label="服务器类型"
+          width="110px"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <span>{{ scope.row.server_type }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
           label="CPU类型"
           width="110px"
           align="center"
@@ -144,16 +154,16 @@
         </el-table-column>
 
         <el-table-column
-          label="服务器类型"
+          label="端口号"
           width="110px"
           align="center"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.server_type }}</span>
+            <span>{{ scope.row.udp_port }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
+        <!-- <el-table-column
           label="群组列表"
           width="110px"
           align="center"
@@ -171,7 +181,7 @@
           <template slot-scope="scope">
             <span>{{ scope.row.dev_map }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column
           label="在线"
@@ -281,17 +291,17 @@
       >
 
         <el-form-item
-          :label="$t('Server.name')"
+          :label="$t('server.server_name')"
           prop="name"
         >
           <el-input v-model="temp.name" />
         </el-form-item>
 
         <el-form-item
-          :label="$t('Server.type')"
-          prop="sex"
+          :label="$t('server.server_type')"
+          prop="type"
         >
-          <el-radio-group v-model="temp.type">
+          <el-radio-group v-model="temp.server_type">
             <el-radio
               v-for="item in ServerTypeOptions"
               :key="item.id"
@@ -300,29 +310,55 @@
 
           </el-radio-group>
         </el-form-item>
+
         <el-form-item
-          v-if="temp.type===3"
-          :label="$t('Server.allow_cpuid')"
-          prop="allow_cpuid"
+          :label="$t('server.mem_size')"
+          prop="name"
         >
-          <el-select
-            v-model="temp.allow_cpuid"
-            filterable
-            placeholder="请选择设备ID"
-            style="width: 320px;"
-            class="filter-item"
-          >
-            <el-option
-              label="没有限制"
-              value=""
-            />
-            <el-option
-              v-for="item in devicesOptions"
-              :key="item.id"
-              :label="item.callsign+'-'+item.ssid+' '+item.name"
-              :value="item.cpuid"
-            />
-          </el-select>
+          <el-input v-model="temp.mem_size" />
+        </el-form-item>
+
+        <el-form-item
+          :label="$t('server.input_rate')"
+          prop="name"
+        >
+          <el-input v-model="temp.input_rate" />
+        </el-form-item>
+
+        <el-form-item
+          :label="$t('server.output_rate')"
+          prop="name"
+        >
+          <el-input v-model="temp.output_rate" />
+        </el-form-item>
+
+        <el-form-item
+          :label="$t('server.ip_addr')"
+          prop="name"
+        >
+          <el-input v-model="temp.ip_addr" />
+        </el-form-item>
+
+        <el-form-item
+          :label="$t('server.udp_port')"
+          prop="name"
+        >
+          <el-input v-model="temp.udp_port" />
+        </el-form-item>
+
+        <el-form-item
+          :label="$t('server.dns_name')"
+          prop="name"
+        >
+          <el-input v-model="temp.dns_name" />
+        </el-form-item>
+
+        <el-form-item :label="$t('server.status')" prop="status">
+          <el-radio-group v-model="temp.status">
+            <el-radio :label="1">启动</el-radio>
+            <el-radio :label="2">关闭</el-radio>
+
+          </el-radio-group>
         </el-form-item>
 
         <!-- <el-form-item :label="$t('employee.employee_id')" prop="employee_id">
@@ -381,20 +417,20 @@ export default {
   // components: { Pagination },
   directives: { waves },
   filters: {
-    statusFilter(status) {
-      const statusMap = {
-        0: 'background: #2625241f',
-        1: 'background: #7eaae300'
-      }
-      return statusMap[status]
-    },
-    // classStatusFilter(type) {
+    // statusFilter(status) {
     //   const statusMap = {
-    //     0: '停课',
-    //     1: '正常'
+    //     0: 'background: #2625241f',
+    //     1: 'background: #7eaae300'
     //   }
-    //   return statusMap[type]
+    //   return statusMap[status]
     // },
+    statusFilter(type) {
+      const statusMap = {
+        1: '启动',
+        2: '停止'
+      }
+      return statusMap[type]
+    },
     Date2Week(date) {
       var d = new Date(Date.parse(date.replace(/-/g, '/')))
       return d.getDay()
@@ -494,7 +530,7 @@ export default {
       this.temp = {
         id: undefined,
         name: '',
-        name_pref: '',
+
         type: 0,
         status: 1
 

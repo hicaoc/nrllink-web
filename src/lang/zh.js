@@ -70,9 +70,27 @@ export default {
     profile: '个人中心'
   },
   server: {
-    name: '名称',
-    master_server: '主服务器',
-    slave_server: '从服务器'
+    server_name: '服务器名称',
+    server_type: '服务器类型',
+    cpu_type: 'CPU类型',
+    mem_size: '内存大小',
+    input_rate: '上行带宽',
+    output_rate: '下行带宽',
+
+    netcard: '网卡型号',
+    ip_addr: 'IP地址',
+    udp_port: 'UDP端口',
+    dns_name: 'DNS名称',
+    iptype: 'IP类型',
+    status: '状态',
+    note: '备注',
+    create: '创建',
+    edit: '编辑',
+    delete: '删除',
+    active: '动作'
+
+    // master_server: '主服务器',
+    // slave_server: '从服务器'
   },
   device: {
     grouproom: '群组房间',
@@ -96,7 +114,7 @@ export default {
   group: {
     name: '名称',
     type: '类型',
-    allow_cpuid: '允许设备',
+    allow_callsign_ssid: '允许设备',
     note: '备注'
 
   },

@@ -57,7 +57,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="主服务器" width="110px" align="center">
+        <!-- <el-table-column label="主服务器" width="110px" align="center">
           <template slot-scope="scope">
             <span>{{
               ValueFilter(scope.row.master_server, serversOptions)
@@ -71,7 +71,7 @@
               ValueFilter(scope.row.slave_server, serversOptions)
             }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="类型" width="110px" align="center">
           <template slot-scope="scope">
@@ -81,9 +81,7 @@
 
         <el-table-column label="允许设备" width="200px" align="center">
           <template slot-scope="scope">
-            <span>{{
-              cpuidValueFilter(scope.row.allow_cpuid, devicesOptions)
-            }}</span>
+            <span>{{ scope.row.allow_callsign_ssid }}</span>
           </template>
         </el-table-column>
 
@@ -154,7 +152,7 @@
           <el-input v-model="temp.name" />
         </el-form-item>
 
-        <el-form-item :label="$t('server.master_server')" prop="type">
+        <!-- <el-form-item :label="$t('server.master_server')" prop="type">
           <el-select v-model="temp.master_server" filterable>
             <el-option
               v-for="item in serversOptions"
@@ -174,7 +172,7 @@
               :value="item.id"
             />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item :label="$t('group.type')" prop="sex">
           <el-radio-group v-model="temp.type">
@@ -188,11 +186,20 @@
 
         <el-form-item
           v-if="temp.type === 3"
-          :label="$t('group.allow_cpuid')"
-          prop="allow_cpuid"
+          :label="$t('group.allow_callsign_ssid')"
+          prop="allow_callsign_ssid"
+        >
+          <el-input v-model="temp.allow_callsign_ssid" />
+        </el-form-item>
+
+        <!--
+        <el-form-item
+          v-if="temp.type === 3"
+          :label="$t('group.allow_callsign_ssid')"
+          prop="allow_callsign_ssid"
         >
           <el-select
-            v-model="temp.allow_cpuid"
+            v-model="temp.allow_callsign_ssid"
             filterable
             placeholder="请选择设备ID"
             style="width: 320px"
@@ -203,10 +210,10 @@
               v-for="item in devicesOptions"
               :key="item.id"
               :label="item.callsign + '-' + item.ssid + ' ' + item.name"
-              :value="item.cpuid"
+              :value="item.callsign + '-' + item.ssid"
             />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item :label="$t('group.note')" prop="name">
           <el-input v-model="temp.note" />
@@ -249,8 +256,8 @@ import {
   deleteGroup
 } from '@/api/groups'
 
-import { fetchServerList } from '@/api/server'
-import { fetchDeviceList } from '@/api/device'
+// import { fetchServerList } from '@/api/server'
+// import { fetchDeviceList } from '@/api/device'
 // import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
 // import LineChart from './components/LineChart'
@@ -292,8 +299,8 @@ export default {
       list: [],
 
       chartData: {},
-      devicesOptions: [],
-      serversOptions: [],
+      // devicesOptions: [],
+      // serversOptions: [],
       groupTypeOptions,
 
       activeName: 'first',
@@ -307,7 +314,8 @@ export default {
       showReviewer: false,
       temp: {
         id: undefined,
-        name: ''
+        name: '',
+        allow_callsign_ssid: ''
       },
 
       //  roles: ["admin", "editer", "guest"],
@@ -337,22 +345,22 @@ export default {
       this.showtable = true
     }
 
+    // this.fetchDeviceList({}).then(response => {
+    //   this.devicesOptions = Object.values(response.data.items)
+    // })
+
     this.getList()
 
-    this.fetchDeviceList({}).then(response => {
-      this.devicesOptions = Object.values(response.data.items)
-    })
-
-    this.fetchServerList({}).then(response => {
-      this.serversOptions = Object.values(response.data.items)
-    })
+    // this.fetchServerList({}).then(response => {
+    //   this.serversOptions = Object.values(response.data.items)
+    // })
   },
 
   methods: {
     checkPermission,
     fetchGroupList,
-    fetchDeviceList,
-    fetchServerList,
+    // fetchDeviceList,
+    // fetchServerList,
     createGroup,
     updateGroup,
     deleteGroup,
@@ -424,9 +432,9 @@ export default {
       })
     },
 
-    cpuidValueFilter(cpuid, array) {
+    callsignssidValueFilter(callsignssid, array) {
       for (const v of array) {
-        if (v.cpuid === cpuid) {
+        if (v.callsignssid === callsignssid) {
           return v.callsign + '-' + v.ssid + ' ' + v.name
         }
       }

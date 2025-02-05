@@ -651,7 +651,7 @@
           active-color="#1890ff"
           inactive-color="#dcdfe6"
         /> -->
-
+            <!--
             <el-form-item label="呼号:" prop="callsign">
               <el-input
                 v-model="temp.device_parm.callsign"
@@ -669,7 +669,7 @@
                 type="primary"
                 @click="changeByte('ssid', temp.device_parm.ssid)"
               >保存</el-button>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item label="本机密码::" prop="local_password">
               <el-input
@@ -1521,6 +1521,8 @@ export default {
           this.temp.cpuid +
           '&callsign=' +
           this.temp.callsign +
+          '&ssid=' +
+          this.temp.ssid +
           '&' +
           name +
           '=' +
@@ -1541,6 +1543,8 @@ export default {
           this.temp.cpuid +
           '&callsign=' +
           this.temp.callsign +
+          '&ssid=' +
+          this.temp.ssid +
           '&local_ipaddr=' +
           val.local_ipaddr +
           '&gateway=' +

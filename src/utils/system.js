@@ -31,7 +31,9 @@ export const DevModelOptions = [
   { id: 21, name: 'FTM-400D' },
   { id: 22, name: 'ESP32' },
   { id: 23, name: 'MMDVM' },
-  { id: 25, name: '4G便携' }
+  { id: 25, name: '4G便携' },
+  { id: 100, name: 'NRL-微信小程序' },
+  { id: 200, name: 'NRL-Server' }
 
 ]
 
@@ -76,3 +78,15 @@ export const WeekOptions = [
   { id: 0, name: '星期日' }
 ]
 
+// 物理机，虚拟机，树莓派等
+export const ServerTypeOptions = [
+
+  { id: 1, name: '专用服务器' },
+  { id: 2, name: '普通PC' },
+  { id: 3, name: '小主机' },
+  { id: 4, name: '树莓派等开发板' },
+  { id: 5, name: '自建虚拟机' },
+  { id: 6, name: '阿里云' },
+  { id: 7, name: '腾讯云' },
+  { id: 8, name: '华为云' }
+]

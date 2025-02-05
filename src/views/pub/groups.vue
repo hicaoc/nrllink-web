@@ -154,7 +154,7 @@
           <el-input v-model="temp.name" style="width: 80%;" />
         </el-form-item>
 
-        <el-form-item :label="$t('server.master_server')" prop="type">
+        <!-- <el-form-item :label="$t('server.master_server')" prop="type">
           <el-select v-model="temp.master_server" filterable>
             <el-option
               v-for="item in serversOptions"
@@ -174,7 +174,7 @@
               :value="item.id"
             />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item :label="$t('group.type')" prop="sex">
           <el-radio-group v-model="temp.type">
@@ -246,7 +246,7 @@ import {
   deleteGroup
 } from '@/api/groups'
 import { fetchMyDeviceList, fetchDeviceList, updateDevice } from '@/api/device'
-import { fetchServerList } from '@/api/server'
+// import { fetchServerList } from '@/api/server'
 
 // import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
@@ -284,15 +284,13 @@ export default {
   data() {
     return {
       tableKey: 0,
-      list: {
-        name: ''
-      },
+      list: [],
       name: '',
       groupTypeOptions,
-      serversOptions: [],
+      // serversOptions: [],
       mydevicesOptions: [],
-      devicesOptions: [],
-      groupodevlist: [],
+      devicesOptions: null,
+      groupodevlist: null,
 
       chartData: {},
       userTimeLinelist: null,
@@ -358,16 +356,15 @@ export default {
       this.devicesOptions = Object.values(response.data.items)
     })
 
-    this.fetchServerList({}).then(response => {
-      this.serversOptions = Object.values(response.data.items)
-    })
+    // this.fetchServerList({}).then(response => {
+    //   this.serversOptions = Object.values(response.data.items)
+    // })
   },
 
   methods: {
     checkPermission,
     fetchMyDeviceList,
     fetchDeviceList,
-    fetchServerList,
     updateDevice,
     fetchGroupList,
     createGroup,
