@@ -97,11 +97,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="状态" width="110px" align="center">
+        <!-- <el-table-column label="状态" width="110px" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.status }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="创建时间" width="100px" align="center">
           <template slot-scope="scope">

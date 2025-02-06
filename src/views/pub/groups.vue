@@ -13,67 +13,17 @@
     </div>
 
     <div>
-      <el-card v-for="r in rooms.filter(item => item.name.includes(name))" :key="r.id" class="box-card">
-        <div style="padding-bottom: 10px;padding-top: 10px; background:#e9e979;">
-          <span>{{ r.name }}</span>
 
-        </div>
-
-        <el-collapse accordion>
-          <el-collapse-item
-            title="我要加入"
-            name="1"
-          >
-            <div
-              v-for="mydev,index in mydevicesOptions"
-              :key="index"
-              class="text item"
-            >
-              <span v-if="mydev.group_id !== r.id">
-                <el-button
-                  size="mini"
-                  plain
-                  :type="mydev.is_online === true ? 'primary' : ''"
-                  @click="changeGroup(mydev, r.id)"
-                > {{ mydev.id +
-                  " " +
-                  mydev.callsign +
-                  "-" +
-                  mydev.ssid +
-                  " " +
-                  mydev.name }}</el-button>
-              </span>
-            </div>
-          </el-collapse-item>
-          <el-collapse-item
-            :title="'已加入设备' "
-            name="2"
-          >
-
-            <div
-              v-for="d in mydevicesOptions"
-              :key="d.id"
-              class="text item"
-            >
-              <span v-if="d.group_id === r.id">
-                <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " + d.name }} </el-tag>
-
-              </span>
-            </div>
-          </el-collapse-item>
-
-        </el-collapse>
-
-      </el-card>
-
-      <el-card
-        v-for="g in list.filter(item => item.name.includes(name) )"
-        :key="g.id"
-        class="box-card"
-      >
-        <div :style="g.id===0 ? 'padding-bottom: 10px;padding-top: 10px;  background:#c1e7c1;' :'padding-bottom: 10px;padding-top: 10px;  background:#afafeb;'">
+      <el-card v-for="g in list.filter(item => item.name.includes(name))" :key="g.id" class="box-card">
+        <div
+          :style="g.id === 0
+            ? 'padding-bottom: 10px; padding-top: 10px; background: #c1e7c1;'
+            : (g.id === 1 || g.id === 2 || g.id === 3
+              ? 'padding-bottom: 10px; padding-top: 10px; background: #e9e979;'
+              : 'padding-bottom: 10px; padding-top: 10px; background: #afafeb;')"
+        >
           <span>{{
-            g.name + "-" + ValueFilter(g.type, groupTypeOptions) +" " + g.note
+            g.name + "-" + ValueFilter(g.type, groupTypeOptions) + " " + g.note
           }}</span>
 
           <el-button
@@ -84,15 +34,8 @@
           >{{ $t("device.edit") }}</el-button>
         </div>
         <el-collapse accordion>
-          <el-collapse-item
-            title="我要加入"
-            name="1"
-          >
-            <div
-              v-for="mydev,index in mydevicesOptions"
-              :key="index"
-              class="text item"
-            >
+          <el-collapse-item title="我要加入" name="1">
+            <div v-for="mydev, index in mydevicesOptions" :key="index" class="text item">
               <span v-if="!hasindevlist(mydev.id, g.devmap)">
                 <el-button
                   size="mini"
@@ -110,17 +53,14 @@
             </div>
           </el-collapse-item>
           <el-collapse-item
-            :title="'已加入设备'+ (g.devmap == null ? '0' : Object.values(g.devmap).filter( i => i.is_online).length) +'/'+ (g.devmap == null ? '0' : Object.keys(g.devmap).length) + '台' "
+            :title="'已加入设备' + (g.devmap == null ? '0' : Object.values(g.devmap).filter(i => i.is_online).length) + '/' + (g.devmap == null ? '0' : Object.keys(g.devmap).length) + '台'"
             name="2"
           >
             <!-- <el-divider>已加入设备 {{ (g.devmap == null ? "0" : Object.keys(g.devmap).length) +"台 " }}</el-divider> -->
-            <div
-              v-for="d in g.devmap"
-              :key="d.id"
-              class="text item"
-            >
+            <div v-for="d in g.devmap" :key="d.id" class="text item">
               <span>
-                <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " + d.name }} </el-tag>
+                <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " +
+                  d.name }} </el-tag>
 
                 <!-- <el-button
               v-if="hasindevlist(d.id, mydevicesOptions) && "
@@ -178,19 +118,11 @@
 
         <el-form-item :label="$t('group.type')" prop="sex">
           <el-radio-group v-model="temp.type">
-            <el-radio
-              v-for="item in groupTypeOptions"
-              :key="item.id"
-              :label="item.id"
-            >{{ item.name }}</el-radio>
+            <el-radio v-for="item in groupTypeOptions" :key="item.id" :label="item.id">{{ item.name }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item
-          v-if="temp.type === 3"
-          :label="$t('group.allow_cpuid')"
-          prop="allow_cpuid"
-        >
+        <el-form-item v-if="temp.type === 3" :label="$t('group.allow_cpuid')" prop="allow_cpuid">
           <el-select
             v-model="temp.allow_cpuid"
             filterable
@@ -228,10 +160,8 @@
         <el-button @click="dialogFormVisible = false">{{
           $t("employee.cancel")
         }}</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus === 'create' ? createData() : updateData()"
-        >{{ $t("employee.confirm") }}</el-button>
+        <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
+          $t("employee.confirm") }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -309,12 +239,12 @@ export default {
       },
       rooms: [
 
-        {
-          id: 1,
-          name: '私人房间1'
-        },
-        { id: 2, name: '私人房间2' },
-        { id: 3, name: '私人房间3' }
+        // {
+        //   id: 1,
+        //   name: '私人房间1'
+        // },
+        // { id: 2, name: '私人房间2' },
+        // { id: 3, name: '私人房间3' }
       ],
 
       //  roles: ["admin", "editer", "guest"],
@@ -618,6 +548,7 @@ export default {
   display: table;
   content: "";
 }
+
 .clearfix:after {
   clear: both;
 }

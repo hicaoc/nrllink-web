@@ -58,6 +58,7 @@ export const groupTypeOptions = [
   { id: 5, name: '俱乐部' },
   { id: 6, name: '车友会' },
   { id: 7, name: '会议组' },
+  { id: 8, name: '私人房间' },
   { id: 100, name: '其他' }
 ]
 

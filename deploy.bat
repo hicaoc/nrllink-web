@@ -4,6 +4,10 @@ rem yarn build:prod
 
 
 echo update bh4tdv  ....
-ssh root@101.34.62.67 "rm -fr /nrllink/www/*"
-scp -r dist/* root@101.34.62.67:/nrllink/www/
+ssh root@nrlptt.com "rm -fr /nrllink/www/*"
+scp -r dist/* root@nrlptt.com:/nrllink/www/
+
+echo update ba1gm  ....
+ssh root@ba1gm.nrlptt.com "rm -fr /nrllink/www/*"
+scp -r dist/* root@ba1gm.nrlptt.com:/nrllink/www/
 
