@@ -239,12 +239,6 @@ export default {
       },
       rooms: [
 
-        // {
-        //   id: 1,
-        //   name: '私人房间1'
-        // },
-        // { id: 2, name: '私人房间2' },
-        // { id: 3, name: '私人房间3' }
       ],
 
       //  roles: ["admin", "editer", "guest"],
