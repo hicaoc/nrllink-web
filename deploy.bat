@@ -22,3 +22,7 @@ scp -r dist/* root@bd4two.nrlptt.com:/nrllink/www/
 echo update bd4vki  ....
 ssh root@bd4vki.nrlptt.com "rm -fr /nrllink/www/*"
 scp -r dist/* root@bd4vki.nrlptt.com:/nrllink/www/
+
+echo update bg6fcs  ....
+ssh root@ah.nrlptt.com "rm -fr /nrllink/www/*"
+scp -r dist/* root@ah.nrlptt.com:/nrllink/www/
