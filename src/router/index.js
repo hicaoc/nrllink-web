@@ -231,6 +231,16 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'register',
+        component: () =>
+          import ('@/views/setup/register'),
+        name: 'regMgr',
+        meta: {
+          title: 'register',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
+      },
+      {
         path: 'roles',
         component: () =>
           import ('@/views/setup/role'),

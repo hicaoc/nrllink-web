@@ -22,7 +22,7 @@ export default {
     appquery: '应用查询',
     signstats: '用户统计',
     users: '用户管理',
-
+    register: '注册管理',
     wxusermgr: '微信用户',
 
     data: '数据管理',
@@ -192,6 +192,21 @@ export default {
     subscribe_time: '关注时间',
     subscribe: '关注状态'
   },
+  register: {
+    name: '姓名',
+    sex: '性别',
+    address: '地址',
+    callsign: '呼号',
+    phone: '电话',
+    audit: '审核',
+    audited: '审核通过',
+    mail: '电子邮箱',
+    create_time: '创建时间',
+    update_time: '修改时间',
+    note: '备注'
+
+  },
+
   operator_log: {
     search: '查找',
     timestamp: '发生时间',
