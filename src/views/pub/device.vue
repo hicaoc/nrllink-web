@@ -19,12 +19,7 @@
         class="filter-item"
         @change="handleFilter"
       >
-        <el-option
-          v-for="item in userOptions"
-          :key="item.id"
-          :label="item.callsign"
-          :value="item.callsign"
-        />
+        <el-option v-for="item in userOptions" :key="item.id" :label="item.callsign" :value="item.callsign" />
       </el-select>
       <!--
       <el-input
@@ -46,20 +41,9 @@
         @change="handleFilter"
       >
 
-        <el-option
-          v-for="item in groupsOptions"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
-        />
+        <el-option v-for="item in groupsOptions" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="getList"
-      >刷新</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="getList">刷新</el-button>
 
       <el-switch
         v-model="listQuery.displayOnline"
@@ -72,12 +56,7 @@
         @change="handleFilter"
       />
 
-      <el-switch
-        v-model="showtable"
-        class="filter-item"
-        :active-text="$t('device.showtable')"
-        inactive-text
-      />
+      <el-switch v-model="showtable" class="filter-item" :active-text="$t('device.showtable')" inactive-text />
     </div>
 
     <!-- <div>
@@ -103,11 +82,10 @@
       <el-table
         :key="tableKey"
         v-loading="listLoading"
-        :data="
-          display_list.slice(
-            (currentPage - 1) * pageSize,
-            currentPage * pageSize
-          )
+        :data="display_list.slice(
+          (currentPage - 1) * pageSize,
+          currentPage * pageSize
+        )
         "
         border
         fit
@@ -116,43 +94,22 @@
         style="width: 100%"
         :default-sort="{ prop: 'id', order: 'descending' }"
       >
-        <el-table-column
-          fixed
-          :label="$t('Account.id')"
-          prop="id"
-          :sortable="true"
-          align="center"
-          width="110"
-        >
+        <el-table-column fixed :label="$t('Account.id')" prop="id" :sortable="true" align="center" width="110">
           <template slot-scope="scope">
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          fixed
-          prop="callsign"
-          label="呼号"
-          width="120px"
-          align="center"
-          :sortable="true"
-        >
+        <el-table-column fixed prop="callsign" label="呼号" width="120px" align="center" :sortable="true">
           <template slot-scope="scope">
-            <span><el-tag
-              :type="scope.row.is_online === true ? '' : 'info'"
-            >{{ scope.row.callsign + "-" + scope.row.ssid
+            <span><el-tag :type="scope.row.is_online === true ? '' : 'info'">{{ scope.row.callsign + "-" +
+              scope.row.ssid
             }}{{ scope.row.status >= 1 ? "🈲" : "" }}
             </el-tag></span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="设备名称"
-          prop="name"
-          width="120px"
-          align="center"
-          :sortable="true"
-        >
+        <el-table-column label="设备名称" prop="name" width="120px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
@@ -170,13 +127,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column
-          label="当前群组"
-          prop="group_id"
-          width="180px"
-          align="center"
-          :sortable="true"
-        >
+        <el-table-column label="当前群组" prop="group_id" width="180px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span v-if="scope.row.group_id > 0 && scope.row.group_id < 1000">
               私人房间{{ scope.row.group_id }}</span>
@@ -186,124 +137,68 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          prop="dev_rf_type"
-          label="射频类型"
-          width="140px"
-          align="center"
-          :sortable="true"
-        >
+        <el-table-column prop="dev_rf_type" label="射频类型" width="140px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.rf_type, DevRFtypeOptions) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          prop="tunner"
-          label="频率信道"
-          width="190px"
-          align="center"
-        >
+        <el-table-column prop="tunner" label="频率信道" width="190px" align="center">
           <template slot-scope="scope">
-            <span
-              v-if="scope.row.device_parm !== null"
-            ><el-tag v-if="scope.row.rf_type == 1">
-               R{{ scope.row.device_parm.one_recive_freq }}/T{{
-                 scope.row.device_parm.one_transmit_freq
-               }}
-             </el-tag>
+            <span v-if="scope.row.device_parm !== null"><el-tag v-if="scope.row.rf_type == 1">
+                                                          R{{ scope.row.device_parm.one_recive_freq }}/T{{
+                                                            scope.row.device_parm.one_transmit_freq
+                                                          }}
+                                                        </el-tag>
               <el-tag v-if="scope.row.rf_type == 2">
                 R{{ scope.row.device_parm.two_recive_freq }}/T{{
                   scope.row.device_parm.two_transmit_freq
                 }}
               </el-tag>
-              <el-tag
-                v-if="scope.row.rf_type == 3"
-              >信道{{ scope.row.device_parm.moto_channel }}
+              <el-tag v-if="scope.row.rf_type == 3">信道{{ scope.row.device_parm.moto_channel }}
                 {{ scope.row.chan_name[scope.row.device_parm.moto_channel] }}
               </el-tag>
             </span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="型号"
-          prop="dev_model"
-          width="100px"
-          align="center"
-          :sortable="true"
-        >
+        <el-table-column label="型号" prop="dev_model" width="100px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.dev_model, DevModelOptions) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="总呼叫时长"
-          prop="voice_time"
-          width="120px"
-          align="center"
-          :sortable="true"
-        >
+        <el-table-column label="总呼叫时长" prop="voice_time" width="120px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ formatVoiceTime(scope.row.voice_time) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="总流量"
-          prop="traffic"
-          width="120px"
-          align="center"
-          :sortable="true"
-        >
+        <el-table-column label="总流量" prop="traffic" width="120px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ formatFileSize(scope.row.traffic) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="状态"
-          prop="status"
-          width="100px"
-          align="center"
-          :sortable="true"
-        >
+        <el-table-column label="状态" prop="status" width="100px" align="center" :sortable="true">
           <template slot-scope="scope">
             <el-select
               v-model="scope.row.status"
               :disabled="!checkPermission(['admin']) && scope.row.callsign !== callsign"
               @change="updateStatus(scope.row)"
             >
-              <el-option
-                v-for="item in DevStatusOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
+              <el-option v-for="item in DevStatusOptions" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="上次呼叫时长"
-          prop="last_voice_duration"
-          width="155px"
-          align="center"
-          :sortable="true"
-        >
+        <el-table-column label="上次呼叫时长" prop="last_voice_duration" width="155px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ formatVoiceTime(scope.row.last_voice_duration) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="最近通联时间"
-          prop="last_voice_end_time"
-          width="155px"
-          align="center"
-          :sortable="true"
-        >
+        <el-table-column label="最近通联时间" prop="last_voice_end_time" width="155px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.last_voice_end_time) }}</span>
           </template>
@@ -355,11 +250,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column
-          :label="$t('Account.actions')"
-          align="center"
-          class-name="small-padding fixed-width"
-        >
+        <el-table-column :label="$t('Account.actions')" align="center" class-name="small-padding fixed-width">
           <template slot-scope="{ row }">
             <el-button
               v-if="checkPermission(['admin']) || row.callsign === callsign"
@@ -374,7 +265,8 @@
               size="mini"
               type="primary"
               @click="handleChange(row)"
-            >{{ $t("device.change") }}</el-button>
+            >{{
+              $t("device.change") }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -402,9 +294,7 @@
         :body-style="{ padding: '20px' }"
       >
         <div slot="header" class="clearfix">
-          <el-tag
-            :type="item.is_online === true ? '' : 'info'"
-          >{{ item.id }}. {{ item.callsign + "-" + item.ssid + " "
+          <el-tag :type="item.is_online === true ? '' : 'info'">{{ item.id }}. {{ item.callsign + "-" + item.ssid + " "
           }}{{ item.status == 1 ? "🈲" : ""
           }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
             ValueFilter(item.dev_type, DevTypeOptions)
@@ -416,14 +306,16 @@
             type="text"
             :disabled="item.is_online === false"
             @click="handleChange(item)"
-          >{{ $t("device.change") }}</el-button>
+          >{{ $t("device.change")
+          }}</el-button>
 
           <el-button
             v-if="checkPermission(['admin']) || item.callsign === callsign"
             style="float: right; padding: 3px 0"
             type="text"
             @click="handleUpdate(item)"
-          >{{ $t("device.edit") }}</el-button>
+          >{{ $t("device.edit")
+          }}</el-button>
         </div>
 
         <span>名称:{{ item.name }}</span><br>
@@ -431,21 +323,17 @@
         <span>射频类型:{{ ValueFilter(item.rf_type, DevRFtypeOptions) }}</span><br>
 
         信道频率:
-        <span
-          v-if="item.device_parm !== null"
-        ><span v-if="item.rf_type == 1">
-           R{{ item.device_parm.one_recive_freq }}/T{{
-             item.device_parm.one_transmit_freq
-           }}
-         </span>
+        <span v-if="item.device_parm !== null"><span v-if="item.rf_type == 1">
+                                                 R{{ item.device_parm.one_recive_freq }}/T{{
+                                                   item.device_parm.one_transmit_freq
+                                                 }}
+                                               </span>
           <span v-if="item.rf_type == 2">
             R{{ item.device_parm.two_recive_freq }}/T{{
               item.device_parm.two_transmit_freq
             }}
           </span>
-          <span
-            v-if="item.rf_type == 3"
-          >信道{{ item.device_parm.moto_channel }}
+          <span v-if="item.rf_type == 3">信道{{ item.device_parm.moto_channel }}
             {{ item.chan_name[item.device_parm.moto_channel] }}
           </span> </span><br>
 
@@ -501,12 +389,7 @@
             @change="handleFilter"
           >
 
-            <el-option
-              v-for="item in groupsOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
+            <el-option v-for="item in groupsOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
@@ -534,67 +417,35 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item
-          v-if="temp.rf_type == 3"
-          label="频道1名称:"
-          prop="chan1_name"
-        >
+        <el-form-item v-if="temp.rf_type == 3" label="频道1名称:" prop="chan1_name">
           <el-input v-model="temp.chan_name[1]" style="width: 80%" />
         </el-form-item>
 
-        <el-form-item
-          v-if="temp.rf_type == 3"
-          label="频道2名称:"
-          prop="chan2_name"
-        >
+        <el-form-item v-if="temp.rf_type == 3" label="频道2名称:" prop="chan2_name">
           <el-input v-model="temp.chan_name[2]" style="width: 80%" />
         </el-form-item>
 
-        <el-form-item
-          v-if="temp.rf_type == 3"
-          label="频道3名称:"
-          prop="chan3_name"
-        >
+        <el-form-item v-if="temp.rf_type == 3" label="频道3名称:" prop="chan3_name">
           <el-input v-model="temp.chan_name[3]" style="width: 80%" />
         </el-form-item>
 
-        <el-form-item
-          v-if="temp.rf_type == 3"
-          label="频道4名称:"
-          prop="chan4_name"
-        >
+        <el-form-item v-if="temp.rf_type == 3" label="频道4名称:" prop="chan4_name">
           <el-input v-model="temp.chan_name[4]" style="width: 80%" />
         </el-form-item>
 
-        <el-form-item
-          v-if="temp.rf_type == 3"
-          label="频道5名称:"
-          prop="chan5_name"
-        >
+        <el-form-item v-if="temp.rf_type == 3" label="频道5名称:" prop="chan5_name">
           <el-input v-model="temp.chan_name[5]" style="width: 80%" />
         </el-form-item>
 
-        <el-form-item
-          v-if="temp.rf_type == 3"
-          label="频道6名称:"
-          prop="chan6_name"
-        >
+        <el-form-item v-if="temp.rf_type == 3" label="频道6名称:" prop="chan6_name">
           <el-input v-model="temp.chan_name[6]" style="width: 80%" />
         </el-form-item>
 
-        <el-form-item
-          v-if="temp.rf_type == 3"
-          label="频道7名称:"
-          prop="chan7_name"
-        >
+        <el-form-item v-if="temp.rf_type == 3" label="频道7名称:" prop="chan7_name">
           <el-input v-model="temp.chan_name[7]" style="width: 80%" />
         </el-form-item>
 
-        <el-form-item
-          v-if="temp.rf_type == 3"
-          label="频道8名称:"
-          prop="chan8_name"
-        >
+        <el-form-item v-if="temp.rf_type == 3" label="频道8名称:" prop="chan8_name">
           <el-input v-model="temp.chan_name[8]" style="width: 80%" />
         </el-form-item>
 
@@ -611,10 +462,9 @@
         <el-button @click="dialogFormVisible = false">{{
           $t("employee.cancel")
         }}</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus === 'create' ? createData() : updateData()"
-        >{{ $t("employee.confirm") }}</el-button>
+        <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
+          $t("employee.confirm")
+        }}</el-button>
       </div>
     </el-dialog>
 
@@ -668,49 +518,34 @@
             </el-form-item> -->
 
             <el-form-item label="本机密码::" prop="local_password">
-              <el-input
-                v-model="temp.device_parm.local_password"
-                style="width: 150px"
-                :disabled="true"
-              />
+              <el-input v-model="temp.device_parm.local_password" style="width: 150px" :disabled="true" />
             </el-form-item>
 
             <el-form-item label="本机IP:" prop="local_ipaddr">
-              <el-input
-                v-model="temp.device_parm.local_ipaddr"
-                style="width: 150px"
-              />
+              <el-input v-model="temp.device_parm.local_ipaddr" style="width: 150px" />
             </el-form-item>
 
             <el-form-item label="掩码:" prop="netmask">
-              <el-input
-                v-model="temp.device_parm.netmask"
-                style="width: 150px"
-              />
+              <el-input v-model="temp.device_parm.netmask" style="width: 150px" />
             </el-form-item>
 
             <el-form-item label="网关:" prop="gateway">
-              <el-input
-                v-model="temp.device_parm.gateway"
-                style="width: 150px"
-              />
+              <el-input v-model="temp.device_parm.gateway" style="width: 150px" />
             </el-form-item>
 
             <el-form-item label="DNS地址:" prop="dns_ipaddr">
-              <el-input
-                v-model="temp.device_parm.dns_ipaddr"
-                style="width: 150px"
-              />
+              <el-input v-model="temp.device_parm.dns_ipaddr" style="width: 150px" />
             </el-form-item>
 
-            <el-form-item label="目标IP地址:" prop="dest_domainname">
-              <el-input
-                v-model="temp.device_parm.dest_domainname"
-                style="width: 150px"
-              />
+            <el-form-item label="目标地址:" prop="dest_domainname">
+              <!-- <el-input v-model="temp.device_parm.dest_domainname" style="width: 150px" /> -->
+
+              <el-select v-model="temp.device_parm.dest_domainname" filterable allow-create default-first-option placeholder="请选择服务器">
+                <el-option v-for="item in platformOptions" :key="item.id" :label="item.name+'-'+item.host" :value="item.host" />
+              </el-select>
 
               <el-popconfirm
-                title="请确认IP地址是否正确,错误后设备将找不到家！！！"
+                title="请确认目标地址或域名是否正确,错误后设备将找不到家！！！"
                 confirm-button-text="确定保存"
                 cancel-button-text="放弃"
                 icon="el-icon-info"
@@ -722,19 +557,11 @@
             </el-form-item>
 
             <el-form-item label="对端CPUID:" prop="peer_password">
-              <el-input
-                v-model="temp.device_parm.peer_password"
-                :disabled="true"
-                style="width: 150px"
-              />
+              <el-input v-model="temp.device_parm.peer_password" :disabled="true" style="width: 150px" />
             </el-form-item>
 
             <el-form-item label="对端密码:" prop="peer_password">
-              <el-input
-                v-model="temp.device_parm.peer_password"
-                :disabled="true"
-                style="width: 150px"
-              />
+              <el-input v-model="temp.device_parm.peer_password" :disabled="true" style="width: 150px" />
             </el-form-item>
           </el-collapse-item>
 
@@ -921,29 +748,18 @@
                   changeByte('moto_channel', temp.device_parm.moto_channel)
                 "
               ><el-option lable="0" :value="0" />
-                <el-option
-                  v-for="(item, index) in 16"
-                  :key="index"
-                  :label="item"
-                  :value="item"
-                />
+                <el-option v-for="(item, index) in 16" :key="index" :label="item" :value="item" />
               </el-select>
             </el-form-item>
           </el-collapse-item>
 
           <el-collapse-item title="内置1W模块参数设置" name="4">
             <el-form-item label="1w接收频率:" prop="one_recive_freq">
-              <el-input
-                v-model="temp.device_parm.one_recive_freq"
-                style="width: 150px"
-              />
+              <el-input v-model="temp.device_parm.one_recive_freq" style="width: 150px" />
             </el-form-item>
 
             <el-form-item label="1w发射频率:" prop="one_transmit_freq">
-              <el-input
-                v-model="temp.device_parm.one_transmit_freq"
-                style="width: 150px"
-              />
+              <el-input v-model="temp.device_parm.one_transmit_freq" style="width: 150px" />
             </el-form-item>
 
             <el-form-item label="1w接收哑音:" prop="recive_dumb">
@@ -951,16 +767,8 @@
                 v-model="temp.device_parm.one_recive_cxcss"
                 style="width: 150px"
               /> -->
-              <el-select
-                v-model="temp.device_parm.one_recive_cxcss"
-                style="width: 150px"
-              >
-                <el-option
-                  v-for="item in ctcssOptions"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                />
+              <el-select v-model="temp.device_parm.one_recive_cxcss" style="width: 150px">
+                <el-option v-for="item in ctcssOptions" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
 
@@ -969,44 +777,21 @@
                 v-model="temp.device_parm.one_transmit_cxcss"
                 style="width: 150px"
               /> -->
-              <el-select
-                v-model="temp.device_parm.one_transmit_cxcss"
-                style="width: 150px"
-              >
-                <el-option
-                  v-for="item in ctcssOptions"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                />
+              <el-select v-model="temp.device_parm.one_transmit_cxcss" style="width: 150px">
+                <el-option v-for="item in ctcssOptions" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-form-item>
 
             <el-form-item label="1W音量:" prop="one_volume">
-              <el-slider
-                v-model="temp.device_parm.one_volume"
-                :max="9"
-                show-input
-                style="width: 95%"
-              />
+              <el-slider v-model="temp.device_parm.one_volume" :max="9" show-input style="width: 95%" />
             </el-form-item>
 
             <el-form-item label="1W SQL:" prop="one_sql_level">
-              <el-slider
-                v-model="temp.device_parm.one_sql_level"
-                :max="9"
-                show-input
-                style="width: 95%"
-              />
+              <el-slider v-model="temp.device_parm.one_sql_level" :max="9" show-input style="width: 95%" />
             </el-form-item>
 
             <el-form-item label="1w话筒增益:" prop="one_mic_sensitivity">
-              <el-slider
-                v-model="temp.device_parm.one_mic_sensitivity"
-                :max="8"
-                show-input
-                style="width: 95%"
-              />
+              <el-slider v-model="temp.device_parm.one_mic_sensitivity" :max="8" show-input style="width: 95%" />
             </el-form-item>
             <el-form-item label="频点模板:" prop="current_relay">
               <el-select
@@ -1036,80 +821,41 @@
               </el-select>
             </el-form-item>
 
-            <el-button
-              type="primary"
-              @click="update1w(temp.device_parm)"
-            >1w参数保存</el-button>
+            <el-button type="primary" @click="update1w(temp.device_parm)">1w参数保存</el-button>
           </el-collapse-item>
 
           <el-collapse-item title="内置2W模块参数设置" name="5">
             <el-form-item label="2W接收频率:" prop="two_recive_freq">
-              <el-input
-                v-model="temp.device_parm.two_recive_freq"
-                style="width: 150px"
-              />
+              <el-input v-model="temp.device_parm.two_recive_freq" style="width: 150px" />
             </el-form-item>
 
             <el-form-item label="2W发送频率:" prop="two_transimit_freq">
-              <el-input
-                v-model="temp.device_parm.two_transmit_freq"
-                style="width: 150px"
-              />
+              <el-input v-model="temp.device_parm.two_transmit_freq" style="width: 150px" />
             </el-form-item>
 
             <el-form-item label="2w接收哑音:" prop="two_recive_cxcss">
-              <el-input
-                v-model="temp.device_parm.two_recive_cxcss"
-                style="width: 150px"
-              />
+              <el-input v-model="temp.device_parm.two_recive_cxcss" style="width: 150px" />
             </el-form-item>
 
             <el-form-item label="2w发射哑音:" prop="two_transmit_cxcss">
-              <el-input
-                v-model="temp.device_parm.two_transmit_cxcss"
-                style="width: 150px"
-              />
+              <el-input v-model="temp.device_parm.two_transmit_cxcss" style="width: 150px" />
             </el-form-item>
 
             <el-form-item label="2W音量:" prop="name">
-              <el-select
-                v-model="temp.device_parm.two_volume"
-                style="width: 150px"
-              >
-                <el-option
-                  v-for="item in 9"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+              <el-select v-model="temp.device_parm.two_volume" style="width: 150px">
+                <el-option v-for="item in 9" :key="item" :label="item" :value="item" />
               </el-select>
             </el-form-item>
 
             <el-form-item label="2W SQL:" prop="two_sql_level">
-              <el-select
-                v-model="temp.device_parm.two_sql_level"
-                style="width: 150px"
-              >
-                <el-option
-                  v-for="item in 9"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+              <el-select v-model="temp.device_parm.two_sql_level" style="width: 150px">
+                <el-option v-for="item in 9" :key="item" :label="item" :value="item" />
               </el-select>
             </el-form-item>
 
             <el-form-item label="2w话筒增益:" prop="two_mic_level">
-              <el-select
-                v-model="temp.device_parm.two_mic_level"
-                style="width: 150px"
-              >
-                <el-option
-                  v-for="item in 9"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
+              <el-select v-model="temp.device_parm.two_mic_level" style="width: 150px">
+                <el-option v-for="item in 9" :key="item" :label="item" :value="item" />
               </el-select>
             </el-form-item>
 
@@ -1141,10 +887,7 @@
               </el-select>
             </el-form-item>
 
-            <el-button
-              type="primary"
-              @click="update2w(temp.device_parm)"
-            >2w参数保存</el-button>
+            <el-button type="primary" @click="update2w(temp.device_parm)">2w参数保存</el-button>
           </el-collapse-item>
         </el-collapse>
       </el-form>
@@ -1158,6 +901,7 @@
 
 <script>
 import {
+  fetchPlatformList,
   fetchDeviceList,
   updateDevice,
   queryDevice,
@@ -1253,6 +997,7 @@ export default {
       DevModelOptions,
       DevStatusOptions,
       DevRFtypeOptions,
+      platformOptions: [],
       ctcssOptions,
       relayOptions: [],
       userOptions: [],
@@ -1337,6 +1082,10 @@ export default {
       this.showtable = true
     }
 
+    this.fetchPlatformList({}).then((response) => {
+      this.platformOptions = response.data.items
+    })
+
     this.fetchEmployeeAllList({}).then((response) => {
       this.userOptions = response.data.items
     })
@@ -1354,6 +1103,7 @@ export default {
   methods: {
     checkPermission,
     fetchDeviceList,
+    fetchPlatformList,
     fetchEmployeeAllList,
     fetchGroupList,
     ValueFilter,
@@ -1430,9 +1180,9 @@ export default {
             this.$notify({
               title: '1w模块参数:',
               message:
-            response.data.message === undefined
-              ? '保存成功'
-              : response.data.message,
+                response.data.message === undefined
+                  ? '保存成功'
+                  : response.data.message,
               type: 'success',
               duration: 2000
             })
@@ -1514,15 +1264,15 @@ export default {
     changeByte(name, val) {
       changeDeviceParm(
         'CPUID=' +
-          this.temp.cpuid +
-          '&callsign=' +
-          this.temp.callsign +
-          '&ssid=' +
-          this.temp.ssid +
-          '&' +
-          name +
-          '=' +
-          val
+        this.temp.cpuid +
+        '&callsign=' +
+        this.temp.callsign +
+        '&ssid=' +
+        this.temp.ssid +
+        '&' +
+        name +
+        '=' +
+        val
       ).then((response) => {
         this.$notify({
           title: '消息',
@@ -1536,21 +1286,21 @@ export default {
     changeIP(val) {
       changeDeviceParm(
         'CPUID=' +
-          this.temp.cpuid +
-          '&callsign=' +
-          this.temp.callsign +
-          '&ssid=' +
-          this.temp.ssid +
-          '&local_ipaddr=' +
-          val.local_ipaddr +
-          '&gateway=' +
-          val.gateway +
-          '&netmask=' +
-          val.netmask +
-          '&dns_ipaddr=' +
-          val.dns_ipaddr +
-          '&dest_domainname=' +
-          val.dest_domainname
+        this.temp.cpuid +
+        '&callsign=' +
+        this.temp.callsign +
+        '&ssid=' +
+        this.temp.ssid +
+        '&local_ipaddr=' +
+        val.local_ipaddr +
+        '&gateway=' +
+        val.gateway +
+        '&netmask=' +
+        val.netmask +
+        '&dns_ipaddr=' +
+        val.dns_ipaddr +
+        '&dest_domainname=' +
+        val.dest_domainname
       ).then((response) => {
         this.$notify({
           title: '消息',
@@ -1778,7 +1528,8 @@ export default {
 
 .maindiv {
   width: 100%;
-  height: auto; /* 不要使用定高度，后果自负 */
+  height: auto;
+  /* 不要使用定高度，后果自负 */
   display: flex;
   flex-wrap: wrap;
 }
@@ -1792,6 +1543,7 @@ export default {
   display: table;
   content: "";
 }
+
 .clearfix:after {
   clear: both;
 }

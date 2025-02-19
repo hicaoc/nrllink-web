@@ -16,6 +16,14 @@ export function fetchMyDeviceList(data) {
   })
 }
 
+export function fetchPlatformList(data) {
+  return request({
+    url: '/platform/list',
+    method: 'post',
+    data
+  })
+}
+
 export function queryDevice(data) {
   return request({
     url: '/device/query',
