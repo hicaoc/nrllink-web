@@ -32,7 +32,7 @@ ssh root@www.bh1osw.com "rm -fr /nrllink/www/*"
 scp -r dist/* root@www.bh1osw.com:/nrllink/www/
 
 echo update bh4tih  ....
-ssh root@www.bh1osw.com "rm -fr /nrllink/www/*"
+ssh root@bh4tih.nrlptt.com "rm -fr /nrllink/www/*"
 scp -r dist/* root@bh4tih.nrlptt.com:/nrllink/www/
 
 
