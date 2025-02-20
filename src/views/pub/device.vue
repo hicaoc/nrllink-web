@@ -82,11 +82,7 @@
       <el-table
         :key="tableKey"
         v-loading="listLoading"
-        :data="display_list.slice(
-          (currentPage - 1) * pageSize,
-          currentPage * pageSize
-        )
-        "
+        :data="display_list"
         border
         fit
         stripe
@@ -100,7 +96,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column fixed prop="callsign" label="呼号" width="120px" align="center" :sortable="true">
+        <el-table-column fixed prop="callsign" label="呼号" width="150px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span><el-tag :type="scope.row.is_online === true ? '' : 'info'">{{ scope.row.callsign + "-" +
               scope.row.ssid
@@ -162,7 +158,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="型号" prop="dev_model" width="100px" align="center" :sortable="true">
+        <el-table-column label="型号" prop="dev_model" width="150px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ ValueFilter(scope.row.dev_model, DevModelOptions) }}</span>
           </template>
@@ -192,13 +188,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="上次呼叫时长" prop="last_voice_duration" width="155px" align="center" :sortable="true">
+        <el-table-column label="上次呼叫时长" prop="last_voice_duration" width="120px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ formatVoiceTime(scope.row.last_voice_duration) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="最近通联时间" prop="last_voice_end_time" width="155px" align="center" :sortable="true">
+        <el-table-column label="最近通联时间" prop="last_voice_end_time" width="160px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.last_voice_end_time) }}</span>
           </template>
@@ -267,22 +263,23 @@
               @click="handleChange(row)"
             >{{
               $t("device.change") }}</el-button>
+
+            <el-button
+              v-if="checkPermission(['admin']) || row.callsign === callsign"
+              size="mini"
+              type="danger"
+              @click="handleDelete(row, '删除')"
+            >{{ $t('employee.delete') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
 
-    <div v-if="showtable">
-      <el-pagination
-        :current-page="currentPage"
-        :page-sizes="[5, 10, 20, 40]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="display_list.length"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </div>
+    <!-- <div v-if="showtable">
+      <el-pagination :current-page="currentPage" :page-sizes="[5, 10, 20, 40]" :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper" :total="display_list.length" @size-change="handleSizeChange"
+        @current-change="handleCurrentChange" />
+    </div> -->
 
     <div v-if="showtable == false">
       <el-card
@@ -540,8 +537,19 @@
             <el-form-item label="目标地址:" prop="dest_domainname">
               <!-- <el-input v-model="temp.device_parm.dest_domainname" style="width: 150px" /> -->
 
-              <el-select v-model="temp.device_parm.dest_domainname" filterable allow-create default-first-option placeholder="请选择服务器">
-                <el-option v-for="item in platformOptions" :key="item.id" :label="item.name+'-'+item.host" :value="item.host" />
+              <el-select
+                v-model="temp.device_parm.dest_domainname"
+                filterable
+                allow-create
+                default-first-option
+                placeholder="请选择服务器"
+              >
+                <el-option
+                  v-for="item in platformOptions"
+                  :key="item.id"
+                  :label="item.name + '-' + item.host"
+                  :value="item.host"
+                />
               </el-select>
 
               <el-popconfirm
@@ -905,6 +913,7 @@ import {
   fetchDeviceList,
   updateDevice,
   queryDevice,
+  deleteDevice,
   changeDeviceParm,
   changeDevice1w,
   changeDevice2w
@@ -1112,6 +1121,7 @@ export default {
     formatVoiceTime,
     updateDevice,
     queryDevice,
+    deleteDevice,
     changeDeviceParm,
     changeDevice1w,
     changeDevice2w,
@@ -1157,6 +1167,27 @@ export default {
           })
         }
       })
+    },
+
+    handleDelete(row) {
+      this.$confirm('此操作将删除设备，设备上线会会重新创建设备, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          deleteDevice(row).then(response => {
+            this.$message(response.data.message)
+            this.getList()
+            this.listLoading = false
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     },
 
     updateStatus(tempData) {

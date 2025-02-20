@@ -104,6 +104,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column :label="$t('register.mail')" width="210px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.mail }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column :label="$t('register.create_time')" width="210px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.create_time }}</span>
