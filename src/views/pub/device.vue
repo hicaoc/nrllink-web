@@ -1019,7 +1019,7 @@ export default {
       showtable: true,
       listQuery: {
         callsign: '',
-        displayOnline: false,
+        displayOnline: true,
         ower_id: '',
         group_id: ''
 
@@ -1128,9 +1128,12 @@ export default {
     fetchRelayList,
 
     getList() {
+      this.listLoading = true
       this.fetchDeviceList({}).then((response) => {
         this.list = Object.values(response.data.items)
         this.handleFilter()
+
+        this.listLoading = false
 
         // console.log(this.list)
       })
@@ -1356,28 +1359,36 @@ export default {
         this.display_list = this.list
       }
     },
+
     handleFilter() {
-      this.display_list = []
-      // console.log(this.listQuery)
-      for (const id in this.list) {
-        if (
-          this.filterOnline(this.list[id]) &&
-          this.filterCallsign(this.list[id]) &&
-          this.filterGroup(this.list[id])
-        ) {
-          this.display_list.push(this.list[id])
-        }
-      }
-      this.diplay_copy_list = this.display_list
+      //  this.display_list = this.list
+      this.display_list = this.list.filter(item => {
+        const matchesOnline = this.listQuery.displayOnline === false || item.is_online === true
+        const matchesCallsign = this.listQuery.callsign === '' || item.callsign === this.listQuery.callsign
+        const matchesGroup = this.listQuery.group_id === '' || item.group_id === this.listQuery.group_id
+
+        // 确保所有条件都满足
+        return matchesOnline && matchesCallsign && matchesGroup
+      })
+      // this.diplay_copy_list = [...this.display_list];
     },
+    // handleFilter() {
+    //   this.display_list = []
+    //   // console.log(this.listQuery)
+    //   for (const id in this.list) {
+    //     if (
+    //       this.filterOnline(this.list[id]) &&
+    //       this.filterCallsign(this.list[id]) &&
+    //       this.filterGroup(this.list[id])
+    //     ) {
+    //       this.display_list.push(this.list[id])
+    //     }
+    //   }
+    //   this.diplay_copy_list = this.display_list
+    // },
 
     filterOnline(dev) {
-      if (this.listQuery.displayOnline === true && dev.is_online === true) {
-        return true
-      } else if (this.listQuery.displayOnline === false) {
-        return true
-      }
-      return false
+      return this.listQuery.displayOnline === false || dev.is_online === true
     },
 
     // GetAsciiCode(str) {
@@ -1393,34 +1404,15 @@ export default {
     //   return getAscii
     // },
     filterCallsign(dev) {
-      // console.log(
-      //   dev.callsign,
-      //   this.GetAsciiCode(dev.callsign),
-      //   this.listQuery.callsign,
-      //   this.GetAsciiCode(this.listQuery.callsign),
-      //   dev.callsign === this.listQuery.callsign
-      // )
-
-      if (
-        this.listQuery.callsign !== '' &&
-        dev.callsign === this.listQuery.callsign
-      ) {
-        return true
-      } else if (this.listQuery.callsign === '') {
-        return true
-      }
-      return false
+      return (
+        this.listQuery.callsign === '' || dev.callsign === this.listQuery.callsign
+      )
     },
+
     filterGroup(dev) {
-      if (
-        this.listQuery.group_id !== '' &&
-        dev.group_id === this.listQuery.group_id
-      ) {
-        return true
-      } else if (this.listQuery.group_id === '') {
-        return true
-      }
-      return false
+      return (
+        this.listQuery.group_id === '' || dev.group_id === this.listQuery.group_id
+      )
     },
 
     sortChange(data) {

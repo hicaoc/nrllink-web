@@ -31,14 +31,15 @@ echo update bg6fcs ptt  ....
 ssh root@ptt.nrlptt.com "rm -fr /nrllink/www/*"
 scp -r dist/* root@ptt.nrlptt.com:/nrllink/www/
 
-
 echo update bh1osw  ....
 ssh root@www.bh1osw.com "rm -fr /nrllink/www/*"
 scp -r dist/* root@www.bh1osw.com:/nrllink/www/
 
-echo update bh4tih  ....
-ssh root@bh4tih.nrlptt.com "rm -fr /nrllink/www/*"
-scp -r dist/* root@bh4tih.nrlptt.com:/nrllink/www/
+echo update bi4umd  ....
+ssh root@yz.hamoa.cn "rm -fr /nrllink/www/*"
+scp -r dist/* root@yz.hamoa.cn:/nrllink/www/
+
+
 
 
 
