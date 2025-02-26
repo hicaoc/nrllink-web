@@ -9,6 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
+        <img src="@/assets/logo.png" alt="Logo" class="logo">
         <h3 class="title">{{ title }}</h3>
 
         <lang-select class="set-language" />
@@ -318,6 +319,7 @@ $light_gray: #eee;
 
   .title-container {
     position: relative;
+    text-align: center;
 
     .title {
       font-size: 26px;
@@ -335,6 +337,13 @@ $light_gray: #eee;
       right: 0px;
       cursor: pointer;
     }
+  }
+
+  .logo {
+    width: 350px;
+    height: auto;
+    margin: 0 auto 20px;
+    display: block;
   }
 
   .show-pwd {

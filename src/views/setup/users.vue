@@ -205,21 +205,9 @@
         <el-form-item :label="$t('employee.gird')" prop="name">
           <el-input v-model="temp.gird" />
         </el-form-item>
-        <!-- <el-form-item :label="$t('employee.employee_id')" prop="employee_id">
-          <el-input v-model="temp.employee_id"/>
-        </el-form-item>-->
-
-        <!-- <el-form-item :label="$t('employee.position')" prop="roles">
-          <el-select
-            v-model="temp.position"
-            :placeholder="$t('employee.position')"
-            class="filter-item"
-            style="width: 130px"
-          >
-            <el-option v-for="item in roles" :key="item.id" :value="item.id" :label="item.name"/>
-          </el-select>
-        </el-form-item>-->
-
+        <el-form-item :label="$t('Account.avatar')" prop="name">
+          <el-input v-model="temp.avatar" />
+        </el-form-item>
         <el-form-item :label="$t('employee.birthday')" prop="birthday">
           <el-date-picker
             v-model="temp.birthday"
