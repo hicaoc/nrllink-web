@@ -65,9 +65,9 @@ export const groupTypeOptions = [
 export const DevStatusOptions = [
   // { id: 0, name: '正常' },
   { id: 1, name: '禁收' },
-  { id: 2, name: '禁发' },
+  { id: 2, name: '禁发' }
   // { id: 3, name: '双禁' },
-  { id: 4, name: '透明' }
+  // { id: 4, name: '透明' }
 ]
 
 export const WeekOptions = [

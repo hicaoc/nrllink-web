@@ -117,7 +117,8 @@
             </el-select> -->
 
             <el-checkbox-group v-model="scope.row.statusArray" size="mini" :disabled="!checkPermission(['admin']) && scope.row.callsign !== callsign" @change="updateStatus(scope.row)">
-              <el-checkbox-button v-for="item in DevStatusOptions" :key="item.id" :label="item.id" :disabled="scope.row.ssid !== 200 && item.id==4">{{ item.name }}</el-checkbox-button>
+              <el-checkbox-button v-for="item in DevStatusOptions" :key="item.id" :label="item.id">{{ item.name }}</el-checkbox-button>
+              <el-checkbox-button v-if="scope.row.ssid === 200" :label="4">透明</el-checkbox-button>
             </el-checkbox-group>
 
           </template>
@@ -358,7 +359,8 @@
           </el-radio-group> -->
 
           <el-checkbox-group v-model="item.statusArray" size="mini" :disabled="!checkPermission(['admin']) && item.callsign !== callsign" @change="updateStatus(item)">
-            <el-checkbox-button v-for="i in DevStatusOptions" :key="i.id" :label="i.id" :disabled="item.ssid !== 200 && i.id==4">{{ i.name }}</el-checkbox-button>
+            <el-checkbox-button v-for="i in DevStatusOptions" :key="i.id" :label="i.id">{{ i.name }}</el-checkbox-button>
+            <el-checkbox-button v-if="item.ssid === 200" :label="4">透明</el-checkbox-button>
           </el-checkbox-group>
 
         </span>
