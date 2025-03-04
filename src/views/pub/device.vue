@@ -100,12 +100,30 @@
           <template slot-scope="scope">
             <span><el-tag :type="scope.row.is_online === true ? '' : 'info'">{{ scope.row.callsign + "-" +
               scope.row.ssid
-            }}{{ scope.row.status >= 1 ? "🈲" : "" }}
+            }}{{ scope.row.status&1 == 1 ? "🈲" : scope.row.status&2 == 2 ? "🈲" : "" }}
             </el-tag></span>
           </template>
         </el-table-column>
 
-        <el-table-column label="设备名称" prop="name" width="120px" align="center" :sortable="true">
+        <el-table-column label="状态" prop="status" width="220px" align="center">
+          <template slot-scope="scope">
+            <!-- <el-select
+              v-model="scope.row.statusArray"
+              :disabled="!checkPermission(['admin']) && scope.row.callsign !== callsign"
+              @change="updateStatus(scope.row)"
+              multiple
+            >
+              <el-option v-for="item in DevStatusOptions" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select> -->
+
+            <el-checkbox-group v-model="scope.row.statusArray" size="mini" :disabled="!checkPermission(['admin']) && scope.row.callsign !== callsign" @change="updateStatus(scope.row)">
+              <el-checkbox-button v-for="item in DevStatusOptions" :key="item.id" :label="item.id" :disabled="scope.row.ssid !== 200 && item.id==4">{{ item.name }}</el-checkbox-button>
+            </el-checkbox-group>
+
+          </template>
+        </el-table-column>
+
+        <el-table-column label="设备名称" prop="name" width="220px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
@@ -176,19 +194,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="状态" prop="status" width="100px" align="center" :sortable="true">
-          <template slot-scope="scope">
-            <el-select
-              v-model="scope.row.status"
-              :disabled="!checkPermission(['admin']) && scope.row.callsign !== callsign"
-              @change="updateStatus(scope.row)"
-            >
-              <el-option v-for="item in DevStatusOptions" :key="item.id" :label="item.name" :value="item.id" />
-            </el-select>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="上次呼叫时长" prop="last_voice_duration" width="120px" align="center" :sortable="true">
+        <el-table-column label="上次呼叫时长" prop="last_voice_duration" width="150px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ formatVoiceTime(scope.row.last_voice_duration) }}</span>
           </template>
@@ -246,7 +252,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column :label="$t('Account.actions')" align="center" class-name="small-padding fixed-width">
+        <el-table-column :label="$t('Account.actions')" align="center" width="260px" class-name="small-padding fixed-width">
           <template slot-scope="{ row }">
             <el-button
               v-if="checkPermission(['admin']) || row.callsign === callsign"
@@ -345,11 +351,17 @@
 
         <span> 所有者：{{ ValueFilter(item.ower_id, userOptions) }}</span><br>
         <span>状态:
-          <el-radio-group v-model="item.status">
+          <!-- <el-radio-group v-model="item.status">
             <el-radio v-for="d in DevStatusOptions" :key="d.id" :label="d.id">{{
               d.name
             }}</el-radio>
-          </el-radio-group></span>
+          </el-radio-group> -->
+
+          <el-checkbox-group v-model="item.statusArray" size="mini" :disabled="!checkPermission(['admin']) && item.callsign !== callsign" @change="updateStatus(item)">
+            <el-checkbox-button v-for="i in DevStatusOptions" :key="i.id" :label="i.id" :disabled="item.ssid !== 200 && i.id==4">{{ i.name }}</el-checkbox-button>
+          </el-checkbox-group>
+
+        </span>
       </el-card>
     </div>
 
@@ -446,13 +458,11 @@
           <el-input v-model="temp.chan_name[8]" style="width: 80%" />
         </el-form-item>
 
-        <el-form-item :label="$t('device.status')" prop="status">
-          <el-radio-group v-model="temp.status">
-            <el-radio v-for="d in DevStatusOptions" :key="d.id" :label="d.id">{{
-              d.name
-            }}</el-radio>
-          </el-radio-group>
-        </el-form-item>
+        <!-- <el-form-item :label="$t('device.status')" prop="status">
+          <el-checkbox-group v-model="temp.statusArray"  size="mini"   :disabled="!checkPermission(['admin']) && temp.callsign !== callsign"  @change="updateStatus(item)">
+            <el-checkbox-button v-for="i in DevStatusOptions" :key="i.id" :label="i.id">{{i.name}}</el-checkbox-button>
+         </el-checkbox-group>
+        </el-form-item> -->
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -1029,6 +1039,8 @@ export default {
       temp: {
         id: undefined,
         name: '',
+        statusArray: [],
+        chan_id: [],
         chan_name: [],
         device_parm: {
           callsign: '',
@@ -1130,12 +1142,24 @@ export default {
     getList() {
       this.listLoading = true
       this.fetchDeviceList({}).then((response) => {
-        this.list = Object.values(response.data.items)
+        this.list = Object.values(response.data.items).map(item => {
+          item.statusArray = []
+          if ((item.status & 1) === 1) {
+            item.statusArray.push(1)
+          }
+          if ((item.status & 2) === 2) {
+            item.statusArray.push(2)
+          }
+          if ((item.status & 4) === 4) {
+            item.statusArray.push(4)
+          }
+          return item
+        }
+        )
+
         this.handleFilter()
 
         this.listLoading = false
-
-        // console.log(this.list)
       })
     },
 
@@ -1194,6 +1218,16 @@ export default {
     },
 
     updateStatus(tempData) {
+      tempData.status = tempData.statusArray.reduce((acc, num) => acc | num, 0)
+
+      // let status = 0;
+
+      // tempData.statusArray.forEach((num) => {
+      //   status |= num; // 按位或运算
+      //   });
+
+      //   tempData.status = status;
+
       //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
       updateDevice(tempData).then((response) => {
         this.$notify({
@@ -1361,6 +1395,10 @@ export default {
     },
 
     handleFilter() {
+      if (this.listQuery.displayOnline === false && this.listQuery.callsign === '' && this.listQuery.group_id === '') {
+        this.display_list = this.list
+        return
+      }
       //  this.display_list = this.list
       this.display_list = this.list.filter(item => {
         const matchesOnline = this.listQuery.displayOnline === false || item.is_online === true
