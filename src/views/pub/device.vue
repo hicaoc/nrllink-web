@@ -105,7 +105,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="状态" prop="status" width="220px" align="center">
+        <el-table-column label="状态" prop="status" width="140px" align="center">
           <template slot-scope="scope">
             <!-- <el-select
               v-model="scope.row.statusArray"
@@ -149,6 +149,33 @@
             <span v-else>{{
               ValueFilter(scope.row.group_id, groupsOptions)
             }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column :label="$t('Account.actions')" align="center" width="260px" class-name="small-padding fixed-width">
+          <template slot-scope="{ row }">
+            <el-button
+              v-if="checkPermission(['admin']) || row.callsign === callsign"
+              size="mini"
+              type="primary"
+              @click="handleUpdate(row)"
+            >{{ $t("device.edit") }}</el-button>
+
+            <el-button
+              v-if="checkPermission(['admin']) || row.callsign === callsign"
+              :disabled="row.is_online === false"
+              size="mini"
+              type="primary"
+              @click="handleChange(row)"
+            >{{
+              $t("device.change") }}</el-button>
+
+            <el-button
+              v-if="checkPermission(['admin']) || row.callsign === callsign"
+              size="mini"
+              type="danger"
+              @click="handleDelete(row, '删除')"
+            >{{ $t('employee.delete') }}</el-button>
           </template>
         </el-table-column>
 
@@ -253,32 +280,6 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column :label="$t('Account.actions')" align="center" width="260px" class-name="small-padding fixed-width">
-          <template slot-scope="{ row }">
-            <el-button
-              v-if="checkPermission(['admin']) || row.callsign === callsign"
-              size="mini"
-              type="primary"
-              @click="handleUpdate(row)"
-            >{{ $t("device.edit") }}</el-button>
-
-            <el-button
-              v-if="checkPermission(['admin']) || row.callsign === callsign"
-              :disabled="row.is_online === false"
-              size="mini"
-              type="primary"
-              @click="handleChange(row)"
-            >{{
-              $t("device.change") }}</el-button>
-
-            <el-button
-              v-if="checkPermission(['admin']) || row.callsign === callsign"
-              size="mini"
-              type="danger"
-              @click="handleDelete(row, '删除')"
-            >{{ $t('employee.delete') }}</el-button>
-          </template>
-        </el-table-column>
       </el-table>
     </div>
 
