@@ -25,7 +25,7 @@
         label-position="left"
       >
         <div class="title-container">
-          <img src="@/assets/logo.png" alt="Logo" class="logo">
+          <img src="/images/logo.png" alt="Logo" class="logo">
           <h3 class="title">{{ title }}</h3>
 
           <lang-select class="set-language" />
@@ -347,7 +347,7 @@ $title_color: #ddd; /* New color for titles */
   .login-form-container {
     width: 100%;
     padding: 20px;
-    background-color: rgba(0, 0, 0, 0.1);
+    // background-color: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     margin-top: 20px;
   }
@@ -365,13 +365,7 @@ $title_color: #ddd; /* New color for titles */
   }
 
   .bottom_footer {
-    color: #fff;
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0 auto;
-    overflow: hidden;
+    display: none;
   }
 
   .svg-container {
@@ -442,8 +436,14 @@ $title_color: #ddd; /* New color for titles */
     }
 
     .bottom_footer {
-      left: 25%;
-      transform: translateX(-25%);
+      color: #fff;
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0 auto;
+      overflow: hidden;
+      display: block;
     }
   }
 
@@ -460,6 +460,7 @@ $title_color: #ddd; /* New color for titles */
     .bottom_footer {
       left: 50%;
       transform: translateX(-50%);
+      display: block;
     }
   }
 }
