@@ -922,7 +922,6 @@
 
 <script>
 import {
-  fetchPlatformList,
   fetchDeviceList,
   updateDevice,
   queryDevice,
@@ -931,6 +930,8 @@ import {
   changeDevice1w,
   changeDevice2w
 } from '@/api/device'
+
+import { fetchPlatformList } from '@/api/platform'
 
 import { fetchGroupList } from '@/api/groups'
 import { ctcssOptions } from '@/utils/ctcss'

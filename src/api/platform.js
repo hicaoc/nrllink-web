@@ -6,3 +6,11 @@ export function getplatforminfo() {
     method: 'get'
   })
 }
+
+export function fetchPlatformList(data) {
+  return request({
+    url: '/platform/list',
+    method: 'post',
+    data
+  })
+}
