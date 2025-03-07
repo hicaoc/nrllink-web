@@ -299,6 +299,7 @@ $bg: #1f2d3d; /* Updated background color */
 $dark_gray: #889aa4;
 $light_gray: #eee;
 $title_color: #ddd; /* New color for titles */
+$primary_color: #409EFF; /* Primary color for buttons and highlights */
 
 .login-container {
   min-height: 100%;
@@ -306,22 +307,24 @@ $title_color: #ddd; /* New color for titles */
   background-color: $bg;
   overflow: hidden;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
+  padding: 20px;
 
   .server-list {
     width: 100%;
-    padding: 20px;
+    padding: 10px;
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     overflow-y: auto;
-    max-height: 80vh;
+    max-height: 60vh;
 
     .server-title {
       font-size: 20px;
       color: $title_color;
       margin-bottom: 10px;
+      text-align: center;
     }
 
     ul {
@@ -329,7 +332,7 @@ $title_color: #ddd; /* New color for titles */
       padding: 0;
 
       li {
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         color: $light_gray;
 
         .server-link {
@@ -339,6 +342,7 @@ $title_color: #ddd; /* New color for titles */
 
         .server-link:hover {
           text-decoration: underline;
+          color: $primary_color;
         }
       }
     }
@@ -346,26 +350,44 @@ $title_color: #ddd; /* New color for titles */
 
   .login-form-container {
     width: 100%;
+    max-width: 400px;
     padding: 20px;
-    // background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     margin-top: 20px;
-  }
 
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
+    .el-form-item {
+      margin-bottom: 20px;
+    }
 
-    span {
-      &:first-of-type {
-        margin-right: 16px;
+    .el-button {
+      width: 100%;
+      margin-bottom: 20px;
+      background-color: $primary_color;
+      border-color: $primary_color;
+
+      &:hover {
+        background-color: darken($primary_color, 10%);
+        border-color: darken($primary_color, 10%);
       }
     }
   }
 
   .bottom_footer {
     display: none;
+    margin-top: 20px;
+    text-align: center;
+    color: $light_gray;
+    font-size: 14px;
+
+    a {
+      color: $primary_color;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   .svg-container {
@@ -379,11 +401,12 @@ $title_color: #ddd; /* New color for titles */
   .title-container {
     position: relative;
     text-align: center;
+    margin-bottom: 30px;
 
     .title {
       font-size: 26px;
       color: $light_gray;
-      margin: 0px auto 40px auto;
+      margin: 0px auto 20px auto;
       text-align: center;
       font-weight: bold;
     }
@@ -399,7 +422,7 @@ $title_color: #ddd; /* New color for titles */
   }
 
   .logo {
-    width: 350px;
+    width: 250px;
     height: auto;
     margin: 0 auto 20px;
     display: block;
