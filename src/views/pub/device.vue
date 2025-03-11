@@ -19,7 +19,7 @@
         class="filter-item"
         @change="handleFilter"
       >
-        <el-option v-for="item in userOptions" :key="item.id" :label="item.callsign" :value="item.callsign" />
+        <el-option v-for="(item,index) in list" :key="index" :label="item.id+' '+item.callsign+'-'+item.ssid" :value="item.callsign" />
       </el-select>
       <!--
       <el-input
@@ -127,6 +127,12 @@
         <el-table-column label="设备名称" prop="name" width="220px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="QTH" prop="name" width="220px" align="center" :sortable="true">
+          <template slot-scope="scope">
+            <span>{{ scope.row.qth }}</span>
           </template>
         </el-table-column>
 
