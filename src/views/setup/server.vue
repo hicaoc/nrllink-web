@@ -182,7 +182,7 @@
             <span>{{ scope.row.dev_map }}</span>
           </template>
         </el-table-column> -->
-
+        <!--
         <el-table-column
           label="在线"
           width="110px"
@@ -191,7 +191,7 @@
           <template slot-scope="scope">
             <span>{{ scope.row.is_online }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column
           label="所有者"
