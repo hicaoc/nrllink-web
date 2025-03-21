@@ -444,47 +444,51 @@ $primary_color: #409EFF; /* Primary color for buttons and highlights */
     bottom: 6px;
   }
 
-  @media only screen and (min-width: 768px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+@media only screen and (min-width: 768px) {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 
-    .server-list {
-      width: 30%;
-      margin-right: 20px;
-    }
-
-    .login-form-container {
-      width: 45%;
-    }
-
-    .bottom_footer {
-      color: #fff;
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      margin: 0 auto;
-      overflow: hidden;
-      display: block;
-    }
+  .server-list {
+    width: 30%;
+    margin-right: 20px;
   }
 
-  @media only screen and (max-width: 470px) {
-    .thirdparty-button {
-      display: none;
-    }
-
-    .server-list, .login-form-container {
-      width: 100%;
-      margin-right: 0;
-    }
-
-    .bottom_footer {
-      left: 50%;
-      transform: translateX(-50%);
-      display: block;
-    }
+  .login-form-container {
+    width: 45%;
   }
+
+  .bottom_footer {
+    color: #fff;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0 auto;
+    overflow: hidden;
+    display: block;
+  }
+}
+
+@media only screen and (max-width: 470px) {
+  flex-direction: column;
+  align-items: center;
+
+  .thirdparty-button {
+    display: none;
+  }
+
+  .server-list, .login-form-container {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px; /* Add margin-bottom for spacing between elements */
+  }
+
+  .bottom_footer {
+    left: 50%;
+    transform: translateX(-50%);
+    display: block;
+  }
+}
 }
 </style>
