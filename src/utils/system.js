@@ -32,7 +32,9 @@ export const DevModelOptions = [
   { id: 22, name: 'ESP32' },
   { id: 23, name: 'MMDVM' },
   { id: 25, name: '4G便携' },
+  { id: 26, name: '即时通9000' },
   { id: 100, name: 'NRL-微信小程序' },
+  { id: 101, name: 'NRL-安卓' },
   { id: 200, name: 'NRL-Server' }
 
 ]
