@@ -335,7 +335,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        sort: '+id'
+        sort: '-id'
       },
       importanceOptions: [1, 2, 3],
       statusOptions: ['在职', '休假', '删除'],

@@ -296,7 +296,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        sort: '+id'
+        sort: '-id'
       },
 
       certificate: '',

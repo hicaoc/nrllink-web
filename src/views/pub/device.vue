@@ -118,7 +118,7 @@
 
             <el-checkbox-group v-model="scope.row.statusArray" size="mini" :disabled="!checkPermission(['admin']) && scope.row.callsign !== callsign" @change="updateStatus(scope.row)">
               <el-checkbox-button v-for="item in DevStatusOptions" :key="item.id" :label="item.id">{{ item.name }}</el-checkbox-button>
-              <el-checkbox-button v-if="scope.row.ssid === 200" :label="4">透明</el-checkbox-button>
+              <!-- <el-checkbox-button v-if="scope.row.ssid === 200" :label="4">透明</el-checkbox-button> -->
             </el-checkbox-group>
 
           </template>
@@ -126,7 +126,7 @@
 
         <el-table-column label="设备名称" prop="name" width="220px" align="center" :sortable="true">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <span>{{ scope.row.ssid === 200 && scope.row.name === '' ? "服务器互联" : scope.row.name }}</span>
           </template>
         </el-table-column>
 
