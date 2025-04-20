@@ -19,7 +19,12 @@
         class="filter-item"
         @change="handleFilter"
       >
-        <el-option v-for="(item,index) in list" :key="index" :label="item.id+' '+item.callsign+'-'+item.ssid" :value="item.callsign" />
+        <el-option
+          v-for="(item, index) in list"
+          :key="index"
+          :label="item.id + ' ' + item.callsign + '-' + item.ssid"
+          :value="item.callsign"
+        />
       </el-select>
       <!--
       <el-input
@@ -100,7 +105,7 @@
           <template slot-scope="scope">
             <span><el-tag :type="scope.row.is_online === true ? '' : 'info'">{{ scope.row.callsign + "-" +
               scope.row.ssid
-            }}{{ scope.row.status&1 == 1 ? "🈲" : scope.row.status&2 == 2 ? "🈲" : "" }}
+            }}{{ scope.row.status & 1 == 1 ? "🈲" : scope.row.status & 2 == 2 ? "🈲" : "" }}
             </el-tag></span>
           </template>
         </el-table-column>
@@ -116,8 +121,14 @@
               <el-option v-for="item in DevStatusOptions" :key="item.id" :label="item.name" :value="item.id" />
             </el-select> -->
 
-            <el-checkbox-group v-model="scope.row.statusArray" size="mini" :disabled="!checkPermission(['admin']) && scope.row.callsign !== callsign" @change="updateStatus(scope.row)">
-              <el-checkbox-button v-for="item in DevStatusOptions" :key="item.id" :label="item.id">{{ item.name }}</el-checkbox-button>
+            <el-checkbox-group
+              v-model="scope.row.statusArray"
+              size="mini"
+              :disabled="!checkPermission(['admin']) && scope.row.callsign !== callsign"
+              @change="updateStatus(scope.row)"
+            >
+              <el-checkbox-button v-for="item in DevStatusOptions" :key="item.id" :label="item.id">{{ item.name
+              }}</el-checkbox-button>
               <!-- <el-checkbox-button v-if="scope.row.ssid === 200" :label="4">透明</el-checkbox-button> -->
             </el-checkbox-group>
 
@@ -158,7 +169,12 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('Account.actions')" align="center" width="260px" class-name="small-padding fixed-width">
+        <el-table-column
+          :label="$t('Account.actions')"
+          align="center"
+          width="260px"
+          class-name="small-padding fixed-width"
+        >
           <template slot-scope="{ row }">
             <el-button
               v-if="checkPermission(['admin']) || row.callsign === callsign"
@@ -365,8 +381,14 @@
             }}</el-radio>
           </el-radio-group> -->
 
-          <el-checkbox-group v-model="item.statusArray" size="mini" :disabled="!checkPermission(['admin']) && item.callsign !== callsign" @change="updateStatus(item)">
-            <el-checkbox-button v-for="i in DevStatusOptions" :key="i.id" :label="i.id">{{ i.name }}</el-checkbox-button>
+          <el-checkbox-group
+            v-model="item.statusArray"
+            size="mini"
+            :disabled="!checkPermission(['admin']) && item.callsign !== callsign"
+            @change="updateStatus(item)"
+          >
+            <el-checkbox-button v-for="i in DevStatusOptions" :key="i.id" :label="i.id">{{ i.name
+            }}</el-checkbox-button>
             <el-checkbox-button v-if="item.ssid === 200" :label="4">透明</el-checkbox-button>
           </el-checkbox-group>
 
@@ -515,19 +537,11 @@
         /> -->
 
             <el-form-item label="呼号:" prop="callsign">
-              <el-input
-                v-model="temp.device_parm.callsign"
-                placeholder="呼号"
-                style="width: 100px"
-                :disabled="true"
-              />
+              <el-input v-model="temp.device_parm.callsign" placeholder="呼号" style="width: 100px" :disabled="true" />
             </el-form-item>
 
             <el-form-item label="设备编号:" prop="ssid">
-              <el-input
-                v-model="temp.device_parm.ssid"
-                style="width: 80px"
-              /><el-button
+              <el-input v-model="temp.device_parm.ssid" style="width: 80px" /><el-button
                 type="primary"
                 @click="changeByte('ssid', temp.device_parm.ssid)"
               >保存</el-button>
@@ -1192,15 +1206,24 @@ export default {
           const tempData = Object.assign({}, this.temp)
           //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           updateDevice(tempData).then((response) => {
-            this.getList()
+            if (response.code === 20000) {
+              this.$notify({
+                title: '成功',
+                message: response.data.message,
+                type: 'success',
+                duration: 2000
+              })
 
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: response.data.message,
-              type: 'success',
-              duration: 2000
-            })
+              this.getList()
+              this.dialogFormVisible = false
+            } else {
+              this.$notify({
+                title: '失败',
+                message: response.data.message,
+                type: 'warning',
+                duration: 2000
+              })
+            }
           })
         }
       })
@@ -1240,12 +1263,23 @@ export default {
 
       //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
       updateDevice(tempData).then((response) => {
-        this.$notify({
-          title: '成功',
-          message: response.data.message,
-          type: 'success',
-          duration: 2000
-        })
+        if (response.code === 20000) {
+          this.$notify({
+            title: '成功',
+            message: response.data.message,
+            type: 'success',
+            duration: 2000
+          })
+
+          this.getList()
+        } else {
+          this.$notify({
+            title: '失败',
+            message: response.data.message,
+            type: 'warning',
+            duration: 2000
+          })
+        }
       })
     },
 
