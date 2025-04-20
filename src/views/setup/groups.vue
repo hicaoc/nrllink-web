@@ -1,22 +1,17 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <!-- <el-input
-        v-model="listQuery.callsign"
-        :placeholder="$t('device.callsign')"
+      <el-input
+        v-model="listQuery.name"
+        :placeholder="$t('device.name')"
         style="width: 320px;"
         class="filter-item"
         clearable
         @keyup.enter.native="handleFilter"
-      /> -->
+      />
 
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >{{ $t("Account.search") }}</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{
+        $t("Account.search") }}</el-button>
 
       <el-button
         class="filter-item"
@@ -39,13 +34,7 @@
         style="width: 100%"
         @sort-change="sortChange"
       >
-        <el-table-column
-          :label="$t('Account.id')"
-          prop="id"
-          sortable="custom"
-          align="center"
-          width="80"
-        >
+        <el-table-column :label="$t('Account.id')" prop="id" sortable="custom" align="center" width="80">
           <template slot-scope="scope">
             <span>{{ scope.row.id }}</span>
           </template>
@@ -81,7 +70,8 @@
 
         <el-table-column label="允许设备" width="200px" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.allow_callsign_ssid }}</span>
+            <el-tag v-for="(item,idx) in scope.row.allow_callsign_ssid" :key="idx">{{ item }}</el-tag>
+
           </template>
         </el-table-column>
 
@@ -121,11 +111,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('device.bind')"
-          align="center"
-          class-name="small-padding fixed-width"
-        >
+        <el-table-column :label="$t('device.bind')" align="center" class-name="small-padding fixed-width">
           <template slot-scope="{ row }">
             <el-button size="mini" type="primary" @click="handleUpdate(row)">{{
               $t("device.edit")
@@ -174,22 +160,33 @@
           </el-select>
         </el-form-item> -->
 
-        <el-form-item :label="$t('group.type')" prop="sex">
+        <el-form-item :label="$t('group.type')" prop="type">
           <el-radio-group v-model="temp.type">
-            <el-radio
-              v-for="item in groupTypeOptions"
-              :key="item.id"
-              :label="item.id"
-            >{{ item.name }}</el-radio>
+            <el-radio v-for="item in groupTypeOptions" :key="item.id" :label="item.id">{{ item.name }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item
-          v-if="temp.type === 3"
+          v-if="checkPermission(['admin'])"
           :label="$t('group.allow_callsign_ssid')"
           prop="allow_callsign_ssid"
         >
-          <el-input v-model="temp.allow_callsign_ssid" />
+          <el-select
+            v-model="temp.allow_callsign_ssid"
+            filterable
+            multiple
+            placeholder="请选择设备"
+            style="width: 320px"
+            class="filter-item"
+          >
+
+            <el-option
+              v-for="item in devicesOptions"
+              :key="item.id"
+              :label="item.callsign + '-' + item.ssid + ' ' + item.name"
+              :value="item.callsign + '-' + item.ssid"
+            />
+          </el-select>
         </el-form-item>
 
         <!--
@@ -239,10 +236,9 @@
         <el-button @click="dialogFormVisible = false">{{
           $t("employee.cancel")
         }}</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus === 'create' ? createData() : updateData()"
-        >{{ $t("employee.confirm") }}</el-button>
+        <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
+          $t("employee.confirm")
+        }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -257,7 +253,7 @@ import {
 } from '@/api/groups'
 
 // import { fetchServerList } from '@/api/server'
-// import { fetchDeviceList } from '@/api/device'
+import { fetchDeviceList } from '@/api/device'
 // import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
 // import LineChart from './components/LineChart'
@@ -299,7 +295,7 @@ export default {
       list: [],
 
       chartData: {},
-      // devicesOptions: [],
+      devicesOptions: [],
       // serversOptions: [],
       groupTypeOptions,
 
@@ -345,9 +341,9 @@ export default {
       this.showtable = true
     }
 
-    // this.fetchDeviceList({}).then(response => {
-    //   this.devicesOptions = Object.values(response.data.items)
-    // })
+    this.fetchDeviceList({}).then(response => {
+      this.devicesOptions = Object.values(response.data.items)
+    })
 
     this.getList()
 
@@ -359,7 +355,7 @@ export default {
   methods: {
     checkPermission,
     fetchGroupList,
-    // fetchDeviceList,
+    fetchDeviceList,
     // fetchServerList,
     createGroup,
     updateGroup,
@@ -463,13 +459,24 @@ export default {
                 break
               }
             }
+
+            if (response.code === 20000) {
+              this.$notify({
+                title: '成功',
+                message: '修改成功',
+                type: 'success',
+                duration: 2000
+              })
+            } else {
+              this.$notify({
+                title: '失败',
+                message: response.message,
+                type: 'warning',
+                duration: 2000
+              })
+            }
+
             this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: response.data.message,
-              type: 'success',
-              duration: 2000
-            })
           })
         }
       })
@@ -591,6 +598,7 @@ export default {
   display: table;
   content: "";
 }
+
 .clearfix:after {
   clear: both;
 }

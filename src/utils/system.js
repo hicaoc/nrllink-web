@@ -57,7 +57,7 @@ export const groupTypeOptions = [
   { id: 0, name: '公共房间' },
   { id: 1, name: '中继互联' },
   { id: 2, name: '设备互联' },
-  { id: 3, name: '守听' },
+  // { id: 3, name: '守听' },
   { id: 4, name: '数模互联' },
   { id: 5, name: '俱乐部' },
   { id: 6, name: '车友会' },

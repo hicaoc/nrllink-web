@@ -52,10 +52,7 @@
               </span>
             </div>
           </el-collapse-item>
-          <el-collapse-item
-            :title="'已加入设备' + (g.devmap == null ? '0' : Object.values(g.devmap).filter(i => i.is_online).length) + '/' + (g.devmap == null ? '0' : Object.keys(g.devmap).length) + '台'"
-            name="2"
-          >
+          <el-collapse-item :title="'已加入设备' + g.online_dev_number + '/' + g.total_dev_number + '台'" name="2">
             <!-- <el-divider>已加入设备 {{ (g.devmap == null ? "0" : Object.keys(g.devmap).length) +"台 " }}</el-divider> -->
             <div v-for="d in g.devmap" :key="d.id" class="text item">
               <span>
@@ -122,20 +119,25 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item v-if="temp.type === 3" :label="$t('group.allow_cpuid')" prop="allow_cpuid">
+        <el-form-item
+          v-if="checkPermission(['admin'])"
+          :label="$t('group.allow_callsign_ssid')"
+          prop="allow_callsign_ssid"
+        >
           <el-select
-            v-model="temp.allow_cpuid"
+            v-model="temp.allow_callsign_ssid"
             filterable
+            multiple
             placeholder="请选择设备ID"
             style="width: 320px"
             class="filter-item"
           >
-            <el-option label="没有限制" value="" />
+
             <el-option
               v-for="item in devicesOptions"
               :key="item.id"
               :label="item.callsign + '-' + item.ssid + ' ' + item.name"
-              :value="item.cpuid"
+              :value="item.callsign + '-' + item.ssid"
             />
           </el-select>
         </el-form-item>
@@ -219,7 +221,7 @@ export default {
       groupTypeOptions,
       // serversOptions: [],
       mydevicesOptions: [],
-      devicesOptions: null,
+      devicesOptions: [],
       groupodevlist: null,
 
       chartData: {},
@@ -337,7 +339,7 @@ export default {
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
-              message: response.data.message,
+              message: response.message,
               type: 'success',
               duration: 2000
             })
@@ -377,13 +379,24 @@ export default {
                 break
               }
             }
+
+            if (response.code === 20000) {
+              this.$notify({
+                title: '成功',
+                message: '修改成功',
+                type: 'success',
+                duration: 2000
+              })
+            } else {
+              this.$notify({
+                title: '失败',
+                message: response.message,
+                type: 'warning',
+                duration: 2000
+              })
+            }
+
             this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: response.data.message,
-              type: 'success',
-              duration: 2000
-            })
           })
         }
       })
