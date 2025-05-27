@@ -3,6 +3,7 @@
 
 hostlist='nrlptt.com bh4tdv.nrlptt.com ba1gm.nrlptt.com bd4vki.nrlptt.com ah.nrlptt.com nrl.bd4two.site www.bh1osw.com bh1osw.nrlptt.com yz.hamoa.cn ham.73ham.com bd4two.nrlptt.com js.nrlptt.com bg1vif.nrlptt.com'
 
+#hostlist='ptt.nrlptt.com'
 
 
 time=`date "+%Y%m%d%H%M%S"`

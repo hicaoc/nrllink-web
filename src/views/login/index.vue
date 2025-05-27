@@ -158,6 +158,11 @@ export default {
       this.title = response.data.items.name
       this.cs_qr_url = response.data.items.cs_qr_url
       this.icp = response.data.items.icp
+
+      if (response.data.items.language === 'en') {
+        this.$i18n.locale = 'en'
+        this.$store.dispatch('app/setLanguage', 'en')
+      }
     })
 
     // Fetch server list
