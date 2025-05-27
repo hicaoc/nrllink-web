@@ -186,29 +186,29 @@
           <el-input v-model="temp.mail" />
         </el-form-item>
 
-        <div v-if="certificate">
+        <!-- <div v-if="certificate">
           <h2>操作证：</h2>
           <img
             :src="certificate"
-            alt="操作证"
+            alt="操作证和电台执照"
             width="300"
             style="max-width: 300px; cursor: pointer;"
             @click="showcertificateFullScreenImage"
           >
 
-        </div>
+        </div> -->
 
         <!-- 原图模态框 -->
-        <div v-if="showcertificateFullScreen" class="fullscreen-overlay" @click.self="closecertificateFullScreen">
+        <!-- <div v-if="showcertificateFullScreen" class="fullscreen-overlay" @click.self="closecertificateFullScreen">
           <img :src="originalcertificateImage" alt="原图" class="fullscreen-image">
           <button class="close-button" @click="closecertificateFullScreen">关闭</button>
-        </div>
+        </div> -->
 
         <div v-if="license">
-          <h2>电台执照:</h2>
+          <h2>操作证和电台执照:</h2>
           <img
             :src="license"
-            alt="电台执照"
+            alt="操作证和电台执照"
             width="300"
             style="max-width: 300px; cursor: pointer;"
             @click="showlicenseFullScreenImage"
