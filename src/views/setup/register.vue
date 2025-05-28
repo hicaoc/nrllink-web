@@ -204,7 +204,7 @@
           <button class="close-button" @click="closecertificateFullScreen">关闭</button>
         </div> -->
 
-        <div v-if="license">
+        <div>
           <h2>操作证和电台执照:</h2>
           <img
             :src="license"
@@ -474,14 +474,14 @@ export default {
         // this.license = URL.createObjectURL(blob);
       })
 
-      getImage({ path: row.op_cert_path }).then(response => {
-        // const blob = new Blob([response.data]);
+      // getImage({ path: row.op_cert_path }).then(response => {
+      //   // const blob = new Blob([response.data]);
 
-        this.certificate = `data:image/jpeg;base64,${response.data}`
-        this.originalcertificateImage = this.certificate
+      //   this.certificate = `data:image/jpeg;base64,${response.data}`
+      //   this.originalcertificateImage = this.certificate
 
-        // this.certificate = URL.createObjectURL(blob);
-      })
+      //   // this.certificate = URL.createObjectURL(blob);
+      // })
 
       this.dialogFormVisible = true
 
