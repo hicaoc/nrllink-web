@@ -37,6 +37,9 @@ export const DevModelOptions = [
   { id: 28, name: '即时通9000' },
   { id: 100, name: 'NRL-微信小程序' },
   { id: 101, name: 'NRL-安卓' },
+  { id: 102, name: 'NRL-IOS' },
+  { id: 103, name: 'NRL-Win' },
+  { id: 105, name: 'NRL-浏览器' },
   { id: 200, name: 'NRL-Server' }
 
 ]
