@@ -94,8 +94,10 @@ export default {
   },
   device: {
     grouproom: '群组房间',
+    priority: '优先级',
     showtable: '表格',
     callsign: '呼号',
+    qth: 'QTH',
     public_group_id: '公共群组',
     public_group: '公共群组',
     group: '私有群组',

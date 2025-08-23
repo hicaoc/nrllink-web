@@ -101,7 +101,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column fixed prop="callsign" label="呼号" width="150px" align="center" :sortable="true">
+        <el-table-column fixed prop="callsign" :label="$t('device.callsign')" width="150px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span><el-tag :type="scope.row.is_online === true ? '' : 'info'">{{ scope.row.callsign + "-" +
               scope.row.ssid
@@ -110,7 +110,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="状态" prop="status" width="140px" align="center">
+        <el-table-column :label="$t('device.status')" prop="status" width="140px" align="center">
           <template slot-scope="scope">
             <!-- <el-select
               v-model="scope.row.statusArray"
@@ -135,13 +135,19 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="设备名称" prop="name" width="220px" align="center" :sortable="true">
+        <el-table-column :label="$t('device.priority')" prop="priority" width="100px" align="center" :sortable="true">
+          <template slot-scope="scope">
+            <span>{{ scope.row.priority }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column :label="$t('device.name')" prop="name" width="220px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ scope.row.ssid === 200 && scope.row.name === '' ? "服务器互联" : scope.row.name }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="QTH" prop="name" width="220px" align="center" :sortable="true">
+        <el-table-column :label="$t('device.qth')" prop="qth" width="220px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span>{{ scope.row.qth }}</span>
           </template>
@@ -346,6 +352,7 @@
         </div>
 
         <span>名称:{{ item.name }}</span><br>
+        <span>优先级:{{ item.priority }}</span><br>
 
         <span>射频类型:{{ ValueFilter(item.rf_type, DevRFtypeOptions) }}</span><br>
 
@@ -431,6 +438,10 @@
 
             <el-option v-for="item in groupsOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
+        </el-form-item>
+
+        <el-form-item :label="$t('device.priority')" prop="priority">
+          <el-input-number v-model="temp.priority" :disabled="!checkPermission(['admin'])" :min="0" :max="255" />
         </el-form-item>
 
         <el-form-item :label="$t('device.type')" prop="type">

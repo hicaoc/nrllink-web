@@ -95,7 +95,9 @@ export default {
   device: {
     grouproom: 'Group Room',
     showtable: 'Table',
+    priority: 'Priority',
     callsign: 'Callsign',
+    qth: 'QTH',
     public_group_id: 'Public Group ID',
     public_group: 'Public Group',
     group: 'Private Group',
