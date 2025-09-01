@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <!-- <el-input
+      <el-input
         v-model="listQuery.callsign"
         :placeholder="$t('device.callsign')"
         style="width: 320px;"
         class="filter-item"
         clearable
         @keyup.enter.native="handleFilter"
-      /> -->
+      />
 
-      <el-select
+      <!-- <el-select
         v-model="listQuery.callsign"
         filterable
         clearable
@@ -25,7 +25,7 @@
           :label="item.id + ' ' + item.callsign + '-' + item.ssid"
           :value="item.callsign"
         />
-      </el-select>
+      </el-select> -->
       <!--
       <el-input
         v-model="listQuery.public_group_id"
@@ -48,9 +48,10 @@
 
         <el-option v-for="item in groupsOptions" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="getList">刷新</el-button>
 
-      <el-switch
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="getList">查询</el-button>
+
+      <!-- <el-switch
         v-model="listQuery.displayOnline"
         class="filter-item"
         active-text="显示在线"
@@ -59,7 +60,7 @@
         :active-value="true"
         :inactive-value="false"
         @change="handleFilter"
-      />
+      /> -->
 
       <el-switch v-model="showtable" class="filter-item" :active-text="$t('device.showtable')" inactive-text />
     </div>
@@ -87,7 +88,7 @@
       <el-table
         :key="tableKey"
         v-loading="listLoading"
-        :data="display_list"
+        :data="list"
         border
         fit
         stripe
@@ -105,7 +106,7 @@
           <template slot-scope="scope">
             <span><el-tag :type="scope.row.is_online === true ? '' : 'info'">{{ scope.row.callsign + "-" +
               scope.row.ssid
-            }}{{ scope.row.status & 1 == 1 ? "🈲" : scope.row.status & 2 == 2 ? "🈲" : "" }}
+            }}
             </el-tag></span>
           </template>
         </el-table-column>
@@ -121,16 +122,22 @@
               <el-option v-for="item in DevStatusOptions" :key="item.id" :label="item.name" :value="item.id" />
             </el-select> -->
 
-            <el-checkbox-group
+            <span><el-button :type="(scope.row.status&1) === 1 ? 'danger' : ''" plain size="mini" @click="updateStatus(scope.row,1)">禁收</el-button></span>
+            <span><el-button :type="(scope.row.status&2) === 2 ? 'danger' : ''" plain size="mini" @click="updateStatus(scope.row,2)">禁发</el-button></span>
+
+            <!-- <el-checkbox-group
               v-model="scope.row.statusArray"
               size="mini"
               :disabled="!checkPermission(['admin']) && scope.row.callsign !== callsign"
               @change="updateStatus(scope.row)"
             >
-              <el-checkbox-button v-for="item in DevStatusOptions" :key="item.id" :label="item.id">{{ item.name
-              }}</el-checkbox-button>
-              <!-- <el-checkbox-button v-if="scope.row.ssid === 200" :label="4">透明</el-checkbox-button> -->
-            </el-checkbox-group>
+
+             <el-checkbox-button   :label="1">禁收</el-checkbox-button>
+             <el-checkbox-button   :label="2">禁发</el-checkbox-button> -->
+            <!-- <el-checkbox-button v-for="item in DevStatusOptions" :key="item.id" :label="item.id">{{ item.name
+              }}</el-checkbox-button> -->
+            <!-- <el-checkbox-button v-if="scope.row.ssid === 200" :label="4">透明</el-checkbox-button> -->
+            <!-- </el-checkbox-group> -->
 
           </template>
         </el-table-column>
@@ -311,15 +318,22 @@
       </el-table>
     </div>
 
-    <!-- <div v-if="showtable">
-      <el-pagination :current-page="currentPage" :page-sizes="[5, 10, 20, 40]" :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper" :total="display_list.length" @size-change="handleSizeChange"
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+    />
+
+    <!-- <el-pagination :current-page="currentPage" :page-sizes="[5, 10, 20, 40]" :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange"
         @current-change="handleCurrentChange" />
-    </div> -->
+  -->
 
     <div v-if="showtable == false">
       <el-card
-        v-for="item in display_list"
+        v-for="item in list"
         :key="item.id"
         :label="item.name"
         :name="item.name"
@@ -387,8 +401,10 @@
               d.name
             }}</el-radio>
           </el-radio-group> -->
+          <span><el-button :type="(item.status&1) === 1 ? 'danger' : ''" plain size="mini" @click="updateStatus(item,1)">禁收</el-button></span>
+          <span><el-button :type="(item.status&2) === 2 ? 'danger' : ''" plain size="mini" @click="updateStatus(item,2)">禁发</el-button></span>
 
-          <el-checkbox-group
+          <!-- <el-checkbox-group
             v-model="item.statusArray"
             size="mini"
             :disabled="!checkPermission(['admin']) && item.callsign !== callsign"
@@ -397,7 +413,7 @@
             <el-checkbox-button v-for="i in DevStatusOptions" :key="i.id" :label="i.id">{{ i.name
             }}</el-checkbox-button>
             <el-checkbox-button v-if="item.ssid === 200" :label="4">透明</el-checkbox-button>
-          </el-checkbox-group>
+          </el-checkbox-group> -->
 
         </span>
       </el-card>
@@ -986,12 +1002,13 @@ import {
   formatFileSize,
   formatVoiceTime
 } from '@/utils'
-// import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'ComplexTable',
-  // components: { Pagination },
+  components: { Pagination },
   directives: { waves },
   filters: {
     // statusFilter(status) {
@@ -1045,7 +1062,7 @@ export default {
       },
       currentPage: 1,
       pageSize: 10,
-      display_list: [],
+      // display_list: [],
       groupsOptions: [],
       DevTypeOptions,
       DevModelOptions,
@@ -1063,12 +1080,13 @@ export default {
       listLoading: false,
       showtable: true,
       listQuery: {
-        callsign: '',
-        displayOnline: true,
-        ower_id: '',
-        group_id: ''
-
-        // sort: "+id"
+        callsign: undefined,
+        // displayOnline: true,
+        // ower_id: '',
+        group_id: undefined,
+        page: 1,
+        limit: 10,
+        sort: '-id'
       },
       showReviewer: false,
       temp: {
@@ -1142,9 +1160,9 @@ export default {
       this.platformOptions = response.data.items
     })
 
-    this.fetchEmployeeAllList({}).then((response) => {
-      this.userOptions = response.data.items
-    })
+    // this.fetchEmployeeAllList({}).then((response) => {
+    //   this.userOptions = response.data.items
+    // })
 
     this.fetchRelayList({}).then((response) => {
       this.relayOptions = response.data.items
@@ -1176,23 +1194,27 @@ export default {
 
     getList() {
       this.listLoading = true
-      this.fetchDeviceList({}).then((response) => {
-        this.list = Object.values(response.data.items).map(item => {
-          item.statusArray = []
-          if ((item.status & 1) === 1) {
-            item.statusArray.push(1)
-          }
-          if ((item.status & 2) === 2) {
-            item.statusArray.push(2)
-          }
-          if ((item.status & 4) === 4) {
-            item.statusArray.push(4)
-          }
-          return item
-        }
-        )
+      this.fetchDeviceList(this.listQuery).then((response) => {
+        // console.log('device list:', response.data.items)
+        this.total = response.data.total
+        this.list = response.data.items
 
-        this.handleFilter()
+        // this.list = Object.values(response.data.items).map(item => {
+        //   item.statusArray = []
+        //   if ((item.status & 1) === 1) {
+        //     item.statusArray.push(1)
+        //   }
+        //   if ((item.status & 2) === 2) {
+        //     item.statusArray.push(2)
+        //   }
+        //   if ((item.status & 4) === 4) {
+        //     item.statusArray.push(4)
+        //   }
+        //   return item
+        // }
+        // )
+
+        // this.handleFilter()
 
         this.listLoading = false
       })
@@ -1261,8 +1283,20 @@ export default {
         })
     },
 
-    updateStatus(tempData) {
-      tempData.status = tempData.statusArray.reduce((acc, num) => acc | num, 0)
+    updateStatus(tempData, key) {
+      let lastvalue1 = tempData.status & 1
+      let lastvalue2 = (tempData.status & 2) >> 1
+
+      if (key === 1) {
+        lastvalue1 = lastvalue1 ^ 1
+        // lastvalue1 = 1 - lastvalue1
+      } else if (key === 2) {
+        lastvalue2 = lastvalue2 ^ 1
+      }
+
+      tempData.status = lastvalue1 | (lastvalue2 << 1)
+
+      // tempData.status = tempData.statusArray.reduce((acc, num) => acc | num, 0)
 
       // let status = 0;
 
@@ -1441,30 +1475,35 @@ export default {
       })
       row.status = status
     },
-    changeodispnline(val) {
-      if (val === true) {
-        this.display_list = this.online_list
-      } else {
-        this.display_list = this.list
-      }
-    },
+    // changeodispnline(val) {
+    //   if (val === true) {
+    //     this.display_list = this.online_list
+    //   } else {
+    //     this.display_list = this.list
+    //   }
+    // },
 
     handleFilter() {
-      if (this.listQuery.displayOnline === false && this.listQuery.callsign === '' && this.listQuery.group_id === '') {
-        this.display_list = this.list
-        return
-      }
-      //  this.display_list = this.list
-      this.display_list = this.list.filter(item => {
-        const matchesOnline = this.listQuery.displayOnline === false || item.is_online === true
-        const matchesCallsign = this.listQuery.callsign === '' || item.callsign === this.listQuery.callsign
-        const matchesGroup = this.listQuery.group_id === '' || item.group_id === this.listQuery.group_id
-
-        // 确保所有条件都满足
-        return matchesOnline && matchesCallsign && matchesGroup
-      })
-      // this.diplay_copy_list = [...this.display_list];
+      this.listQuery.page = 1
+      this.getList()
     },
+
+    // handleFilter() {
+    //   if (this.listQuery.displayOnline === false && this.listQuery.callsign === '' && this.listQuery.group_id === '') {
+    //     this.display_list = this.list
+    //     return
+    //   }
+    //   //  this.display_list = this.list
+    //   this.display_list = this.list.filter(item => {
+    //     const matchesOnline = this.listQuery.displayOnline === false || item.is_online === true
+    //     const matchesCallsign = this.listQuery.callsign === '' || item.callsign === this.listQuery.callsign
+    //     const matchesGroup = this.listQuery.group_id === '' || item.group_id === this.listQuery.group_id
+
+    //     // 确保所有条件都满足
+    //     return matchesOnline && matchesCallsign && matchesGroup
+    //   })
+    //   // this.diplay_copy_list = [...this.display_list];
+    // },
     // handleFilter() {
     //   this.display_list = []
     //   // console.log(this.listQuery)

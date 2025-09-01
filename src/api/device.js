@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchDeviceList(data) {
   return request({
-    url: '/device/list',
+    url: '/device/db/list',
     method: 'post',
     data
   })
