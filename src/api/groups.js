@@ -8,6 +8,14 @@ export function fetchGroupList(data) {
   })
 }
 
+export function fetchGroupListMini(data) {
+  return request({
+    url: '/group/list/mini',
+    method: 'post',
+    data
+  })
+}
+
 export function fetchMyGroupList(data) {
   return request({
     url: '/room/list',

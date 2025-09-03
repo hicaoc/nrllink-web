@@ -46,7 +46,7 @@
         @change="handleFilter"
       >
 
-        <el-option v-for="item in groupsOptions" :key="item.id" :label="item.name" :value="item.id" />
+        <el-option v-for="item in groupsOptions" :key="item.id" :label="item.id+'-'+item.name" :value="item.id" />
       </el-select>
 
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="getList">查询</el-button>
@@ -222,17 +222,19 @@
 
         <el-table-column prop="tunner" label="频率信道" width="190px" align="center">
           <template slot-scope="scope">
-            <span v-if="scope.row.device_parm !== null"><el-tag v-if="scope.row.rf_type == 1">
-                                                          R{{ scope.row.device_parm.one_recive_freq }}/T{{
-                                                            scope.row.device_parm.one_transmit_freq
-                                                          }}
-                                                        </el-tag>
+            <span v-if="scope.row.device_parm">
+
+              <el-tag v-if="scope.row.rf_type == 1">
+                R{{ scope.row.device_parm.one_recive_freq }}/T{{
+                  scope.row.device_parm.one_transmit_freq
+                }}
+              </el-tag>
               <el-tag v-if="scope.row.rf_type == 2">
                 R{{ scope.row.device_parm.two_recive_freq }}/T{{
                   scope.row.device_parm.two_transmit_freq
                 }}
               </el-tag>
-              <el-tag v-if="scope.row.rf_type == 3">信道{{ scope.row.device_parm.moto_channel }}
+              <el-tag v-if="scope.row.rf_type == 3 && scope.row.chan_name">信道{{ scope.row.device_parm.moto_channel }}
                 {{ scope.row.chan_name[scope.row.device_parm.moto_channel] }}
               </el-tag>
             </span>
@@ -452,7 +454,7 @@
             @change="handleFilter"
           >
 
-            <el-option v-for="item in groupsOptions" :key="item.id" :label="item.name" :value="item.id" />
+            <el-option v-for="item in groupsOptions" :key="item.id" :label="item.id+'-'+item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
@@ -980,7 +982,7 @@ import {
 
 import { fetchPlatformList } from '@/api/platform'
 
-import { fetchGroupList } from '@/api/groups'
+import { fetchGroupList, fetchGroupListMini } from '@/api/groups'
 import { ctcssOptions } from '@/utils/ctcss'
 import { fetchEmployeeAllList } from '@/api/employee'
 import {
@@ -1168,8 +1170,8 @@ export default {
       this.relayOptions = response.data.items
     })
 
-    this.fetchGroupList({}).then((response) => {
-      this.groupsOptions = Object.values(response.data.items)
+    this.fetchGroupListMini({}).then((response) => {
+      this.groupsOptions = response.data
     })
     this.getList()
   },
@@ -1180,6 +1182,7 @@ export default {
     fetchPlatformList,
     fetchEmployeeAllList,
     fetchGroupList,
+    fetchGroupListMini,
     ValueFilter,
     parseTime,
     formatFileSize,
@@ -1195,7 +1198,7 @@ export default {
     getList() {
       this.listLoading = true
       this.fetchDeviceList(this.listQuery).then((response) => {
-        // console.log('device list:', response.data.items)
+        // console.log('device list:', response.data)
         this.total = response.data.total
         this.list = response.data.items
 
@@ -1225,6 +1228,10 @@ export default {
 
       if (this.temp.device_parm === null) {
         this.temp.device_parm = {}
+      }
+
+      if (this.temp.chan_name === null) {
+        this.temp.chan_name = []
       }
 
       this.dialogStatus = 'update'

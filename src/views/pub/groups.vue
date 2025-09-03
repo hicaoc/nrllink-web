@@ -128,7 +128,8 @@
             v-model="temp.allow_callsign_ssid"
             filterable
             multiple
-            placeholder="请选择设备ID"
+            allow-create
+            placeholder="请输入设备ID,格式：BX1XXX-1"
             style="width: 320px"
             class="filter-item"
           >
@@ -278,9 +279,9 @@ export default {
       this.mydevicesOptions = Object.values(response.data.items)
     })
 
-    this.fetchDeviceList({}).then(response => {
-      this.devicesOptions = Object.values(response.data.items)
-    })
+    // this.fetchDeviceList({}).then(response => {
+    //   this.devicesOptions = Object.values(response.data.items)
+    // })
 
     // this.fetchServerList({}).then(response => {
     //   this.serversOptions = Object.values(response.data.items)
