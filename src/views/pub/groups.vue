@@ -14,7 +14,7 @@
 
     <div>
 
-      <el-card v-for="g in list.filter(item => item.name.includes(name))" :key="g.id" class="box-card">
+      <el-card v-for="g,idx in list.filter(item => item.name.includes(name))" :key="g.id" class="box-card">
         <div
           :style="g.id === 0
             ? 'padding-bottom: 10px; padding-top: 10px; background: #c1e7c1;'
@@ -23,7 +23,7 @@
               : 'padding-bottom: 10px; padding-top: 10px; background: #afafeb;')"
         >
           <span>{{
-            g.name + "-" + ValueFilter(g.type, groupTypeOptions) + " " + g.note
+            g.name + "-" + ValueFilter(g.type, groupTypeOptions) + " "
           }}</span>
 
           <el-button
@@ -33,8 +33,8 @@
             @click="handleUpdate(g)"
           >{{ $t("device.edit") }}</el-button>
         </div>
-        <el-collapse accordion>
-          <el-collapse-item title="我要加入" name="1">
+        <el-collapse v-model="g.a" accordion @change="handleChange(idx,g.a)">
+          <el-collapse-item title="我要加入" :name="g.id+'-1'">
             <div v-for="mydev, index in mydevicesOptions" :key="index" class="text item">
               <span v-if="!hasindevlist(mydev.id, g.devmap)">
                 <el-button
@@ -52,9 +52,9 @@
               </span>
             </div>
           </el-collapse-item>
-          <el-collapse-item :title="'已加入设备' + g.online_dev_number + '/' + g.total_dev_number + '台'" name="2">
+          <el-collapse-item :title="'已加入设备' + g.online_dev_number + '/' + g.total_dev_number + '台'" :name="g.id+'-2'">
             <!-- <el-divider>已加入设备 {{ (g.devmap == null ? "0" : Object.keys(g.devmap).length) +"台 " }}</el-divider> -->
-            <div v-for="d in g.devmap" :key="d.id" class="text item">
+            <div v-for="d in g.devlist" :key="d.id" class="text item">
               <span>
                 <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " +
                   d.name }} </el-tag>
@@ -174,6 +174,8 @@
 
 import {
   fetchGroupList,
+  fetchGroupDevicesList,
+  fetchGroupListMini,
   createGroup,
   updateGroup,
   deleteGroup
@@ -224,6 +226,7 @@ export default {
       mydevicesOptions: [],
       devicesOptions: [],
       groupodevlist: null,
+      activeNames: [],
 
       chartData: {},
       userTimeLinelist: null,
@@ -271,9 +274,7 @@ export default {
       this.showtable = true
     }
 
-    this.fetchGroupList({}).then(response => {
-      this.list = Object.values(response.data.items)
-    })
+    this.getList()
 
     this.fetchMyDeviceList({}).then(response => {
       this.mydevicesOptions = Object.values(response.data.items)
@@ -294,18 +295,39 @@ export default {
     fetchDeviceList,
     updateDevice,
     fetchGroupList,
+    fetchGroupListMini,
+    fetchGroupDevicesList,
     createGroup,
     updateGroup,
     deleteGroup,
     ValueFilter,
     getList() {
-      this.fetchGroupList({}).then(response => {
-        this.list = Object.values(response.data.items)
+      this.fetchGroupListMini({}).then(response => {
+        this.list = response.data
       })
     },
+
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
+    },
+    handleChange(idx, name) {
+      // console.log(idx, name)
+      if (name === this.list[idx].id + '-2') {
+        fetchGroupDevicesList({ group_id: this.list[idx].id }).then(response => {
+          // this.list[idx].devlist = response.data.items
+
+          this.$set(this.list[idx], 'devlist', response.data.items)
+          // this.list = this.list
+
+          // this.$notify({
+          //   title: '成功',
+          //   message: response.message,
+          //   type: 'success',
+          //   duration: 2000
+          // })
+        })
+      }
     },
     handleModifiStatus(row, status) {
       this.$message({

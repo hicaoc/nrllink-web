@@ -8,6 +8,14 @@ export function fetchGroupList(data) {
   })
 }
 
+export function fetchGroupDevicesList(data) {
+  return request({
+    url: '/group/device/list',
+    method: 'post',
+    data
+  })
+}
+
 export function fetchGroupListMini(data) {
   return request({
     url: '/group/list/mini',
