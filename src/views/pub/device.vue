@@ -566,7 +566,7 @@
         /> -->
 
             <el-form-item label="呼号:" prop="callsign">
-              <el-input v-model="temp.device_parm.callsign" placeholder="呼号" style="width: 100px" :disabled="true" />
+              <el-input v-model="temp.device_parm.callsign" placeholder="呼号" style="width: 100px" :disabled="!checkPermission(['admin'])" />
             </el-form-item>
 
             <el-form-item label="设备编号:" prop="ssid">
