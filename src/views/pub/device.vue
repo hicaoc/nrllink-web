@@ -572,7 +572,7 @@
             <el-form-item label="设备编号:" prop="ssid">
               <el-input v-model="temp.device_parm.ssid" style="width: 80px" /><el-button
                 type="primary"
-                @click="changeByte('ssid', temp.device_parm.ssid)"
+                @click="changeByte('newcallsignssid', temp.device_parm.callsign+'-'+temp.device_parm.ssid)"
               >保存</el-button>
             </el-form-item>
 
