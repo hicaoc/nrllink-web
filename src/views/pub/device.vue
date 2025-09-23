@@ -609,7 +609,7 @@
                 <el-option
                   v-for="item in platformOptions"
                   :key="item.id"
-                  :label="item.name + '-' + item.host"
+                  :label="item.name + '-' + item.host + '-在线:' + item.online + ',高峰:' + item.total"
                   :value="item.host"
                 />
               </el-select>
