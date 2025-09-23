@@ -5,7 +5,7 @@
       <ul>
         <li v-for="server in serverList" :key="server.id">
           <a :href="'https://' + server.host" target="_blank" class="server-link">
-            {{ server.name }} - {{ server.host }}
+            {{ server.name }} - {{ server.host }} ,在线:{{ server.online }} 高峰:{{ server.total }}
           </a>
         </li>
         <li>
@@ -475,7 +475,7 @@ $primary_color: #409EFF; /* Primary color for buttons and highlights */
   }
 }
 
-@media only screen and (max-width: 470px) {
+@media only screen and (max-width: 768px) {
   flex-direction: column;
   align-items: center;
 
