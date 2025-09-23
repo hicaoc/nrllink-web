@@ -12,11 +12,23 @@
             :end-val="list.dev_number"
             :duration="2600"
             class="card-panel-num"
+          />/
+          <count-to
+            :start-val="0"
+            :end-val="list.platform_dev_total"
+            :duration="2600"
+            class="card-panel-num"
           />个
           <br>在线
           <count-to
             :start-val="0"
             :end-val="list.online_dev_number"
+            :duration="2600"
+            class="card-panel-num"
+          />/
+          <count-to
+            :start-val="0"
+            :end-val="list.platform_dev_online"
             :duration="2600"
             class="card-panel-num"
           />个
