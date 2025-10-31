@@ -39,7 +39,7 @@ module.exports = {
             [process.env.VUE_APP_BASE_API]: {
                 // target: `http://localhost:${port}/mock`,
                 // target: `http://150.158.20.247:9998/`,
-                target: `https://js.nrlptt.com/`,
+                target: `https://nrlptt.com/`,
                 changeOrigin: true,
                 pathRewrite: {
                     ['^' + process.env.VUE_APP_BASE_API]: ''

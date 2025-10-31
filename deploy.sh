@@ -1,11 +1,14 @@
 #!/bin/bash
 
+# hostlist='bh4tdv.nrlptt.com'
 
-hostlist='nrlptt.com bh4tdv.nrlptt.com ba1gm.nrlptt.com bd4vki.nrlptt.com ah.nrlptt.com nrl.bd4two.site ptt.nrlptt.com bh1osw.nrlptt.com yz.hamoa.cn ham.73ham.com bd4two.nrlptt.com js.nrlptt.com bg1vif.nrlptt.com usa.nrlptt.com'
+hostlist='nrlptt.com  ba1gm.nrlptt.com bd4vki.nrlptt.com ah.nrlptt.com nrl.bd4two.site ptt.nrlptt.com bh1osw.nrlptt.com yz.hamoa.cn ham.73ham.com bd4two.nrlptt.com js.nrlptt.com bg1vif.nrlptt.com usa.nrlptt.com nrl.bd4two.site'
 
 #hostlist='js.nrlptt.com'
 #hostlist="ptt.nrlptt.com"
+hostlist='nrl.bd4two.site'
 
+hostlist='bh1osw.nrlptt.com'
 
 time=`date "+%Y%m%d%H%M%S"`
 

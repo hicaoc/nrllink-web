@@ -40,7 +40,8 @@ export const DevModelOptions = [
   { id: 102, name: 'NRL-IOS' },
   { id: 103, name: 'NRL-Win' },
   { id: 105, name: 'NRL-浏览器' },
-  { id: 200, name: 'NRL-Server' }
+  { id: 200, name: 'NRL-Server' },
+  { id: 250, name: 'NRL-保姆' }
 
 ]
 

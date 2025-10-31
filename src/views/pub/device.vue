@@ -63,6 +63,11 @@
       /> -->
 
       <el-switch v-model="showtable" class="filter-item" :active-text="$t('device.showtable')" inactive-text />
+
+      <el-tag class="filter-item">
+        <a href="/ws.html" target="_blank">内网配置设备</a>
+      </el-tag>
+
     </div>
 
     <!-- <div>
@@ -185,7 +190,7 @@
         <el-table-column
           :label="$t('Account.actions')"
           align="center"
-          width="260px"
+          width="160px"
           class-name="small-padding fixed-width"
         >
           <template slot-scope="{ row }">
@@ -207,10 +212,20 @@
 
             <el-button
               v-if="checkPermission(['admin']) || row.callsign === callsign"
+              :disabled="row.is_online === false"
+              size="mini"
+              type="primary"
+              @click="handleOpenAT(row)"
+            >{{
+              $t("device.at") }}</el-button>
+
+            <el-button
+              v-if="checkPermission(['admin']) || row.callsign === callsign"
               size="mini"
               type="danger"
               @click="handleDelete(row, '删除')"
             >{{ $t('employee.delete') }}</el-button>
+
           </template>
         </el-table-column>
 
@@ -360,10 +375,20 @@
 
           <el-button
             v-if="checkPermission(['admin']) || item.callsign === callsign"
+            style="float: right; padding: 3px 3px"
+            type="text"
+            :disabled="item.is_online === false"
+            @click="handleChangeAT(item)"
+          >{{ $t("device.change")
+          }}</el-button>
+
+          <el-button
+            v-if="checkPermission(['admin']) || item.callsign === callsign"
             style="float: right; padding: 3px 0"
             type="text"
             @click="handleUpdate(item)"
           >{{ $t("device.edit")
+
           }}</el-button>
         </div>
 
@@ -699,11 +724,13 @@
               />
             </el-form-item>
 
-            <el-form-item label="继电器:" prop="realy_status">
+            <el-form-item label="模块功率:" prop="realy_status">
               <el-switch
                 v-model="temp.device_parm.realy_status"
                 active-color="#1890ff"
                 inactive-color="#dcdfe6"
+                active-text="1W"
+                inactive-text="0.5W"
                 :active-value="1"
                 :inactive-value="0"
                 @change="
@@ -966,6 +993,34 @@
         <el-button @click="dialogFormChangeVisible = false">关闭</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog
+      width="70%"
+      :title="textMap[dialogStatus]"
+      :visible.sync="dialogFormATVisible"
+      :center="device === 'mobile'"
+      :fullscreen="device === 'mobile'"
+    >
+      <el-form
+        ref="deviceATForm"
+        :rules="rules"
+        :model="tempat"
+        label-position="right"
+        label-width="120px"
+        style="width: 95%; margin-left: 5px"
+      >
+
+        <el-form-item v-for="v,k in tempat.atmap" :key="k" :label="k" :prop="k">
+          <el-input :value="v" style="width: 80%;" />
+          <el-button @click="handleChangeAT(tempat.callsign,tempat.ssid,k,v)">执行 </el-button>
+
+        </el-form-item>
+
+      </el-form>
+
+      <div slot="footer" class="dialog-footer" />
+    </el-dialog>
+
   </div>
 </template>
 
@@ -975,6 +1030,8 @@ import {
   updateDevice,
   queryDevice,
   deleteDevice,
+  changeDeviceAT,
+
   changeDeviceParm,
   changeDevice1w,
   changeDevice2w
@@ -1091,6 +1148,13 @@ export default {
         sort: '-id'
       },
       showReviewer: false,
+      tempat: {
+        callsign: undefined,
+        ssid: undefined,
+        atcommand: '',
+        data: undefined,
+        atmap: undefined
+      },
       temp: {
         id: undefined,
         name: '',
@@ -1112,6 +1176,7 @@ export default {
 
       //  roles: ["admin", "editer", "guest"],
       dialogFormVisible: false,
+      dialogFormATVisible: false,
 
       dialogFormChangeVisible: false,
       dialogStatus: '',
@@ -1194,6 +1259,7 @@ export default {
     changeDevice1w,
     changeDevice2w,
     fetchRelayList,
+    changeDeviceAT,
 
     getList() {
       this.listLoading = true
@@ -1397,6 +1463,63 @@ export default {
             this.$refs['devicedataForm'].clearValidate()
           })
         }
+      }) // copy obj
+      //  this.temp.timestamp = new Date(this.temp.timestamp);
+    },
+
+    handleOpenAT(row) {
+      const at = {
+        callsign: row.callsign,
+        ssid: row.ssid,
+        atcommand: 'AT+READ',
+        data: '123',
+        type: 1
+      }
+      changeDeviceAT(at).then((response) => {
+        // this.tempat = response.data.items.last_atcommand
+
+        this.tempat.callsign = row.callsign
+        this.tempat.ssid = row.ssid
+
+        // this.tempat.atmap = { 'AT+READ': '123', 'AT+INIT': 'ok', 'AT+REBOOT': 'ok' }
+
+        // this.tempat = response.data.items.last_atcommand
+
+        if (!response.data.items.last_atcommand) {
+          this.$notify({
+            title: '加载AT参数列表失败,可能是设备固件版本不支持',
+            message: response.data.message,
+            type: 'warning',
+            duration: 5000
+          })
+          return
+        } else {
+          this.tempat = response.data.items.last_atcommand
+          this.dialogFormATVisible = true
+
+          // this.$nextTick(() => {
+          //   this.$refs['deviceATForm'].clearValidate()
+          // })
+        }
+      }) // copy obj
+      //  this.temp.timestamp = new Date(this.temp.timestamp);
+    },
+
+    handleChangeAT(callsign, ssid, atcommand, data) {
+      console.log(callsign, ssid, atcommand, data)
+
+      const at = {
+        callsign: callsign,
+        ssid: ssid,
+        atcommand: atcommand,
+        data: data,
+        type: 2
+      }
+
+      changeDeviceAT(at).then((response) => {
+
+        // this.temp = response.data.items
+
       }) // copy obj
       //  this.temp.timestamp = new Date(this.temp.timestamp);
     },

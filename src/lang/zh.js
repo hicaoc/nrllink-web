@@ -111,7 +111,8 @@ export default {
     name: '名称',
     edit: '编辑',
     delete: '删除',
-    active: '动作'
+    active: '动作',
+    at: 'AT指令'
   },
   group: {
     name: '名称',
