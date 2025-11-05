@@ -51,8 +51,8 @@
 
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="getList">查询</el-button>
 
-      <!-- <el-switch
-        v-model="listQuery.displayOnline"
+      <el-switch
+        v-model="listQuery.isonline"
         class="filter-item"
         active-text="显示在线"
         active-color="#1890ff"
@@ -60,7 +60,7 @@
         :active-value="true"
         :inactive-value="false"
         @change="handleFilter"
-      /> -->
+      />
 
       <el-switch v-model="showtable" class="filter-item" :active-text="$t('device.showtable')" inactive-text />
 
@@ -99,9 +99,10 @@
         stripe
         highlight-current-row
         style="width: 100%"
-        :default-sort="{ prop: 'id', order: 'descending' }"
+        @sort-change="sortChange"
       >
-        <el-table-column fixed :label="$t('Account.id')" prop="id" :sortable="true" align="center" width="110">
+        >
+        <el-table-column fixed :label="$t('Account.id')" prop="id" sortable="custom" align="center" width="110">
           <template slot-scope="scope">
             <span>{{ scope.row.id }}</span>
           </template>
