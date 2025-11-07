@@ -23,19 +23,32 @@
           </a>
         </li>
         <li class="special-server">
-          <a :href="'/nrlmp.jpg'" target="_blank" class="server-link special-link">
+          <a href="#" class="server-link special-link" @click.prevent="toggleImage(true)">
             <div class="special-text">NRL微信小程序 BH4RPN</div>
           </a>
         </li>
 
-        <li class="special-server server-link special-link">
+        <li class="special-server">
+          <a :href="'https://qm.qq.com/q/wu5lgyM5hK'" target="_blank" class="server-link special-link">
 
-          <div class="special-text">NRL技术交流QQ群：1039950103</div>
+            <div class="special-text">NRL技术交流QQ群：1039950103</div>
+          </a>
 
         </li>
 
       </ul>
+
     </div>
+    <!-- 悬浮层，背景透明度和位置可调 -->
+    <div v-if="isImageVisible" class="overlay">
+      <div class="image-container">
+        <!-- 关闭按钮 -->
+        <button class="close-btn" @click.prevent="toggleImage(false)">×</button>
+        <!-- 显示图片 -->
+        <img :src="nrlmpImg" alt="NRL微信小程序" class="floating-image">
+      </div>
+    </div>
+
     <div class="login-form-container">
       <el-form
         ref="loginForm"
@@ -138,6 +151,7 @@ import { getplatforminfo, fetchPlatformList } from '@/api/platform'
 import { validUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import { mapGetters } from 'vuex'
+import nrlmpImg from '@/assets/nrlmp.jpg'
 // import SocialSign from './components/SocialSignin'
 
 export default {
@@ -166,6 +180,8 @@ export default {
         username: '',
         password: ''
       },
+      isImageVisible: false,
+      nrlmpImg,
       loginRules: {
         username: [
           { required: true, trigger: 'blur', validator: validateUsername }
@@ -252,6 +268,9 @@ export default {
       this.$nextTick(() => {
         this.$refs.password.focus()
       })
+    },
+    toggleImage(show) {
+      this.isImageVisible = show
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
