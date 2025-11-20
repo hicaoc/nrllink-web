@@ -1,147 +1,108 @@
 <template>
   <div class="login-container">
+    <div class="content-wrapper">
+      <!-- Left Column: Support Links -->
+      <div class="column support-column">
+        <support-links @toggle-image="toggleImage" />
+      </div>
 
-    <div class="server-list">
-      <h4 class="server-title">NRL设备和软件APP支持</h4>
-      <ul>
+      <!-- Center Column: Login Form -->
+      <div class="column form-column">
+        <div class="login-form-card">
+          <el-form
+            ref="loginForm"
+            :model="loginForm"
+            :rules="loginRules"
+            class="login-form"
+            autocomplete="on"
+            label-position="left"
+          >
+            <div class="title-container">
+              <img src="/images/logo.png" alt="Logo" class="logo">
+              <h3 class="title">{{ title }}</h3>
+              <lang-select class="set-language" />
+            </div>
 
-        <li class="special-server">
-          <a :href="'https://bh4tdv.taobao.com/'" target="_blank" class="server-link special-link">
-            <div class="special-text">支持NRL协议的设备 BH4TDV作坊</div>
-          </a>
-        </li>
+            <el-form-item prop="username">
+              <span class="svg-container">
+                <svg-icon icon-class="user" />
+              </span>
+              <el-input
+                ref="username"
+                v-model="loginForm.username"
+                :placeholder="$t('login.username')"
+                name="username"
+                type="text"
+                tabindex="1"
+                autocomplete="on"
+              />
+            </el-form-item>
 
-        <li class="special-server">
-          <a :href="'https://73ham.com/'" target="_blank" class="server-link special-link">
-            <div class="special-text">NRL安卓APP BA4QGT</div>
-          </a>
-        </li>
+            <el-tooltip
+              v-model="capsTooltip"
+              content="Caps lock is On"
+              placement="right"
+              manual
+            >
+              <el-form-item prop="password">
+                <span class="svg-container">
+                  <svg-icon icon-class="password" />
+                </span>
+                <el-input
+                  :key="passwordType"
+                  ref="password"
+                  v-model="loginForm.password"
+                  :type="passwordType"
+                  :placeholder="$t('login.password')"
+                  name="password"
+                  tabindex="2"
+                  autocomplete="on"
+                  @keyup.native="checkCapslock"
+                  @blur="capsTooltip = false"
+                  @keyup.enter.native="handleLogin"
+                />
+                <span class="show-pwd" @click="showPwd">
+                  <svg-icon
+                    :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+                  />
+                </span>
+              </el-form-item>
+            </el-tooltip>
 
-        <li class="special-server">
-          <a :href="'https://github.com/hicaoc/nrlnanny'" target="_blank" class="server-link special-link">
-            <div class="special-text">NRL保姆(录音，信标播放) BH4RPN</div>
-          </a>
-        </li>
-        <li class="special-server">
-          <a href="#" class="server-link special-link" @click.prevent="toggleImage(true)">
-            <div class="special-text">NRL微信小程序 BH4RPN</div>
-          </a>
-        </li>
+            <el-button
+              :loading="loading"
+              type="primary"
+              class="login-button"
+              @click.native.prevent="handleLogin"
+            >{{ $t("login.logIn") }}</el-button>
+          </el-form>
+        </div>
+      </div>
 
-        <li class="special-server">
-          <a :href="'https://qm.qq.com/q/wu5lgyM5hK'" target="_blank" class="server-link special-link">
-
-            <div class="special-text">NRL技术交流QQ群：1039950103</div>
-          </a>
-
-        </li>
-
-      </ul>
-
-    </div>
-    <!-- 悬浮层，背景透明度和位置可调 -->
-    <div v-if="isImageVisible" class="overlay">
-      <div class="image-container">
-        <!-- 关闭按钮 -->
-        <button class="close-btn" @click.prevent="toggleImage(false)">×</button>
-        <!-- 显示图片 -->
-        <img :src="nrlmpImg" alt="NRL微信小程序" class="floating-image">
+      <!-- Right Column: Server List -->
+      <div class="column server-column">
+        <server-list :list="serverList" />
       </div>
     </div>
 
-    <div class="login-form-container">
-      <el-form
-        ref="loginForm"
-        :model="loginForm"
-        :rules="loginRules"
-        class="login-form"
-        autocomplete="on"
-        label-position="left"
-      >
-        <div class="title-container">
-          <img src="/images/logo.png" alt="Logo" class="logo">
-          <h3 class="title">{{ title }}</h3>
-
-          <lang-select class="set-language" />
+    <!-- Floating Image Overlay -->
+    <transition name="fade">
+      <div v-if="isImageVisible" class="overlay" @click.self="toggleImage(false)">
+        <div class="image-container">
+          <button class="close-btn" @click.prevent="toggleImage(false)">×</button>
+          <img :src="nrlmpImg" alt="NRL微信小程序" class="floating-image">
         </div>
+      </div>
+    </transition>
 
-        <el-form-item prop="username">
-          <span class="svg-container">
-            <svg-icon icon-class="user" />
-          </span>
-          <el-input
-            ref="username"
-            v-model="loginForm.username"
-            :placeholder="$t('login.username')"
-            name="username"
-            type="text"
-            tabindex="1"
-            autocomplete="on"
-          />
-        </el-form-item>
-
-        <el-tooltip
-          v-model="capsTooltip"
-          content="Caps lock is On"
-          placement="right"
-          manual
-        >
-          <el-form-item prop="password">
-            <span class="svg-container">
-              <svg-icon icon-class="password" />
-            </span>
-            <el-input
-              :key="passwordType"
-              ref="password"
-              v-model="loginForm.password"
-              :type="passwordType"
-              :placeholder="$t('login.password')"
-              name="password"
-              tabindex="2"
-              autocomplete="on"
-              @keyup.native="checkCapslock"
-              @blur="capsTooltip = false"
-              @keyup.enter.native="handleLogin"
-            />
-            <span class="show-pwd" @click="showPwd">
-              <svg-icon
-                :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-              />
-            </span>
-          </el-form-item>
-        </el-tooltip>
-
-        <el-button
-          :loading="loading"
-          type="primary"
-          style="width: 100%; margin-bottom: 30px"
-          @click.native.prevent="handleLogin"
-        >{{ $t("login.logIn") }}</el-button>
-      </el-form>
-    </div>
-
-    <div class="server-list">
-      <h4 class="server-title">在线NRL服务器</h4>
-      <ul>
-        <li v-for="server in serverList" :key="server.id">
-          <a :href="'https://' + server.host" target="_blank" class="server-link">
-            <div class="server-item">
-              <div class="server-header">
-                <span class="server-name">{{ server.name }}</span>
-              </div>
-              <div class="server-stats">
-                <span class="server-host">{{ server.host }}</span>
-                <span class="server-online">在线:{{ server.online }}</span>
-                <span class="server-peak">高峰:{{ server.total }}</span>
-              </div>
-            </div>
-          </a>
-        </li>
-      </ul>
-
-    </div>
+    <!-- Footer -->
     <div v-if="icp !== ''" class="bottom_footer">
-      <a href="https://beian.miit.gov.cn" target="_blank">公信部ICP备案号：{{ icp }}</a> &nbsp; &nbsp; 技术支持：BH4TDV BG6FCS BA4RN BH4TIH BD4VKI BA4QAO Copyright © 2017-2022 BH4RPN 版权所有
+      <div class="footer-content">
+        <a href="https://beian.miit.gov.cn" target="_blank">公信部ICP备案号：{{ icp }}</a>
+        <span class="separator">|</span>
+        <span>技术支持：BH4TDV BG6FCS BA4RN BA1GM BH4TIH BD4VKI BA4QAO</span>
+        <span class="copyright">Copyright © 2017-2022 BH4RPN 版权所有</span>
+      </div>
     </div>
   </div>
 </template>
@@ -152,11 +113,12 @@ import { validUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import { mapGetters } from 'vuex'
 import nrlmpImg from '@/assets/nrlmp.jpg'
-// import SocialSign from './components/SocialSignin'
+import ServerList from './components/ServerList'
+import SupportLinks from './components/SupportLinks'
 
 export default {
   name: 'Login',
-  components: { LangSelect },
+  components: { LangSelect, ServerList, SupportLinks },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -198,11 +160,9 @@ export default {
       serverList: []
     }
   },
-
   computed: {
     ...mapGetters(['device'])
   },
-
   watch: {
     $route: {
       handler: function(route) {
@@ -223,7 +183,6 @@ export default {
       }
     })
 
-    // Fetch server list
     this.fetchServerList()
   },
   mounted() {
@@ -232,9 +191,6 @@ export default {
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
-  },
-  destroyed() {
-    // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
     fetchServerList() {
@@ -291,33 +247,13 @@ export default {
         }
       })
     }
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
   }
 }
 </script>
 
 <style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-$bg: #1f2d3d; /* Updated background color */
+/* Global overrides for Element UI inputs in login page */
+$bg: #283443;
 $light_gray: #fff;
 $cursor: #fff;
 
@@ -327,7 +263,6 @@ $cursor: #fff;
   }
 }
 
-/* reset element-ui css */
 .login-container {
   .el-input {
     display: inline-block;
@@ -361,14 +296,10 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg: linear-gradient(135deg, #1a1f2e 0%, #2a3b5a 100%);
-$dark_gray: #66788a;
-$light_gray: #f5f7fa;
-$title_color: #ffffff;
+$bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+$dark_gray: #8899a6;
+$light_gray: #eee;
 $primary_color: #3b82f6;
-$card_bg: rgba(255, 255, 255, 0.05);
-$border_radius: 12px;
-$shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 
 .login-container {
   min-height: 100vh;
@@ -376,261 +307,63 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   background: $bg;
   overflow-x: hidden;
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  padding: 20px 10px;
-  transition: background 0.3s ease;
+  align-items: center;
+  color: #fff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  .server-list {
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    padding: 16px;
-    background-color: $card_bg;
-    border-radius: $border_radius;
-    overflow-y: auto;
-    max-height: 60vh;
-    box-shadow: $shadow;
-    margin-bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 1400px;
+    padding: 20px;
+    gap: 20px;
+    flex: 1;
+    justify-content: center;
+    align-items: flex-start;
 
-    /* Custom scrollbar styling */
-    &::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    .server-title {
-      font-size: 20px;
-      color: $title_color;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-
-    ul {
-      list-style-type: none;
-      padding: 0;
-
-      li {
-        margin-bottom: 5px;
-        color: $light_gray;
-
-    .server-link {
-      display: block;
-      text-decoration: none;
-      transition: transform 0.2s ease, background 0.3s ease;
-    }
-
-    .server-item {
-      display: flex;
-      flex-wrap: wrap;
-      padding: 12px 16px;
-      margin: -12px -16px;
-      border-radius: $border_radius;
-      transition: background 0.3s ease;
-      position: relative;
-    }
-
-    .server-header {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 8px;
-    }
-
-    .server-name {
-      font-weight: 600;
-      font-size: 15px;
-      color: $primary_color;
-      margin-bottom: 4px;
-    }
-
-    .server-host {
-      color: lighten($light_gray, 10%);
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-
-    .server-item:hover {
-      background: $primary_color;
-      color: white;
-      transform: translateX(5px);
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .server-name {
-      flex: 1 1 100%;
-      font-weight: 600;
-      font-size: 15px;
-      color: $primary_color;
-      margin-bottom: 6px;
-    }
-
-    .server-host {
-      flex: 1 1 100%;
-      color: lighten($light_gray, 10%);
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    .server-item {
-      display: flex;
+    @media (min-width: 1024px) {
       flex-direction: row;
-      gap: 4px;
-      align-items: center;
-    }
-
-    .server-header,
-    .server-stats {
-      display: inline-flex;
-      gap: 2px;
-    }
-
-    .server-name,
-    .server-host,
-    .server-online,
-    .server-peak {
-      margin-bottom: 0;
-    }
-
-    .server-name,
-    .server-host,
-    .server-online,
-    .server-peak {
-      font-size: 14px;
-      white-space: nowrap;
-    }
-
-    .server-name {
-      font-weight: 700;
-      color: $primary_color;
-    }
-
-    .server-host {
-      color: lighten($light_gray, 15%);
-    }
-
-    .server-online {
-      color: #4ade80;
-    }
-
-    .server-peak {
-      color: #f87171;
-    }
-
-    .server-link:hover .server-name {
-      color: #e0f2fe;
-    }
-
-    .server-link:hover .server-item {
-      background: $primary_color;
-      color: white;
-    }
-
-    .server-link:hover .server-host { color: lighten(white, 10%); }
-    .server-link:hover .server-online { color: #ecfdf5; }
-    .server-link:hover .server-peak { color: #fef2f2; }
-
-    .server-link:hover .server-name { color: #e0f2fe; }
-  }
-
-  .special-link {
-    display: block;
-    padding: 16px;
-    text-align: center;
-    border-radius: 8px;
-    background-color: rgba(59, 130, 246, 0.1);
-    transition: all 0.3s ease;
-  }
-
-  .special-link:hover {
-    background-color: rgba(59, 130, 246, 0.2);
-    transform: translateY(-2px);
-  }
-
-  .special-text {
-    color: #3b82f6;
-    font-weight: 600;
-    font-size: 14px;
-  }
-
-  li:nth-child(even) .server-item {
-    background: rgba(255,255,255,0.02);
-  }
-
-  li:nth-child(odd) .server-item {
-    background: rgba(255,255,255,0.01);
-  }
+      align-items: flex-start;
+      padding: 60px 20px;
+      gap: 40px;
     }
   }
 
-  .login-form-container {
+  .column {
     width: 100%;
-    max-width: 420px;
-    padding: 24px;
-    background-color: $card_bg;
-    border-radius: $border_radius;
-    margin-top: 0;
-    box-shadow: $shadow;
 
-    .el-form-item {
-      margin-bottom: 20px;
+    @media (min-width: 1024px) {
+      flex: 1;
     }
+  }
 
-  .el-button {
+  .support-column, .server-column {
+    @media (min-width: 1024px) {
+      flex: 1;
+      max-width: 350px;
+      position: sticky;
+      top: 40px;
+    }
+  }
+
+  .form-column {
+    @media (min-width: 1024px) {
+      flex: 0 0 450px;
+    }
+  }
+
+  .login-form-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 40px 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
-    margin-bottom: 20px;
-    background-color: $primary_color;
-    border-color: $primary_color;
-    border-radius: 30px;
-    padding: 12px 20px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background-color: lighten($primary_color, 5%);
-      border-color: lighten($primary_color, 5%);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
-    }
-  }
-  }
-
-  .bottom_footer {
-    display: block;
-    margin-top: 30px;
-    text-align: center;
-    color: $light_gray;
-    font-size: 13px;
-    line-height: 1.6;
-
-    a {
-      color: $primary_color;
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
+    max-width: 450px;
+    margin: 0 auto;
   }
 
   .title-container {
@@ -639,28 +372,41 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     margin-bottom: 30px;
 
     .title {
-      font-size: 26px;
+      font-size: 28px;
       color: $light_gray;
-      margin: 0px auto 20px auto;
-      text-align: center;
-      font-weight: bold;
+      margin: 0 auto 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
 
     .set-language {
       color: #fff;
       position: absolute;
-      top: 3px;
-      font-size: 18px;
-      right: 0px;
+      top: 0;
+      right: 0;
+      font-size: 20px;
       cursor: pointer;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
     }
   }
 
   .logo {
-    width: 250px;
+    width: 180px;
     height: auto;
-    margin: 0 auto 20px;
-    display: block;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+  }
+
+  .svg-container {
+    padding: 6px 5px 6px 15px;
+    color: $dark_gray;
+    vertical-align: middle;
+    width: 30px;
+    display: inline-block;
   }
 
   .show-pwd {
@@ -673,219 +419,140 @@ $shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     user-select: none;
   }
 
-  .thirdparty-button {
-    position: absolute;
-    right: 0;
-    bottom: 6px;
+  .login-button {
+    width: 100%;
+    margin-bottom: 20px;
+    height: 48px;
+    font-size: 16px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, $primary_color 0%, darken($primary_color, 10%) 100%);
+    border: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
   }
 
-@media only screen and (min-width: 768px) {
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  padding: 40px 20px;
+  .bottom_footer {
+    width: 100%;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: auto;
 
-    .server-list {
-      width: 100%;
-      padding: 16px 24px;
-      background-color: rgba(255, 255, 255, 0.03);
-      border-radius: $border_radius;
-      overflow-y: auto;
-      max-height: 60vh;
-      box-shadow: $shadow;
-      margin-bottom: 0;
-      flex: 1 1 300px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-
-      /* Enhanced scrollbar styling */
-      scrollbar-width: thin;
-      scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-
-      &::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: transparent;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.25);
-        border-radius: 3px;
-        border: 2px solid transparent;
-        background-clip: content-box;
-      }
-
-      &::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.4);
-        border: 2px solid transparent;
-      }
-    }
-
-    .server-item {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 16px;
-      padding: 16px;
-      margin: 0 -16px;
-      border-radius: $border_radius;
-      transition: all 0.3s ease;
-      position: relative;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      margin-bottom: 12px;
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .server-header {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .server-item:hover {
-      background: $primary_color;
-      color: white;
-      transform: translateX(4px) scale(1.02);
-      box-shadow: 0 12px 24px rgba(59, 130, 246, 0.25);
-    }
-
-    .special-link {
-      display: block;
-      padding: 20px;
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
       text-align: center;
-      border-radius: 10px;
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
-      border: 1px solid rgba(59, 130, 246, 0.2);
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
-    }
-
-    .special-link:hover {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.1));
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.2);
-    }
-
-    .login-container {
-      background: $bg;
-      padding: 32px 16px;
-      backdrop-filter: blur(20px);
-    }
-
-    .login-form-container {
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      flex: 1 1 360px;
-    }
-
-    .server-stats {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 13px;
+      line-height: 1.8;
       display: flex;
-      flex-wrap: nowrap;
-      justify-content: space-between;
-      margin-top: 2px;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      align-items: center;
     }
 
-    .server-online {
-      flex: 1 1 45%;
-      color: #4ade80;
-      font-size: 12px;
-      white-space: nowrap;
+    a {
+      color: $primary_color;
+      text-decoration: none;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: lighten($primary_color, 15%);
+        text-decoration: underline;
+      }
     }
 
-    .server-peak {
-      flex: 1 1 45%;
-      color: #f87171;
-      font-size: 12px;
-      white-space: nowrap;
+    .separator {
+      color: rgba(255, 255, 255, 0.2);
+      margin: 0 5px;
+      display: none;
+      @media (min-width: 768px) {
+        display: inline;
+      }
+    }
+  }
+
+  /* Overlay Styles */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
+
+  .image-container {
+    position: relative;
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    .floating-image {
+      max-width: 90vw;
+      max-height: 80vh;
+      border-radius: 8px;
+      display: block;
     }
 
-    .server-link:hover .server-item {
-      background: $primary_color;
+    .close-btn {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #ef4444;
       color: white;
+      border: 2px solid white;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #dc2626;
+        transform: scale(1.1);
+      }
     }
-
-  .bottom_footer {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: block;
-    max-width: 800px;
   }
 
-  .server-host,
-  .server-online,
-  .server-peak {
-    flex: 1 1 48%;
+  /* Animations */
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.3s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 
-  .server-name {
-    flex: 1 1 100%;
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
-}
-
-@media only screen and (max-width: 768px) {
-  .login-container {
-    padding: 20px 10px;
-  }
-
-  .title-container .title {
-    font-size: 22px;
-  }
-
-  .logo {
-    width: 200px;
-  }
-
-  .server-list {
-    max-height: 40vh;
-  }
-
-  .login-form-container {
-    max-width: 100%;
-    padding: 16px;
-  }
-
-  .bottom_footer {
-    font-size: 12px;
-    padding: 0 20px;
-  }
-
-  .server-item {
-    flex-direction: column;
-  }
-
-  .server-host {
-    flex: 1 1 100%;
-  }
-
-  .server-stats {
-    flex-direction: row;
-    flex-wrap: nowrap;
-  }
-
-  .server-online,
-  .server-peak {
-    flex: 1 1 48%;
-    white-space: nowrap;
-  }
-
-  .server-name {
-    font-size: 14px;
-  }
-
-  .server-host {
-    font-size: 12px;
-  }
-
-  .server-online,
-  .server-peak {
-    font-size: 12px;
-  }
-}
 }
 </style>
