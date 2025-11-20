@@ -4,56 +4,27 @@
       <el-input
         v-model="listQuery.callsign"
         :placeholder="$t('device.callsign')"
-        style="width: 320px;"
-        class="filter-item"
+        class="filter-item search-input"
         clearable
         @keyup.enter.native="handleFilter"
       />
-
-      <!-- <el-select
-        v-model="listQuery.callsign"
-        filterable
-        clearable
-        placeholder="呼号"
-        style="width: 320px"
-        class="filter-item"
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="(item, index) in list"
-          :key="index"
-          :label="item.id + ' ' + item.callsign + '-' + item.ssid"
-          :value="item.callsign"
-        />
-      </el-select> -->
-      <!--
-      <el-input
-        v-model="listQuery.public_group_id"
-        :placeholder="$t('device.public_group_id')"
-        style="width: 320px;"
-        class="filter-item"
-        clearable
-        @keyup.enter.native="handleFilter"
-      /> -->
 
       <el-select
         v-model="listQuery.group_id"
         filterable
         clearable
         placeholder="请选择组"
-        style="width: 320px"
-        class="filter-item"
+        class="filter-item group-select"
         @change="handleFilter"
       >
-
         <el-option v-for="item in groupsOptions" :key="item.id" :label="item.id+'-'+item.name" :value="item.id" />
       </el-select>
 
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="getList">查询</el-button>
+      <el-button v-waves class="filter-item action-btn" type="primary" icon="el-icon-search" @click="getList">查询</el-button>
 
       <el-switch
         v-model="listQuery.isonline"
-        class="filter-item"
+        class="filter-item status-switch"
         active-text="显示在线"
         active-color="#1890ff"
         inactive-color="#dcdfe6"
@@ -62,32 +33,9 @@
         @change="handleFilter"
       />
 
-      <el-switch v-model="showtable" class="filter-item" :active-text="$t('device.showtable')" inactive-text />
-
-      <el-tag class="filter-item">
-        <a href="/ws.html" target="_blank">内网配置设备</a>
-      </el-tag>
+      <el-switch v-model="showtable" class="filter-item view-switch" :active-text="$t('device.showtable')" inactive-text />
 
     </div>
-
-    <!-- <div>
-      <el-tag>app数量: {{ list.app_stats_list.length }}  </el-tag>  <el-tag>总会话数量: {{ list.stats.session_number }}  </el-tag>
-
-      <el-tag>最大延时： {{ parseInt(list.stats.max_delay) }}ms  </el-tag>
-      <el-tag>最小延时： {{ parseInt(list.stats.min_delay) }}ms  </el-tag>
-      <el-tag>平均延时：{{ parseInt(list.stats.total_delay/list.stats.session_number) }}ms  </el-tag>
-
-      <el-tag>最大首包延时： {{ parseInt(list.stats.max_first_delay) }}ms  </el-tag>
-      <el-tag>最小首包延时： {{ parseInt(list.stats.min_first_delay) }}ms  </el-tag>
-      <el-tag>平均首包延时： {{ parseInt(list.stats.total_first_delay/list.stats.session_number) }}ms  </el-tag>
-
-      <el-tag>最大丢包： {{ list.stats.max_lost }}  </el-tag>
-      <el-tag>最小丢包： {{ list.stats.min_lost }}  </el-tag>
-      <el-tag>平均丢包： {{ parseInt(list.stats.total_lost/list.stats.session_number) }}  </el-tag>
-
-    </div> -->
-
-    <!-- <panel-group :list="list" /> -->
 
     <div v-if="showtable">
       <el-table
@@ -96,7 +44,6 @@
         :data="list"
         border
         fit
-        stripe
         highlight-current-row
         style="width: 100%"
         @sort-change="sortChange"
@@ -119,32 +66,23 @@
 
         <el-table-column :label="$t('device.status')" prop="status" width="140px" align="center">
           <template slot-scope="scope">
-            <!-- <el-select
-              v-model="scope.row.statusArray"
-              :disabled="!checkPermission(['admin']) && scope.row.callsign !== callsign"
-              @change="updateStatus(scope.row)"
-              multiple
-            >
-              <el-option v-for="item in DevStatusOptions" :key="item.id" :label="item.name" :value="item.id" />
-            </el-select> -->
+            <div class="status-actions">
+              <el-button
+                :type="(scope.row.status&1) === 1 ? 'danger' : 'success'"
+                size="mini"
+                plain
+                class="compact-btn"
+                @click="updateStatus(scope.row,1)"
+              >{{ (scope.row.status&1) === 1 ? '禁收' : '接收' }}</el-button>
 
-            <span><el-button :type="(scope.row.status&1) === 1 ? 'danger' : ''" plain size="mini" @click="updateStatus(scope.row,1)">禁收</el-button></span>
-            <span><el-button :type="(scope.row.status&2) === 2 ? 'danger' : ''" plain size="mini" @click="updateStatus(scope.row,2)">禁发</el-button></span>
-
-            <!-- <el-checkbox-group
-              v-model="scope.row.statusArray"
-              size="mini"
-              :disabled="!checkPermission(['admin']) && scope.row.callsign !== callsign"
-              @change="updateStatus(scope.row)"
-            >
-
-             <el-checkbox-button   :label="1">禁收</el-checkbox-button>
-             <el-checkbox-button   :label="2">禁发</el-checkbox-button> -->
-            <!-- <el-checkbox-button v-for="item in DevStatusOptions" :key="item.id" :label="item.id">{{ item.name
-              }}</el-checkbox-button> -->
-            <!-- <el-checkbox-button v-if="scope.row.ssid === 200" :label="4">透明</el-checkbox-button> -->
-            <!-- </el-checkbox-group> -->
-
+              <el-button
+                :type="(scope.row.status&2) === 2 ? 'danger' : 'success'"
+                size="mini"
+                plain
+                class="compact-btn"
+                @click="updateStatus(scope.row,2)"
+              >{{ (scope.row.status&2) === 2 ? '禁发' : '发送' }}</el-button>
+            </div>
           </template>
         </el-table-column>
 
@@ -166,18 +104,6 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column label="应用类型" width="120px" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.type }}</span>
-          </template>
-        </el-table-column> -->
-
-        <!-- <el-table-column label="CPUID" width="150px" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.cpuid }}</span>
-          </template>
-        </el-table-column> -->
-
         <el-table-column label="当前群组" prop="group_id" width="180px" align="center" :sortable="true">
           <template slot-scope="scope">
             <span v-if="scope.row.group_id > 0 && scope.row.group_id < 1000">
@@ -191,42 +117,49 @@
         <el-table-column
           :label="$t('Account.actions')"
           align="center"
-          width="160px"
+          width="260px"
           class-name="small-padding fixed-width"
         >
           <template slot-scope="{ row }">
-            <el-button
-              v-if="checkPermission(['admin']) || row.callsign === callsign"
-              size="mini"
-              type="primary"
-              @click="handleUpdate(row)"
-            >{{ $t("device.edit") }}</el-button>
+            <div class="operation-actions">
+              <el-button
+                v-if="checkPermission(['admin']) || row.callsign === callsign"
+                size="mini"
+                type="primary"
+                plain
+                class="compact-btn"
+                @click="handleUpdate(row)"
+              >{{ $t("device.edit") }}</el-button>
 
-            <el-button
-              v-if="checkPermission(['admin']) || row.callsign === callsign"
-              :disabled="row.is_online === false"
-              size="mini"
-              type="primary"
-              @click="handleChange(row)"
-            >{{
-              $t("device.change") }}</el-button>
+              <el-button
+                v-if="checkPermission(['admin']) || row.callsign === callsign"
+                :disabled="row.is_online === false"
+                size="mini"
+                type="warning"
+                plain
+                class="compact-btn"
+                @click="handleChange(row)"
+              >{{ $t("device.change") }}</el-button>
 
-            <el-button
-              v-if="checkPermission(['admin']) || row.callsign === callsign"
-              :disabled="row.is_online === false"
-              size="mini"
-              type="primary"
-              @click="handleOpenAT(row)"
-            >{{
-              $t("device.at") }}</el-button>
+              <el-button
+                v-if="checkPermission(['admin']) || row.callsign === callsign"
+                :disabled="row.is_online === false"
+                size="mini"
+                type="info"
+                plain
+                class="compact-btn"
+                @click="handleOpenAT(row)"
+              >{{ $t("device.at") }}</el-button>
 
-            <el-button
-              v-if="checkPermission(['admin']) || row.callsign === callsign"
-              size="mini"
-              type="danger"
-              @click="handleDelete(row, '删除')"
-            >{{ $t('employee.delete') }}</el-button>
-
+              <el-button
+                v-if="checkPermission(['admin']) || row.callsign === callsign"
+                size="mini"
+                type="danger"
+                plain
+                class="compact-btn"
+                @click="handleDelete(row, '删除')"
+              >{{ $t('employee.delete') }}</el-button>
+            </div>
           </template>
         </el-table-column>
 
@@ -287,52 +220,6 @@
           </template>
         </el-table-column>
 
-        <!-- <el-table-column
-          label="绑定时间"
-          prop="online_time"
-          width="155px"
-          align="center"
-          :sortable="true"
-        >
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.online_time) }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          label="最近活动时间"
-          prop="last_packet_time"
-          width="155px"
-          align="center"
-          :sortable="true"
-        >
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.last_packet_time) }}</span>
-          </template>
-        </el-table-column> -->
-
-        <!-- <el-table-column label="加入时间" width="180px" align="center">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.creatre_time) }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="更新时间" width="180px" align="center">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.update_time) }}</span>
-          </template>
-        </el-table-column> -->
-
-        <!-- <el-table-column
-          label="备注"
-          width="100px"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <span>{{ scope.row.note }}</span>
-          </template>
-        </el-table-column> -->
-
       </el-table>
     </div>
 
@@ -343,11 +230,6 @@
       :limit.sync="listQuery.limit"
       @pagination="getList"
     />
-
-    <!-- <el-pagination :current-page="currentPage" :page-sizes="[5, 10, 20, 40]" :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper" :total="total" @size-change="handleSizeChange"
-        @current-change="handleCurrentChange" />
-  -->
 
     <div v-if="showtable == false">
       <el-card
@@ -424,24 +306,9 @@
 
         <span> 所有者：{{ ValueFilter(item.ower_id, userOptions) }}</span><br>
         <span>状态:
-          <!-- <el-radio-group v-model="item.status">
-            <el-radio v-for="d in DevStatusOptions" :key="d.id" :label="d.id">{{
-              d.name
-            }}</el-radio>
-          </el-radio-group> -->
+
           <span><el-button :type="(item.status&1) === 1 ? 'danger' : ''" plain size="mini" @click="updateStatus(item,1)">禁收</el-button></span>
           <span><el-button :type="(item.status&2) === 2 ? 'danger' : ''" plain size="mini" @click="updateStatus(item,2)">禁发</el-button></span>
-
-          <!-- <el-checkbox-group
-            v-model="item.statusArray"
-            size="mini"
-            :disabled="!checkPermission(['admin']) && item.callsign !== callsign"
-            @change="updateStatus(item)"
-          >
-            <el-checkbox-button v-for="i in DevStatusOptions" :key="i.id" :label="i.id">{{ i.name
-            }}</el-checkbox-button>
-            <el-checkbox-button v-if="item.ssid === 200" :label="4">透明</el-checkbox-button>
-          </el-checkbox-group> -->
 
         </span>
       </el-card>
@@ -465,10 +332,6 @@
         <el-form-item :label="$t('device.name')" prop="name">
           <el-input v-model="temp.name" style="width: 90%" />
         </el-form-item>
-
-        <!-- <el-form-item :label="$t('device.callsign')" prop="callsign">
-          {{ temp.callsign }}
-        </el-form-item> -->
 
         <el-form-item :label="$t('device.grouproom')" prop="group_id">
           <el-select
@@ -544,11 +407,6 @@
           <el-input v-model="temp.chan_name[8]" style="width: 80%" />
         </el-form-item>
 
-        <!-- <el-form-item :label="$t('device.status')" prop="status">
-          <el-checkbox-group v-model="temp.statusArray"  size="mini"   :disabled="!checkPermission(['admin']) && temp.callsign !== callsign"  @change="updateStatus(item)">
-            <el-checkbox-button v-for="i in DevStatusOptions" :key="i.id" :label="i.id">{{i.name}}</el-checkbox-button>
-         </el-checkbox-group>
-        </el-form-item> -->
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -582,14 +440,7 @@
 
         <el-collapse accordion>
           <el-collapse-item title="IP和密码设置" name="1">
-            <!--
-        <el-switch
-          v-model="temp.iptype"
-          active-text="DHCP"
-          inactive-text="静态"
-          active-color="#1890ff"
-          inactive-color="#dcdfe6"
-        /> -->
+            <!-- IP and Password Settings -->
 
             <el-form-item label="呼号:" prop="callsign">
               <el-input v-model="temp.device_parm.callsign" placeholder="呼号" style="width: 100px" :disabled="!checkPermission(['admin'])" />
@@ -762,16 +613,6 @@
                 <el-radio :label="1">PTT</el-radio>
               </el-radio-group>
 
-              <!-- <el-switch
-                v-model="temp.device_parm.key_func"
-                inactive-text="继电器"
-                active-text="PTT"
-                active-color="#1890ff"
-                inactive-color="#1890ff"
-                :active-value="1"
-                :inactive-value="0"
-                @change="Switch_key_func"
-              /> -->
             </el-form-item>
 
             <el-form-item label="添加尾音:" prop="name">
@@ -804,37 +645,6 @@
               />
             </el-form-item>
 
-            <!--
-        <el-row :gutter="2">
-          <el-col :span="4">
-            <el-form-item label="内置UV:" prop="name">
-              <el-switch
-                v-model="temp.device_parm.one_uv_power"
-                active-color="#1890ff"
-                inactive-color="#dcdfe6"
-                :active-value="1"
-                :inactive-value="0"
-              />
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="7">
-            <el-form-item label="带宽" prop="one_band">
-              <el-radio-group v-model="temp.device_parm.one_band">
-                <el-radio :label="0">窄带</el-radio>
-                <el-radio :label="1">宽带</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-form-item label="DTMF" prop="one_dtmf">
-              <el-radio-group v-model="temp.device_parm.one_dtmf">
-                <el-radio :label="0">发射</el-radio>
-                <el-radio :label="1">不发射</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row> -->
           </el-collapse-item>
 
           <el-collapse-item title="Moto 3188/3688" name="3">
@@ -1071,13 +881,7 @@ export default {
   components: { Pagination },
   directives: { waves },
   filters: {
-    // statusFilter(status) {
-    //   const statusMap = {
-    //     0: 'background: #2625241f',
-    //     1: 'background: #7eaae300'
-    //   }
-    //   return statusMap[status]
-    // },
+
     statusFilter(status) {
       const statusMap = {
         9: 'success',
@@ -1087,13 +891,7 @@ export default {
       }
       return statusMap[status]
     },
-    // classStatusFilter(type) {
-    //   const statusMap = {
-    //     0: '停课',
-    //     1: '正常'
-    //   }
-    //   return statusMap[type]
-    // },
+
     Date2Week(date) {
       var d = new Date(Date.parse(date.replace(/-/g, '/')))
       return d.getDay()
@@ -1205,18 +1003,6 @@ export default {
     ...mapGetters(['device', 'callsign'])
   },
 
-  // watch: {
-  //   displayOnline(item1, item2) {
-  //     console.log(item1, item2)
-  //     if (item1 === true) {
-  //       this.display_list = this.online_list
-  //     } else {
-  //       this.display_list = this.list
-  //     }
-  //   }
-  //   // immediate:true
-  // },
-
   created() {
     if (this.device === 'mobile') {
       this.showtable = false
@@ -1227,10 +1013,6 @@ export default {
     this.fetchPlatformList({}).then((response) => {
       this.platformOptions = response.data.items
     })
-
-    // this.fetchEmployeeAllList({}).then((response) => {
-    //   this.userOptions = response.data.items
-    // })
 
     this.fetchRelayList({}).then((response) => {
       this.relayOptions = response.data.items
@@ -1268,21 +1050,6 @@ export default {
         // console.log('device list:', response.data)
         this.total = response.data.total
         this.list = response.data.items
-
-        // this.list = Object.values(response.data.items).map(item => {
-        //   item.statusArray = []
-        //   if ((item.status & 1) === 1) {
-        //     item.statusArray.push(1)
-        //   }
-        //   if ((item.status & 2) === 2) {
-        //     item.statusArray.push(2)
-        //   }
-        //   if ((item.status & 4) === 4) {
-        //     item.statusArray.push(4)
-        //   }
-        //   return item
-        // }
-        // )
 
         // this.handleFilter()
 
@@ -1606,66 +1373,16 @@ export default {
       })
       row.status = status
     },
-    // changeodispnline(val) {
-    //   if (val === true) {
-    //     this.display_list = this.online_list
-    //   } else {
-    //     this.display_list = this.list
-    //   }
-    // },
 
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
     },
 
-    // handleFilter() {
-    //   if (this.listQuery.displayOnline === false && this.listQuery.callsign === '' && this.listQuery.group_id === '') {
-    //     this.display_list = this.list
-    //     return
-    //   }
-    //   //  this.display_list = this.list
-    //   this.display_list = this.list.filter(item => {
-    //     const matchesOnline = this.listQuery.displayOnline === false || item.is_online === true
-    //     const matchesCallsign = this.listQuery.callsign === '' || item.callsign === this.listQuery.callsign
-    //     const matchesGroup = this.listQuery.group_id === '' || item.group_id === this.listQuery.group_id
-
-    //     // 确保所有条件都满足
-    //     return matchesOnline && matchesCallsign && matchesGroup
-    //   })
-    //   // this.diplay_copy_list = [...this.display_list];
-    // },
-    // handleFilter() {
-    //   this.display_list = []
-    //   // console.log(this.listQuery)
-    //   for (const id in this.list) {
-    //     if (
-    //       this.filterOnline(this.list[id]) &&
-    //       this.filterCallsign(this.list[id]) &&
-    //       this.filterGroup(this.list[id])
-    //     ) {
-    //       this.display_list.push(this.list[id])
-    //     }
-    //   }
-    //   this.diplay_copy_list = this.display_list
-    // },
-
     filterOnline(dev) {
       return this.listQuery.displayOnline === false || dev.is_online === true
     },
 
-    // GetAsciiCode(str) {
-    //   var strAscii = new Array() // 用于接收ASCII码
-    //   for (var i = 0; i < str.length; i++) {
-    //     strAscii[i] = str.charCodeAt(i) // 只能把字符串中的字符一个一个的解码
-    //   }
-    //   var getAscii = '' // 把这些ASCII码按顺序排列
-    //   for (var i = 0; i < strAscii.length; i++) {
-    //     getAscii += strAscii[i]
-    //     getAscii += ' '
-    //   }
-    //   return getAscii
-    // },
     filterCallsign(dev) {
       return (
         this.listQuery.callsign === '' || dev.callsign === this.listQuery.callsign
@@ -1740,23 +1457,7 @@ export default {
 
     handleUpload() {
       // this.UploadLoading = true;
-      // import("@/vendor/Export2Excel").then(excel => {
-      //   const tHeader = ["姓名", "电话", "性别", "出生年月日", "意向账号", "意向等级"];
-      //   const filterVal = [
-      //     "name",
-      //     "phone",
-      //     "sex",
-      //     "intendent_course",
-      //     "intendent_level"
-      //   ];
-      //   const data = this.formatJson(filterVal, this.list);
-      //   excel.export_json_to_excel({
-      //     header: tHeader,
-      //     data,
-      //     filename: "table-list"
-      //   });
-      //   this.downloadLoading = false;
-      // });
+
     },
 
     formatJson(filterVal, jsonData) {
@@ -1843,5 +1544,135 @@ export default {
   float: left;
   margin-right: 10px;
   margin-bottom: 10px;
+}
+</style>
+
+<style lang="scss">
+/* Global overrides for Element UI in device page - Modern Light Theme */
+.app-container {
+  .el-table {
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+
+    th {
+      background-color: #f8f9fa !important;
+      color: #606266;
+      font-weight: 600;
+      height: 50px;
+    }
+
+    td {
+      padding: 8px 0;
+    }
+  }
+
+  .el-dialog {
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+    .el-dialog__header {
+      padding: 20px;
+      border-bottom: 1px solid #ebeef5;
+    }
+
+    .el-dialog__footer {
+      padding: 20px;
+      border-top: 1px solid #ebeef5;
+    }
+  }
+
+  .compact-btn {
+    padding: 6px 12px;
+    margin: 0 4px !important;
+    font-size: 12px;
+    border-radius: 4px;
+    transition: all 0.3s;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    span {
+      margin-left: 0 !important;
+    }
+  }
+
+  .status-actions, .operation-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+}
+</style>
+
+<style lang="scss" scoped>
+.app-container {
+  padding: 20px;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+}
+
+.filter-container {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+
+  .filter-item {
+    margin-bottom: 0;
+    margin-right: 0;
+
+    &.search-input, &.group-select {
+      width: 240px;
+
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+    }
+
+    &.action-btn {
+      height: 36px;
+      padding: 0 20px;
+    }
+
+    &.status-switch, &.view-switch {
+      margin-left: 10px;
+    }
+  }
+}
+
+.box-card {
+  width: 340px;
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both;
 }
 </style>

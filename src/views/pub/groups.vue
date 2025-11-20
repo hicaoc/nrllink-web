@@ -14,13 +14,14 @@
 
     <div>
 
-      <el-card v-for="g,idx in list.filter(item => item.name.includes(name))" :key="g.id" class="box-card">
+      <el-card v-for="g,idx in list.filter(item => item.name.includes(name))" :key="g.id" class="box-card" :body-style="{ padding: '0px' }">
         <div
+          class="card-header"
           :style="g.id === 0
-            ? 'padding-bottom: 10px; padding-top: 10px; background: #c1e7c1;'
+            ? 'background: #e1f3d8;'
             : (g.id === 1 || g.id === 2 || g.id === 3
-              ? 'padding-bottom: 10px; padding-top: 10px; background: #e9e979;'
-              : 'padding-bottom: 10px; padding-top: 10px; background: #afafeb;')"
+              ? 'background: #faecd8;'
+              : 'background: #d9ecff;')"
         >
           <span>{{
             g.name + "-" + ValueFilter(g.type, groupTypeOptions) + " "
@@ -28,47 +29,43 @@
 
           <el-button
             v-if="checkPermission(['admin'])"
-            style="float: right; padding: 3px 0"
+            style="padding: 3px 0"
             type="text"
             @click="handleUpdate(g)"
           >{{ $t("device.edit") }}</el-button>
         </div>
-        <el-collapse v-model="g.a" accordion @change="handleChange(idx,g.a)">
-          <el-collapse-item title="我要加入" :name="g.id+'-1'">
-            <div v-for="mydev, index in mydevicesOptions" :key="index" class="text item">
-              <span v-if="!hasindevlist(mydev.id, g.devmap)">
-                <el-button
-                  size="mini"
-                  plain
-                  :type="mydev.is_online === true ? 'primary' : ''"
-                  @click="changeGroup(mydev, g.id)"
-                > {{ mydev.id +
-                  " " +
-                  mydev.callsign +
-                  "-" +
-                  mydev.ssid +
-                  " " +
-                  mydev.name }}</el-button>
-              </span>
-            </div>
-          </el-collapse-item>
-          <el-collapse-item :title="'已加入设备' + g.online_dev_number + '/' + g.total_dev_number + '台'" :name="g.id+'-2'">
-            <!-- <el-divider>已加入设备 {{ (g.devmap == null ? "0" : Object.keys(g.devmap).length) +"台 " }}</el-divider> -->
-            <div v-for="d in g.devlist" :key="d.id" class="text item">
-              <span>
-                <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " +
-                  d.name }} </el-tag>
+        <div class="card-content">
+          <el-collapse v-model="g.a" accordion @change="handleChange(idx,g.a)">
+            <el-collapse-item title="我要加入" :name="g.id+'-1'">
+              <div v-for="mydev, index in mydevicesOptions" :key="index" class="text item">
+                <span v-if="!hasindevlist(mydev.id, g.devmap)">
+                  <el-button
+                    size="mini"
+                    plain
+                    :type="mydev.is_online === true ? 'primary' : ''"
+                    @click="changeGroup(mydev, g.id)"
+                  > {{ mydev.id +
+                    " " +
+                    mydev.callsign +
+                    "-" +
+                    mydev.ssid +
+                    " " +
+                    mydev.name }}</el-button>
+                </span>
+              </div>
+            </el-collapse-item>
+            <el-collapse-item :title="'已加入设备' + g.online_dev_number + '/' + g.total_dev_number + '台'" :name="g.id+'-2'">
 
-                <!-- <el-button
-              v-if="hasindevlist(d.id, mydevicesOptions) && "
-              size="mini"
-              type="primary"
-              @click="changeGroup(mydev, g.id)"
-              >离开</el-button > -->
-              </span>
-            </div>
-          </el-collapse-item>
-        </el-collapse>
+              <div v-for="d in g.devlist" :key="d.id" class="text item">
+                <span>
+                  <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " +
+                    d.name }} </el-tag>
+
+                </span>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
       </el-card>
     </div>
 
@@ -90,28 +87,6 @@
         <el-form-item :label="$t('group.name')" prop="name">
           <el-input v-model="temp.name" style="width: 80%;" />
         </el-form-item>
-
-        <!-- <el-form-item :label="$t('server.master_server')" prop="type">
-          <el-select v-model="temp.master_server" filterable>
-            <el-option
-              v-for="item in serversOptions"
-              :key="item.id"
-              :label="d.id == 0 ? '当前服务器' : item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item :label="$t('server.slave_server')" prop="type">
-          <el-select v-model="temp.slave_server" filterable>
-            <el-option
-              v-for="item in serversOptions"
-              :key="item.id"
-              :label="d.id == 0 ? '当前服务器' : item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item> -->
 
         <el-form-item :label="$t('group.type')" prop="sex">
           <el-radio-group v-model="temp.type">
@@ -143,20 +118,6 @@
           </el-select>
         </el-form-item>
 
-        <!-- <el-form-item :label="$t('employee.employee_id')" prop="employee_id">
-          <el-input v-model="temp.employee_id"/>
-        </el-form-item>-->
-
-        <!-- <el-form-item :label="$t('employee.position')" prop="roles">
-          <el-select
-            v-model="temp.position"
-            :placeholder="$t('employee.position')"
-            class="filter-item"
-            style="width: 130px"
-          >
-            <el-option v-for="item in roles" :key="item.id" :value="item.id" :label="item.name"/>
-          </el-select>
-        </el-form-item>-->
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -194,7 +155,6 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'ComplexTable',
-  // components: { Pagination },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -204,13 +164,6 @@ export default {
       }
       return statusMap[status]
     },
-    // classStatusFilter(type) {
-    //   const statusMap = {
-    //     0: '停课',
-    //     1: '正常'
-    //   }
-    //   return statusMap[type]
-    // },
     Date2Week(date) {
       var d = new Date(Date.parse(date.replace(/-/g, '/')))
       return d.getDay()
@@ -222,7 +175,6 @@ export default {
       list: [],
       name: '',
       groupTypeOptions,
-      // serversOptions: [],
       mydevicesOptions: [],
       devicesOptions: [],
       groupodevlist: null,
@@ -247,7 +199,6 @@ export default {
 
       ],
 
-      //  roles: ["admin", "editer", "guest"],
       dialogFormVisible: false,
 
       dialogTimeLineVisible: false,
@@ -279,14 +230,6 @@ export default {
     this.fetchMyDeviceList({}).then(response => {
       this.mydevicesOptions = Object.values(response.data.items)
     })
-
-    // this.fetchDeviceList({}).then(response => {
-    //   this.devicesOptions = Object.values(response.data.items)
-    // })
-
-    // this.fetchServerList({}).then(response => {
-    //   this.serversOptions = Object.values(response.data.items)
-    // })
   },
 
   methods: {
@@ -564,7 +507,50 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+/* Global overrides for Element UI in groups page - Modern Light Theme */
+.app-container {
+  .el-dialog {
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+    .el-dialog__header {
+      padding: 20px;
+      border-bottom: 1px solid #ebeef5;
+    }
+
+    .el-dialog__footer {
+      padding: 20px;
+      border-top: 1px solid #ebeef5;
+    }
+  }
+}
+</style>
+
+<style lang="scss" scoped>
+.app-container {
+  padding: 20px;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+}
+
+.filter-container {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+
+  .filter-item {
+    margin-bottom: 0;
+    margin-right: 0;
+  }
+}
+
 .text {
   font-size: 14px;
 }
@@ -586,7 +572,33 @@ export default {
 .box-card {
   width: 340px;
   float: left;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  ::v-deep .el-card__body {
+    padding: 0;
+  }
+
+  .card-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    color: #303133;
+  }
+
+  .card-content {
+    padding: 20px;
+  }
 }
 </style>
