@@ -43,7 +43,6 @@
         :data="list"
         border
         fit
-        stripe
         highlight-current-row
         style="width: 100%;"
         @sort-change="sortChange"
@@ -221,10 +220,6 @@
         </el-form-item>
 
         <el-form-item label="接收哑音:" prop="recive_cxcss">
-          <!-- <el-input
-                v-model="temp.device_parm.one_recive_cxcss"
-                style="width: 150px"
-              /> -->
           <el-select
             v-model="temp.recive_ctss"
             style="width: 150px"
@@ -239,10 +234,6 @@
         </el-form-item>
 
         <el-form-item label="发射哑音:" prop="send_cxcss">
-          <!-- <el-input
-                v-model="temp.device_parm.one_transmit_cxcss"
-                style="width: 150px"
-              /> -->
           <el-select
             v-model="temp.send_ctss"
             style="width: 150px"
@@ -288,8 +279,6 @@ import { ctcssOptions } from '@/utils/ctcss'
 // import { fetchDeviceList } from '@/api/device'
 // import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
-// import LineChart from './components/LineChart'
-// import PanelServer from './components/PanelServer'
 
 import waves from '@/directive/waves' // waves directive
 import { parseTime, ValueFilter } from '@/utils'
@@ -299,7 +288,6 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'ComplexTable',
-  // components: { Pagination },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -309,13 +297,6 @@ export default {
       }
       return statusMap[status]
     },
-    // classStatusFilter(type) {
-    //   const statusMap = {
-    //     0: '停课',
-    //     1: '正常'
-    //   }
-    //   return statusMap[type]
-    // },
     Date2Week(date) {
       var d = new Date(Date.parse(date.replace(/-/g, '/')))
       return d.getDay()
@@ -337,8 +318,6 @@ export default {
       listQuery: {
         name: '',
         page: 1
-
-        // sort: "+id"
       },
       showReviewer: false,
       temp: {
@@ -346,7 +325,6 @@ export default {
         name: ''
       },
 
-      //  roles: ["admin", "editer", "guest"],
       dialogFormVisible: false,
 
       dialogTimeLineVisible: false,
@@ -375,9 +353,7 @@ export default {
 
     this.getList()
 
-    // this.fetchList({}).then(response => {
-    //   this.devicesOptions = Object.values(response.data.items)
-    // })
+    this.getList()
   },
 
   methods: {
@@ -420,10 +396,6 @@ export default {
         name_pref: '',
         type: 0,
         status: 1
-
-        // timestamp: new Date(),
-        // roles: [],
-        // password: ""
       }
     },
     handleCreate() {
@@ -438,7 +410,6 @@ export default {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          //  this.temp.roles = 'vue-element-admin'
           createRelay(this.temp).then(response => {
             this.getList()
             this.dialogFormVisible = false
@@ -542,24 +513,6 @@ export default {
     },
 
     handleUpload() {
-      // this.UploadLoading = true;
-      // import("@/vendor/Export2Excel").then(excel => {
-      //   const tHeader = ["姓名", "电话", "性别", "出生年月日", "意向账号", "意向等级"];
-      //   const filterVal = [
-      //     "name",
-      //     "phone",
-      //     "sex",
-      //     "intendent_course",
-      //     "intendent_level"
-      //   ];
-      //   const data = this.formatJson(filterVal, this.list);
-      //   excel.export_json_to_excel({
-      //     header: tHeader,
-      //     data,
-      //     filename: "table-list"
-      //   });
-      //   this.downloadLoading = false;
-      // });
     },
 
     formatJson(filterVal, jsonData) {
@@ -598,7 +551,67 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+/* Global overrides for Element UI in relay page - Modern Light Theme */
+.app-container {
+  .el-table {
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+
+    th {
+      background-color: #f8f9fa !important;
+      color: #606266;
+      font-weight: 600;
+      height: 50px;
+    }
+
+    td {
+      padding: 8px 0;
+    }
+  }
+
+  .el-dialog {
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+    .el-dialog__header {
+      padding: 20px;
+      border-bottom: 1px solid #ebeef5;
+    }
+
+    .el-dialog__footer {
+      padding: 20px;
+      border-top: 1px solid #ebeef5;
+    }
+  }
+}
+</style>
+
+<style lang="scss" scoped>
+.app-container {
+  padding: 20px;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+}
+
+.filter-container {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+
+  .filter-item {
+    margin-bottom: 0;
+    margin-right: 0;
+  }
+}
+
 .text {
   font-size: 14px;
 }
@@ -619,7 +632,16 @@ export default {
 .box-card {
   width: 340px;
   float: left;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
 }
 </style>
