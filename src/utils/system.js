@@ -99,4 +99,46 @@ export const ServerTypeOptions = [
   { id: 6, name: '阿里云' },
   { id: 7, name: '腾讯云' },
   { id: 8, name: '华为云' }
+
 ]
+
+export const ATREADMEOptions = {
+  'AT+1W_FREQ': '1W射频模块参数',
+  'AT+1W_MIC': '1W模块麦克风增益',
+  'AT+1W_VOL': '1W模块音量',
+  'AT+ADD_D': '添加尾音',
+  'AT+AMSG': 'APRS消息内容',
+  'AT+APRS': 'APRS开关',
+  'AT+A_IP': 'APRS服务器地址或者域名',
+  'AT+BAT': '电池电量',
+  'AT+CALL': '呼号',
+  'AT+DCD': 'DCD模式',
+  'AT+DEL_D': '尾音消除',
+  'AT+DHCP': 'DHCP开关',
+  'AT+DNS': 'DNS服务器地址',
+  'AT+DUPLEX': '双工模式',
+  'AT+D_ID': '目标设备CPU序列号',
+  'AT+D_IP': '目标IP/域名',
+  'AT+D_PORT': '目标端口',
+  'AT+D_SN': '目标序列号',
+  'AT+FILTER': '过滤器',
+  'AT+GATEWAY': '网关',
+  'AT+IP': '本机IP',
+  'AT+LCD_TIME': '屏幕熄灭时间',
+  'AT+LOGO': '开机LOGO',
+  'AT+LOOP': '环路测试',
+  'AT+MASK': '子网掩码',
+  'AT+PHY': 'MAC地址',
+  'AT+PTT_EN': 'PTT使能',
+  'AT+PTT_IO': 'PTT电平',
+  'AT+PTT_RES': 'PTT电阻',
+  'AT+PW': '功率',
+  'AT+SQL_TIME': '静噪延迟时间',
+  'AT+SSID': 'SSID',
+  'AT+S_ID': '源设备CPU序列号',
+  'AT+S_PORT': '源端口',
+  'AT+S_SN': '源序列号',
+  'AT+VOX_D': 'VOX延迟',
+  'AT+WDJD': 'APRS坐标值'
+}
+

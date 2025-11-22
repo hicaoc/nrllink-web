@@ -11,6 +11,7 @@ hostlist='nrlptt.com  ba1gm.nrlptt.com nrlptt.bd4vki.xyz bd4vki.nrlptt.com ah.nr
 #hostlist='bh1osw.nrlptt.com'
 #hostlist='nrlptt.bd4vki.xyz'
 #hostlist='nrlptt.com'
+#hostlist='bd4vki.nrlptt.com'
 
 time=`date "+%Y%m%d%H%M%S"`
 

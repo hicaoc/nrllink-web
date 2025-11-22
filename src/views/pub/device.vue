@@ -17,10 +17,16 @@
         class="filter-item group-select"
         @change="handleFilter"
       >
-        <el-option v-for="item in groupsOptions" :key="item.id" :label="item.id+'-'+item.name" :value="item.id" />
+        <el-option v-for="item in groupsOptions" :key="item.id" :label="item.id + '-' + item.name" :value="item.id" />
       </el-select>
 
-      <el-button v-waves class="filter-item action-btn" type="primary" icon="el-icon-search" @click="getList">查询</el-button>
+      <el-button
+        v-waves
+        class="filter-item action-btn"
+        type="primary"
+        icon="el-icon-search"
+        @click="getList"
+      >查询</el-button>
 
       <el-switch
         v-model="listQuery.isonline"
@@ -33,7 +39,12 @@
         @change="handleFilter"
       />
 
-      <el-switch v-model="showtable" class="filter-item view-switch" :active-text="$t('device.showtable')" inactive-text />
+      <el-switch
+        v-model="showtable"
+        class="filter-item view-switch"
+        :active-text="$t('device.showtable')"
+        inactive-text
+      />
 
     </div>
 
@@ -55,7 +66,14 @@
           </template>
         </el-table-column>
 
-        <el-table-column fixed prop="callsign" :label="$t('device.callsign')" width="150px" align="center" :sortable="true">
+        <el-table-column
+          fixed
+          prop="callsign"
+          :label="$t('device.callsign')"
+          width="150px"
+          align="center"
+          :sortable="true"
+        >
           <template slot-scope="scope">
             <span><el-tag :type="scope.row.is_online === true ? '' : 'info'">{{ scope.row.callsign + "-" +
               scope.row.ssid
@@ -68,20 +86,22 @@
           <template slot-scope="scope">
             <div class="status-actions">
               <el-button
-                :type="(scope.row.status&1) === 1 ? 'danger' : 'success'"
+                :type="(scope.row.status & 1) === 1 ? 'danger' : 'success'"
                 size="mini"
                 plain
                 class="compact-btn"
-                @click="updateStatus(scope.row,1)"
-              >{{ (scope.row.status&1) === 1 ? '禁收' : '接收' }}</el-button>
+                @click="updateStatus(scope.row, 1)"
+              >{{ (scope.row.status & 1) === 1 ? '禁收' : '接收'
+              }}</el-button>
 
               <el-button
-                :type="(scope.row.status&2) === 2 ? 'danger' : 'success'"
+                :type="(scope.row.status & 2) === 2 ? 'danger' : 'success'"
                 size="mini"
                 plain
                 class="compact-btn"
-                @click="updateStatus(scope.row,2)"
-              >{{ (scope.row.status&2) === 2 ? '禁发' : '发送' }}</el-button>
+                @click="updateStatus(scope.row, 2)"
+              >{{ (scope.row.status & 2) === 2 ? '禁发' : '发送'
+              }}</el-button>
             </div>
           </template>
         </el-table-column>
@@ -224,7 +244,7 @@
     </div>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.limit"
@@ -307,8 +327,18 @@
         <span> 所有者：{{ ValueFilter(item.ower_id, userOptions) }}</span><br>
         <span>状态:
 
-          <span><el-button :type="(item.status&1) === 1 ? 'danger' : ''" plain size="mini" @click="updateStatus(item,1)">禁收</el-button></span>
-          <span><el-button :type="(item.status&2) === 2 ? 'danger' : ''" plain size="mini" @click="updateStatus(item,2)">禁发</el-button></span>
+          <span><el-button
+            :type="(item.status & 1) === 1 ? 'danger' : ''"
+            plain
+            size="mini"
+            @click="updateStatus(item, 1)"
+          >禁收</el-button></span>
+          <span><el-button
+            :type="(item.status & 2) === 2 ? 'danger' : ''"
+            plain
+            size="mini"
+            @click="updateStatus(item, 2)"
+          >禁发</el-button></span>
 
         </span>
       </el-card>
@@ -343,7 +373,12 @@
             @change="handleFilter"
           >
 
-            <el-option v-for="item in groupsOptions" :key="item.id" :label="item.id+'-'+item.name" :value="item.id" />
+            <el-option
+              v-for="item in groupsOptions"
+              :key="item.id"
+              :label="item.id + '-' + item.name"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
 
@@ -443,13 +478,18 @@
             <!-- IP and Password Settings -->
 
             <el-form-item label="呼号:" prop="callsign">
-              <el-input v-model="temp.device_parm.callsign" placeholder="呼号" style="width: 100px" :disabled="!checkPermission(['admin'])" />
+              <el-input
+                v-model="temp.device_parm.callsign"
+                placeholder="呼号"
+                style="width: 100px"
+                :disabled="!checkPermission(['admin'])"
+              />
             </el-form-item>
 
             <el-form-item label="设备编号:" prop="ssid">
               <el-input v-model="temp.device_parm.ssid" style="width: 80px" /><el-button
                 type="primary"
-                @click="changeByte('newcallsignssid', temp.device_parm.callsign+'-'+temp.device_parm.ssid)"
+                @click="changeByte('newcallsignssid', temp.device_parm.callsign + '-' + temp.device_parm.ssid)"
               >保存</el-button>
             </el-form-item>
 
@@ -818,13 +858,19 @@
         :model="tempat"
         label-position="right"
         label-width="120px"
-        style="width: 95%; margin-left: 5px"
+        style="width: 65%; margin-left: 5px"
       >
 
-        <el-form-item v-for="v,k in tempat.atmap" :key="k" :label="k" :prop="k">
-          <el-input :value="v" style="width: 80%;" />
-          <el-button @click="handleChangeAT(tempat.callsign,tempat.ssid,k,v)">执行 </el-button>
+        <el-form-item v-for="v, k in tempat.atmap" :key="k" :label="k + '='" :prop="k">
+          <el-input v-model="tempat.atmap[k]" style="width: 60%;" />
+          <el-button @click="handleChangeAT(tempat.callsign, tempat.ssid, k, tempat.atmap[k])">执行 </el-button>
+          {{ ATREADMEOptions[k] }}
 
+        </el-form-item>
+        <el-form-item label="自定义AT指令">
+          <el-input v-model="tempatcommand" style="width: 20%;" />=
+          <el-input v-model="tempatdata" style="width: 38%;" />
+          <el-button @click="handleChangeAT(tempat.callsign, tempat.ssid, tempatcommand, tempatdata)">执行 </el-button>
         </el-form-item>
 
       </el-form>
@@ -857,7 +903,8 @@ import {
   DevTypeOptions,
   DevModelOptions,
   DevStatusOptions,
-  DevRFtypeOptions
+  DevRFtypeOptions,
+  ATREADMEOptions
 } from '@/utils/system'
 
 import { fetchRelayList } from '@/api/relay'
@@ -926,6 +973,7 @@ export default {
       DevModelOptions,
       DevStatusOptions,
       DevRFtypeOptions,
+      ATREADMEOptions,
       platformOptions: [],
       ctcssOptions,
       relayOptions: [],
@@ -947,6 +995,8 @@ export default {
         sort: '-id'
       },
       showReviewer: false,
+      tempatcommand: '',
+      tempatdata: '',
       tempat: {
         callsign: undefined,
         ssid: undefined,
@@ -1285,9 +1335,9 @@ export default {
       }
 
       changeDeviceAT(at).then((response) => {
+        this.$message(response.data.message)
 
         // this.temp = response.data.items
-
       }) // copy obj
       //  this.temp.timestamp = new Date(this.temp.timestamp);
     },
@@ -1591,7 +1641,7 @@ export default {
 
     &:hover {
       transform: translateY(-1px);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
 
     span {
@@ -1599,7 +1649,8 @@ export default {
     }
   }
 
-  .status-actions, .operation-actions {
+  .status-actions,
+  .operation-actions {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1631,7 +1682,8 @@ export default {
     margin-bottom: 0;
     margin-right: 0;
 
-    &.search-input, &.group-select {
+    &.search-input,
+    &.group-select {
       width: 240px;
 
       @media (max-width: 768px) {
@@ -1644,7 +1696,8 @@ export default {
       padding: 0 20px;
     }
 
-    &.status-switch, &.view-switch {
+    &.status-switch,
+    &.view-switch {
       margin-left: 10px;
     }
   }
