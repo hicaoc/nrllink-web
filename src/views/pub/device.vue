@@ -858,18 +858,60 @@
         :model="tempat"
         label-position="right"
         label-width="120px"
-        style="width: 65%; margin-left: 5px"
+        style="width: 85%; margin-left: 5px"
       >
 
         <el-form-item v-for="v, k in tempat.atmap" :key="k" :label="k + '='" :prop="k">
-          <el-input v-model="tempat.atmap[k]" style="width: 60%;" />
+          <el-select
+            v-if="k === 'AT+D_IP'"
+            v-model="tempat.atmap[k]"
+            filterable
+            allow-create
+            default-first-option
+            placeholder="请选择服务器"
+          >
+            <el-option
+              v-for="item in platformOptions"
+              :key="item.id"
+              :label="item.host + '-' + item.name + '-' + '-在线:' +
+                item.online + ',高峰:' + item.total"
+              :value="item.host"
+            />
+          </el-select>
+
+          <el-select
+            v-else-if="['AT+APRS', 'AT+DHCP', 'AT+DUPLEX', 'AT+LOOP', 'AT+PTT_RES'].includes(k)"
+            v-model="tempat.atmap[k]"
+            default-first-option
+          >
+            <el-option v-for="item, idx in ['ON', 'OFF',]" :key="idx" :label="item" :value="item" />
+          </el-select>
+
+          <el-select v-else-if="k === 'AT+DCD'" v-model="tempat.atmap[k]" default-first-option>
+            <el-option
+              v-for="item, idx in ['SQL_LO', 'VOX', 'MANUAL', 'DISABLE',]"
+              :key="idx"
+              :label="item"
+              :value="item"
+            />
+          </el-select>
+
+          <el-select v-else-if="k === 'AT+PTT_EN'" v-model="tempat.atmap[k]" default-first-option>
+            <el-option v-for="item, idx in ['ENABLE', 'DISABLE',]" :key="idx" :label="item" :value="item" />
+          </el-select>
+
+          <el-select v-else-if="['AT+PW', 'AT+PTT_IO'].includes(k)" v-model="tempat.atmap[k]" default-first-option>
+            <el-option v-for="item, idx in ['H', 'L',]" :key="idx" :label="item" :value="item" />
+          </el-select>
+
+          <el-input v-else v-model="tempat.atmap[k]" style="width: 215px;" />
           <el-button @click="handleChangeAT(tempat.callsign, tempat.ssid, k, tempat.atmap[k])">执行 </el-button>
           {{ ATREADMEOptions[k] }}
 
         </el-form-item>
         <el-form-item label="自定义AT指令">
-          <el-input v-model="tempatcommand" style="width: 20%;" />=
-          <el-input v-model="tempatdata" style="width: 38%;" />
+          <el-input v-model="tempatcommand" style="width: 10%;" />=
+          <el-input v-model="tempatdata" style="width: 18%;" />
           <el-button @click="handleChangeAT(tempat.callsign, tempat.ssid, tempatcommand, tempatdata)">执行 </el-button>
         </el-form-item>
 
