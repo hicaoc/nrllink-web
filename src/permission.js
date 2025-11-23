@@ -40,7 +40,10 @@ router.beforeEach(async(to, from, next) => {
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 
           // dynamically add accessible routes
-          router.addRoutes(accessRoutes)
+          for (let i = 0; i < accessRoutes.length; i += 1) {
+            const element = accessRoutes[i]
+            router.addRoute(element) // 会有告警
+          }
 
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
