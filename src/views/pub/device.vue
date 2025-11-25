@@ -861,6 +861,11 @@
         style="width: 85%; margin-left: 5px"
       >
 
+        <el-form-item label="设备信息" prop="version">
+          {{ tempat.version }}
+
+        </el-form-item>
+
         <el-form-item v-for="v, k in tempat.atmap" :key="k" :label="k + '='" :prop="k">
           <el-select
             v-if="k === 'AT+D_IP'"
