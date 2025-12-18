@@ -26,6 +26,7 @@
 | 2025-12-20 | (pending) | Element Plus | Replace remaining $message/$notify in views |
 | 2025-12-20 | (pending) | UI | Raise z-index for message box/notification |
 | 2025-12-20 | (pending) | UI | Center message box wrapper with flex |
+| 2025-12-20 | (pending) | UI | Force message box/message/notification positioning |
 | 2025-12-20 | (pending) | Element Plus | Use notification for server delete result |
 | 2025-12-19 | (pending) | Vite base + Vue3 + Pinia | Build config, entry, router, store migration scaffolding |
 | 2025-12-19 | (pending) | Template syntax | .sync -> v-model, slot-scope -> v-slot, filters -> methods/$filters |

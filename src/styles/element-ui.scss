@@ -86,12 +86,22 @@
   justify-content: center;
 }
 
+.el-overlay.is-message-box {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
 .el-message {
   z-index: 4001 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
 }
 
 .el-notification {
   z-index: 4002 !important;
+  right: 16px !important;
+  left: auto !important;
 }
 
 .el-message-box {
