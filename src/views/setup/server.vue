@@ -8,24 +8,32 @@
         style="width: 320px;"
         class="filter-item"
         clearable
-        @keyup.enter.native="handleFilter"
+        @keyup.enter="handleFilter"
       /> -->
 
       <el-button
         v-waves
         class="filter-item"
         type="primary"
-        icon="el-icon-search"
         @click="handleFilter"
-      >{{ $t('Account.search') }}</el-button>
+      >
+        <el-icon>
+          <Search />
+        </el-icon>
+        {{ $t('Account.search') }}
+      </el-button>
 
       <el-button
         class="filter-item"
         style="margin-left: 10px;"
         type="primary"
-        icon="el-icon-edit"
         @click="handleCreate"
-      >{{ $t('employee.add') }}</el-button>
+      >
+        <el-icon>
+          <Edit />
+        </el-icon>
+        {{ $t('employee.add') }}
+      </el-button>
 
     </div>
 
@@ -48,7 +56,7 @@
           align="center"
           width="80"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
@@ -58,7 +66,7 @@
           width="120px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
@@ -68,7 +76,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.server_type }}</span>
           </template>
         </el-table-column>
@@ -78,7 +86,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.cpu_type }}</span>
           </template>
         </el-table-column>
@@ -88,7 +96,7 @@
           width="200px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.mem_size }}</span>
           </template>
         </el-table-column>
@@ -98,7 +106,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.input_rate }}</span>
           </template>
         </el-table-column>
@@ -108,7 +116,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.output_rate }}</span>
           </template>
         </el-table-column>
@@ -118,7 +126,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.netcard }}</span>
           </template>
         </el-table-column>
@@ -128,7 +136,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.ip_type }}</span>
           </template>
         </el-table-column>
@@ -138,7 +146,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.ip_addr }}</span>
           </template>
         </el-table-column>
@@ -148,7 +156,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.dns_name }}</span>
           </template>
         </el-table-column>
@@ -158,7 +166,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.udp_port }}</span>
           </template>
         </el-table-column>
@@ -168,7 +176,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.group_list }}</span>
           </template>
         </el-table-column>
@@ -178,7 +186,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.dev_map }}</span>
           </template>
         </el-table-column> -->
@@ -188,7 +196,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.is_online }}</span>
           </template>
         </el-table-column> -->
@@ -198,7 +206,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.ower_id }}</span>
           </template>
         </el-table-column>
@@ -208,7 +216,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.ower_callsign }}</span>
           </template>
         </el-table-column>
@@ -218,7 +226,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.status }}</span>
           </template>
         </el-table-column>
@@ -228,7 +236,7 @@
           width="100px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ parseTime(scope.row.create_time) }}</span>
           </template>
         </el-table-column>
@@ -238,7 +246,7 @@
           width="100px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ parseTime(scope.row.update_time) }}</span>
           </template>
         </el-table-column>
@@ -248,7 +256,7 @@
           width="100px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.note }}</span>
           </template>
         </el-table-column>
@@ -258,15 +266,15 @@
           align="center"
           class-name="small-padding fixed-width"
         >
-          <template slot-scope="{row}">
+          <template #default="{row}">
             <el-button
-              size="mini"
+              size="small"
               type="primary"
               @click="handleUpdate(row)"
             >{{ $t('device.edit') }}</el-button>
 
             <el-button
-              size="mini"
+              size="small"
               type="primary"
               @click="handleDelete(row)"
             >{{ $t('device.delete') }}</el-button>
@@ -279,7 +287,7 @@
 
     <el-dialog
       :title="textMap[dialogStatus]"
-      :visible.sync="dialogFormVisible"
+      v-model="dialogFormVisible"
     >
       <el-form
         ref="dataForm"
@@ -300,12 +308,13 @@
         <el-form-item
           :label="$t('server.server_type')"
           prop="type"
+          label-for="server-type"
         >
-          <el-radio-group v-model="temp.server_type">
+          <el-radio-group id="server-type" v-model="temp.server_type">
             <el-radio
               v-for="item in ServerTypeOptions"
               :key="item.id"
-              :label="item.id"
+              :value="item.id"
             >{{ item.name }}</el-radio>
 
           </el-radio-group>
@@ -355,8 +364,8 @@
 
         <el-form-item :label="$t('server.status')" prop="status">
           <el-radio-group v-model="temp.status">
-            <el-radio :label="1">启动</el-radio>
-            <el-radio :label="2">关闭</el-radio>
+            <el-radio :value="1">启动</el-radio>
+            <el-radio :value="2">关闭</el-radio>
 
           </el-radio-group>
         </el-form-item>
@@ -378,16 +387,15 @@
 
       </el-form>
 
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus==='create'?createData():updateData()"
-        >{{ $t('employee.confirm') }}</el-button>
-      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
+          <el-button
+            type="primary"
+            @click="dialogStatus==='create'?createData():updateData()"
+          >{{ $t('employee.confirm') }}</el-button>
+        </div>
+      </template>
     </el-dialog>
 
   </div>
@@ -410,32 +418,13 @@ import waves from '@/directive/waves' // waves directive
 import { parseTime, ValueFilter } from '@/utils'
 import { ServerTypeOptions } from '@/utils/system'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { mapGetters } from 'vuex'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
 
 export default {
   name: 'ComplexTable',
   // components: { Pagination },
   directives: { waves },
-  filters: {
-    // statusFilter(status) {
-    //   const statusMap = {
-    //     0: 'background: #2625241f',
-    //     1: 'background: #7eaae300'
-    //   }
-    //   return statusMap[status]
-    // },
-    statusFilter(type) {
-      const statusMap = {
-        1: '启动',
-        2: '停止'
-      }
-      return statusMap[type]
-    },
-    Date2Week(date) {
-      var d = new Date(Date.parse(date.replace(/-/g, '/')))
-      return d.getDay()
-    }
-  },
   data() {
     return {
       tableKey: 0,
@@ -476,7 +465,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['device'])
+    ...mapState(useAppStore, ['device'])
   },
 
   created() {
@@ -634,24 +623,23 @@ export default {
           })
         })
     },
-    handleDownload() {
+    async handleDownload() {
       this.downloadLoading = true
       // console.log(this.list)
       if (this.list === null) {
         this.downloadLoading = false
         return
       }
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['姓名', '电话', '性别', '出生年月日']
-        const filterVal = ['name', 'phone', 'sex']
-        const data = this.formatJson(filterVal, this.list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'device-list'
-        })
-        this.downloadLoading = false
+      const excel = await import('@/vendor/Export2Excel')
+      const tHeader = ['姓名', '电话', '性别', '出生年月日']
+      const filterVal = ['name', 'phone', 'sex']
+      const data = this.formatJson(filterVal, this.list)
+      await excel.export_json_to_excel({
+        header: tHeader,
+        data,
+        filename: 'device-list'
       })
+      this.downloadLoading = false
     },
 
     handleUpload() {

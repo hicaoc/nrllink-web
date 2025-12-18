@@ -18,6 +18,7 @@
 | 2025-12-20 | (pending) | Register | Guard license image fetch to avoid unhandled 404 |
 | 2025-12-20 | (pending) | Vue3 | Replace $set usage in pub groups view |
 | 2025-12-20 | (pending) | Element Plus | Replace $confirm/$notify in relay view |
+| 2025-12-20 | (pending) | Element Plus | Add label-for/id for radio groups to fix label for warnings |
 | 2025-12-19 | (pending) | Vite base + Vue3 + Pinia | Build config, entry, router, store migration scaffolding |
 | 2025-12-19 | (pending) | Template syntax | .sync -> v-model, slot-scope -> v-slot, filters -> methods/$filters |
 | 2025-12-19 | (pending) | Vue3 deps | vue-count-to -> vue3-count-to, vuedraggable -> v4 |
