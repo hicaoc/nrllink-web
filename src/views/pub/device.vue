@@ -275,7 +275,7 @@
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
               style="float: right; padding: 3px 3px"
-              type="link"
+              link
               :disabled="item.is_online === false"
               @click="handleChange(item)"
             >{{ $t("device.change")
@@ -284,7 +284,7 @@
             <el-button
             v-if="checkPermission(['admin']) || item.callsign === callsign"
             style="float: right; padding: 3px 3px"
-            type="link"
+            link
             :disabled="item.is_online === false"
             @click="handleChangeAT(item)"
           >{{ $t("device.change")
@@ -293,7 +293,7 @@
           <el-button
             v-if="checkPermission(['admin']) || item.callsign === callsign"
             style="float: right; padding: 3px 0"
-            type="link"
+            link
             @click="handleUpdate(item)"
           >{{ $t("device.edit")
 
