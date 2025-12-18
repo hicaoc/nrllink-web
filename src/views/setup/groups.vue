@@ -7,19 +7,27 @@
         style="width: 320px;"
         class="filter-item"
         clearable
-        @keyup.enter.native="handleFilter"
+        @keyup.enter="handleFilter"
       />
 
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{
-        $t("Account.search") }}</el-button>
+      <el-button v-waves class="filter-item" type="primary" @click="handleFilter">
+        <el-icon>
+          <Search />
+        </el-icon>
+        {{ $t("Account.search") }}
+      </el-button>
 
       <el-button
         class="filter-item"
         style="margin-left: 10px"
         type="primary"
-        icon="el-icon-edit"
         @click="handleCreate"
-      >{{ $t("employee.add") }}</el-button>
+      >
+        <el-icon>
+          <Edit />
+        </el-icon>
+        {{ $t("employee.add") }}
+      </el-button>
     </div>
 
     <div>
@@ -35,19 +43,19 @@
         @sort-change="sortChange"
       >
         <el-table-column :label="$t('Account.id')" prop="id" sortable="custom" align="center" width="80">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="群组名称" width="120px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
 
         <!-- <el-table-column label="主服务器" width="110px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{
               ValueFilter(scope.row.master_server, serversOptions)
             }}</span>
@@ -55,7 +63,7 @@
         </el-table-column>
 
         <el-table-column label="从服务器" width="110px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{
               ValueFilter(scope.row.slave_server, serversOptions)
             }}</span>
@@ -63,61 +71,61 @@
         </el-table-column> -->
 
         <el-table-column label="类型" width="110px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ ValueFilter(scope.row.type, groupTypeOptions) }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="允许设备" width="200px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <el-tag v-for="(item,idx) in scope.row.allow_callsign_ssid" :key="idx">{{ item }}</el-tag>
 
           </template>
         </el-table-column>
 
         <el-table-column label="创建者呼号" width="110px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.callsign }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="创建者" width="110px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.ower_id }}</span>
           </template>
         </el-table-column>
 
         <!-- <el-table-column label="状态" width="110px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.status }}</span>
           </template>
         </el-table-column> -->
 
         <el-table-column label="创建时间" width="100px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ parseTime(scope.row.create_time) }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="更新时间" width="100px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ parseTime(scope.row.update_time) }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="备注" width="100px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.note }}</span>
           </template>
         </el-table-column>
 
         <el-table-column :label="$t('device.bind')" align="center" class-name="small-padding fixed-width">
-          <template slot-scope="{ row }">
-            <el-button size="mini" type="primary" @click="handleUpdate(row)">{{
+          <template #default="{ row }">
+            <el-button size="small" type="primary" @click="handleUpdate(row)">{{
               $t("device.edit")
             }}</el-button>
 
-            <el-button size="mini" type="primary" @click="handleDelete(row)">{{
+            <el-button size="small" type="primary" @click="handleDelete(row)">{{
               $t("device.delete")
             }}</el-button>
           </template>
@@ -125,7 +133,7 @@
       </el-table>
     </div>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -162,7 +170,7 @@
 
         <el-form-item :label="$t('group.type')" prop="type">
           <el-radio-group v-model="temp.type">
-            <el-radio v-for="item in groupTypeOptions" :key="item.id" :label="item.id">{{ item.name }}</el-radio>
+            <el-radio v-for="item in groupTypeOptions" :key="item.id" :value="item.id">{{ item.name }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -232,14 +240,16 @@
         </el-form-item>-->
       </el-form>
 
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{
-          $t("employee.cancel")
-        }}</el-button>
-        <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
-          $t("employee.confirm")
-        }}</el-button>
-      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">{{
+            $t("employee.cancel")
+          }}</el-button>
+          <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
+            $t("employee.confirm")
+          }}</el-button>
+        </div>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -262,33 +272,15 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 import waves from '@/directive/waves' // waves directive
 import { parseTime, ValueFilter } from '@/utils'
 import { groupTypeOptions } from '@/utils/system'
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { mapGetters } from 'vuex'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
 
 export default {
   name: 'ComplexTable',
   // components: { Pagination },
   directives: { waves },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        0: 'background: #2625241f',
-        1: 'background: #7eaae300'
-      }
-      return statusMap[status]
-    },
-    // classStatusFilter(type) {
-    //   const statusMap = {
-    //     0: '停课',
-    //     1: '正常'
-    //   }
-    //   return statusMap[type]
-    // },
-    Date2Week(date) {
-      var d = new Date(Date.parse(date.replace(/-/g, '/')))
-      return d.getDay()
-    }
-  },
   data() {
     return {
       tableKey: 0,
@@ -331,7 +323,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['device'])
+    ...mapState(useAppStore, ['device'])
   },
 
   created() {
@@ -460,17 +452,17 @@ export default {
               }
             }
 
-            if (response.code === 20000) {
-              this.$notify({
+            if (response && response.code === 20000) {
+              ElNotification({
                 title: '成功',
                 message: '修改成功',
                 type: 'success',
                 duration: 2000
               })
             } else {
-              this.$notify({
+              ElNotification({
                 title: '失败',
-                message: response.message,
+                message: response?.message || '请求失败',
                 type: 'warning',
                 duration: 2000
               })
@@ -482,49 +474,43 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$confirm('此操作将永久删除该群组, 是否继续?', '提示', {
+      ElMessageBox.confirm('此操作将永久删除该群组, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
           deleteGroup(row).then(response => {
-            this.$message(response.data.message)
+            const message = response?.data?.message || '操作完成'
+            ElMessage.success(message)
             this.listLoading = false
           })
           const index = this.list.indexOf(row)
           this.list.splice(index, 1)
 
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+          ElMessage.success('删除成功!')
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          ElMessage.info('已取消删除')
         })
     },
-    handleDownload() {
+    async handleDownload() {
       this.downloadLoading = true
       // console.log(this.list)
       if (this.list === null) {
         this.downloadLoading = false
         return
       }
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['姓名', '电话', '性别', '出生年月日']
-        const filterVal = ['name', 'phone', 'sex']
-        const data = this.formatJson(filterVal, this.list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'device-list'
-        })
-        this.downloadLoading = false
+      const excel = await import('@/vendor/Export2Excel')
+      const tHeader = ['姓名', '电话', '性别', '出生年月日']
+      const filterVal = ['name', 'phone', 'sex']
+      const data = this.formatJson(filterVal, this.list)
+      await excel.export_json_to_excel({
+        header: tHeader,
+        data,
+        filename: 'device-list'
       })
+      this.downloadLoading = false
     },
 
     handleUpload() {
