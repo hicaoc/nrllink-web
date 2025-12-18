@@ -417,6 +417,7 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 import waves from '@/directive/waves' // waves directive
 import { parseTime, ValueFilter } from '@/utils'
 import { ServerTypeOptions } from '@/utils/system'
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapState } from 'pinia'
 import { useAppStore } from '@/store/modules/app'
@@ -544,9 +545,9 @@ export default {
           createServer(this.temp).then(response => {
             this.getList()
             this.dialogFormVisible = false
-            this.$notify({
+            ElNotification({
               title: '成功',
-              message: response.data.message,
+              message: response?.data?.message || '创建成功',
               type: 'success',
               duration: 2000
             })
@@ -587,9 +588,9 @@ export default {
               }
             }
             this.dialogFormVisible = false
-            this.$notify({
+            ElNotification({
               title: '成功',
-              message: response.data.message,
+              message: response?.data?.message || '更新成功',
               type: 'success',
               duration: 2000
             })
@@ -598,29 +599,24 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$confirm('此操作将永久删除该群组, 是否继续?', '提示', {
+      ElMessageBox.confirm('此操作将永久删除该群组, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
           deleteServer(row).then(response => {
-            this.$message(response.data.message)
+            const message = response?.data?.message || '操作完成'
+            ElMessage.success(message)
             this.listLoading = false
           })
           const index = this.list.indexOf(row)
           this.list.splice(index, 1)
 
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+          ElMessage.success('删除成功!')
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          ElMessage.info('已取消删除')
         })
     },
     async handleDownload() {
