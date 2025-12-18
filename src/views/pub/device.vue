@@ -394,7 +394,7 @@
 
         <el-form-item :label="$t('device.type')" prop="type">
           <el-radio-group v-model="temp.dev_type">
-            <el-radio v-for="d in DevTypeOptions" :key="d.id" :label="d.id">{{
+            <el-radio v-for="d in DevTypeOptions" :key="d.id" :value="d.id">{{
               d.name
             }}</el-radio>
           </el-radio-group>
@@ -402,7 +402,7 @@
 
         <el-form-item :label="$t('device.model')" prop="model">
           <el-radio-group v-model="temp.dev_model">
-            <el-radio v-for="d in DevModelOptions" :key="d.id" :label="d.id">{{
+            <el-radio v-for="d in DevModelOptions" :key="d.id" :value="d.id">{{
               d.name
             }}</el-radio>
           </el-radio-group>
@@ -410,7 +410,7 @@
 
         <el-form-item :label="$t('device.rf_type')" prop="rf_type">
           <el-radio-group v-model="temp.rf_type">
-            <el-radio v-for="d in DevRFtypeOptions" :key="d.id" :label="d.id">{{
+            <el-radio v-for="d in DevRFtypeOptions" :key="d.id" :value="d.id">{{
               d.name
             }}</el-radio>
           </el-radio-group>
@@ -566,11 +566,11 @@
                 v-model="temp.device_parm.dcd_select"
                 @change="changeByte('dcd_select', temp.device_parm.dcd_select)"
               >
-                <el-radio :label="0">关闭</el-radio>
-                <el-radio :label="1">手动</el-radio>
-                <el-radio :label="2">SQL_LO</el-radio>
-                <el-radio :label="3">SQL_HI</el-radio>
-                <el-radio :label="4">VOX </el-radio>
+                <el-radio :value="0">关闭</el-radio>
+                <el-radio :value="1">手动</el-radio>
+                <el-radio :value="2">SQL_LO</el-radio>
+                <el-radio :value="3">SQL_HI</el-radio>
+                <el-radio :value="4">VOX </el-radio>
               </el-radio-group>
             </el-form-item>
 
@@ -595,8 +595,8 @@
                   )
                 "
               >
-                <el-radio :label="1">高电平</el-radio>
-                <el-radio :label="0">低电平</el-radio>
+                <el-radio :value="1">高电平</el-radio>
+                <el-radio :value="0">低电平</el-radio>
               </el-radio-group>
             </el-form-item>
 
@@ -657,8 +657,8 @@
                 v-model="temp.device_parm.key_func"
                 @change="changeByte('key_func', temp.device_parm.key_func)"
               >
-                <el-radio :label="0">继电器</el-radio>
-                <el-radio :label="1">PTT</el-radio>
+                <el-radio :value="0">继电器</el-radio>
+                <el-radio :value="1">PTT</el-radio>
               </el-radio-group>
 
             </el-form-item>
