@@ -392,24 +392,24 @@
           <el-input-number v-model="temp.priority" :disabled="!checkPermission(['admin'])" :min="0" :max="255" />
         </el-form-item>
 
-        <el-form-item :label="$t('device.type')" prop="type">
-          <el-radio-group v-model="temp.dev_type">
+        <el-form-item :label="$t('device.type')" prop="type" label-for="device-type">
+          <el-radio-group id="device-type" v-model="temp.dev_type">
             <el-radio v-for="d in DevTypeOptions" :key="d.id" :value="d.id">{{
               d.name
             }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item :label="$t('device.model')" prop="model">
-          <el-radio-group v-model="temp.dev_model">
+        <el-form-item :label="$t('device.model')" prop="model" label-for="device-model">
+          <el-radio-group id="device-model" v-model="temp.dev_model">
             <el-radio v-for="d in DevModelOptions" :key="d.id" :value="d.id">{{
               d.name
             }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item :label="$t('device.rf_type')" prop="rf_type">
-          <el-radio-group v-model="temp.rf_type">
+        <el-form-item :label="$t('device.rf_type')" prop="rf_type" label-for="device-rf-type">
+          <el-radio-group id="device-rf-type" v-model="temp.rf_type">
             <el-radio v-for="d in DevRFtypeOptions" :key="d.id" :value="d.id">{{
               d.name
             }}</el-radio>
@@ -561,8 +561,9 @@
           </el-collapse-item>
 
           <el-collapse-item title="参数设置" name="2">
-            <el-form-item label="DCD选择:" prop="name">
+            <el-form-item label="DCD选择:" prop="name" label-for="device-dcd-select">
               <el-radio-group
+                id="device-dcd-select"
                 v-model="temp.device_parm.dcd_select"
                 @change="changeByte('dcd_select', temp.device_parm.dcd_select)"
               >
@@ -585,8 +586,9 @@
               />
             </el-form-item>
 
-            <el-form-item label="PTT电平:" prop="ptt_level_reversed">
+            <el-form-item label="PTT电平:" prop="ptt_level_reversed" label-for="device-ptt-level">
               <el-radio-group
+                id="device-ptt-level"
                 v-model="temp.device_parm.ptt_level_reversed"
                 @change="
                   changeByte(
@@ -652,8 +654,9 @@
               />
             </el-form-item>
 
-            <el-form-item label="按键功能:" prop="key_func">
+            <el-form-item label="按键功能:" prop="key_func" label-for="device-key-func">
               <el-radio-group
+                id="device-key-func"
                 v-model="temp.device_parm.key_func"
                 @change="changeByte('key_func', temp.device_parm.key_func)"
               >

@@ -88,8 +88,8 @@
           <el-input v-model="temp.name" style="width: 80%;" />
         </el-form-item>
 
-        <el-form-item :label="$t('group.type')" prop="sex">
-          <el-radio-group v-model="temp.type">
+        <el-form-item :label="$t('group.type')" prop="sex" label-for="pub-group-type">
+          <el-radio-group id="pub-group-type" v-model="temp.type">
             <el-radio v-for="item in groupTypeOptions" :key="item.id" :value="item.id">{{ item.name }}</el-radio>
           </el-radio-group>
         </el-form-item>

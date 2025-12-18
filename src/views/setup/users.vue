@@ -229,8 +229,8 @@
           />
         </el-form-item>
 
-        <el-form-item :label="$t('Account.sex')" prop="sex">
-          <el-radio-group v-model="temp.sex">
+        <el-form-item :label="$t('Account.sex')" prop="sex" label-for="user-sex">
+          <el-radio-group id="user-sex" v-model="temp.sex">
             <el-radio :value="1">男</el-radio>
             <el-radio :value="0">女</el-radio>
             <el-radio :value="2">未知</el-radio>
@@ -256,8 +256,8 @@
           <el-input v-model="temp.password" />
         </el-form-item>
 
-        <el-form-item :label="$t('employee.status')" prop="status">
-          <el-radio-group v-model="temp.status">
+        <el-form-item :label="$t('employee.status')" prop="status" label-for="user-status">
+          <el-radio-group id="user-status" v-model="temp.status">
             <el-radio :value="1">正常</el-radio>
             <el-radio :value="0">禁用</el-radio>
 
