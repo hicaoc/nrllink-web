@@ -264,10 +264,7 @@ export default {
       }
     },
     handleModifiStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
+      ElMessage.success('操作成功')
       row.status = status
     },
     changeGroup(tempData, groupid) {
@@ -278,9 +275,9 @@ export default {
         this.getList()
 
         this.dialogFormVisible = false
-        this.$notify({
+        ElNotification({
           title: '成功',
-          message: response.data.message,
+          message: response?.data?.message || '操作成功',
           type: 'success',
           duration: 2000
         })
@@ -294,9 +291,9 @@ export default {
           createGroup(this.temp).then(response => {
             this.getList()
             this.dialogFormVisible = false
-            this.$notify({
+            ElNotification({
               title: '成功',
-              message: response.message,
+              message: response?.message || '创建成功',
               type: 'success',
               duration: 2000
             })

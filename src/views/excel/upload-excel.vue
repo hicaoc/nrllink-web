@@ -9,6 +9,7 @@
 
 <script>
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
+import { ElMessage } from 'element-plus'
 
 export default {
   name: 'UploadExcel',
@@ -27,10 +28,7 @@ export default {
         return true
       }
 
-      this.$message({
-        message: 'Please do not upload files larger than 1m in size.',
-        type: 'warning'
-      })
+      ElMessage.warning('Please do not upload files larger than 1m in size.')
       return false
     },
     handleSuccess({ results, header }) {

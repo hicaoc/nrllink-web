@@ -4,19 +4,19 @@
 
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border>
       <el-table-column align="center" label="序号" width="120">
-        <template slot-scope="scope">{{ scope.row.id }}</template>
+        <template #default="scope">{{ scope.row.id }}</template>
       </el-table-column>
       <el-table-column align="center" label="角色关键字" width="220">
-        <template slot-scope="scope">{{ scope.row.key }}</template>
+        <template #default="scope">{{ scope.row.key }}</template>
       </el-table-column>
       <el-table-column align="center" label="角色名称" width="220">
-        <template slot-scope="scope">{{ scope.row.name }}</template>
+        <template #default="scope">{{ scope.row.name }}</template>
       </el-table-column>
       <el-table-column align="header-center" label="描述">
-        <template slot-scope="scope">{{ scope.row.description }}</template>
+        <template #default="scope">{{ scope.row.description }}</template>
       </el-table-column>
       <!-- <el-table-column align="center" label="操作">
-        <template slot-scope="scope">
+        <template #default="scope">
           <el-button
             type="primary"
             size="small"
@@ -31,7 +31,7 @@
       </el-table-column> -->
     </el-table>
 
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Role':'New Role'">
+    <el-dialog v-model="dialogVisible" :title="dialogType==='edit'?'Edit Role':'New Role'">
       <el-form :model="role" label-width="80px" label-position="left">
         <el-form-item label="关键字">
           <el-input v-model="role.key" placeholder="此处输入角色简写" />
@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import path from 'path'
 import { deepClone } from '@/utils'
 import {
   getRoutes,
@@ -78,6 +77,17 @@ import {
   updateRole
 } from '@/api/role'
 import i18n from '@/lang'
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
+
+const resolveRoutePath = (basePath, routePath) => {
+  if (routePath.startsWith('/')) {
+    return routePath
+  }
+  if (basePath.endsWith('/')) {
+    return `${basePath}${routePath}`
+  }
+  return `${basePath}/${routePath}`
+}
 
 const defaultRole = {
   key: '',
@@ -128,7 +138,7 @@ export default {
     },
     i18n(routes) {
       const app = routes.map(route => {
-        route.title = i18n.t(`route.${route.title}`)
+        route.title = i18n.global.t(`route.${route.title}`)
         if (route.children) {
           route.children = this.i18n(route.children)
         }
@@ -156,7 +166,7 @@ export default {
         }
 
         const data = {
-          path: path.resolve(basePath, route.path),
+          path: resolveRoutePath(basePath, route.path),
           title: route.meta && route.meta.title
         }
 
@@ -202,7 +212,7 @@ export default {
       // })
     },
     handleDelete({ $index, row }) {
-      this.$confirm('确认要删除职位角色?', 'Warning', {
+      ElMessageBox.confirm('确认要删除职位角色?', 'Warning', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
         type: 'warning'
@@ -210,10 +220,7 @@ export default {
         .then(async() => {
           await deleteRole(row.key)
           this.rolesList.splice($index, 1)
-          this.$message({
-            type: 'success',
-            message: '角色角色删除成功!'
-          })
+          ElMessage.success('角色角色删除成功!')
         })
         .catch(err => {
           console.error(err)
@@ -223,7 +230,7 @@ export default {
       const res = []
 
       for (const route of routes) {
-        const routePath = path.resolve(basePath, route.path)
+        const routePath = resolveRoutePath(basePath, route.path)
 
         // recursive child routes
         if (route.children) {
@@ -269,7 +276,7 @@ export default {
 
       const { description, key, name } = this.role
       this.dialogVisible = false
-      this.$notify({
+      ElNotification({
         title: '成功',
         dangerouslyUseHTMLString: true,
         message: `
@@ -288,7 +295,7 @@ export default {
       // When there is only one child route, the child route is displayed by default
       if (showingChildren.length === 1) {
         onlyOneChild = showingChildren[0]
-        onlyOneChild.path = path.resolve(parent.path, onlyOneChild.path)
+        onlyOneChild.path = resolveRoutePath(parent.path, onlyOneChild.path)
         return onlyOneChild
       }
 

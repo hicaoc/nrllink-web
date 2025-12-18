@@ -409,9 +409,9 @@ export default {
           createGroup(this.temp).then(response => {
             this.getList()
             this.dialogFormVisible = false
-            this.$notify({
+            ElNotification({
               title: '成功',
-              message: response.data.message,
+              message: response?.data?.message || '创建成功',
               type: 'success',
               duration: 2000
             })
