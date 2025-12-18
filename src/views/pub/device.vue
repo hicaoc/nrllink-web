@@ -6,7 +6,7 @@
         :placeholder="$t('device.callsign')"
         class="filter-item search-input"
         clearable
-        @keyup.enter.native="handleFilter"
+        @keyup.enter="handleFilter"
       />
 
       <el-select
@@ -24,9 +24,13 @@
         v-waves
         class="filter-item action-btn"
         type="primary"
-        icon="el-icon-search"
         @click="getList"
-      >查询</el-button>
+      >
+        <el-icon>
+          <Search />
+        </el-icon>
+        查询
+      </el-button>
 
       <el-switch
         v-model="listQuery.isonline"
@@ -61,7 +65,7 @@
       >
         >
         <el-table-column fixed :label="$t('Account.id')" prop="id" sortable="custom" align="center" width="110">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
@@ -74,8 +78,8 @@
           align="center"
           :sortable="true"
         >
-          <template slot-scope="scope">
-            <span><el-tag :type="scope.row.is_online === true ? '' : 'info'">{{ scope.row.callsign + "-" +
+          <template #default="scope">
+            <span><el-tag :type="scope.row.is_online ? 'success' : 'info'">{{ scope.row.callsign + "-" +
               scope.row.ssid
             }}
             </el-tag></span>
@@ -83,11 +87,11 @@
         </el-table-column>
 
         <el-table-column :label="$t('device.status')" prop="status" width="140px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <div class="status-actions">
               <el-button
                 :type="(scope.row.status & 1) === 1 ? 'danger' : 'success'"
-                size="mini"
+                size="small"
                 plain
                 class="compact-btn"
                 @click="updateStatus(scope.row, 1)"
@@ -96,7 +100,7 @@
 
               <el-button
                 :type="(scope.row.status & 2) === 2 ? 'danger' : 'success'"
-                size="mini"
+                size="small"
                 plain
                 class="compact-btn"
                 @click="updateStatus(scope.row, 2)"
@@ -107,25 +111,25 @@
         </el-table-column>
 
         <el-table-column :label="$t('device.priority')" prop="priority" width="100px" align="center" :sortable="true">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.priority }}</span>
           </template>
         </el-table-column>
 
         <el-table-column :label="$t('device.name')" prop="name" width="220px" align="center" :sortable="true">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.ssid === 200 && scope.row.name === '' ? "服务器互联" : scope.row.name }}</span>
           </template>
         </el-table-column>
 
         <el-table-column :label="$t('device.qth')" prop="qth" width="220px" align="center" :sortable="true">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.qth }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="当前群组" prop="group_id" width="180px" align="center" :sortable="true">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span v-if="scope.row.group_id > 0 && scope.row.group_id < 1000">
               私人房间{{ scope.row.group_id }}</span>
             <span v-else>{{
@@ -140,11 +144,11 @@
           width="260px"
           class-name="small-padding fixed-width"
         >
-          <template slot-scope="{ row }">
+          <template #default="{ row }">
             <div class="operation-actions">
               <el-button
                 v-if="checkPermission(['admin']) || row.callsign === callsign"
-                size="mini"
+                size="small"
                 type="primary"
                 plain
                 class="compact-btn"
@@ -154,7 +158,7 @@
               <el-button
                 v-if="checkPermission(['admin']) || row.callsign === callsign"
                 :disabled="row.is_online === false"
-                size="mini"
+                size="small"
                 type="warning"
                 plain
                 class="compact-btn"
@@ -164,7 +168,7 @@
               <el-button
                 v-if="checkPermission(['admin']) || row.callsign === callsign"
                 :disabled="row.is_online === false"
-                size="mini"
+                size="small"
                 type="info"
                 plain
                 class="compact-btn"
@@ -173,7 +177,7 @@
 
               <el-button
                 v-if="checkPermission(['admin']) || row.callsign === callsign"
-                size="mini"
+                size="small"
                 type="danger"
                 plain
                 class="compact-btn"
@@ -184,13 +188,13 @@
         </el-table-column>
 
         <el-table-column prop="dev_rf_type" label="射频类型" width="140px" align="center" :sortable="true">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ ValueFilter(scope.row.rf_type, DevRFtypeOptions) }}</span>
           </template>
         </el-table-column>
 
         <el-table-column prop="tunner" label="频率信道" width="190px" align="center">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span v-if="scope.row.device_parm">
 
               <el-tag v-if="scope.row.rf_type == 1">
@@ -211,31 +215,31 @@
         </el-table-column>
 
         <el-table-column label="型号" prop="dev_model" width="150px" align="center" :sortable="true">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ ValueFilter(scope.row.dev_model, DevModelOptions) }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="总呼叫时长" prop="voice_time" width="120px" align="center" :sortable="true">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ formatVoiceTime(scope.row.voice_time) }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="总流量" prop="traffic" width="120px" align="center" :sortable="true">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ formatFileSize(scope.row.traffic) }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="上次呼叫时长" prop="last_voice_duration" width="150px" align="center" :sortable="true">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ formatVoiceTime(scope.row.last_voice_duration) }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="最近通联时间" prop="last_voice_end_time" width="160px" align="center" :sortable="true">
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ parseTime(scope.row.last_voice_end_time) }}</span>
           </template>
         </el-table-column>
@@ -246,8 +250,8 @@
     <pagination
       v-show="total > 0"
       :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
+      v-model:page="listQuery.page"
+      v-model:limit="listQuery.limit"
       @pagination="getList"
     />
 
@@ -260,26 +264,27 @@
         class="box-card"
         :body-style="{ padding: '20px' }"
       >
-        <div slot="header" class="clearfix">
-          <el-tag :type="item.is_online === true ? '' : 'info'">{{ item.id }}. {{ item.callsign + "-" + item.ssid + " "
-          }}{{ item.status == 1 ? "🈲" : ""
-          }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
-            ValueFilter(item.dev_type, DevTypeOptions)
-          }}</el-tag>
+        <template #header>
+          <div class="clearfix">
+            <el-tag :type="item.is_online ? 'success' : 'info'">{{ item.id }}. {{ item.callsign + "-" + item.ssid + " "
+            }}{{ item.status == 1 ? "🈲" : ""
+            }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
+              ValueFilter(item.dev_type, DevTypeOptions)
+            }}</el-tag>
 
-          <el-button
+            <el-button
+              v-if="checkPermission(['admin']) || item.callsign === callsign"
+              style="float: right; padding: 3px 3px"
+              type="link"
+              :disabled="item.is_online === false"
+              @click="handleChange(item)"
+            >{{ $t("device.change")
+            }}</el-button>
+
+            <el-button
             v-if="checkPermission(['admin']) || item.callsign === callsign"
             style="float: right; padding: 3px 3px"
-            type="text"
-            :disabled="item.is_online === false"
-            @click="handleChange(item)"
-          >{{ $t("device.change")
-          }}</el-button>
-
-          <el-button
-            v-if="checkPermission(['admin']) || item.callsign === callsign"
-            style="float: right; padding: 3px 3px"
-            type="text"
+            type="link"
             :disabled="item.is_online === false"
             @click="handleChangeAT(item)"
           >{{ $t("device.change")
@@ -288,12 +293,13 @@
           <el-button
             v-if="checkPermission(['admin']) || item.callsign === callsign"
             style="float: right; padding: 3px 0"
-            type="text"
+            type="link"
             @click="handleUpdate(item)"
           >{{ $t("device.edit")
 
           }}</el-button>
         </div>
+        </template>
 
         <span>名称:{{ item.name }}</span><br>
         <span>优先级:{{ item.priority }}</span><br>
@@ -328,15 +334,15 @@
         <span>状态:
 
           <span><el-button
-            :type="(item.status & 1) === 1 ? 'danger' : ''"
+            :type="(item.status & 1) === 1 ? 'danger' : 'success'"
             plain
-            size="mini"
+            size="small"
             @click="updateStatus(item, 1)"
           >禁收</el-button></span>
           <span><el-button
-            :type="(item.status & 2) === 2 ? 'danger' : ''"
+            :type="(item.status & 2) === 2 ? 'danger' : 'success'"
             plain
-            size="mini"
+            size="small"
             @click="updateStatus(item, 2)"
           >禁发</el-button></span>
 
@@ -346,7 +352,7 @@
 
     <el-dialog
       :title="textMap[dialogStatus]"
-      :visible.sync="dialogFormVisible"
+      v-model="dialogFormVisible"
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"
       width="70%"
@@ -444,20 +450,22 @@
 
       </el-form>
 
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{
-          $t("employee.cancel")
-        }}</el-button>
-        <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
-          $t("employee.confirm")
-        }}</el-button>
-      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">{{
+            $t("employee.cancel")
+          }}</el-button>
+          <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
+            $t("employee.confirm")
+          }}</el-button>
+        </div>
+      </template>
     </el-dialog>
 
     <el-dialog
       title="参数修改"
       width="70%"
-      :visible.sync="dialogFormChangeVisible"
+      v-model="dialogFormChangeVisible"
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"
     >
@@ -535,11 +543,11 @@
                 title="请确认目标地址或域名是否正确,错误后设备将找不到家！！！"
                 confirm-button-text="确定保存"
                 cancel-button-text="放弃"
-                icon="el-icon-info"
-                icon-color="red"
                 @confirm="changeIP(temp.device_parm)"
               >
-                <el-button slot="reference" type="primary">保存</el-button>
+                <template #reference>
+                  <el-button type="primary">保存</el-button>
+                </template>
               </el-popconfirm>
             </el-form-item>
 
@@ -840,15 +848,17 @@
         </el-collapse>
       </el-form>
 
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormChangeVisible = false">关闭</el-button>
-      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogFormChangeVisible = false">关闭</el-button>
+        </div>
+      </template>
     </el-dialog>
 
     <el-dialog
       width="70%"
       :title="textMap[dialogStatus]"
-      :visible.sync="dialogFormATVisible"
+      v-model="dialogFormATVisible"
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"
     >
@@ -922,7 +932,9 @@
 
       </el-form>
 
-      <div slot="footer" class="dialog-footer" />
+      <template #footer>
+        <div class="dialog-footer" />
+      </template>
     </el-dialog>
 
   </div>
@@ -967,30 +979,16 @@ import {
   formatVoiceTime
 } from '@/utils'
 
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { mapGetters } from 'vuex'
+import Pagination from '@/components/Pagination/index.vue' // secondary package based on el-pagination
+import { mapState } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
+import { useUserStore } from '@/store/modules/user'
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 
 export default {
   name: 'ComplexTable',
   components: { Pagination },
   directives: { waves },
-  filters: {
-
-    statusFilter(status) {
-      const statusMap = {
-        9: 'success',
-        0: 'info',
-        2: 'info',
-        1: 'danger'
-      }
-      return statusMap[status]
-    },
-
-    Date2Week(date) {
-      var d = new Date(Date.parse(date.replace(/-/g, '/')))
-      return d.getDay()
-    }
-  },
   data() {
     const validateFreq = (rule, value, callback) => {
       if (!value) {
@@ -1097,7 +1095,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['device', 'callsign'])
+    ...mapState(useAppStore, ['device']),
+    ...mapState(useUserStore, ['callsign'])
   },
 
   created() {
@@ -1178,9 +1177,9 @@ export default {
           //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           updateDevice(tempData).then((response) => {
             if (response.code === 20000) {
-              this.$notify({
+              ElNotification({
                 title: '成功',
-                message: response.data.message,
+                message: response?.data?.message || '更新成功',
                 type: 'success',
                 duration: 2000
               })
@@ -1188,9 +1187,9 @@ export default {
               this.getList()
               this.dialogFormVisible = false
             } else {
-              this.$notify({
+              ElNotification({
                 title: '失败',
-                message: response.data.message,
+                message: response?.data?.message || '请求失败',
                 type: 'warning',
                 duration: 2000
               })
@@ -1201,23 +1200,21 @@ export default {
     },
 
     handleDelete(row) {
-      this.$confirm('此操作将删除设备，设备上线会会重新创建设备, 是否继续?', '提示', {
+      ElMessageBox.confirm('此操作将删除设备，设备上线会会重新创建设备, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
           deleteDevice(row).then(response => {
-            this.$message(response.data.message)
+            const message = response?.data?.message || '操作完成'
+            ElMessage.success(message)
             this.getList()
             this.listLoading = false
           })
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          ElMessage.info('已取消删除')
         })
     },
 
@@ -1247,18 +1244,18 @@ export default {
       //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
       updateDevice(tempData).then((response) => {
         if (response.code === 20000) {
-          this.$notify({
+          ElNotification({
             title: '成功',
-            message: response.data.message,
+            message: response?.data?.message || '更新成功',
             type: 'success',
             duration: 2000
           })
 
           this.getList()
         } else {
-          this.$notify({
+          ElNotification({
             title: '失败',
-            message: response.data.message,
+            message: response?.data?.message || '请求失败',
             type: 'warning',
             duration: 2000
           })
@@ -1272,12 +1269,9 @@ export default {
           changeDevice1w(device_parm).then((response) => {
             this.getList()
 
-            this.$notify({
+            ElNotification({
               title: '1w模块参数:',
-              message:
-                response.data.message === undefined
-                  ? '保存成功'
-                  : response.data.message,
+              message: response?.data?.message || '保存成功',
               type: 'success',
               duration: 2000
             })
@@ -1296,12 +1290,9 @@ export default {
       changeDevice2w(device_parm).then((response) => {
         this.getList()
 
-        this.$notify({
+        ElNotification({
           title: '2w模块参数:',
-          message:
-            response.data.message === undefined
-              ? '保存成功'
-              : response.data.message,
+          message: response?.data?.message || '保存成功',
           type: 'success',
           duration: 2000
         })
@@ -1312,9 +1303,9 @@ export default {
         this.temp = response.data.items
 
         if (this.temp.device_parm === null) {
-          this.$notify({
+          ElNotification({
             title: '加载参数失败,可能是设备固件不支持，或者设备不在线',
-            message: response.data.message,
+            message: response?.data?.message || '加载失败',
             type: 'warning',
             duration: 5000
           })
@@ -1351,9 +1342,9 @@ export default {
         // this.tempat = response.data.items.last_atcommand
 
         if (!response.data.items.last_atcommand) {
-          this.$notify({
+          ElNotification({
             title: '加载AT参数列表失败,可能是设备固件版本不支持',
-            message: response.data.message,
+            message: response?.data?.message || '加载失败',
             type: 'warning',
             duration: 5000
           })
@@ -1382,7 +1373,8 @@ export default {
       }
 
       changeDeviceAT(at).then((response) => {
-        this.$message(response.data.message)
+        const message = response?.data?.message || '操作完成'
+        ElMessage.success(message)
 
         // this.temp = response.data.items
       }) // copy obj
@@ -1426,9 +1418,9 @@ export default {
         '=' +
         val
       ).then((response) => {
-        this.$notify({
+        ElNotification({
           title: '消息',
-          message: response.data.message,
+          message: response?.data?.message || '操作完成',
           type: 'info',
           duration: 5000
         })
@@ -1454,9 +1446,9 @@ export default {
         '&dest_domainname=' +
         val.dest_domainname
       ).then((response) => {
-        this.$notify({
+        ElNotification({
           title: '消息',
-          message: response.data.message,
+          message: response?.data?.message || '操作完成',
           type: 'info',
           duration: 5000
         })
@@ -1464,10 +1456,7 @@ export default {
     },
 
     handleModifiStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
+      ElMessage.success('操作成功')
       row.status = status
     },
 
@@ -1532,24 +1521,23 @@ export default {
       }
     },
 
-    handleDownload() {
+    async handleDownload() {
       this.downloadLoading = true
       // console.log(this.list)
       if (this.list === null) {
         this.downloadLoading = false
         return
       }
-      import('@/vendor/Export2Excel').then((excel) => {
-        const tHeader = ['姓名', '电话', '性别', '出生年月日']
-        const filterVal = ['name', 'phone', 'sex']
-        const data = this.formatJson(filterVal, this.list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'device-list'
-        })
-        this.downloadLoading = false
+      const excel = await import('@/vendor/Export2Excel')
+      const tHeader = ['姓名', '电话', '性别', '出生年月日']
+      const filterVal = ['name', 'phone', 'sex']
+      const data = this.formatJson(filterVal, this.list)
+      await excel.export_json_to_excel({
+        header: tHeader,
+        data,
+        filename: 'device-list'
       })
+      this.downloadLoading = false
     },
 
     handleUpload() {

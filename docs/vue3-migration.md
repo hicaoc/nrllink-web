@@ -10,6 +10,7 @@
 | 2025-12-20 | b202fdc | Router | Move catch-all to constantRoutes to avoid initial no-match warnings |
 | 2025-12-20 | (pending) | Element Plus | Replace $confirm/$notify, update radio value prop, guard null responses |
 | 2025-12-20 | (pending) | Element Plus | Replace $confirm/$notify in register view, guard response messages |
+| 2025-12-20 | (pending) | Element Plus | Replace $confirm/$notify in device view, guard response messages |
 | 2025-12-19 | (pending) | Vite base + Vue3 + Pinia | Build config, entry, router, store migration scaffolding |
 | 2025-12-19 | (pending) | Template syntax | .sync -> v-model, slot-scope -> v-slot, filters -> methods/$filters |
 | 2025-12-19 | (pending) | Vue3 deps | vue-count-to -> vue3-count-to, vuedraggable -> v4 |
