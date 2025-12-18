@@ -605,15 +605,28 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          deleteServer(row).then(response => {
-            const message = response?.data?.message || '操作完成'
-            ElMessage.success(message)
-            this.listLoading = false
-          })
+          deleteServer(row)
+            .then(response => {
+              const message = response?.data?.message || '删除成功'
+              ElNotification({
+                title: '成功',
+                message,
+                type: 'success',
+                duration: 2000
+              })
+              this.listLoading = false
+            })
+            .catch(() => {
+              ElNotification({
+                title: '失败',
+                message: '删除失败',
+                type: 'warning',
+                duration: 2000
+              })
+            })
+
           const index = this.list.indexOf(row)
           this.list.splice(index, 1)
-
-          ElMessage.success('删除成功!')
         })
         .catch(() => {
           ElMessage.info('已取消删除')

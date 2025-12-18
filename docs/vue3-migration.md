@@ -24,6 +24,7 @@
 | 2025-12-20 | (pending) | Element Plus | Replace el-button type="link" with link prop in device view |
 | 2025-12-20 | (pending) | Element Plus | Normalize el-button type bindings in device view |
 | 2025-12-20 | (pending) | Element Plus | Replace remaining $message/$notify in views |
+| 2025-12-20 | (pending) | Element Plus | Use notification for server delete result |
 | 2025-12-19 | (pending) | Vite base + Vue3 + Pinia | Build config, entry, router, store migration scaffolding |
 | 2025-12-19 | (pending) | Template syntax | .sync -> v-model, slot-scope -> v-slot, filters -> methods/$filters |
 | 2025-12-19 | (pending) | Vue3 deps | vue-count-to -> vue3-count-to, vuedraggable -> v4 |
