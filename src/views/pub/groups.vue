@@ -251,7 +251,7 @@ export default {
         fetchGroupDevicesList({ group_id: this.list[idx].id }).then(response => {
           // this.list[idx].devlist = response.data.items
 
-          this.$set(this.list[idx], 'devlist', response.data.items)
+          this.list[idx].devlist = response.data.items
           // this.list = this.list
 
           // this.$notify({
