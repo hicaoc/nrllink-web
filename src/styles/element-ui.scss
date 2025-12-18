@@ -94,10 +94,11 @@
 }
 
 .el-message {
-  z-index: 4001 !important;
+  z-index: 5000 !important;
+  position: fixed !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  top: 70px !important;
+  top: 80px !important;
 }
 
 .el-notification {

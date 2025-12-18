@@ -51,3 +51,5 @@
 - Update tests to Vitest (or new testing strategy)
 
 - Tweak message box/message styles to match aa/cc reference (classic overlay, compact box, top toast)
+
+- Force ElMessage toast to fixed top center with higher z-index so cancel-delete notices are visible
