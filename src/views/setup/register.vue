@@ -462,14 +462,23 @@ export default {
       //  this.temp.timestamp = new Date(this.temp.timestamp);
       this.dialogStatus = 'update'
 
-      getImage({ path: row.license_path }).then(response => {
-        // 将 Blob 数据转换为 URL
-        // const blob = new Blob([response.data]);
+      if (row.license_path) {
+        getImage({ path: row.license_path }).then(response => {
+          // 将 Blob 数据转换为 URL
+          // const blob = new Blob([response.data]);
 
-        this.license = `data:image/jpeg;base64,${response.data}`
-        this.originallicenseImage = this.license
-        // this.license = URL.createObjectURL(blob);
-      })
+          this.license = `data:image/jpeg;base64,${response.data}`
+          this.originallicenseImage = this.license
+          // this.license = URL.createObjectURL(blob);
+        }).catch(() => {
+          this.license = ''
+          this.originallicenseImage = ''
+          ElMessage.warning('证书图片加载失败')
+        })
+      } else {
+        this.license = ''
+        this.originallicenseImage = ''
+      }
 
       // getImage({ path: row.op_cert_path }).then(response => {
       //   // const blob = new Blob([response.data]);
