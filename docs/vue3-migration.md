@@ -49,3 +49,5 @@
 ## Open Items
 - Validate Element Plus theme overrides
 - Update tests to Vitest (or new testing strategy)
+
+- Tweak message box/message styles to match aa/cc reference (classic overlay, compact box, top toast)
