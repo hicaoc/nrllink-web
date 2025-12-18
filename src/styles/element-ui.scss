@@ -81,6 +81,9 @@
 /* Ensure message box/notification are visible above layout layers */
 .el-message-box__wrapper {
   z-index: 4000 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
 
 .el-message {
@@ -89,4 +92,8 @@
 
 .el-notification {
   z-index: 4002 !important;
+}
+
+.el-message-box {
+  margin: 0 !important;
 }
