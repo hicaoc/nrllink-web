@@ -1,10 +1,7 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-
-Vue.use(Router)
+import { createRouter, createWebHistory } from 'vue-router'
 
 /* Layout */
-import Layout from '@/layout'
+import Layout from '@/layout/index.vue'
 
 /* Router Modules */
 // import componentsRouter from './modules/components'
@@ -33,12 +30,6 @@ import Layout from '@/layout'
   }
  */
 
-const originalPush = Router.prototype.push
-Router.prototype.push = function push(location, onResolve, onReject) {
-  if (onResolve || onReject) { return originalPush.call(this, location, onResolve, onReject) }
-  return originalPush.call(this, location).catch((err) => err)
-}
-
 /**
  * constantRoutes
  * a base page that does not have permission requirements
@@ -49,34 +40,34 @@ export const constantRoutes = [{
   component: Layout,
   hidden: true,
   children: [{
-    path: '/redirect/:path(.*)',
+    path: '/redirect/:pathMatch(.*)*',
     component: () =>
-      import('@/views/redirect/index')
+      import('@/views/redirect/index.vue')
   }]
 },
 {
   path: '/login',
   component: () =>
-    import('@/views/login/index'),
+    import('@/views/login/index.vue'),
   hidden: true
 },
 
 {
   path: '/auth-redirect',
   component: () =>
-    import('@/views/login/auth-redirect'),
+    import('@/views/login/auth-redirect.vue'),
   hidden: true
 },
 {
   path: '/404',
   component: () =>
-    import('@/views/error-page/404'),
+    import('@/views/error-page/404.vue'),
   hidden: true
 },
 {
   path: '/401',
   component: () =>
-    import('@/views/error-page/401'),
+    import('@/views/error-page/401.vue'),
   hidden: true
 },
 {
@@ -86,10 +77,10 @@ export const constantRoutes = [{
   children: [{
     path: 'dashboard',
     component: () =>
-      import('@/views/dashboard/index'),
+      import('@/views/dashboard/index.vue'),
     name: 'Dashboard',
     meta: { title: 'dashboard', icon: 'dashboard', affix: true, noCache: true }
-  }]
+}]
 },
 
 {
@@ -100,11 +91,12 @@ export const constantRoutes = [{
   children: [{
     path: 'index',
     component: () =>
-      import('@/views/profile/index'),
+      import('@/views/profile/index.vue'),
     name: 'Profile',
     meta: { title: 'profile', icon: 'user', noCache: true }
   }]
-}
+},
+{ path: '/:pathMatch(.*)*', redirect: '/404', hidden: true }
 ]
 
 /**
@@ -150,7 +142,7 @@ export const asyncRoutes = [
     children: [{
       path: 'totaldevices',
       component: () =>
-        import('@/views/pub/device'),
+        import('@/views/pub/device.vue'),
       name: 'totaldevices',
       meta: {
         title: 'totaldevices',
@@ -160,7 +152,7 @@ export const asyncRoutes = [
     {
       path: 'groups',
       component: () =>
-        import('@/views/pub/groups'),
+        import('@/views/pub/groups.vue'),
       name: 'grouproom',
       meta: {
         title: 'grouproom',
@@ -180,7 +172,7 @@ export const asyncRoutes = [
     {
       path: 'relay',
       component: () =>
-        import('@/views/pub/relay'),
+        import('@/views/pub/relay.vue'),
       name: 'relay',
       meta: {
         title: 'relay',
@@ -207,7 +199,7 @@ export const asyncRoutes = [
       {
         path: 'publicgroup',
         component: () =>
-          import('@/views/setup/groups'),
+          import('@/views/setup/groups.vue'),
         name: 'publicgroup',
         meta: {
           title: 'publicgroup',
@@ -218,7 +210,7 @@ export const asyncRoutes = [
       {
         path: 'server',
         component: () =>
-          import('@/views/setup/server'),
+          import('@/views/setup/server.vue'),
         name: 'server',
         meta: {
           title: 'server',
@@ -229,7 +221,7 @@ export const asyncRoutes = [
       {
         path: 'users',
         component: () =>
-          import('@/views/setup/users'),
+          import('@/views/setup/users.vue'),
         name: 'UserMgr',
         meta: {
           title: 'users',
@@ -239,7 +231,7 @@ export const asyncRoutes = [
       {
         path: 'register',
         component: () =>
-          import('@/views/setup/register'),
+          import('@/views/setup/register.vue'),
         name: 'regMgr',
         meta: {
           title: 'register',
@@ -249,7 +241,7 @@ export const asyncRoutes = [
       {
         path: 'roles',
         component: () =>
-          import('@/views/setup/role'),
+          import('@/views/setup/role.vue'),
         name: 'Roles',
         meta: {
           title: 'rolemgr',
@@ -276,7 +268,7 @@ export const asyncRoutes = [
       {
         path: 'operatorlog',
         component: () =>
-          import('@/views/log/operatorlog'),
+          import('@/views/log/operatorlog.vue'),
         name: 'OperatorLog',
         meta: {
           title: 'operatorlog',
@@ -286,21 +278,22 @@ export const asyncRoutes = [
     ]
   },
 
-  { path: '*', redirect: '/404', hidden: true }
+
 ]
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+const router = createRouter({
+  history: createWebHistory(),
+  routes: constantRoutes,
+  scrollBehavior: () => ({ top: 0 })
 })
 
-const router = createRouter()
-
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  const newRouter = createRouter({
+    history: createWebHistory(),
+    routes: constantRoutes,
+    scrollBehavior: () => ({ top: 0 })
+  })
+  router.matcher = newRouter.matcher
 }
 
 export default router
