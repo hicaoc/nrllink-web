@@ -90,7 +90,7 @@
           <template #default="scope">
             <div class="status-actions">
               <el-button
-                :type="(scope.row.status & 1) === 1 ? 'danger' : 'success'"
+                :type="safeButtonType(((scope.row.status ?? 0) & 1) === 1 ? 'danger' : 'success')"
                 size="small"
                 plain
                 class="compact-btn"
@@ -99,7 +99,7 @@
               }}</el-button>
 
               <el-button
-                :type="(scope.row.status & 2) === 2 ? 'danger' : 'success'"
+                :type="safeButtonType(((scope.row.status ?? 0) & 2) === 2 ? 'danger' : 'success')"
                 size="small"
                 plain
                 class="compact-btn"
@@ -334,13 +334,13 @@
         <span>状态:
 
           <span><el-button
-            :type="(item.status & 1) === 1 ? 'danger' : 'success'"
+            :type="safeButtonType(((item.status ?? 0) & 1) === 1 ? 'danger' : 'success')"
             plain
             size="small"
             @click="updateStatus(item, 1)"
           >禁收</el-button></span>
           <span><el-button
-            :type="(item.status & 2) === 2 ? 'danger' : 'success'"
+            :type="safeButtonType(((item.status ?? 0) & 2) === 2 ? 'danger' : 'success')"
             plain
             size="small"
             @click="updateStatus(item, 2)"
@@ -944,6 +944,18 @@
 </template>
 
 <script>
+const buttonTypes = new Set([
+  '',
+  'default',
+  'primary',
+  'success',
+  'warning',
+  'info',
+  'danger',
+  'text',
+  'link'
+])
+
 import {
   fetchDeviceList,
   updateDevice,
@@ -1172,6 +1184,9 @@ export default {
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
+    },
+    safeButtonType(type) {
+      return buttonTypes.has(type) ? type : ''
     },
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
