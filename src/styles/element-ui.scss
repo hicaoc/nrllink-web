@@ -77,3 +77,16 @@
 .el-range-editor.el-input__inner {
   display: inline-flex !important;
 }
+
+/* Ensure message box/notification are visible above layout layers */
+.el-message-box__wrapper {
+  z-index: 4000 !important;
+}
+
+.el-message {
+  z-index: 4001 !important;
+}
+
+.el-notification {
+  z-index: 4002 !important;
+}
