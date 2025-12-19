@@ -62,7 +62,7 @@
 
 <script>
 // import GithubCorner from '@/components/GithubCorner'
-import PanelGroup from './components/PanelGroup'
+import PanelGroup from './components/PanelGroup.vue'
 // import LineChart from './components/LineChart'
 // import PieAmont from './components/PieAmont'
 // import PieChart from './components/PieChart'

@@ -1,8 +1,10 @@
 <template>
   <el-card class="box-card-component" style="margin-left:8px;">
-    <div slot="header" class="box-card-header">
-      <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png">
-    </div>
+    <template #header>
+      <div class="box-card-header">
+        <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png">
+      </div>
+    </template>
     <div style="position:relative;">
       <pan-thumb :image="avatar" class="panThumb" />
       <mallki class-name="mallki-text" text="HAM互联" />
@@ -27,22 +29,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'pinia'
 import PanThumb from '@/components/PanThumb'
 import Mallki from '@/components/TextHoverEffect/Mallki'
+import { useUserStore } from '@/store/modules/user'
 
 export default {
   components: { PanThumb, Mallki },
-
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        success: 'success',
-        pending: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
   data() {
     return {
       statisticsData: {
@@ -52,7 +45,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
+    ...mapState(useUserStore, [
       'name',
       'avatar',
       'roles'

@@ -16,7 +16,9 @@
       <ul class="list-inline">
         <li>
           <span class="link-black text-sm">
-            <i class="el-icon-share" />
+            <el-icon>
+              <Share />
+            </el-icon>
             Share
           </span>
         </li>
@@ -44,7 +46,9 @@
       <ul class="list-inline">
         <li>
           <span class="link-black text-sm">
-            <i class="el-icon-share" />
+            <el-icon>
+              <Share />
+            </el-icon>
             Share
           </span>
         </li>
@@ -70,7 +74,7 @@
         </el-carousel>
       </div>
       <ul class="list-inline">
-        <li><span class="link-black text-sm"><i class="el-icon-share" /> Share</span></li>
+        <li><span class="link-black text-sm"><el-icon><Share /></el-icon> Share</span></li>
         <li>
           <span class="link-black text-sm">
             <svg-icon icon-class="like" /> Like</span>

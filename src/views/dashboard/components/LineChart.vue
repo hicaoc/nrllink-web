@@ -4,7 +4,7 @@
 
 <script>
 import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
+import 'echarts/theme/macarons' // echarts theme
 import { debounce } from '@/utils'
 
 export default {
@@ -63,7 +63,7 @@ export default {
         this.sidebarResizeHandler
       )
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (!this.chart) {
       return
     }

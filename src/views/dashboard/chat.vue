@@ -13,7 +13,7 @@
       style="width: 320px"
       class="filter-item"
       clearable
-      @keyup.enter.native="websocketsend(msgitem)"
+      @keyup.enter="websocketsend(msgitem)"
     />
   </div>
 </template>
@@ -45,7 +45,7 @@ export default {
   created() {
     // this.initWebSocket()
   },
-  destroyed() {
+  unmounted() {
     // this.websock.close() // 离开路由之后断开websocket连接
   },
 
