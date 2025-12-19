@@ -98,7 +98,7 @@
   position: fixed !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  top: 80px !important;
+  top: 24px !important;
   min-width: 220px;
   padding: 10px 16px !important;
   border-radius: 8px !important;
@@ -118,6 +118,26 @@
 .el-message__content {
   margin: 0 !important;
   line-height: 1.4;
+}
+
+.el-message--success {
+  border-color: rgba(34, 197, 94, 0.35) !important;
+  color: #166534;
+}
+
+.el-message--info {
+  border-color: rgba(59, 130, 246, 0.35) !important;
+  color: #1e40af;
+}
+
+.el-message--warning {
+  border-color: rgba(245, 158, 11, 0.4) !important;
+  color: #92400e;
+}
+
+.el-message--error {
+  border-color: rgba(239, 68, 68, 0.4) !important;
+  color: #991b1b;
 }
 
 .el-notification {

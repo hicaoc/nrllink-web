@@ -61,3 +61,5 @@
 - Align confirm icon inline with text and soften close button
 
 - Align ElMessage icon/text inline and tighten height
+
+- Move toast to top-center and colorize by type (success/info/warn/error)
