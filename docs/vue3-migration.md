@@ -20,3 +20,5 @@
 - 测试策略扩展：补充 store/权限/关键组件用例，或引入端到端测试
 
 - 扩展 Pinia store 单元测试（user/permission/settings/tagsView/app/errorLog）
+
+- 修复 Vitest 兼容：锁定 jsdom@22（Node16），更新组件/校验类旧测试以适配 Vue Test Utils v2
