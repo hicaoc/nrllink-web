@@ -67,3 +67,5 @@
 - Let ElMessage use native stacking offsets to avoid overlap while keeping top-center alignment
 
 - Add subtle translucency to toast background for softer look
+
+- Switch router history to hash mode to avoid 404 on hard refresh

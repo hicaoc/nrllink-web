@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 /* Layout */
 import Layout from '@/layout/index.vue'
@@ -282,14 +282,14 @@ export const asyncRoutes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes: constantRoutes,
   scrollBehavior: () => ({ top: 0 })
 })
 
 export function resetRouter() {
   const newRouter = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes: constantRoutes,
     scrollBehavior: () => ({ top: 0 })
   })
