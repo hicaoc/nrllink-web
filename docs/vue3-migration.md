@@ -18,3 +18,5 @@
 
 ## 待推进
 - 测试策略扩展：补充 store/权限/关键组件用例，或引入端到端测试
+
+- 扩展 Pinia store 单元测试（user/permission/settings/tagsView/app/errorLog）
