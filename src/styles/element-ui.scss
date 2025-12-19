@@ -106,6 +106,18 @@
   background: #ffffff !important;
   box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16) !important;
   color: #111827;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px;
+}
+
+.el-message__icon {
+  margin-right: 0 !important;
+}
+
+.el-message__content {
+  margin: 0 !important;
+  line-height: 1.4;
 }
 
 .el-notification {
