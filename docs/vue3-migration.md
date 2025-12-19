@@ -72,4 +72,4 @@
 
 - Validate Element Plus theme override: apply CSS variables and runtime theme setter (no remote CSS fetch)
 
-- Add Vitest config and starter unit tests (utils/validate, utils/theme)
+- 添加 Vitest 配置与示例单测（utils/validate、utils/theme）
