@@ -1,15 +1,15 @@
 <template>
   <div v-if="errorLogs.length>0">
-    <el-badge :is-dot="true" style="line-height: 25px;margin-top: -5px;" @click.native="dialogTableVisible=true">
+    <el-badge :is-dot="true" style="line-height: 25px;margin-top: -5px;" @click="dialogTableVisible=true">
       <el-button style="padding: 8px 10px;" size="small" type="danger">
         <svg-icon icon-class="bug" />
       </el-button>
     </el-badge>
 
-    <el-dialog :visible.sync="dialogTableVisible" title="Error Log" width="80%" append-to-body>
+    <el-dialog v-model="dialogTableVisible" title="Error Log" width="80%" append-to-body>
       <el-table :data="errorLogs" border>
         <el-table-column label="Message">
-          <template slot-scope="{row}">
+          <template #default="{row}">
             <div>
               <span class="message-title">Msg:</span>
               <el-tag type="danger">
@@ -33,7 +33,7 @@
           </template>
         </el-table-column>
         <el-table-column label="Stack">
-          <template slot-scope="scope">
+          <template #default="scope">
             {{ scope.row.err.stack }}
           </template>
         </el-table-column>
@@ -43,6 +43,9 @@
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useErrorLogStore } from '@/store/modules/errorLog'
+
 export default {
   name: 'ErrorLog',
   data() {
@@ -51,9 +54,7 @@ export default {
     }
   },
   computed: {
-    errorLogs() {
-      return this.$store.getters.errorLogs
-    }
+    ...mapState(useErrorLogStore, { errorLogs: 'logs' })
   }
 }
 </script>

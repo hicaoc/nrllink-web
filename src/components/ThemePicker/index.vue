@@ -8,7 +8,11 @@
 </template>
 
 <script>
-const version = require('element-ui/package.json').version // element-ui version from node_modules
+import { ElMessage } from 'element-plus'
+import elementPlusPkg from 'element-plus/package.json'
+import { useSettingsStore } from '@/store/modules/settings'
+
+const version = elementPlusPkg.version
 const ORIGINAL_THEME = '#409EFF' // default color
 
 export default {
@@ -20,7 +24,8 @@ export default {
   },
   computed: {
     defaultTheme() {
-      return this.$store.state.settings.theme
+      const settingsStore = useSettingsStore()
+      return settingsStore.theme
     }
   },
   watch: {
@@ -37,12 +42,11 @@ export default {
       const originalCluster = this.getThemeCluster(oldVal.replace('#', ''))
       console.log(themeCluster, originalCluster)
 
-      const $message = this.$message({
+      const $message = ElMessage({
         message: '  Compiling the theme',
         customClass: 'theme-message',
         type: 'success',
-        duration: 0,
-        iconClass: 'el-icon-loading'
+        duration: 0
       })
 
       const getHandler = (variable, id) => {
@@ -61,7 +65,7 @@ export default {
       }
 
       if (!this.chalk) {
-        const url = `https://unpkg.com/element-ui@${version}/lib/theme-chalk/index.css`
+        const url = `https://unpkg.com/element-plus@${version}/dist/index.css`
         await this.getCSSString(url, 'chalk')
       }
 

@@ -3,7 +3,7 @@
     <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls" @change="handleClick">
     <div class="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
       表格字段须包含【姓名,性别,年龄,电话,渠道,备注】 <br> 拖动EXCEL文件到这里
-      <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">
+      <el-button :loading="loading" style="margin-left:16px;" size="small" type="primary" @click="handleUpload">
         打开EXCEL文件
       </el-button>
     </div>

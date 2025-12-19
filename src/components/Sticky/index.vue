@@ -45,7 +45,7 @@ export default {
   activated() {
     this.handleScroll()
   },
-  destroyed() {
+  unmounted() {
     window.removeEventListener('scroll', this.handleScroll)
     window.removeEventListener('resize', this.handleResize)
   },

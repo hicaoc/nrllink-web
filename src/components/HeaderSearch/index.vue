@@ -21,8 +21,20 @@
 // fuse is a lightweight fuzzy-search module
 // make search results more in line with expectations
 import Fuse from 'fuse.js'
-import path from 'path'
 import i18n from '@/lang'
+import { mapState } from 'pinia'
+import { usePermissionStore } from '@/store/modules/permission'
+import { useAppStore } from '@/store/modules/app'
+
+const resolvePath = (basePath, routePath) => {
+  if (routePath.startsWith('/')) {
+    return routePath
+  }
+  if (basePath.endsWith('/')) {
+    return `${basePath}${routePath}`
+  }
+  return `${basePath}/${routePath}`
+}
 
 export default {
   name: 'HeaderSearch',
@@ -36,12 +48,8 @@ export default {
     }
   },
   computed: {
-    routes() {
-      return this.$store.getters.permission_routes
-    },
-    lang() {
-      return this.$store.getters.language
-    }
+    ...mapState(usePermissionStore, { routes: 'routes' }),
+    ...mapState(useAppStore, { lang: 'language' })
   },
   watch: {
     lang() {
@@ -111,13 +119,13 @@ export default {
         if (router.hidden) { continue }
 
         const data = {
-          path: path.resolve(basePath, router.path),
+          path: resolvePath(basePath, router.path),
           title: [...prefixTitle]
         }
 
         if (router.meta && router.meta.title) {
           // generate internationalized title
-          const i18ntitle = i18n.t(`route.${router.meta.title}`)
+          const i18ntitle = i18n.global.t(`route.${router.meta.title}`)
 
           data.title = [...data.title, i18ntitle]
 

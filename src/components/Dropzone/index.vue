@@ -164,7 +164,7 @@ export default {
       vm.$emit('dropzone-successmultiple', file, error, xhr)
     })
   },
-  destroyed() {
+  unmounted() {
     document.removeEventListener('paste', this.pasteImg)
     this.dropzone.destroy()
   },
