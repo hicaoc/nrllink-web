@@ -55,3 +55,5 @@
 - Force ElMessage toast to fixed top center with higher z-index so cancel-delete notices are visible
 
 - Restyle ElMessage and ElMessageBox to a cleaner non-transparent look (rounded, shadow, spacing)
+
+- Tighten message box vertical spacing and pin close button top-right

@@ -125,7 +125,8 @@
 }
 
 .el-message-box__header {
-  padding: 18px 20px 6px;
+  padding: 14px 18px 6px;
+  position: relative;
 }
 
 .el-message-box__title {
@@ -134,15 +135,21 @@
   color: #0f172a;
 }
 
+.el-message-box__headerbtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
 .el-message-box__content {
-  padding: 6px 20px 4px;
+  padding: 6px 18px 4px;
   color: #475569;
   font-size: 14px;
   line-height: 1.6;
 }
 
 .el-message-box__btns {
-  padding: 12px 20px 18px;
+  padding: 10px 18px 14px;
   display: flex;
   gap: 10px;
   justify-content: flex-end;
