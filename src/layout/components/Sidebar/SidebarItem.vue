@@ -8,8 +8,8 @@
       </app-link>
     </template>
 
-    <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
-      <template slot="title">
+    <el-sub-menu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
+      <template #title>
         <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="generateTitle(item.meta.title)" />
       </template>
       <sidebar-item
@@ -20,17 +20,26 @@
         :base-path="resolvePath(child.path)"
         class="nest-menu"
       />
-    </el-submenu>
+    </el-sub-menu>
   </div>
 </template>
 
 <script>
-import path from 'path'
 import { generateTitle } from '@/utils/i18n'
 import { isExternal } from '@/utils/validate'
-import Item from './Item'
-import AppLink from './Link'
-import FixiOSBug from './FixiOSBug'
+import Item from './Item.vue'
+import AppLink from './Link.vue'
+import FixiOSBug from './FixiOSBug.js'
+
+const resolveRoutePath = (basePath, routePath) => {
+  if (routePath.startsWith('/')) {
+    return routePath
+  }
+  if (basePath.endsWith('/')) {
+    return `${basePath}${routePath}`
+  }
+  return `${basePath}/${routePath}`
+}
 
 export default {
   name: 'SidebarItem',
@@ -89,7 +98,7 @@ export default {
       if (isExternal(this.basePath)) {
         return this.basePath
       }
-      return path.resolve(this.basePath, routePath)
+      return resolveRoutePath(this.basePath, routePath)
     },
 
     generateTitle

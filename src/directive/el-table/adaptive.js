@@ -1,4 +1,4 @@
-import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/resize-event'
+import { addResizeListener, removeResizeListener } from 'element-plus/es/utils/resize-event'
 
 /**
  * How to use
@@ -8,7 +8,7 @@ import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/re
  */
 
 const doResize = (el, binding, vnode) => {
-  const { componentInstance: $table } = vnode
+  const $table = vnode.component?.proxy
 
   const { value } = binding
 
@@ -25,17 +25,18 @@ const doResize = (el, binding, vnode) => {
 }
 
 export default {
-  bind(el, binding, vnode) {
+  mounted(el, binding, vnode) {
     el.resizeListener = () => {
       doResize(el, binding, vnode)
     }
     // parameter 1 is must be "Element" type
     addResizeListener(window.document.body, el.resizeListener)
-  },
-  inserted(el, binding, vnode) {
     doResize(el, binding, vnode)
   },
-  unbind(el) {
+  updated(el, binding, vnode) {
+    doResize(el, binding, vnode)
+  },
+  unmounted(el) {
     removeResizeListener(window.document.body, el.resizeListener)
   }
 }

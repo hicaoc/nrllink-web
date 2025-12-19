@@ -1,22 +1,12 @@
-const state = {
-  logs: []
-}
+import { defineStore } from 'pinia'
 
-const mutations = {
-  ADD_ERROR_LOG: (state, log) => {
-    state.logs.push(log)
+export const useErrorLogStore = defineStore('errorLog', {
+  state: () => ({
+    logs: []
+  }),
+  actions: {
+    addErrorLog(log) {
+      this.logs.push(log)
+    }
   }
-}
-
-const actions = {
-  addErrorLog({ commit }, log) {
-    commit('ADD_ERROR_LOG', log)
-  }
-}
-
-export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions
-}
+})

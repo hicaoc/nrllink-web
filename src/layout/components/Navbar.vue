@@ -12,8 +12,8 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <!-- <div class="right-menu-item">{{ areaname }}</div> -->
-        <div class="right-menu-item">{{ this.$store.state.user.name }}</div>
-        <div class="right-menu-item">{{ this.$store.state.user.callsign }}</div>
+        <div class="right-menu-item">{{ name }}</div>
+        <div class="right-menu-item">{{ callsign }}</div>
         <!-- <div class="right-menu-item">
 
             <el-select v-model="current_area" class="filter-item" placeholder="请选择">
@@ -37,31 +37,37 @@
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+          <el-icon class="el-icon-caret-bottom">
+            <CaretBottom />
+          </el-icon>
         </div>
-        <el-dropdown-menu slot="dropdown">
-          <router-link to="/profile/index">
-            <el-dropdown-item>{{ $t('navbar.profile') }}</el-dropdown-item>
-          </router-link>
-          <router-link to="/">
-            <el-dropdown-item>{{ $t('navbar.dashboard') }}</el-dropdown-item>
-          </router-link>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <router-link to="/profile/index">
+              <el-dropdown-item>{{ $t('navbar.profile') }}</el-dropdown-item>
+            </router-link>
+            <router-link to="/">
+              <el-dropdown-item>{{ $t('navbar.dashboard') }}</el-dropdown-item>
+            </router-link>
 
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
+            <el-dropdown-item divided>
+              <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
       </el-dropdown>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
+import { useUserStore } from '@/store/modules/user'
+import Breadcrumb from '@/components/Breadcrumb/index.vue'
+import Hamburger from '@/components/Hamburger/index.vue'
 // import ErrorLog from '@/components/ErrorLog'
-import Screenfull from '@/components/Screenfull'
+import Screenfull from '@/components/Screenfull/index.vue'
 // import SizeSelect from '@/components/SizeSelect'
 // import LangSelect from '@/components/LangSelect'
 // import Search from '@/components/HeaderSearch'
@@ -81,13 +87,12 @@ export default {
   data() {
     return {
       list: [],
-      total: 0,
-      callsign: ''
-
+      total: 0
     }
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar', 'device'])
+    ...mapState(useAppStore, ['sidebar', 'device']),
+    ...mapState(useUserStore, ['avatar', 'name', 'callsign'])
     // callsign() {
     //   return this.$store.state.user.callsign
     // }
@@ -97,10 +102,12 @@ export default {
   // },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
+      const appStore = useAppStore()
+      appStore.toggleSideBar()
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
+      const userStore = useUserStore()
+      await userStore.logout()
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
     // getList() {

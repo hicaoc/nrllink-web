@@ -1,6 +1,8 @@
 import router from './router'
-import store from './store'
-import { Message } from 'element-ui'
+import { pinia } from './store'
+import { useUserStore } from '@/store/modules/user'
+import { usePermissionStore } from '@/store/modules/permission'
+import { ElMessage } from 'element-plus'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
@@ -11,6 +13,8 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login', '/signtimes', '/getcustomer', '/auth-redirect'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
+  const userStore = useUserStore(pinia)
+  const permissionStore = usePermissionStore(pinia)
   // start progress bar
   NProgress.start()
 
@@ -27,17 +31,17 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       // determine whether the user has obtained his permission roles through getInfo
-      const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      const hasRoles = userStore.roles && userStore.roles.length > 0
       if (hasRoles) {
         next()
       } else {
         try {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          const { roles } = await store.dispatch('user/getInfo')
+          const { roles } = await userStore.getInfo()
 
           // generate accessible routes map based on roles
-          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+          const accessRoutes = await permissionStore.generateRoutes(roles)
 
           // dynamically add accessible routes
           for (let i = 0; i < accessRoutes.length; i += 1) {
@@ -51,8 +55,8 @@ router.beforeEach(async(to, from, next) => {
           next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login
-          await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
+          userStore.resetToken()
+          ElMessage.error(error?.message || error || 'Has Error')
           next(`/login?redirect=${to.path}`)
           NProgress.done()
         }
