@@ -57,3 +57,5 @@
 - Restyle ElMessage and ElMessageBox to a cleaner non-transparent look (rounded, shadow, spacing)
 
 - Tighten message box vertical spacing and pin close button top-right
+
+- Align confirm icon inline with text and soften close button

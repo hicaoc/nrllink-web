@@ -139,6 +139,13 @@
   position: absolute;
   top: 12px;
   right: 12px;
+  background: transparent;
+  border: none;
+  opacity: 0.6;
+}
+
+.el-message-box__headerbtn:hover {
+  opacity: 1;
 }
 
 .el-message-box__content {
@@ -146,6 +153,20 @@
   color: #475569;
   font-size: 14px;
   line-height: 1.6;
+}
+
+.el-message-box__container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.el-message-box__status {
+  margin-top: 0 !important;
+}
+
+.el-message-box__message {
+  margin: 0 !important;
 }
 
 .el-message-box__btns {
