@@ -266,7 +266,8 @@ $cursor: #fff;
   .el-input {
     display: inline-block;
     height: 47px;
-    width: 100%;
+    flex: 1;
+    min-width: 0;
 
     input,
     .el-input__inner {
@@ -294,6 +295,7 @@ $cursor: #fff;
   }
 
   .el-input__wrapper {
+    width: 100%;
     background: transparent;
     box-shadow: none;
     border: 0px;
@@ -306,6 +308,8 @@ $cursor: #fff;
 
   .el-form-item {
     position: relative;
+    display: flex;
+    align-items: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;

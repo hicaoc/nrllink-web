@@ -24,3 +24,4 @@
 - 修复 Vitest 兼容：锁定 jsdom@22（Node16），更新组件/校验类旧测试以适配 Vue Test Utils v2
 
 - 登录页输入框宽度对齐（el-input 改为 100- 登录页输入框宽度对齐（el-input 改为 100%）
+- 登录页输入框与背景条宽度统一（el-form-item flex，el-input 填满剩余宽度）
