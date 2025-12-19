@@ -22,3 +22,5 @@
 - 扩展 Pinia store 单元测试（user/permission/settings/tagsView/app/errorLog）
 
 - 修复 Vitest 兼容：锁定 jsdom@22（Node16），更新组件/校验类旧测试以适配 Vue Test Utils v2
+
+- 登录页输入框宽度对齐（el-input 改为 100- 登录页输入框宽度对齐（el-input 改为 100%）

@@ -266,10 +266,11 @@ $cursor: #fff;
   .el-input {
     display: inline-block;
     height: 47px;
-    width: 85%;
+    width: 100%;
 
     input,
     .el-input__inner {
+      box-sizing: border-box;
       background: transparent;
       border: 0px;
       -webkit-appearance: none;
