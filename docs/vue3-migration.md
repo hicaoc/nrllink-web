@@ -63,3 +63,5 @@
 - Align ElMessage icon/text inline and tighten height
 
 - Move toast to top-center and colorize by type (success/info/warn/error)
+
+- Let ElMessage use native stacking offsets to avoid overlap while keeping top-center alignment
