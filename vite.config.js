@@ -68,6 +68,11 @@ export default defineConfig(({ mode }) => {
         }
       },
       chunkSizeWarningLimit: 800
+    },
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: ['tests/setup.js']
     }
   }
 })
