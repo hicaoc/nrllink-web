@@ -65,3 +65,5 @@
 - Move toast to top-center and colorize by type (success/info/warn/error)
 
 - Let ElMessage use native stacking offsets to avoid overlap while keeping top-center alignment
+
+- Add subtle translucency to toast background for softer look
