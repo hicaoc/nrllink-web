@@ -69,3 +69,5 @@
 - Add subtle translucency to toast background for softer look
 
 - Switch router history to hash mode to avoid 404 on hard refresh
+
+- Validate Element Plus theme override: apply CSS variables and runtime theme setter (no remote CSS fetch)

@@ -24,11 +24,14 @@ import '@/styles/index.scss' // global css
 import App from './App.vue'
 import router from './router'
 import { setupStore } from './store'
+import { pinia } from './store'
+import { useSettingsStore } from '@/store/modules/settings'
 
 import i18n from './lang' // internationalization
 import { setupIcons } from './icons' // icon
 import './permission' // permission control
 import { setupErrorLog } from './utils/error-log' // error log
+import { setElementPlusTheme } from './utils/theme'
 
 import * as filters from './filters' // global filters
 
@@ -63,6 +66,9 @@ setupIcons(app)
 app.use(router)
 app.use(i18n)
 setupErrorLog(app)
+
+const settingsStore = useSettingsStore(pinia)
+setElementPlusTheme(settingsStore.theme)
 
 // register global utility filters (Vue3 removes template filters, use $filters)
 app.config.globalProperties.$filters = filters
