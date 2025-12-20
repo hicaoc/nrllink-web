@@ -272,7 +272,7 @@ $cursor: #fff;
     input,
     .el-input__inner {
       box-sizing: border-box;
-      background: transparent;
+      background: transparent !important;
       border: 0px;
       -webkit-appearance: none;
       border-radius: 0px;
@@ -296,14 +296,19 @@ $cursor: #fff;
 
   .el-input__wrapper {
     width: 100%;
-    background: transparent;
-    box-shadow: none;
+    background: transparent !important;
+    box-shadow: none !important;
     border: 0px;
     padding: 0;
   }
 
   .el-input__wrapper.is-focus {
-    box-shadow: none;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  .el-input__wrapper:hover {
+    background: transparent !important;
   }
 
   .el-form-item {
