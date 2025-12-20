@@ -28,3 +28,5 @@
 - 登录页输入区域背景与外层条一致（去掉输入内层背景色）
 - .env 补充 VITE_BASE_API，避免请求基址为空
 - 依赖升级：axios@0.21.4、path-to-regexp@6.3.0（仍建议评估 axios 1.x/echarts 6 升级）
+- 依赖升级：axios@1.12.2、echarts@5.5.0，jsonlint 替换为 jsonlint-mod（清理 nomnom/underscore）
+- npm audit 仅剩 xlsx 高危（上游无修复版本）
