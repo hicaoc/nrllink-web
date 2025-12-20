@@ -26,3 +26,5 @@
 - 登录页输入框宽度对齐（el-input 改为 100- 登录页输入框宽度对齐（el-input 改为 100%）
 - 登录页输入框与背景条宽度统一（el-form-item flex，el-input 填满剩余宽度）
 - 登录页输入区域背景与外层条一致（去掉输入内层背景色）
+- .env 补充 VITE_BASE_API，避免请求基址为空
+- 依赖升级：axios@0.21.4、path-to-regexp@6.3.0（仍建议评估 axios 1.x/echarts 6 升级）
