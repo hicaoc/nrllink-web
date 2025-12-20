@@ -79,10 +79,12 @@
           :sortable="true"
         >
           <template #default="scope">
-            <span><el-tag :type="scope.row.is_online ? 'success' : 'info'">{{ scope.row.callsign + "-" +
-              scope.row.ssid
-            }}
-            </el-tag></span>
+            <div class="tag-wrap">
+              <el-tag :type="scope.row.is_online ? 'success' : 'info'">{{ scope.row.callsign + "-" +
+                scope.row.ssid
+              }}
+              </el-tag>
+            </div>
           </template>
         </el-table-column>
 
@@ -195,8 +197,7 @@
 
         <el-table-column prop="tunner" label="频率信道" width="190px" align="center">
           <template #default="scope">
-            <span v-if="scope.row.device_parm">
-
+            <div v-if="scope.row.device_parm" class="tag-wrap">
               <el-tag v-if="scope.row.rf_type == 1">
                 R{{ scope.row.device_parm.one_recive_freq }}/T{{
                   scope.row.device_parm.one_transmit_freq
@@ -210,7 +211,7 @@
               <el-tag v-if="scope.row.rf_type == 3 && scope.row.chan_name">信道{{ scope.row.device_parm.moto_channel }}
                 {{ scope.row.chan_name[scope.row.device_parm.moto_channel] }}
               </el-tag>
-            </span>
+            </div>
           </template>
         </el-table-column>
 
@@ -249,9 +250,9 @@
 
     <pagination
       v-show="total > 0"
-      :total="total"
       v-model:page="listQuery.page"
       v-model:limit="listQuery.limit"
+      :total="total"
       @pagination="getList"
     />
 
@@ -266,11 +267,13 @@
       >
         <template #header>
           <div class="clearfix">
-            <el-tag :type="item.is_online ? 'success' : 'info'">{{ item.id }}. {{ item.callsign + "-" + item.ssid + " "
-            }}{{ item.status == 1 ? "🈲" : ""
-            }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
-              ValueFilter(item.dev_type, DevTypeOptions)
-            }}</el-tag>
+            <div class="tag-wrap">
+              <el-tag :type="item.is_online ? 'success' : 'info'">{{ item.id }}. {{ item.callsign + "-" + item.ssid + " "
+              }}{{ item.status == 1 ? "🈲" : ""
+              }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
+                ValueFilter(item.dev_type, DevTypeOptions)
+              }}</el-tag>
+            </div>
 
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
@@ -282,23 +285,23 @@
             }}</el-button>
 
             <el-button
-            v-if="checkPermission(['admin']) || item.callsign === callsign"
-            style="float: right; padding: 3px 3px"
-            link
-            :disabled="item.is_online === false"
-            @click="handleChangeAT(item)"
-          >{{ $t("device.change")
-          }}</el-button>
+              v-if="checkPermission(['admin']) || item.callsign === callsign"
+              style="float: right; padding: 3px 3px"
+              link
+              :disabled="item.is_online === false"
+              @click="handleChangeAT(item)"
+            >{{ $t("device.change")
+            }}</el-button>
 
-          <el-button
-            v-if="checkPermission(['admin']) || item.callsign === callsign"
-            style="float: right; padding: 3px 0"
-            link
-            @click="handleUpdate(item)"
-          >{{ $t("device.edit")
+            <el-button
+              v-if="checkPermission(['admin']) || item.callsign === callsign"
+              style="float: right; padding: 3px 0"
+              link
+              @click="handleUpdate(item)"
+            >{{ $t("device.edit")
 
-          }}</el-button>
-        </div>
+            }}</el-button>
+          </div>
         </template>
 
         <span>名称:{{ item.name }}</span><br>
@@ -351,8 +354,8 @@
     </div>
 
     <el-dialog
-      :title="textMap[dialogStatus]"
       v-model="dialogFormVisible"
+      :title="textMap[dialogStatus]"
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"
       width="70%"
@@ -463,9 +466,9 @@
     </el-dialog>
 
     <el-dialog
+      v-model="dialogFormChangeVisible"
       title="参数修改"
       width="70%"
-      v-model="dialogFormChangeVisible"
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"
     >
@@ -859,9 +862,9 @@
     </el-dialog>
 
     <el-dialog
+      v-model="dialogFormATVisible"
       width="70%"
       :title="textMap[dialogStatus]"
-      v-model="dialogFormATVisible"
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"
     >

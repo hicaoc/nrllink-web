@@ -80,6 +80,7 @@
         "@babel/eslint-parser": "^7.24.1",
         "@babel/register": "7.21.0",
         "@vitejs/plugin-vue": "^4.6.2",
+        "@vue/babel-preset-app": "^5.0.9",
         "@vue/test-utils": "^2.4.6",
         "autoprefixer": "^10.4.19",
         "babel-core": "7.0.0-bridge.0",

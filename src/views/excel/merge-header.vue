@@ -25,7 +25,9 @@
         </el-table-column>
         <el-table-column label="Author" width="110" align="center">
           <template #default="scope">
-            <el-tag>{{ scope.row.author }}</el-tag>
+            <div class="tag-wrap">
+              <el-tag>{{ scope.row.author }}</el-tag>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="Readings" width="115" align="center">

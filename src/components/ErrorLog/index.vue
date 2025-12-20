@@ -12,23 +12,29 @@
           <template #default="{row}">
             <div>
               <span class="message-title">Msg:</span>
-              <el-tag type="danger">
-                {{ row.err.message }}
-              </el-tag>
+              <span class="tag-wrap">
+                <el-tag type="danger">
+                  {{ row.err.message }}
+                </el-tag>
+              </span>
             </div>
             <br>
             <div>
               <span class="message-title" style="padding-right: 10px;">Info: </span>
-              <el-tag type="warning">
-                {{ row.vm.$vnode.tag }} error in {{ row.info }}
-              </el-tag>
+              <span class="tag-wrap">
+                <el-tag type="warning">
+                  {{ row.vm.$vnode.tag }} error in {{ row.info }}
+                </el-tag>
+              </span>
             </div>
             <br>
             <div>
               <span class="message-title" style="padding-right: 16px;">Url: </span>
-              <el-tag type="success">
-                {{ row.url }}
-              </el-tag>
+              <span class="tag-wrap">
+                <el-tag type="success">
+                  {{ row.url }}
+                </el-tag>
+              </span>
             </div>
           </template>
         </el-table-column>

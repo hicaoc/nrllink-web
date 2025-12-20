@@ -39,6 +39,10 @@
       height: 100%;
     }
 
+    .el-scrollbar__view {
+      display: block;
+    }
+
     &.has-logo {
       .el-scrollbar {
         height: calc(100% - 50px);
@@ -63,6 +67,7 @@
       border: none;
       height: 100%;
       width: 100% !important;
+      display: block;
     }
 
     // menu hover
@@ -91,6 +96,13 @@
   .hideSidebar {
     .sidebar-container {
       width: 54px !important;
+      .el-scrollbar__view {
+        display: block !important;
+      }
+
+      .el-menu {
+        display: block !important;
+      }
     }
 
     .main-container {
@@ -134,13 +146,44 @@
       .el-sub-menu {
         &>.el-sub-menu__title {
           &>span {
-            height: 0;
-            width: 0;
-            overflow: hidden;
-            visibility: hidden;
-            display: inline-block;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: visible;
           }
         }
+      }
+    }
+
+    .el-menu--collapse {
+      .menu-title {
+        display: none !important;
+      }
+
+      .el-menu-item,
+      .el-sub-menu__title {
+        padding: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .menu-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .svg-icon {
+        margin: 0 !important;
+      }
+
+      .submenu-title-noDropdown .el-tooltip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
   }

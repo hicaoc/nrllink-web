@@ -85,6 +85,12 @@ div:focus {
   display: block;
 }
 
+.tag-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .clearfix {
   &:after {
     visibility: hidden;

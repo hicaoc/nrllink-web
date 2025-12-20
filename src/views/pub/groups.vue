@@ -57,11 +57,10 @@
             <el-collapse-item :title="'已加入设备' + g.online_dev_number + '/' + g.total_dev_number + '台'" :name="g.id+'-2'">
 
               <div v-for="d in g.devlist" :key="d.id" class="text item">
-                <span>
+                <div class="tag-wrap">
                   <el-tag :type="d.is_online ? 'success' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " +
                     d.name }} </el-tag>
-
-                </span>
+                </div>
               </div>
             </el-collapse-item>
           </el-collapse>
@@ -70,9 +69,9 @@
     </div>
 
     <el-dialog
+      v-model="dialogFormVisible"
       width="70%"
       :title="textMap[dialogStatus]"
-      v-model="dialogFormVisible"
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"
     >

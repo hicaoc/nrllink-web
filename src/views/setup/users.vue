@@ -112,7 +112,9 @@
 
       <el-table-column :label="$t('employee.position')" width="110px" align="center">
         <template #default="scope">
-          <el-tag v-for="r in scope.row.roles" :key="r">{{ RoleValueFilter(r, roles) }}</el-tag>
+          <div class="tag-wrap">
+            <el-tag v-for="r in scope.row.roles" :key="r">{{ RoleValueFilter(r, roles) }}</el-tag>
+          </div>
         </template>
       </el-table-column>
 
@@ -162,8 +164,10 @@
 
       <el-table-column :label="$t('employee.msg')" width="120px" align="center">
         <template #default="scope">
-          <el-tag v-if="scope.row.recharge_msg">BAS</el-tag>
-          <el-tag v-if="scope.row.sign_msg">APP</el-tag>
+          <div class="tag-wrap">
+            <el-tag v-if="scope.row.recharge_msg">BAS</el-tag>
+            <el-tag v-if="scope.row.sign_msg">APP</el-tag>
+          </div>
         </template>
       </el-table-column>
 
@@ -192,13 +196,13 @@
 
     <pagination
       v-show="total>0"
-      :total="total"
       v-model:page="listQuery.page"
       v-model:limit="listQuery.limit"
+      :total="total"
       @pagination="getList"
     />
 
-    <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
+    <el-dialog v-model="dialogFormVisible" :title="textMap[dialogStatus]">
       <el-form
         ref="dataForm"
         :rules="rules"

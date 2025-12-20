@@ -78,7 +78,9 @@
 
         <el-table-column label="允许设备" width="200px" align="center">
           <template #default="scope">
-            <el-tag v-for="(item,idx) in scope.row.allow_callsign_ssid" :key="idx">{{ item }}</el-tag>
+            <div class="tag-wrap">
+              <el-tag v-for="(item,idx) in scope.row.allow_callsign_ssid" :key="idx">{{ item }}</el-tag>
+            </div>
 
           </template>
         </el-table-column>
@@ -133,7 +135,7 @@
       </el-table>
     </div>
 
-    <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
+    <el-dialog v-model="dialogFormVisible" :title="textMap[dialogStatus]">
       <el-form
         ref="dataForm"
         :rules="rules"

@@ -12,9 +12,11 @@
     </el-table-column>
     <el-table-column label="状态" width="100" align="center">
       <template #default="{row}">
-        <el-tag :type="statusFilter(row.status)">
-          {{ row.status }}
-        </el-tag>
+        <div class="tag-wrap">
+          <el-tag :type="statusFilter(row.status)">
+            {{ row.status }}
+          </el-tag>
+        </div>
       </template>
     </el-table-column>
   </el-table>
