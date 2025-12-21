@@ -1,6 +1,14 @@
 /* eslint-disable */
-require('script-loader!file-saver');
-import XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
+
+let xlsxPromise
+async function getXlsx() {
+  if (!xlsxPromise) {
+    xlsxPromise = import('xlsx')
+  }
+  const mod = await xlsxPromise
+  return mod.default || mod
+}
 
 function generateArray(table) {
   var out = [];
@@ -113,7 +121,8 @@ function s2ab(s) {
   return buf;
 }
 
-export function export_table_to_excel(id) {
+export async function export_table_to_excel(id) {
+  const XLSX = await getXlsx()
   var theTable = document.getElementById(id);
   var oo = generateArray(theTable);
   var ranges = oo[1];
@@ -144,7 +153,7 @@ export function export_table_to_excel(id) {
   }), "test.xlsx")
 }
 
-export function export_json_to_excel({
+export async function export_json_to_excel({
   multiHeader = [],
   header,
   data,
@@ -153,6 +162,7 @@ export function export_json_to_excel({
   autoWidth = true,
   bookType=  'xlsx'
 } = {}) {
+  const XLSX = await getXlsx()
   /* original data */
   filename = filename || 'excel-list'
   data = [...data]

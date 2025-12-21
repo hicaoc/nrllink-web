@@ -1,11 +1,11 @@
 <template>
   <div style="display:inline-block;">
     <label class="radio-label">Cell Auto-Width: </label>
-    <el-radio-group v-model="autoWidth">
-      <el-radio :label="true" border>
+  <el-radio-group v-model="autoWidth">
+      <el-radio :value="true" border>
         True
       </el-radio>
-      <el-radio :label="false" border>
+      <el-radio :value="false" border>
         False
       </el-radio>
     </el-radio-group>
@@ -15,7 +15,7 @@
 <script>
 export default {
   props: {
-    value: {
+    modelValue: {
       type: Boolean,
       default: true
     }
@@ -23,10 +23,10 @@ export default {
   computed: {
     autoWidth: {
       get() {
-        return this.value
+        return this.modelValue
       },
       set(val) {
-        this.$emit('input', val)
+        this.$emit('update:modelValue', val)
       }
     }
   }

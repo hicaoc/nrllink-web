@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel.native.prevent="handleScroll">
+  <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel.prevent="handleScroll">
     <slot />
   </el-scrollbar>
 </template>
@@ -16,20 +16,28 @@ export default {
   },
   computed: {
     scrollWrapper() {
-      return this.$refs.scrollContainer.$refs.wrap
+      const scrollContainer = this.$refs.scrollContainer
+      return scrollContainer?.wrapRef ||
+        scrollContainer?.$refs?.wrap ||
+        scrollContainer?.$el?.querySelector?.('.el-scrollbar__wrap') ||
+        null
     }
   },
   methods: {
     handleScroll(e) {
-      const eventDelta = e.wheelDelta || -e.deltaY * 40
       const $scrollWrapper = this.scrollWrapper
+      if (!$scrollWrapper) return
+      const eventDelta = e.wheelDelta || -e.deltaY * 40
       $scrollWrapper.scrollLeft = $scrollWrapper.scrollLeft + eventDelta / 4
     },
     moveToTarget(currentTag) {
-      const $container = this.$refs.scrollContainer.$el
-      const $containerWidth = $container.offsetWidth
       const $scrollWrapper = this.scrollWrapper
+      if (!$scrollWrapper) return
+      const $container = this.$refs.scrollContainer.$el
+      if (!$container) return
+      const $containerWidth = $container.offsetWidth
       const tagList = this.$parent.$refs.tag
+      if (!tagList || tagList.length === 0) return
 
       let firstTag = null
       let lastTag = null
@@ -47,8 +55,10 @@ export default {
       } else {
         // find preTag and nextTag
         const currentIndex = tagList.findIndex(item => item === currentTag)
+        if (currentIndex < 0) return
         const prevTag = tagList[currentIndex - 1]
         const nextTag = tagList[currentIndex + 1]
+        if (!prevTag || !nextTag || !prevTag.$el || !nextTag.$el) return
 
         // the tag's offsetLeft after of nextTag
         const afterNextTagOffsetLeft = nextTag.$el.offsetLeft + nextTag.$el.offsetWidth + tagAndTagSpacing
@@ -73,13 +83,11 @@ export default {
   position: relative;
   overflow: hidden;
   width: 100%;
-  /deep/ {
-    .el-scrollbar__bar {
-      bottom: 0px;
-    }
-    .el-scrollbar__wrap {
-      height: 49px;
-    }
+  :deep(.el-scrollbar__bar) {
+    bottom: 0px;
+  }
+  :deep(.el-scrollbar__wrap) {
+    height: 49px;
   }
 }
 </style>

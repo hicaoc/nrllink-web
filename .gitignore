@@ -20,5 +20,4 @@ selenium-debug.log
 *.local
 .yarn
 
-package-lock.json
 yarn.lock

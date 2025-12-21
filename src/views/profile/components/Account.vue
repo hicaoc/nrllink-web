@@ -35,8 +35,9 @@
 
 <script>
 import { password } from '@/api/user'
-
-import { mapGetters } from 'vuex'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
+import { ElNotification } from 'element-plus'
 
 export default {
   props: {
@@ -72,16 +73,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'device'
-      // 'name',
-      //  'avatar',
-      //  'roles',
-      //  'phone',
-      //  'callsign',
-      // 'current_area_name',
-      // 'area'
-    ])
+    ...mapState(useAppStore, ['device'])
   },
   created() {
     this.getList()
@@ -114,9 +106,9 @@ export default {
     // },
     submit() {
       password(this.user).then(response => {
-        this.$notify({
+        ElNotification({
           title: '成功',
-          message: response.data.message,
+          message: response?.data?.message || '修改成功',
           type: 'success',
           duration: 2000
         })

@@ -7,7 +7,7 @@
         style="width: 200px"
         class="filter-item"
         clearable
-        @keyup.enter.native="handleFilter"
+        @keyup.enter="handleFilter"
       />
 
     </div>
@@ -30,7 +30,7 @@
           <el-button
             v-if="checkPermission(['admin'])"
             style="padding: 3px 0"
-            type="text"
+            link
             @click="handleUpdate(g)"
           >{{ $t("device.edit") }}</el-button>
         </div>
@@ -40,9 +40,9 @@
               <div v-for="mydev, index in mydevicesOptions" :key="index" class="text item">
                 <span v-if="!hasindevlist(mydev.id, g.devmap)">
                   <el-button
-                    size="mini"
+                    size="small"
                     plain
-                    :type="mydev.is_online === true ? 'primary' : ''"
+                    :type="mydev.is_online ? 'success' : 'info'"
                     @click="changeGroup(mydev, g.id)"
                   > {{ mydev.id +
                     " " +
@@ -57,11 +57,10 @@
             <el-collapse-item :title="'已加入设备' + g.online_dev_number + '/' + g.total_dev_number + '台'" :name="g.id+'-2'">
 
               <div v-for="d in g.devlist" :key="d.id" class="text item">
-                <span>
-                  <el-tag :type="d.is_online === true ? '' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " +
+                <div class="tag-wrap">
+                  <el-tag :type="d.is_online ? 'success' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " +
                     d.name }} </el-tag>
-
-                </span>
+                </div>
               </div>
             </el-collapse-item>
           </el-collapse>
@@ -70,9 +69,9 @@
     </div>
 
     <el-dialog
+      v-model="dialogFormVisible"
       width="70%"
       :title="textMap[dialogStatus]"
-      :visible.sync="dialogFormVisible"
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"
     >
@@ -88,9 +87,9 @@
           <el-input v-model="temp.name" style="width: 80%;" />
         </el-form-item>
 
-        <el-form-item :label="$t('group.type')" prop="sex">
-          <el-radio-group v-model="temp.type">
-            <el-radio v-for="item in groupTypeOptions" :key="item.id" :label="item.id">{{ item.name }}</el-radio>
+        <el-form-item :label="$t('group.type')" prop="sex" label-for="pub-group-type">
+          <el-radio-group id="pub-group-type" v-model="temp.type">
+            <el-radio v-for="item in groupTypeOptions" :key="item.id" :value="item.id">{{ item.name }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -120,13 +119,15 @@
 
       </el-form>
 
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{
-          $t("employee.cancel")
-        }}</el-button>
-        <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
-          $t("employee.confirm") }}</el-button>
-      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">{{
+            $t("employee.cancel")
+          }}</el-button>
+          <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
+            $t("employee.confirm") }}</el-button>
+        </div>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -150,25 +151,14 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 import waves from '@/directive/waves' // waves directive
 import { parseTime, ValueFilter } from '@/utils'
 import { groupTypeOptions } from '@/utils/system'
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { mapGetters } from 'vuex'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
 
 export default {
   name: 'ComplexTable',
   directives: { waves },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        0: 'background: #2625241f',
-        1: 'background: #7eaae300'
-      }
-      return statusMap[status]
-    },
-    Date2Week(date) {
-      var d = new Date(Date.parse(date.replace(/-/g, '/')))
-      return d.getDay()
-    }
-  },
   data() {
     return {
       tableKey: 0,
@@ -215,7 +205,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['device'])
+    ...mapState(useAppStore, ['device'])
   },
 
   created() {
@@ -260,7 +250,7 @@ export default {
         fetchGroupDevicesList({ group_id: this.list[idx].id }).then(response => {
           // this.list[idx].devlist = response.data.items
 
-          this.$set(this.list[idx], 'devlist', response.data.items)
+          this.list[idx].devlist = response.data.items
           // this.list = this.list
 
           // this.$notify({
@@ -273,10 +263,7 @@ export default {
       }
     },
     handleModifiStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
+      ElMessage.success('操作成功')
       row.status = status
     },
     changeGroup(tempData, groupid) {
@@ -287,9 +274,9 @@ export default {
         this.getList()
 
         this.dialogFormVisible = false
-        this.$notify({
+        ElNotification({
           title: '成功',
-          message: response.data.message,
+          message: response?.data?.message || '操作成功',
           type: 'success',
           duration: 2000
         })
@@ -303,9 +290,9 @@ export default {
           createGroup(this.temp).then(response => {
             this.getList()
             this.dialogFormVisible = false
-            this.$notify({
+            ElNotification({
               title: '成功',
-              message: response.message,
+              message: response?.message || '创建成功',
               type: 'success',
               duration: 2000
             })
@@ -346,17 +333,17 @@ export default {
               }
             }
 
-            if (response.code === 20000) {
-              this.$notify({
+            if (response && response.code === 20000) {
+              ElNotification({
                 title: '成功',
                 message: '修改成功',
                 type: 'success',
                 duration: 2000
               })
             } else {
-              this.$notify({
+              ElNotification({
                 title: '失败',
-                message: response.message,
+                message: response?.message || '请求失败',
                 type: 'warning',
                 duration: 2000
               })
@@ -368,29 +355,24 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$confirm('此操作将永久删除该群组, 是否继续?', '提示', {
+      ElMessageBox.confirm('此操作将永久删除该群组, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
           deleteGroup(row).then(response => {
-            this.$message(response.data.message)
+            const message = response?.data?.message || '操作完成'
+            ElMessage.success(message)
             this.listLoading = false
           })
           const index = this.list.indexOf(row)
           this.list.splice(index, 1)
 
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+          ElMessage.success('删除成功!')
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          ElMessage.info('已取消删除')
         })
     },
     sortChange(data) {
@@ -421,24 +403,23 @@ export default {
       }
     },
 
-    handleDownload() {
+    async handleDownload() {
       this.downloadLoading = true
       // console.log(this.list)
       if (this.list === null) {
         this.downloadLoading = false
         return
       }
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['姓名', '电话', '性别', '出生年月日']
-        const filterVal = ['name', 'phone', 'sex']
-        const data = this.formatJson(filterVal, this.list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'device-list'
-        })
-        this.downloadLoading = false
+      const excel = await import('@/vendor/Export2Excel')
+      const tHeader = ['姓名', '电话', '性别', '出生年月日']
+      const filterVal = ['name', 'phone', 'sex']
+      const data = this.formatJson(filterVal, this.list)
+      await excel.export_json_to_excel({
+        header: tHeader,
+        data,
+        filename: 'device-list'
       })
+      this.downloadLoading = false
     },
 
     handleUpload() {
@@ -584,7 +565,7 @@ export default {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   }
 
-  ::v-deep .el-card__body {
+  :deep(.el-card__body) {
     padding: 0;
   }
 

@@ -1,12 +1,23 @@
 <template>
   <div class="app-container">
     <!-- $t is vue-i18n global function to translate lang -->
-    <el-input v-model="filename" :placeholder="$t('excel.placeholder')" style="width:350px;" prefix-icon="el-icon-document" />
-    <el-button :loading="downloadLoading" style="margin-bottom:20px" type="primary" icon="document" @click="handleDownload">
+    <el-input v-model="filename" :placeholder="$t('excel.placeholder')" style="width:350px;">
+      <template #prefix>
+        <el-icon>
+          <Document />
+        </el-icon>
+      </template>
+    </el-input>
+    <el-button :loading="downloadLoading" style="margin-bottom:20px" type="primary" @click="handleDownload">
+      <el-icon>
+        <Document />
+      </el-icon>
       {{ $t('excel.selectedExport') }}
     </el-button>
     <a href="https://panjiachen.github.io/vue-element-admin-site/feature/component/excel.html" target="_blank" style="margin-left:15px;">
-      <el-tag type="info">Documentation</el-tag>
+      <span class="tag-wrap">
+        <el-tag type="info">Documentation</el-tag>
+      </span>
     </a>
     <el-table
       ref="multipleTable"
@@ -20,28 +31,32 @@
     >
       <el-table-column type="selection" align="center" />
       <el-table-column align="center" label="Id" width="95">
-        <template slot-scope="scope">
+        <template #default="scope">
           {{ scope.$index }}
         </template>
       </el-table-column>
       <el-table-column label="Title">
-        <template slot-scope="scope">
+        <template #default="scope">
           {{ scope.row.title }}
         </template>
       </el-table-column>
       <el-table-column label="Author" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag>{{ scope.row.author }}</el-tag>
+        <template #default="scope">
+          <div class="tag-wrap">
+            <el-tag>{{ scope.row.author }}</el-tag>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="Readings" width="115" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           {{ scope.row.pageviews }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="PDate" width="220">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
+        <template #default="scope">
+          <el-icon>
+            <Clock />
+          </el-icon>
           <span>{{ scope.row.display_time }}</span>
         </template>
       </el-table-column>
@@ -51,6 +66,7 @@
 
 <script>
 import { fetchList } from '@/api/article'
+import { ElMessage } from 'element-plus'
 
 export default {
   name: 'SelectExcel',
@@ -77,27 +93,23 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
-    handleDownload() {
+    async handleDownload() {
       if (this.multipleSelection.length) {
         this.downloadLoading = true
-        import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
-          const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
-          const list = this.multipleSelection
-          const data = this.formatJson(filterVal, list)
-          excel.export_json_to_excel({
-            header: tHeader,
-            data,
-            filename: this.filename
-          })
-          this.$refs.multipleemployee.clearSelection()
-          this.downloadLoading = false
+        const excel = await import('@/vendor/Export2Excel')
+        const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
+        const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
+        const list = this.multipleSelection
+        const data = this.formatJson(filterVal, list)
+        await excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: this.filename
         })
+        this.$refs.multipleemployee.clearSelection()
+        this.downloadLoading = false
       } else {
-        this.$message({
-          message: 'Please select at least one item',
-          type: 'warning'
-        })
+        ElMessage.warning('Please select at least one item')
       }
     },
     formatJson(filterVal, jsonData) {

@@ -5,39 +5,48 @@
       <FilenameOption v-model="filename" />
       <AutoWidthOption v-model="autoWidth" />
       <BookTypeOption v-model="bookType" />
-      <el-button :loading="downloadLoading" style="margin:0 0 20px 20px;" type="primary" icon="document" @click="handleDownload">
+      <el-button :loading="downloadLoading" style="margin:0 0 20px 20px;" type="primary" @click="handleDownload">
+        <el-icon>
+          <Document />
+        </el-icon>
         {{ $t('excel.export') }} Excel
       </el-button>
       <a href="https://panjiachen.github.io/vue-element-admin-site/feature/component/excel.html" target="_blank" style="margin-left:15px;">
-        <el-tag type="info">Documentation</el-tag>
+        <span class="tag-wrap">
+          <el-tag type="info">Documentation</el-tag>
+        </span>
       </a>
     </div>
 
     <el-table v-loading="listLoading" :data="list" element-loading-text="拼命加载中" border fit highlight-current-row>
       <el-table-column align="center" label="Id" width="95">
-        <template slot-scope="scope">
+        <template #default="scope">
           {{ scope.$index }}
         </template>
       </el-table-column>
       <el-table-column label="Title">
-        <template slot-scope="scope">
+        <template #default="scope">
           {{ scope.row.title }}
         </template>
       </el-table-column>
       <el-table-column label="Author" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag>{{ scope.row.author }}</el-tag>
+        <template #default="scope">
+          <div class="tag-wrap">
+            <el-tag>{{ scope.row.author }}</el-tag>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="Readings" width="115" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           {{ scope.row.pageviews }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="Date" width="220">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        <template #default="scope">
+          <el-icon>
+            <Clock />
+          </el-icon>
+          <span>{{ $filters.parseTime(scope.row.timestamp, '{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -75,22 +84,21 @@ export default {
         this.listLoading = false
       })
     },
-    handleDownload() {
+    async handleDownload() {
       this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
-        const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
-        const list = this.list
-        const data = this.formatJson(filterVal, list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: this.filename,
-          autoWidth: this.autoWidth,
-          bookType: this.bookType
-        })
-        this.downloadLoading = false
+      const excel = await import('@/vendor/Export2Excel')
+      const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
+      const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
+      const list = this.list
+      const data = this.formatJson(filterVal, list)
+      await excel.export_json_to_excel({
+        header: tHeader,
+        data,
+        filename: this.filename,
+        autoWidth: this.autoWidth,
+        bookType: this.bookType
       })
+      this.downloadLoading = false
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {

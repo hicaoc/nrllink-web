@@ -32,11 +32,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import UserCard from './components/UserCard'
+import { mapState } from 'pinia'
+import { useUserStore } from '@/store/modules/user'
+import UserCard from './components/UserCard.vue'
 // import Activity from './components/Activity'
-import Timeline from './components/Timeline'
-import Account from './components/Account'
+import Timeline from './components/Timeline.vue'
+import Account from './components/Account.vue'
 // import Advqr from './components/Advqr'
 
 export default {
@@ -49,15 +50,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
+    ...mapState(useUserStore, [
       'id',
       'name',
       'avatar',
       'roles',
       'phone',
-      'schname',
       'callsign'
-
     ])
   },
   created() {

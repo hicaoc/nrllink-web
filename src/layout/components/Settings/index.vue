@@ -28,7 +28,8 @@
 </template>
 
 <script>
-import ThemePicker from '@/components/ThemePicker'
+import ThemePicker from '@/components/ThemePicker/index.vue'
+import { useSettingsStore } from '@/store/modules/settings'
 
 export default {
   components: { ThemePicker },
@@ -37,12 +38,15 @@ export default {
     }
   },
   computed: {
+    settingsStore() {
+      return useSettingsStore()
+    },
     title: {
       get() {
-        return this.$store.state.settings.title
+        return this.settingsStore.title
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+        this.settingsStore.changeSetting({
           key: 'title',
           value: val
         })
@@ -50,10 +54,10 @@ export default {
     },
     fixedHeader: {
       get() {
-        return this.$store.state.settings.fixedHeader
+        return this.settingsStore.fixedHeader
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+        this.settingsStore.changeSetting({
           key: 'fixedHeader',
           value: val
         })
@@ -61,10 +65,10 @@ export default {
     },
     tagsView: {
       get() {
-        return this.$store.state.settings.tagsView
+        return this.settingsStore.tagsView
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+        this.settingsStore.changeSetting({
           key: 'tagsView',
           value: val
         })
@@ -72,10 +76,10 @@ export default {
     },
     sidebarLogo: {
       get() {
-        return this.$store.state.settings.sidebarLogo
+        return this.settingsStore.sidebarLogo
       },
       set(val) {
-        this.$store.dispatch('settings/changeSetting', {
+        this.settingsStore.changeSetting({
           key: 'sidebarLogo',
           value: val
         })
@@ -84,7 +88,7 @@ export default {
   },
   methods: {
     themeChange(val) {
-      this.$store.dispatch('settings/changeSetting', {
+      this.settingsStore.changeSetting({
         key: 'theme',
         value: val
       })

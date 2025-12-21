@@ -3,17 +3,26 @@
     <scroll-pane ref="scrollPane" class="tags-view-wrapper">
       <router-link
         v-for="tag in visitedViews"
-        ref="tag"
         :key="tag.path"
-        :class="isActive(tag)?'active':''"
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
-        tag="span"
-        class="tags-view-item"
-        @click.middle.native="closeSelectedTag(tag)"
-        @contextmenu.prevent.native="openMenu(tag,$event)"
+        custom
+        v-slot="{ navigate }"
       >
-        {{ generateTitle(tag.title) }}
-        <span v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
+        <span
+          ref="tag"
+          :data-path="tag.path"
+          :data-full-path="tag.fullPath"
+          :class="isActive(tag)?'active':''"
+          class="tags-view-item"
+          @click="navigate"
+          @click.middle="closeSelectedTag(tag)"
+          @contextmenu.prevent="openMenu(tag,$event)"
+        >
+          {{ generateTitle(tag.title) }}
+          <el-icon v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)">
+            <Close />
+          </el-icon>
+        </span>
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
@@ -35,9 +44,20 @@
 </template>
 
 <script>
-import ScrollPane from './ScrollPane'
+import ScrollPane from './ScrollPane.vue'
 import { generateTitle } from '@/utils/i18n'
-import path from 'path'
+const resolvePath = (basePath, routePath) => {
+  if (routePath.startsWith('/')) {
+    return routePath
+  }
+  if (basePath.endsWith('/')) {
+    return `${basePath}${routePath}`
+  }
+  return `${basePath}/${routePath}`
+}
+import { mapState } from 'pinia'
+import { useTagsViewStore } from '@/store/modules/tagsView'
+import { usePermissionStore } from '@/store/modules/permission'
 
 export default {
   components: { ScrollPane },
@@ -51,12 +71,8 @@ export default {
     }
   },
   computed: {
-    visitedViews() {
-      return this.$store.state.tagsView.visitedViews
-    },
-    routes() {
-      return this.$store.state.permission.routes
-    }
+    ...mapState(useTagsViewStore, ['visitedViews']),
+    ...mapState(usePermissionStore, ['routes'])
   },
   watch: {
     $route() {
@@ -84,7 +100,7 @@ export default {
       let tags = []
       routes.forEach(route => {
         if (route.meta && route.meta.affix) {
-          const tagPath = path.resolve(basePath, route.path)
+          const tagPath = resolvePath(basePath, route.path)
           tags.push({
             fullPath: tagPath,
             path: tagPath,
@@ -106,26 +122,32 @@ export default {
       for (const tag of affixTags) {
         // Must have tag name
         if (tag.name) {
-          this.$store.dispatch('tagsView/addVisitedView', tag)
+          const tagsViewStore = useTagsViewStore()
+          tagsViewStore.addVisitedView(tag)
         }
       }
     },
     addTags() {
       const { name } = this.$route
       if (name) {
-        this.$store.dispatch('tagsView/addView', this.$route)
+        const tagsViewStore = useTagsViewStore()
+        tagsViewStore.addView(this.$route)
       }
       return false
     },
     moveToCurrentTag() {
       const tags = this.$refs.tag
       this.$nextTick(() => {
-        for (const tag of tags) {
-          if (tag.to.path === this.$route.path) {
-            this.$refs.scrollPane.moveToTarget(tag)
-            // when query is different then update
-            if (tag.to.fullPath !== this.$route.fullPath) {
-              this.$store.dispatch('tagsView/updateVisitedView', this.$route)
+        const tagElements = Array.isArray(tags) ? tags : [tags]
+        for (const tagEl of tagElements) {
+          if (!tagEl) continue
+          const path = tagEl.dataset.path
+          const fullPath = tagEl.dataset.fullPath
+          if (path === this.$route.path) {
+            this.$refs.scrollPane.moveToTarget(tagEl)
+            if (fullPath !== this.$route.fullPath) {
+              const tagsViewStore = useTagsViewStore()
+              tagsViewStore.updateVisitedView(this.$route)
             }
             break
           }
@@ -133,35 +155,35 @@ export default {
       })
     },
     refreshSelectedTag(view) {
-      this.$store.dispatch('tagsView/delCachedView', view).then(() => {
+      const tagsViewStore = useTagsViewStore()
+      tagsViewStore.delCachedView(view)
+      this.$nextTick(() => {
         const { fullPath } = view
-        this.$nextTick(() => {
-          this.$router.replace({
-            path: '/redirect' + fullPath
-          })
+        this.$router.replace({
+          path: '/redirect' + fullPath
         })
       })
     },
     closeSelectedTag(view) {
-      this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
-        if (this.isActive(view)) {
-          this.toLastView(visitedViews, view)
-        }
-      })
+      const tagsViewStore = useTagsViewStore()
+      const { visitedViews } = tagsViewStore.delView(view)
+      if (this.isActive(view)) {
+        this.toLastView(visitedViews, view)
+      }
     },
     closeOthersTags() {
       this.$router.push(this.selectedTag)
-      this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
-        this.moveToCurrentTag()
-      })
+      const tagsViewStore = useTagsViewStore()
+      tagsViewStore.delOthersViews(this.selectedTag)
+      this.moveToCurrentTag()
     },
     closeAllTags(view) {
-      this.$store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
-        if (this.affixTags.some(tag => tag.path === view.path)) {
-          return
-        }
-        this.toLastView(visitedViews, view)
-      })
+      const tagsViewStore = useTagsViewStore()
+      const { visitedViews } = tagsViewStore.delAllViews()
+      if (this.affixTags.some(tag => tag.path === view.path)) {
+        return
+      }
+      this.toLastView(visitedViews, view)
     },
     toLastView(visitedViews, view) {
       const latestView = visitedViews.slice(-1)[0]

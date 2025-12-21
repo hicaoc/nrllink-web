@@ -1,4 +1,4 @@
-module.exports = {
+const settings = {
   title: 'HAM互联',
 
   /**
@@ -33,3 +33,5 @@ module.exports = {
      */
   errorLog: 'production'
 }
+
+export default settings

@@ -1,3 +1,4 @@
+import { defineStore } from 'pinia'
 import { asyncRoutes, constantRoutes } from '@/router'
 
 /**
@@ -34,36 +35,22 @@ export function filterAsyncRoutes(routes, roles) {
   return res
 }
 
-const state = {
-  routes: [],
-  addRoutes: []
-}
-
-const mutations = {
-  SET_ROUTES: (state, routes) => {
-    state.addRoutes = routes
-    state.routes = constantRoutes.concat(routes)
-  }
-}
-
-const actions = {
-  generateRoutes({ commit }, roles) {
-    return new Promise(resolve => {
+export const usePermissionStore = defineStore('permission', {
+  state: () => ({
+    routes: [],
+    addRoutes: []
+  }),
+  actions: {
+    generateRoutes(roles) {
       let accessedRoutes
       if (roles.includes('admin')) {
         accessedRoutes = asyncRoutes || []
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
-      commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
-    })
+      this.addRoutes = accessedRoutes
+      this.routes = constantRoutes.concat(accessedRoutes)
+      return accessedRoutes
+    }
   }
-}
-
-export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions
-}
+})

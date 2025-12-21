@@ -1,22 +1,37 @@
-import Vue from 'vue'
-
+import { createApp } from 'vue'
 import Cookies from 'js-cookie'
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
-import Element from 'element-ui'
+import 'virtual:svg-icons-register'
 import './styles/element-variables.scss'
+import {
+  CaretBottom,
+  Clock,
+  Close,
+  Delete,
+  Document,
+  Download,
+  Edit,
+  Search,
+  Setting,
+  Share,
+  Upload
+} from '@element-plus/icons-vue'
 
 import '@/styles/index.scss' // global css
 
-import App from './App'
-import store from './store'
+import App from './App.vue'
 import router from './router'
+import { setupStore } from './store'
+import { pinia } from './store'
+import { useSettingsStore } from '@/store/modules/settings'
 
 import i18n from './lang' // internationalization
-import './icons' // icon
+import { setupIcons } from './icons' // icon
 import './permission' // permission control
-import './utils/error-log' // error log
+import { setupErrorLog } from './utils/error-log' // error log
+import { setElementPlusTheme } from './utils/theme'
 
 import * as filters from './filters' // global filters
 
@@ -32,28 +47,30 @@ import * as filters from './filters' // global filters
  * mockXHR()
  */
 
-Vue.use(Element, {
-  size: Cookies.get('size') || 'medium', // set element-ui default size
-  i18n: (key, value) => i18n.t(key, value)
-})
+const app = createApp(App)
 
-// register global utility filters
-Object.keys(filters).forEach(key => {
-  Vue.filter(key, filters[key])
-})
+app.component('CaretBottom', CaretBottom)
+app.component('Clock', Clock)
+app.component('Close', Close)
+app.component('Delete', Delete)
+app.component('Document', Document)
+app.component('Download', Download)
+app.component('Edit', Edit)
+app.component('Search', Search)
+app.component('Setting', Setting)
+app.component('Share', Share)
+app.component('Upload', Upload)
 
-Vue.config.productionTip = false
+setupStore(app)
+setupIcons(app)
+app.use(router)
+app.use(i18n)
+setupErrorLog(app)
 
-// const originalPush = router.prototype.push
-// router.prototype.push = function push(location, onResolve, onReject) {
-//   if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
-//   return originalPush.call(this, location).catch(err => err)
-// }
+const settingsStore = useSettingsStore(pinia)
+setElementPlusTheme(settingsStore.theme)
 
-new Vue({
-  el: '#app',
-  router,
-  store,
-  i18n,
-  render: h => h(App)
-})
+// register global utility filters (Vue3 removes template filters, use $filters)
+app.config.globalProperties.$filters = filters
+
+app.mount('#app')

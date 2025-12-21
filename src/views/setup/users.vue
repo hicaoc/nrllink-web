@@ -7,7 +7,7 @@
         :placeholder="$t('device.callsign')"
         style="width: 200px;"
         class="filter-item"
-        @keyup.enter.native="handleFilter"
+        @keyup.enter="handleFilter"
       />
 
       <el-input
@@ -15,7 +15,7 @@
         :placeholder="$t('Account.namephone')"
         style="width: 200px;"
         class="filter-item"
-        @keyup.enter.native="handleFilter"
+        @keyup.enter="handleFilter"
       />
 
       <el-select
@@ -34,24 +34,36 @@
         v-waves
         class="filter-item"
         type="primary"
-        icon="el-icon-search"
         @click="handleFilter"
-      >{{ $t('employee.search') }}</el-button>
+      >
+        <el-icon>
+          <Search />
+        </el-icon>
+        {{ $t('employee.search') }}
+      </el-button>
       <el-button
         class="filter-item"
         style="margin-left: 10px;"
         type="primary"
-        icon="el-icon-edit"
         @click="handleCreate"
-      >{{ $t('employee.add') }}</el-button>
+      >
+        <el-icon>
+          <Edit />
+        </el-icon>
+        {{ $t('employee.add') }}
+      </el-button>
       <el-button
         v-waves
         :loading="downloadLoading"
         class="filter-item"
         type="primary"
-        icon="el-icon-download"
         @click="handleDownload"
-      >{{ $t('employee.export') }}</el-button>
+      >
+        <el-icon>
+          <Download />
+        </el-icon>
+        {{ $t('employee.export') }}
+      </el-button>
       <!-- <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
         {{ $t('employee.reviewer') }}
       </el-checkbox>-->
@@ -74,24 +86,24 @@
         align="center"
         width="80"
       >
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="$t('employee.callsign')" width="110px" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>{{ scope.row.callsign }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="$t('employee.name')" width="110px" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Account.avatar')" width="60px" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>
             <img style="witdh:30px;height:30px" :src="scope.row.avatar">
           </span>
@@ -99,13 +111,15 @@
       </el-table-column>
 
       <el-table-column :label="$t('employee.position')" width="110px" align="center">
-        <template slot-scope="scope">
-          <el-tag v-for="r in scope.row.roles" :key="r">{{ r|RoleValueFilter(roles) }}</el-tag>
+        <template #default="scope">
+          <div class="tag-wrap">
+            <el-tag v-for="r in scope.row.roles" :key="r">{{ RoleValueFilter(r, roles) }}</el-tag>
+          </div>
         </template>
       </el-table-column>
 
       <el-table-column :label="$t('Account.nickname')" width="150px" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>
 
             {{ scope.row.nickname.length===0?'未绑定':scope.row.nickname }}
@@ -114,44 +128,46 @@
       </el-table-column>
 
       <el-table-column :label="$t('employee.phone')" width="110px" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>{{ scope.row.phone }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="$t('Account.sex')" width="60px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.sex|SexFilter }}</span>
+        <template #default="scope">
+          <span>{{ SexFilter(scope.row.sex) }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="$t('employee.birthday')" width="110px" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>{{ scope.row.birthday }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="$t('employee.address')" width="210px" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>{{ scope.row.address }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="$t('employee.last_login_time')" width="160px" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>{{ scope.row.last_login_time }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('employee.status')" width="60px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.status|statusFilter }}</span>
+        <template #default="scope">
+          <span>{{ statusFilter(scope.row.status) }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="$t('employee.msg')" width="120px" align="center">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.recharge_msg">BAS</el-tag>
-          <el-tag v-if="scope.row.sign_msg">APP</el-tag>
+        <template #default="scope">
+          <div class="tag-wrap">
+            <el-tag v-if="scope.row.recharge_msg">BAS</el-tag>
+            <el-tag v-if="scope.row.sign_msg">APP</el-tag>
+          </div>
         </template>
       </el-table-column>
 
@@ -161,16 +177,16 @@
         width="180px"
         class-name="small-padding fixed-width"
       >
-        <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">{{ $t('employee.edit') }}</el-button>
-          <!-- <el-button v-if="row.status!='在职'" size="mini" type="success" @click="handleModifyStatus(row,'在职')">
+        <template #default="{row}">
+          <el-button type="primary" size="small" @click="handleUpdate(row)">{{ $t('employee.edit') }}</el-button>
+          <!-- <el-button v-if="row.status!='在职'" size="small" type="success" @click="handleModifyStatus(row,'在职')">
             {{ $t('employee.publish') }}
           </el-button>
-          <el-button v-if="row.status!='休假'" size="mini" @click="handleModifyStatus(row,'休假')">
+          <el-button v-if="row.status!='休假'" size="small" @click="handleModifyStatus(row,'休假')">
             {{ $t('employee.draft') }}
           </el-button>-->
           <el-button
-            size="mini"
+            size="small"
             type="danger"
             @click="handleDelete(row,'删除')"
           >{{ $t('employee.delete') }}</el-button>
@@ -180,13 +196,13 @@
 
     <pagination
       v-show="total>0"
+      v-model:page="listQuery.page"
+      v-model:limit="listQuery.limit"
       :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
       @pagination="getList"
     />
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog v-model="dialogFormVisible" :title="textMap[dialogStatus]">
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -217,11 +233,11 @@
           />
         </el-form-item>
 
-        <el-form-item :label="$t('Account.sex')" prop="sex">
-          <el-radio-group v-model="temp.sex">
-            <el-radio :label="1">男</el-radio>
-            <el-radio :label="0">女</el-radio>
-            <el-radio :label="2">未知</el-radio>
+        <el-form-item :label="$t('Account.sex')" prop="sex" label-for="user-sex">
+          <el-radio-group id="user-sex" v-model="temp.sex">
+            <el-radio :value="1">男</el-radio>
+            <el-radio :value="0">女</el-radio>
+            <el-radio :value="2">未知</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -244,10 +260,10 @@
           <el-input v-model="temp.password" />
         </el-form-item>
 
-        <el-form-item :label="$t('employee.status')" prop="status">
-          <el-radio-group v-model="temp.status">
-            <el-radio :label="1">正常</el-radio>
-            <el-radio :label="0">禁用</el-radio>
+        <el-form-item :label="$t('employee.status')" prop="status" label-for="user-status">
+          <el-radio-group id="user-status" v-model="temp.status">
+            <el-radio :value="1">正常</el-radio>
+            <el-radio :value="0">禁用</el-radio>
 
           </el-radio-group>
         </el-form-item>
@@ -262,13 +278,15 @@
 
       </el-form>
 
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus==='create'?createData():updateData()"
-        >{{ $t('employee.confirm') }}</el-button>
-      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
+          <el-button
+            type="primary"
+            @click="dialogStatus==='create'?createData():updateData()"
+          >{{ $t('employee.confirm') }}</el-button>
+        </div>
+      </template>
     </el-dialog>
 
   </div>
@@ -284,47 +302,14 @@ import {
 } from '@/api/employee'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import Pagination from '@/components/Pagination/index.vue' // secondary package based on el-pagination
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 
 export default {
   name: 'ComplexTable',
   components: { Pagination },
   directives: { waves },
 
-  filters: {
-    SexFilter(type) {
-      const sexMap = {
-        '0': '女',
-        '1': '男',
-        '2': '未知'
-      }
-      return sexMap[type]
-    },
-    statusFilter(status) {
-      const statusMap = {
-        1: '正常',
-        0: '禁用',
-        2: '离职'
-      }
-      return statusMap[status]
-    },
-    ValueFilter(type, array) {
-      for (const v of array) {
-        if (v.id === type) {
-          return v.name
-        }
-      }
-      return '未知'
-    },
-    RoleValueFilter(type, array) {
-      for (const v of array) {
-        if (v.key === type) {
-          return v.name
-        }
-      }
-      return '未知'
-    }
-  },
   data() {
     return {
 
@@ -392,9 +377,33 @@ export default {
     })
   },
   methods: {
+    SexFilter(type) {
+      const sexMap = {
+        '0': '女',
+        '1': '男',
+        '2': '未知'
+      }
+      return sexMap[type]
+    },
+    statusFilter(status) {
+      const statusMap = {
+        1: '正常',
+        0: '禁用',
+        2: '离职'
+      }
+      return statusMap[status]
+    },
     ValueFilter(type, array) {
       for (const v of array) {
         if (v.id === type) {
+          return v.name
+        }
+      }
+      return '未知'
+    },
+    RoleValueFilter(type, array) {
+      for (const v of array) {
+        if (v.key === type) {
           return v.name
         }
       }
@@ -417,10 +426,7 @@ export default {
       this.getList()
     },
     handleModifiStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
+      ElMessage.success('操作成功')
       row.status = status
     },
     sortChange(data) {
@@ -465,9 +471,9 @@ export default {
           createEmployee(this.temp).then(response => {
             this.getList()
             this.dialogFormVisible = false
-            this.$notify({
+            ElNotification({
               title: '成功',
-              message: response.data.message,
+              message: response?.data?.message || '创建成功',
               type: 'success',
               duration: 2000
             })
@@ -498,9 +504,9 @@ export default {
               }
             }
             this.dialogFormVisible = false
-            this.$notify({
+            ElNotification({
               title: '成功',
-              message: response.data.message,
+              message: response?.data?.message || '更新成功',
               type: 'success',
               duration: 2000
             })
@@ -509,50 +515,44 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$confirm('此操作将永久删除用户:' + row.name + '-' + row.callsign + ', 是否继续?', '提示', {
+      ElMessageBox.confirm('此操作将永久删除用户:' + row.name + '-' + row.callsign + ', 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
           deleteEmployee(row).then(response => {
-            this.$message(response.data.message)
+            const message = response?.data?.message || '操作完成'
+            ElMessage.success(message)
             this.listLoading = false
           })
           const index = this.list.indexOf(row)
           this.list.splice(index, 1)
 
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+          ElMessage.success('删除成功!')
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          ElMessage.info('已取消删除')
         })
     },
-    handleDownload() {
+    async handleDownload() {
       this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['更新时间', '电话', '角色', '工号', '角色']
-        const filterVal = [
-          'update_time',
-          'phone',
-          'zhiwu',
-          'employee_id',
-          'roles'
-        ]
-        const data = this.formatJson(filterVal, this.list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'table-list'
-        })
-        this.downloadLoading = false
+      const excel = await import('@/vendor/Export2Excel')
+      const tHeader = ['更新时间', '电话', '角色', '工号', '角色']
+      const filterVal = [
+        'update_time',
+        'phone',
+        'zhiwu',
+        'employee_id',
+        'roles'
+      ]
+      const data = this.formatJson(filterVal, this.list)
+      await excel.export_json_to_excel({
+        header: tHeader,
+        data,
+        filename: 'table-list'
       })
+      this.downloadLoading = false
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>

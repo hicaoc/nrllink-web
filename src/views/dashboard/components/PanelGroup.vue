@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import CountTo from 'vue-count-to'
+import { CountTo } from 'vue3-count-to'
 import { formatVoiceTime } from '@/utils'
 
 export default {

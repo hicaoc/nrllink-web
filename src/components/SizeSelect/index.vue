@@ -3,16 +3,23 @@
     <div>
       <svg-icon class-name="size-icon" icon-class="size" />
     </div>
-    <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item v-for="item of sizeOptions" :key="item.value" :disabled="size===item.value" :command="item.value">
-        {{
-          item.label }}
-      </el-dropdown-item>
-    </el-dropdown-menu>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item v-for="item of sizeOptions" :key="item.value" :disabled="size===item.value" :command="item.value">
+          {{
+            item.label }}
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
   </el-dropdown>
 </template>
 
 <script>
+import { ElMessage } from 'element-plus'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
+import { useTagsViewStore } from '@/store/modules/tagsView'
+
 export default {
   data() {
     return {
@@ -25,23 +32,22 @@ export default {
     }
   },
   computed: {
-    size() {
-      return this.$store.getters.size
-    }
+    ...mapState(useAppStore, ['size'])
   },
   methods: {
     handleSetSize(size) {
-      this.$ELEMENT.size = size
-      this.$store.dispatch('app/setSize', size)
+      const appStore = useAppStore()
+      appStore.setSize(size)
       this.refreshView()
-      this.$message({
+      ElMessage({
         message: 'Switch Size Success',
         type: 'success'
       })
     },
     refreshView() {
       // In order to make the cached page re-rendered
-      this.$store.dispatch('tagsView/delAllCachedViews', this.$route)
+      const tagsViewStore = useTagsViewStore()
+      tagsViewStore.delAllCachedViews()
 
       const { fullPath } = this.$route
 
