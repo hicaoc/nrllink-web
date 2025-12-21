@@ -95,8 +95,7 @@ export const constantRoutes = [{
     name: 'Profile',
     meta: { title: 'profile', icon: 'user', noCache: true }
   }]
-},
-{ path: '/:pathMatch(.*)*', redirect: '/404', hidden: true }
+}
 ]
 
 /**

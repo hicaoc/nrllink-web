@@ -11,6 +11,13 @@ import getPageTitle from '@/utils/get-page-title'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login', '/signtimes', '/getcustomer', '/auth-redirect'] // no redirect whitelist
+const catchAllRoute = { path: '/:pathMatch(.*)*', name: 'CatchAll', redirect: '/404', hidden: true }
+
+function ensureCatchAllRoute() {
+  if (!router.hasRoute('CatchAll')) {
+    router.addRoute(catchAllRoute)
+  }
+}
 
 router.beforeEach(async(to, from, next) => {
   const userStore = useUserStore(pinia)
@@ -48,6 +55,7 @@ router.beforeEach(async(to, from, next) => {
             const element = accessRoutes[i]
             router.addRoute(element) // 会有告警
           }
+          ensureCatchAllRoute()
 
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
