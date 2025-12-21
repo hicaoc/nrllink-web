@@ -286,8 +286,8 @@
     </div>
 
     <el-dialog
-      :title="textMap[dialogStatus]"
       v-model="dialogFormVisible"
+      :title="textMap[dialogStatus]"
     >
       <el-form
         ref="dataForm"

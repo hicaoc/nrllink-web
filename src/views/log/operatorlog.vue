@@ -118,9 +118,9 @@
 
     <pagination
       v-show="total>0"
-      :total="total"
       v-model:page="listQuery.page"
       v-model:limit="listQuery.limit"
+      :total="total"
       @pagination="getList"
     />
   </div>

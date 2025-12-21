@@ -159,13 +159,13 @@
 
     <pagination
       v-show="total > 0"
-      :total="total"
       v-model:page="listQuery.page"
       v-model:limit="listQuery.limit"
+      :total="total"
       @pagination="getList"
     />
 
-    <el-dialog :title="textMap[dialogStatus]" v-model="dialogFormVisible">
+    <el-dialog v-model="dialogFormVisible" :title="textMap[dialogStatus]">
       <el-form
         ref="dataForm"
         :rules="rules"

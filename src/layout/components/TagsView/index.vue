@@ -4,9 +4,9 @@
       <router-link
         v-for="tag in visitedViews"
         :key="tag.path"
+        v-slot="{ navigate }"
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
         custom
-        v-slot="{ navigate }"
       >
         <span
           ref="tag"

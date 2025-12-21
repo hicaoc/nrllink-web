@@ -80,7 +80,7 @@ export const constantRoutes = [{
       import('@/views/dashboard/index.vue'),
     name: 'Dashboard',
     meta: { title: 'dashboard', icon: 'dashboard', affix: true, noCache: true }
-}]
+  }]
 },
 
 {
@@ -276,8 +276,7 @@ export const asyncRoutes = [
         }
       }
     ]
-  },
-
+  }
 
 ]
 
