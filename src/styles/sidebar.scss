@@ -1,3 +1,5 @@
+@use './variables.scss' as *;
+
 #app {
 
   .main-container {
@@ -37,6 +39,10 @@
       height: 100%;
     }
 
+    .el-scrollbar__view {
+      display: block;
+    }
+
     &.has-logo {
       .el-scrollbar {
         height: calc(100% - 50px);
@@ -61,22 +67,23 @@
       border: none;
       height: 100%;
       width: 100% !important;
+      display: block;
     }
 
     // menu hover
     .submenu-title-noDropdown,
-    .el-submenu__title {
+    .el-sub-menu__title {
       &:hover {
         background-color: $menuHover !important;
       }
     }
 
-    .is-active>.el-submenu__title {
+    .is-active>.el-sub-menu__title {
       color: $subMenuActiveText !important;
     }
 
-    & .nest-menu .el-submenu>.el-submenu__title,
-    & .el-submenu .el-menu-item {
+    & .nest-menu .el-sub-menu>.el-sub-menu__title,
+    & .el-sub-menu .el-menu-item {
       min-width: $sideBarWidth !important;
       background-color: $subMenuBg !important;
 
@@ -89,6 +96,13 @@
   .hideSidebar {
     .sidebar-container {
       width: 54px !important;
+      .el-scrollbar__view {
+        display: block !important;
+      }
+
+      .el-menu {
+        display: block !important;
+      }
     }
 
     .main-container {
@@ -112,38 +126,69 @@
       }
     }
 
-    .el-submenu {
+    .el-sub-menu {
       overflow: hidden;
 
-      &>.el-submenu__title {
+      &>.el-sub-menu__title {
         padding: 0 !important;
 
         .svg-icon {
           margin-left: 20px;
         }
 
-        .el-submenu__icon-arrow {
+        .el-sub-menu__icon-arrow {
           display: none;
         }
       }
     }
 
     .el-menu--collapse {
-      .el-submenu {
-        &>.el-submenu__title {
+      .el-sub-menu {
+        &>.el-sub-menu__title {
           &>span {
-            height: 0;
-            width: 0;
-            overflow: hidden;
-            visibility: hidden;
-            display: inline-block;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: visible;
           }
         }
       }
     }
+
+    .el-menu--collapse {
+      .menu-title {
+        display: none !important;
+      }
+
+      .el-menu-item,
+      .el-sub-menu__title {
+        padding: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .menu-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .svg-icon {
+        margin: 0 !important;
+      }
+
+      .submenu-title-noDropdown .el-tooltip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
   }
 
-  .el-menu--collapse .el-menu .el-submenu {
+  .el-menu--collapse .el-menu .el-sub-menu {
     min-width: $sideBarWidth !important;
   }
 
@@ -184,7 +229,7 @@
     }
   }
 
-  .nest-menu .el-submenu>.el-submenu__title,
+  .nest-menu .el-sub-menu>.el-sub-menu__title,
   .el-menu-item {
     &:hover {
       // you can use $subMenuHover

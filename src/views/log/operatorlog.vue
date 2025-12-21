@@ -22,7 +22,7 @@
         :placeholder="$t('operator_log.event_type')"
         style="width: 200px;"
         class="filter-item"
-        @keyup.enter.native="handleFilter"
+        @keyup.enter="handleFilter"
       />
 
       <!-- <el-input
@@ -30,7 +30,7 @@
         :placeholder="$t('operator_log.event_type')"
         style="width: 300px;"
         class="filter-item"
-        @keyup.enter.native="handleFilter"
+        @keyup.enter="handleFilter"
       /> -->
 
       <el-date-picker
@@ -63,9 +63,13 @@
         v-waves
         class="filter-item"
         type="primary"
-        icon="el-icon-search"
         @click="handleFilter"
-      >{{ $t('operator_log.search') }}</el-button>
+      >
+        <el-icon>
+          <Search />
+        </el-icon>
+        {{ $t('operator_log.search') }}
+      </el-button>
     </div>
 
     <el-table
@@ -85,28 +89,28 @@
         align="center"
         width="80"
       >
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
 
       <el-table-column :label="$t('operator_log.timestamp')" width="230px" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>{{ scope.row.timestamp }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('operator_log.content')" width="310px" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>{{ scope.row.content }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('operator_log.event_type')" width="150px" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>{{ scope.row.event_type }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('operator_log.operator')" width="110px" align="center">
-        <template slot-scope="scope">
+        <template #default="scope">
           <span>{{ scope.row.operator }}</span>
         </template>
       </el-table-column>
@@ -114,9 +118,9 @@
 
     <pagination
       v-show="total>0"
+      v-model:page="listQuery.page"
+      v-model:limit="listQuery.limit"
       :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
       @pagination="getList"
     />
   </div>
@@ -128,7 +132,8 @@ import { fetchOperatorLogList } from '@/api/operatorlog'
 import waves from '@/directive/waves' // waves directive
 import { fetchEmployeeList } from '@/api/employee'
 import { parseTime, formatDate, firstDate, lastDate } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import Pagination from '@/components/Pagination/index.vue' // secondary package based on el-pagination
+import { ElMessage } from 'element-plus'
 
 // arr to obj, such as { CN : "China", US : "USA" }
 // const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
@@ -140,11 +145,6 @@ export default {
   name: 'ComplexTable',
   components: { Pagination },
   directives: { waves },
-  filters: {
-    courseStatusFilter(status) {
-      return status ? '正常' : '禁用'
-    }
-  },
   data() {
     return {
       tableKey: 0,
@@ -195,10 +195,7 @@ export default {
       this.getList()
     },
     handleModifiStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
+      ElMessage.success('操作成功')
       row.status = status
     },
     sortChange(data) {

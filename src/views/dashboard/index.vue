@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group :list="list" @handleSetLineChartData="handleSetLineChartData" />
+    <panel-group :list="list" @handle-set-line-chart-data="handleSetLineChartData" />
 
     <!-- <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" />
@@ -62,7 +62,7 @@
 
 <script>
 // import GithubCorner from '@/components/GithubCorner'
-import PanelGroup from './components/PanelGroup'
+import PanelGroup from './components/PanelGroup.vue'
 // import LineChart from './components/LineChart'
 // import PieAmont from './components/PieAmont'
 // import PieChart from './components/PieChart'

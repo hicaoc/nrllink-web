@@ -80,7 +80,7 @@ export default {
   mounted() {
     this.initEditor()
   },
-  destroyed() {
+  unmounted() {
     this.destroyEditor()
   },
   methods: {

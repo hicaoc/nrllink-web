@@ -15,7 +15,7 @@
 <script>
 export default {
   props: {
-    value: {
+    modelValue: {
       type: String,
       default: 'xlsx'
     }
@@ -28,10 +28,10 @@ export default {
   computed: {
     bookType: {
       get() {
-        return this.value
+        return this.modelValue
       },
       set(val) {
-        this.$emit('input', val)
+        this.$emit('update:modelValue', val)
       }
     }
   }

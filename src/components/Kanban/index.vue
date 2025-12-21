@@ -8,6 +8,7 @@
       v-bind="$attrs"
       class="board-column-content"
       :set-data="setData"
+      item-key="id"
     >
       <div v-for="element in list" :key="element.id" class="board-item">
         {{ element.name }} {{ element.id }}
@@ -96,4 +97,3 @@ export default {
   }
 }
 </style>
-

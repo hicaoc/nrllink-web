@@ -15,6 +15,7 @@
 
 <script>
 import { getplatforminfo } from '@/api/platform'
+import { useSettingsStore } from '@/store/modules/settings'
 
 export default {
   name: 'SidebarLogo',
@@ -37,7 +38,8 @@ export default {
       this.title = response.data.items.name + response.data.items.version
       this.logourl = response.data.items.logourl
 
-      this.$store.dispatch('settings/changeSetting', {
+      const settingsStore = useSettingsStore()
+      settingsStore.changeSetting({
         key: 'title',
         value: this.title
       })

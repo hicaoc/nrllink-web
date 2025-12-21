@@ -1,9 +1,9 @@
-@import './variables.scss';
-@import './mixin.scss';
-@import './transition.scss';
-@import './element-ui.scss';
-@import './sidebar.scss';
-@import './btn.scss';
+@use './variables.scss' as *;
+@use './mixin.scss' as *;
+@use './transition.scss';
+@use './element-ui.scss';
+@use './sidebar.scss';
+@use './btn.scss';
 
 body {
   height: 100%;
@@ -83,6 +83,12 @@ div:focus {
 
 .inlineBlock {
   display: block;
+}
+
+.tag-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .clearfix {

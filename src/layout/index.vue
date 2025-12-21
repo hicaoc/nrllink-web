@@ -19,7 +19,9 @@
 // import RightPanel from '@/components/RightPanel'
 import { AppMain, Navbar, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
-import { mapState } from 'vuex'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
+import { useSettingsStore } from '@/store/modules/settings'
 
 export default {
   name: 'Layout',
@@ -33,13 +35,11 @@ export default {
   },
   mixins: [ResizeMixin],
   computed: {
-    ...mapState({
-      sidebar: state => state.app.sidebar,
-      device: state => state.app.device,
-      showSettings: state => state.settings.showSettings,
-      needTagsView: state => state.settings.tagsView,
-      fixedHeader: state => state.settings.fixedHeader
-    }),
+    ...mapState(useAppStore, ['sidebar', 'device']),
+    ...mapState(useSettingsStore, ['showSettings', 'tagsView', 'fixedHeader']),
+    needTagsView() {
+      return this.tagsView
+    },
     classObj() {
       return {
         hideSidebar: !this.sidebar.opened,
@@ -51,15 +51,16 @@ export default {
   },
   methods: {
     handleClickOutside() {
-      this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
+      const appStore = useAppStore()
+      appStore.closeSideBar({ withoutAnimation: false })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import "~@/styles/mixin.scss";
-@import "~@/styles/variables.scss";
+@use "@/styles/mixin.scss" as *;
+@use "@/styles/variables.scss" as *;
 
 .app-wrapper {
   @include clearfix;

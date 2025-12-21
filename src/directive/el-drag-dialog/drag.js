@@ -1,5 +1,5 @@
 export default {
-  bind(el, binding, vnode) {
+  mounted(el, binding, vnode) {
     const dialogHeaderEl = el.querySelector('.el-dialog__header')
     const dragDom = el.querySelector('.el-dialog')
     dialogHeaderEl.style.cssText += ';cursor:move;'
@@ -65,7 +65,9 @@ export default {
         dragDom.style.cssText += `;left:${left + styL}px;top:${top + styT}px;`
 
         // emit onDrag event
-        vnode.child.$emit('dragDialog')
+        if (binding.instance && binding.instance.$emit) {
+          binding.instance.$emit('dragDialog')
+        }
       }
 
       document.onmouseup = function(e) {

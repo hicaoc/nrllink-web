@@ -1,20 +1,23 @@
 <template>
   <section class="app-main">
-    <transition name="fade-transform" mode="out-in">
-      <keep-alive :include="cachedViews">
-        <router-view :key="key" />
-      </keep-alive>
-    </transition>
+    <router-view v-slot="{ Component }">
+      <transition name="fade-transform" mode="out-in">
+        <keep-alive :include="cachedViews">
+          <component :is="Component" :key="key" />
+        </keep-alive>
+      </transition>
+    </router-view>
   </section>
 </template>
 
 <script>
+import { mapState } from 'pinia'
+import { useTagsViewStore } from '@/store/modules/tagsView'
+
 export default {
   name: 'AppMain',
   computed: {
-    cachedViews() {
-      return this.$store.state.tagsView.cachedViews
-    },
+    ...mapState(useTagsViewStore, ['cachedViews']),
     key() {
       return this.$route.fullPath
     }
@@ -48,4 +51,3 @@ export default {
   }
 }
 </style>
-

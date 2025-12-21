@@ -7,7 +7,7 @@
         :placeholder="$t('relay.name')"
         style="width: 200px;"
         class="filter-item"
-        @keyup.enter.native="handleFilter"
+        @keyup.enter="handleFilter"
       />
       <el-input
         v-model="listQuery.ower_callsign"
@@ -15,24 +15,32 @@
         style="width: 320px;"
         class="filter-item"
         clearable
-        @keyup.enter.native="handleFilter"
+        @keyup.enter="handleFilter"
       />
 
       <el-button
         v-waves
         class="filter-item"
         type="primary"
-        icon="el-icon-search"
         @click="handleFilter"
-      >{{ $t('Account.search') }}</el-button>
+      >
+        <el-icon>
+          <Search />
+        </el-icon>
+        {{ $t('Account.search') }}
+      </el-button>
 
       <el-button
         class="filter-item"
         style="margin-left: 10px;"
         type="primary"
-        icon="el-icon-edit"
         @click="handleCreate"
-      >{{ $t('employee.add') }}</el-button>
+      >
+        <el-icon>
+          <Edit />
+        </el-icon>
+        {{ $t('employee.add') }}
+      </el-button>
 
     </div>
 
@@ -54,7 +62,7 @@
           align="center"
           width="80"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
@@ -64,7 +72,7 @@
           width="150px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
@@ -74,7 +82,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.up_freq }}</span>
           </template>
         </el-table-column>
@@ -84,7 +92,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.down_freq }}</span>
           </template>
         </el-table-column>
@@ -94,7 +102,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ ValueFilter( scope.row.send_ctss,ctcssOptions) }}</span>
           </template>
         </el-table-column>
@@ -104,7 +112,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ ValueFilter(scope.row.recive_ctss,ctcssOptions) }}</span>
           </template>
         </el-table-column>
@@ -114,7 +122,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.ower_callsign }}</span>
           </template>
         </el-table-column>
@@ -124,7 +132,7 @@
           width="110px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.status }}</span>
           </template>
         </el-table-column>
@@ -134,7 +142,7 @@
           width="160px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ parseTime(scope.row.create_time) }}</span>
           </template>
         </el-table-column>
@@ -144,7 +152,7 @@
           width="160px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ parseTime(scope.row.update_time) }}</span>
           </template>
         </el-table-column>
@@ -154,7 +162,7 @@
           width="100px"
           align="center"
         >
-          <template slot-scope="scope">
+          <template #default="scope">
             <span>{{ scope.row.note }}</span>
           </template>
         </el-table-column>
@@ -164,17 +172,17 @@
           align="center"
           class-name="small-padding fixed-width"
         >
-          <template slot-scope="{row}">
+          <template #default="{row}">
             <el-button
               v-if="checkPermission(['admin']) || row.ower_callsign === callsign "
-              size="mini"
+              size="small"
               type="primary"
               @click="handleUpdate(row)"
             >{{ $t('device.edit') }}</el-button>
 
             <el-button
               v-if="checkPermission(['admin']) || row.ower_callsign === callsign "
-              size="mini"
+              size="small"
               type="danger"
               @click="handleDelete(row)"
             >{{ $t('device.delete') }}</el-button>
@@ -186,8 +194,8 @@
     </div>
 
     <el-dialog
+      v-model="dialogFormVisible"
       :title="textMap[dialogStatus]"
-      :visible.sync="dialogFormVisible"
     >
       <el-form
         ref="dataForm"
@@ -253,16 +261,15 @@
 
       </el-form>
 
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus==='create'?createData():updateData()"
-        >{{ $t('employee.confirm') }}</el-button>
-      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
+          <el-button
+            type="primary"
+            @click="dialogStatus==='create'?createData():updateData()"
+          >{{ $t('employee.confirm') }}</el-button>
+        </div>
+      </template>
     </el-dialog>
 
   </div>
@@ -283,25 +290,15 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 import waves from '@/directive/waves' // waves directive
 import { parseTime, ValueFilter } from '@/utils'
 import { ServerTypeOptions } from '@/utils/system'
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { mapGetters } from 'vuex'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
+import { useUserStore } from '@/store/modules/user'
 
 export default {
   name: 'ComplexTable',
   directives: { waves },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        0: 'background: #2625241f',
-        1: 'background: #7eaae300'
-      }
-      return statusMap[status]
-    },
-    Date2Week(date) {
-      var d = new Date(Date.parse(date.replace(/-/g, '/')))
-      return d.getDay()
-    }
-  },
   data() {
     return {
       tableKey: 0,
@@ -341,7 +338,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['device', 'callsign'])
+    ...mapState(useAppStore, ['device']),
+    ...mapState(useUserStore, ['callsign'])
   },
 
   created() {
@@ -413,9 +411,9 @@ export default {
           createRelay(this.temp).then(response => {
             this.getList()
             this.dialogFormVisible = false
-            this.$notify({
+            ElNotification({
               title: '成功',
-              message: response.data.message,
+              message: response?.data?.message || '创建成功',
               type: 'success',
               duration: 2000
             })
@@ -456,9 +454,9 @@ export default {
               }
             }
             this.dialogFormVisible = false
-            this.$notify({
+            ElNotification({
               title: '成功',
-              message: response.data.message,
+              message: response?.data?.message || '更新成功',
               type: 'success',
               duration: 2000
             })
@@ -467,49 +465,43 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$confirm('此操作将永久删除该频点, 是否继续?', '提示', {
+      ElMessageBox.confirm('此操作将永久删除该频点, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
           deleteRelay(row).then(response => {
-            this.$message(response.data.message)
+            const message = response?.data?.message || '操作完成'
+            ElMessage.success(message)
             this.listLoading = false
           })
           const index = this.list.indexOf(row)
           this.list.splice(index, 1)
 
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+          ElMessage.success('删除成功!')
         })
         .catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          })
+          ElMessage.info('已取消删除')
         })
     },
-    handleDownload() {
+    async handleDownload() {
       this.downloadLoading = true
       // console.log(this.list)
       if (this.list === null) {
         this.downloadLoading = false
         return
       }
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['姓名', '电话', '性别', '出生年月日']
-        const filterVal = ['name', 'phone', 'sex']
-        const data = this.formatJson(filterVal, this.list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'device-list'
-        })
-        this.downloadLoading = false
+      const excel = await import('@/vendor/Export2Excel')
+      const tHeader = ['姓名', '电话', '性别', '出生年月日']
+      const filterVal = ['name', 'phone', 'sex']
+      const data = this.formatJson(filterVal, this.list)
+      await excel.export_json_to_excel({
+        header: tHeader,
+        data,
+        filename: 'device-list'
       })
+      this.downloadLoading = false
     },
 
     handleUpload() {

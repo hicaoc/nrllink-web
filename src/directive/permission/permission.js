@@ -1,9 +1,11 @@
-import store from '@/store'
+import { pinia } from '@/store'
+import { useUserStore } from '@/store/modules/user'
 
 export default {
-  inserted(el, binding, vnode) {
+  mounted(el, binding) {
     const { value } = binding
-    const roles = store.getters && store.getters.roles
+    const userStore = useUserStore(pinia)
+    const roles = userStore.roles
 
     if (value && value instanceof Array && value.length > 0) {
       const permissionRoles = value

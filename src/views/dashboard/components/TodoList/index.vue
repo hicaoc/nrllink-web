@@ -7,15 +7,20 @@
     <!-- main section -->
     <section v-show="todos.length" class="main">
       <input id="toggle-all" :checked="allChecked" class="toggle-all" type="checkbox" @change="toggleAll({ done: !allChecked })">
-      <label for="toggle-all" />
+      <label
+        class="toggle-all-label"
+        role="button"
+        aria-label="Toggle all"
+        @click="toggleAll({ done: !allChecked })"
+      />
       <ul class="todo-list">
         <todo
           v-for="(todo, index) in filteredTodos"
           :key="index"
           :todo="todo"
-          @toggleTodo="toggleTodo"
-          @editTodo="editTodo"
-          @deleteTodo="deleteTodo"
+          @toggle-todo="toggleTodo"
+          @edit-todo="editTodo"
+          @delete-todo="deleteTodo"
         />
       </ul>
     </section>
@@ -23,11 +28,11 @@
     <footer v-show="todos.length" class="footer">
       <span class="todo-count">
         <strong>{{ remaining }}</strong>
-        {{ remaining | pluralize('item') }} left
+        {{ pluralize(remaining, 'item') }} left
       </span>
       <ul class="filters">
         <li v-for="(val, key) in filters" :key="key">
-          <a :class="{ selected: visibility === key }" @click.prevent="visibility = key">{{ key | capitalize }}</a>
+          <a :class="{ selected: visibility === key }" @click.prevent="visibility = key">{{ capitalize(key) }}</a>
         </li>
       </ul>
       <!-- <button class="clear-completed" v-show="todos.length > remaining" @click="clearCompleted">
@@ -58,10 +63,6 @@ const defalutList = [
 ]
 export default {
   components: { Todo },
-  filters: {
-    pluralize: (n, w) => n === 1 ? w : w + 's',
-    capitalize: s => s.charAt(0).toUpperCase() + s.slice(1)
-  },
   data() {
     return {
       visibility: 'all',
@@ -82,6 +83,12 @@ export default {
     }
   },
   methods: {
+    pluralize(n, w) {
+      return n === 1 ? w : w + 's'
+    },
+    capitalize(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1)
+    },
     setLocalStorage() {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.todos))
     },
@@ -123,5 +130,5 @@ export default {
 </script>
 
 <style lang="scss">
-  @import './index.scss';
+  @use './index.scss';
 </style>

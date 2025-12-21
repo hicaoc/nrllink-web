@@ -57,9 +57,9 @@
                   name="password"
                   tabindex="2"
                   autocomplete="on"
-                  @keyup.native="checkCapslock"
+                  @keyup="checkCapslock"
                   @blur="capsTooltip = false"
-                  @keyup.enter.native="handleLogin"
+                  @keyup.enter="handleLogin"
                 />
                 <span class="show-pwd" @click="showPwd">
                   <svg-icon
@@ -73,7 +73,7 @@
               :loading="loading"
               type="primary"
               class="login-button"
-              @click.native.prevent="handleLogin"
+              @click.prevent="handleLogin"
             >{{ $t("login.logIn") }}</el-button>
           </el-form>
         </div>
@@ -110,11 +110,13 @@
 <script>
 import { getplatforminfo, fetchPlatformList } from '@/api/platform'
 import { validUsername } from '@/utils/validate'
-import LangSelect from '@/components/LangSelect'
-import { mapGetters } from 'vuex'
+import LangSelect from '@/components/LangSelect/index.vue'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
+import { useUserStore } from '@/store/modules/user'
 import nrlmpImg from '@/assets/nrlmp.jpg'
-import ServerList from './components/ServerList'
-import SupportLinks from './components/SupportLinks'
+import ServerList from './components/ServerList.vue'
+import SupportLinks from './components/SupportLinks.vue'
 
 export default {
   name: 'Login',
@@ -161,7 +163,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['device'])
+    ...mapState(useAppStore, ['device'])
   },
   watch: {
     $route: {
@@ -179,7 +181,8 @@ export default {
 
       if (response.data.items.language === 'en') {
         this.$i18n.locale = 'en'
-        this.$store.dispatch('app/setLanguage', 'en')
+        const appStore = useAppStore()
+        appStore.setLanguage('en')
       }
     })
 
@@ -216,11 +219,7 @@ export default {
       }
     },
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
+      this.passwordType = this.passwordType === 'password' ? 'text' : 'password'
       this.$nextTick(() => {
         this.$refs.password.focus()
       })
@@ -232,8 +231,8 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store
-            .dispatch('user/login', this.loginForm)
+          const userStore = useUserStore()
+          userStore.login(this.loginForm)
             .then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
@@ -267,10 +266,13 @@ $cursor: #fff;
   .el-input {
     display: inline-block;
     height: 47px;
-    width: 85%;
+    flex: 1;
+    min-width: 0;
 
-    input {
-      background: transparent;
+    input,
+    .el-input__inner {
+      box-sizing: border-box;
+      background: transparent !important;
       border: 0px;
       -webkit-appearance: none;
       border-radius: 0px;
@@ -278,24 +280,52 @@ $cursor: #fff;
       color: $light_gray;
       height: 47px;
       caret-color: $cursor;
+      font-size: 16px;
 
       &:-webkit-autofill {
         box-shadow: 0 0 0px 1000px $bg inset !important;
         -webkit-text-fill-color: $cursor !important;
       }
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+        opacity: 1;
+      }
     }
   }
 
+  .el-input__wrapper {
+    width: 100%;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0px;
+    padding: 0;
+  }
+
+  .el-input__wrapper.is-focus {
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  .el-input__wrapper:hover {
+    background: transparent !important;
+  }
+
   .el-form-item {
+    position: relative;
+    display: flex;
+    align-items: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     color: #454545;
+    padding-right: 40px;
   }
 }
 </style>
 
 <style lang="scss" scoped>
+@use "sass:color";
 $bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 $dark_gray: #8899a6;
 $light_gray: #eee;
@@ -425,7 +455,7 @@ $primary_color: #3b82f6;
     height: 48px;
     font-size: 16px;
     border-radius: 8px;
-    background: linear-gradient(90deg, $primary_color 0%, darken($primary_color, 10%) 100%);
+    background: linear-gradient(90deg, $primary_color 0%, color.adjust($primary_color, $lightness: -10%) 100%);
     border: none;
     transition: all 0.3s ease;
     font-weight: 600;
@@ -465,7 +495,7 @@ $primary_color: #3b82f6;
       transition: color 0.3s ease;
 
       &:hover {
-        color: lighten($primary_color, 15%);
+        color: color.adjust($primary_color, $lightness: 15%);
         text-decoration: underline;
       }
     }
