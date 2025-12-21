@@ -66,7 +66,7 @@ function datenum(v, date1904) {
   return (epoch - new Date(Date.UTC(1899, 11, 30))) / (24 * 60 * 60 * 1000);
 }
 
-function sheet_from_array_of_arrays(data, opts) {
+function sheet_from_array_of_arrays(data, XLSX, opts) {
   var ws = {};
   var range = {
     s: {
@@ -132,7 +132,7 @@ export async function export_table_to_excel(id) {
   var ws_name = "SheetJS";
 
   var wb = new Workbook(),
-    ws = sheet_from_array_of_arrays(data);
+    ws = sheet_from_array_of_arrays(data, XLSX);
 
   /* add ranges to worksheet */
   // ws['!cols'] = ['apple', 'banan'];
@@ -174,7 +174,7 @@ export async function export_json_to_excel({
 
   var ws_name = "SheetJS";
   var wb = new Workbook(),
-    ws = sheet_from_array_of_arrays(data);
+    ws = sheet_from_array_of_arrays(data, XLSX);
 
   if (merges.length > 0) {
     if (!ws['!merges']) ws['!merges'] = [];
