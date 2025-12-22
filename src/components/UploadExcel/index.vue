@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import XLSX from 'xlsx'
 
 export default {
+  name: 'UploadExcel',
   props: {
     beforeUpload: Function, // eslint-disable-line
     onSuccess: Function// eslint-disable-line
@@ -21,6 +21,7 @@ export default {
   data() {
     return {
       loading: false,
+      xlsxModule: null,
       excelData: {
         header: null,
         results: null
@@ -28,6 +29,13 @@ export default {
     }
   },
   methods: {
+    async loadXlsx() {
+      if (!this.xlsxModule) {
+        const mod = await import('xlsx')
+        this.xlsxModule = mod.default || mod
+      }
+      return this.xlsxModule
+    },
     generateData({ header, results }) {
       this.excelData.header = header
       this.excelData.results = results
@@ -78,8 +86,9 @@ export default {
         this.readerData(rawFile)
       }
     },
-    readerData(rawFile) {
+    async readerData(rawFile) {
       this.loading = true
+      const XLSX = await this.loadXlsx()
       return new Promise((resolve, reject) => {
         const reader = new FileReader()
         reader.onload = e => {
@@ -87,16 +96,20 @@ export default {
           const workbook = XLSX.read(data, { type: 'array' })
           const firstSheetName = workbook.SheetNames[0]
           const worksheet = workbook.Sheets[firstSheetName]
-          const header = this.getHeaderRow(worksheet)
+          const header = this.getHeaderRow(worksheet, XLSX)
           const results = XLSX.utils.sheet_to_json(worksheet)
           this.generateData({ header, results })
           this.loading = false
           resolve()
         }
+        reader.onerror = err => {
+          this.loading = false
+          reject(err)
+        }
         reader.readAsArrayBuffer(rawFile)
       })
     },
-    getHeaderRow(sheet) {
+    getHeaderRow(sheet, XLSX) {
       const headers = []
       const range = XLSX.utils.decode_range(sheet['!ref'])
       let C

@@ -170,8 +170,11 @@
           </el-select>
         </el-form-item> -->
 
-        <el-form-item :label="$t('group.type')" prop="type" label-for="group-type">
-          <el-radio-group id="group-type" v-model="temp.type">
+        <el-form-item prop="type" for="">
+          <template #label>
+            <span id="group-type-label">{{ $t('group.type') }}</span>
+          </template>
+          <el-radio-group v-model="temp.type" aria-labelledby="group-type-label">
             <el-radio v-for="item in groupTypeOptions" :key="item.id" :value="item.id">{{ item.name }}</el-radio>
           </el-radio-group>
         </el-form-item>

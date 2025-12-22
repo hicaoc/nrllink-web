@@ -51,6 +51,12 @@ export const constantRoutes = [{
     import('@/views/login/index.vue'),
   hidden: true
 },
+{
+  path: '/register',
+  component: () =>
+    import('@/views/register/index.vue'),
+  hidden: true
+},
 
 {
   path: '/auth-redirect',

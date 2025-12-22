@@ -37,21 +37,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$primary_color: #3b82f6;
-$light_gray: #f5f7fa;
-$title_color: #ffffff;
-$border_radius: 12px;
-
 .server-list-component {
   width: 100%;
+  background: var(--glass);
+  border-radius: 20px;
+  border: 1px solid rgba(63, 140, 255, 0.2);
+  padding: 16px 22px 30px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+  margin-bottom: 16px;
+  min-height: unset !important;
+  padding-bottom: 30px !important;
 
   .server-title {
-    font-size: 20px;
-    color: $title_color;
-    margin-bottom: 15px;
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 2px;
     text-align: center;
-    font-weight: 600;
-    letter-spacing: 0.5px;
   }
 
   .scroll-container {
@@ -94,24 +99,17 @@ $border_radius: 12px;
     grid-template-columns: 1fr auto;
     align-items: center;
     gap: 12px;
-    padding: 8px 16px; /* Reduced padding */
-    margin-bottom: 8px; /* Reduced margin */
-    border-radius: $border_radius;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(5px);
-    margin-right: 2px; /* Prevent hover cut-off */
+    padding: 8px 16px;
+    margin-bottom: 8px;
+    border-radius: 14px;
+    background: rgba(9, 15, 22, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: border-color 0.2s ease, background 0.2s ease;
+    margin-right: 2px;
 
     &:hover {
-      background: $primary_color;
-      border-color: $primary_color;
-      transform: translateY(-2px) scale(1.01);
-      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
-
-      .server-name, .server-host, .server-online, .server-peak {
-        color: white;
-      }
+      background: rgba(56, 242, 194, 0.12);
+      border-color: rgba(56, 242, 194, 0.35);
     }
   }
 
@@ -124,8 +122,7 @@ $border_radius: 12px;
   .server-name {
     font-weight: 600;
     font-size: 14px;
-    color: $primary_color;
-    transition: color 0.3s ease;
+    color: var(--accent);
   }
 
   .server-stats {
@@ -143,21 +140,18 @@ $border_radius: 12px;
   }
 
   .server-host {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(231, 240, 245, 0.5);
     font-size: 12px;
-    transition: color 0.3s ease;
   }
 
   .server-online {
-    color: #4ade80;
+    color: var(--accent);
     font-weight: 500;
-    transition: color 0.3s ease;
   }
 
   .server-peak {
-    color: #f87171;
+    color: var(--warn);
     font-weight: 500;
-    transition: color 0.3s ease;
   }
 }
 </style>

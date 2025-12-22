@@ -306,11 +306,13 @@
         </el-form-item>
 
         <el-form-item
-          :label="$t('server.server_type')"
           prop="type"
-          label-for="server-type"
+          for=""
         >
-          <el-radio-group id="server-type" v-model="temp.server_type">
+          <template #label>
+            <span id="server-type-label">{{ $t('server.server_type') }}</span>
+          </template>
+          <el-radio-group v-model="temp.server_type" aria-labelledby="server-type-label">
             <el-radio
               v-for="item in ServerTypeOptions"
               :key="item.id"
@@ -362,8 +364,11 @@
           <el-input v-model="temp.dns_name" />
         </el-form-item>
 
-        <el-form-item :label="$t('server.status')" prop="status">
-          <el-radio-group v-model="temp.status">
+        <el-form-item prop="status" for="">
+          <template #label>
+            <span id="server-status-label">{{ $t('server.status') }}</span>
+          </template>
+          <el-radio-group v-model="temp.status" aria-labelledby="server-status-label">
             <el-radio :value="1">启动</el-radio>
             <el-radio :value="2">关闭</el-radio>
 
