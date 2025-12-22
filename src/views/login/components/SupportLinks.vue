@@ -47,8 +47,10 @@ export default {
   background: var(--glass-bright);
   border-radius: 20px;
   border: 1px solid rgba(56, 242, 194, 0.16);
-  padding: 18px 18px 14px;
+  padding: 12px 18px 14px;
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+  min-height: unset !important;
+  height: auto;
 
   .server-title {
     font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -56,8 +58,8 @@ export default {
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--ink-dim);
-    margin-bottom: 4px;
-    text-align: left;
+    margin-bottom: 2px;
+    text-align: center;
   }
 
   ul {
@@ -83,12 +85,17 @@ export default {
     border: 1px solid rgba(63, 140, 255, 0.15);
     text-decoration: none;
     transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    margin: 0 !important;
   }
 
   .special-link:hover {
     border-color: rgba(56, 242, 194, 0.4);
     background: rgba(56, 242, 194, 0.08);
     transform: translateY(-1px);
+  }
+
+  .special-server + .special-server {
+    margin-top: 0 !important;
   }
 
   .special-text {

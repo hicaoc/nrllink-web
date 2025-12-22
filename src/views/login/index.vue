@@ -357,7 +357,7 @@ $cursor: #e7f0f5;
 .login-container {
   min-height: 100vh;
   width: 100%;
-  background: radial-gradient(1200px 600px at 18% -10%, rgba(63, 140, 255, 0.35) 0%, rgba(7, 12, 18, 0.85) 55%, #05070b 100%);
+  background: radial-gradient(1200px 600px at 18% -10%, rgba(63, 140, 255, 0.45) 0%, rgba(11, 18, 30, 0.82) 55%, #0b111a 100%);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -393,7 +393,7 @@ $cursor: #e7f0f5;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 28px;
-    align-items: start;
+    align-items: start !important;
     position: relative;
     z-index: 1;
     max-width: 1400px;
@@ -402,11 +402,11 @@ $cursor: #e7f0f5;
 
     @media (min-width: 1024px) {
       grid-template-columns: minmax(260px, 320px) minmax(320px, 520px) minmax(260px, 320px);
-      gap: clamp(24px, 6vw, 80px);
-      column-gap: clamp(24px, 6vw, 80px);
-      padding-left: clamp(24px, 6vw, 72px);
-      padding-right: clamp(24px, 6vw, 72px);
-      max-width: 1400px;
+      gap: clamp(24px, 6vw, 80px) !important;
+      column-gap: clamp(24px, 6vw, 80px) !important;
+      padding-left: clamp(24px, 6vw, 72px) !important;
+      padding-right: clamp(24px, 6vw, 72px) !important;
+      max-width: 1400px !important;
     }
   }
 
@@ -438,12 +438,15 @@ $cursor: #e7f0f5;
   @media (min-width: 1024px) {
     .server-column {
       order: 2;
-      align-self: start;
     }
 
     .form-column {
       order: 1;
     }
+  }
+
+  .server-column {
+    align-self: start;
   }
 
   .login-form-card {
@@ -452,17 +455,17 @@ $cursor: #e7f0f5;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
     border-radius: 20px;
     padding: 40px 34px 32px;
-    min-height: 0;
-    height: auto;
+    min-height: 0 !important;
+    height: auto !important;
   }
 
   .title-container {
     position: relative;
-    text-align: left;
+    text-align: center;
     margin-bottom: 24px;
 
     .title {
-      font-size: 30px;
+      font-size: 28px;
       letter-spacing: 0.6px;
       margin-bottom: 6px;
       color: var(--ink);
@@ -497,7 +500,8 @@ $cursor: #e7f0f5;
   .logo {
     width: 180px;
     height: auto;
-    margin-bottom: 20px;
+    margin: 0 auto 20px;
+    display: block;
     filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.4));
   }
 

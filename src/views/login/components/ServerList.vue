@@ -42,10 +42,12 @@ export default {
   background: var(--glass);
   border-radius: 20px;
   border: 1px solid rgba(63, 140, 255, 0.2);
-  padding: 26px 22px 30px;
+  padding: 16px 22px 30px;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(12px);
   margin-bottom: 16px;
+  min-height: unset !important;
+  padding-bottom: 30px !important;
 
   .server-title {
     font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -53,7 +55,8 @@ export default {
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--ink-dim);
-    margin-bottom: 18px;
+    margin-bottom: 2px;
+    text-align: center;
   }
 
   .scroll-container {
