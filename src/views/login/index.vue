@@ -165,7 +165,21 @@ export default {
   computed: {
     ...mapState(useAppStore, ['device']),
     sortedServerList() {
+      const currentHost = typeof window !== 'undefined' ? window.location.host : ''
+      const currentHostname = typeof window !== 'undefined' ? window.location.hostname : ''
+      const normalizeHost = value => String(value || '').replace(/^https?:\/\//i, '').replace(/\/+$/, '').toLowerCase()
+      const isLocalServer = server => {
+        const host = normalizeHost(server && server.host)
+        if (!host) return false
+        return host === normalizeHost(currentHost) || host === normalizeHost(currentHostname)
+      }
+
       return [...this.serverList].sort((a, b) => {
+        const localA = isLocalServer(a)
+        const localB = isLocalServer(b)
+        if (localA !== localB) {
+          return localA ? -1 : 1
+        }
         const onlineA = Number(a && a.online) || 0
         const onlineB = Number(b && b.online) || 0
         if (onlineB !== onlineA) {
