@@ -117,7 +117,6 @@ import LangSelect from '@/components/LangSelect/index.vue'
 import { mapState } from 'pinia'
 import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
-import nrlmpImg from '@/assets/nrlmp.jpg'
 import ServerList from './components/ServerList.vue'
 import SupportLinks from './components/SupportLinks.vue'
 
@@ -148,7 +147,6 @@ export default {
         password: ''
       },
       isImageVisible: false,
-      nrlmpImg,
       loginRules: {
         username: [
           { required: true, trigger: 'blur', validator: validateUsername }
@@ -162,7 +160,8 @@ export default {
       loading: false,
       showDialog: false,
       redirect: undefined,
-      serverList: []
+      serverList: [],
+      nrlmpImg: ''
     }
   },
   computed: {
@@ -253,8 +252,12 @@ export default {
         this.$refs.password.focus()
       })
     },
-    toggleImage(show) {
+    async toggleImage(show) {
       this.isImageVisible = show
+      if (show && !this.nrlmpImg) {
+        const mod = await import('@/assets/nrlmp.jpg')
+        this.nrlmpImg = mod.default || mod
+      }
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
