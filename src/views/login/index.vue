@@ -81,7 +81,7 @@
 
       <!-- Right Column: Server List -->
       <div class="column server-column">
-        <server-list :list="serverList" />
+        <server-list :list="sortedServerList" />
       </div>
     </div>
 
@@ -119,7 +119,7 @@ import ServerList from './components/ServerList.vue'
 import SupportLinks from './components/SupportLinks.vue'
 
 export default {
-  name: 'Login',
+  name: 'LoginView',
   components: { LangSelect, ServerList, SupportLinks },
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -163,7 +163,19 @@ export default {
     }
   },
   computed: {
-    ...mapState(useAppStore, ['device'])
+    ...mapState(useAppStore, ['device']),
+    sortedServerList() {
+      return [...this.serverList].sort((a, b) => {
+        const onlineA = Number(a && a.online) || 0
+        const onlineB = Number(b && b.online) || 0
+        if (onlineB !== onlineA) {
+          return onlineB - onlineA
+        }
+        const nameA = a && a.name ? String(a.name) : ''
+        const nameB = b && b.name ? String(b.name) : ''
+        return nameA.localeCompare(nameB)
+      })
+    }
   },
   watch: {
     $route: {
@@ -251,10 +263,21 @@ export default {
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --ink: #e7f0f5;
+  --ink-dim: rgba(231, 240, 245, 0.7);
+  --glass: rgba(10, 16, 22, 0.68);
+  --glass-bright: rgba(18, 28, 40, 0.9);
+  --accent: #38f2c2;
+  --accent-2: #3f8cff;
+  --warn: #ffb020;
+}
+
 /* Global overrides for Element UI inputs in login page */
-$bg: #283443;
-$light_gray: #fff;
-$cursor: #fff;
+$bg: #0b121a;
+$cursor: #e7f0f5;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
@@ -277,7 +300,7 @@ $cursor: #fff;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
+      color: var(--ink) !important;
       height: 47px;
       caret-color: $cursor;
       font-size: 16px;
@@ -288,7 +311,7 @@ $cursor: #fff;
       }
 
       &::placeholder {
-        color: rgba(255, 255, 255, 0.7);
+        color: rgba(231, 240, 245, 0.6);
         opacity: 1;
       }
     }
@@ -315,102 +338,149 @@ $cursor: #fff;
     position: relative;
     display: flex;
     align-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+    background: rgba(5, 10, 16, 0.7) !important;
+    border: 1px solid rgba(63, 140, 255, 0.18) !important;
+    border-radius: 12px !important;
     color: #454545;
     padding-right: 40px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .el-form-item:hover {
+    border-color: rgba(56, 242, 194, 0.5) !important;
+    box-shadow: 0 0 0 1px rgba(56, 242, 194, 0.3) inset;
   }
 }
 </style>
 
 <style lang="scss" scoped>
-@use "sass:color";
-$bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-$dark_gray: #8899a6;
-$light_gray: #eee;
-$primary_color: #3b82f6;
-
 .login-container {
   min-height: 100vh;
   width: 100%;
-  background: $bg;
-  overflow-x: hidden;
+  background: radial-gradient(1200px 600px at 18% -10%, rgba(63, 140, 255, 0.35) 0%, rgba(7, 12, 18, 0.85) 55%, #05070b 100%);
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #fff;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  &::before {
+    content: "";
+    position: fixed;
+    inset: -40% auto auto -20%;
+    width: 640px;
+    height: 640px;
+    background: radial-gradient(circle, rgba(56, 242, 194, 0.25) 0%, rgba(56, 242, 194, 0) 70%);
+    filter: blur(4px);
+    pointer-events: none;
+  }
+
+  &::after {
+    content: "";
+    position: fixed;
+    right: -20%;
+    bottom: -30%;
+    width: 720px;
+    height: 720px;
+    background: radial-gradient(circle, rgba(63, 140, 255, 0.3) 0%, rgba(63, 140, 255, 0) 70%);
+    filter: blur(6px);
+    pointer-events: none;
+  }
 
   .content-wrapper {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+    position: relative;
+    z-index: 1;
     max-width: 1400px;
-    padding: 20px;
-    gap: 20px;
-    flex: 1;
-    justify-content: center;
-    align-items: flex-start;
+    margin: 0 auto;
+    padding: clamp(24px, 4vw, 52px);
 
     @media (min-width: 1024px) {
-      flex-direction: row;
-      align-items: flex-start;
-      padding: 60px 20px;
-      gap: 40px;
+      grid-template-columns: minmax(260px, 320px) minmax(320px, 520px) minmax(260px, 320px);
+      gap: clamp(24px, 6vw, 80px);
+      column-gap: clamp(24px, 6vw, 80px);
+      padding-left: clamp(24px, 6vw, 72px);
+      padding-right: clamp(24px, 6vw, 72px);
+      max-width: 1400px;
     }
   }
 
-  .column {
-    width: 100%;
-
-    @media (min-width: 1024px) {
-      flex: 1;
-    }
-  }
-
-  .support-column, .server-column {
-    @media (min-width: 1024px) {
-      flex: 1;
-      max-width: 350px;
-      position: sticky;
-      top: 40px;
-    }
-  }
-
+  .support-column,
   .form-column {
-    @media (min-width: 1024px) {
-      flex: 0 0 450px;
+    display: block;
+    align-self: start;
+  }
+
+  .support-column,
+  .server-column,
+  .form-column {
+    width: 100%;
+    max-width: 560px;
+    justify-self: center;
+  }
+
+  @media (min-width: 1024px) {
+    .support-column,
+    .server-column {
+      max-width: 360px;
+    }
+
+    .form-column {
+      max-width: 560px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .server-column {
+      order: 2;
+      align-self: start;
+    }
+
+    .form-column {
+      order: 1;
     }
   }
 
   .login-form-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 40px 30px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    width: 100%;
-    max-width: 450px;
-    margin: 0 auto;
+    background: linear-gradient(140deg, rgba(5, 10, 16, 0.82) 0%, rgba(15, 24, 35, 0.95) 100%);
+    border: 1px solid rgba(56, 242, 194, 0.15);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    border-radius: 20px;
+    padding: 40px 34px 32px;
+    min-height: 0;
+    height: auto;
   }
 
   .title-container {
     position: relative;
-    text-align: center;
-    margin-bottom: 30px;
+    text-align: left;
+    margin-bottom: 24px;
 
     .title {
-      font-size: 28px;
-      color: $light_gray;
-      margin: 0 auto 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
+      font-size: 30px;
+      letter-spacing: 0.6px;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    &::after {
+      content: "实时互联 · 指挥中枢";
+      display: block;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(56, 242, 194, 0.7);
+      margin-top: 6px;
     }
 
     .set-language {
-      color: #fff;
+      color: var(--ink-dim);
       position: absolute;
       top: 0;
       right: 0;
@@ -428,12 +498,12 @@ $primary_color: #3b82f6;
     width: 180px;
     height: auto;
     margin-bottom: 20px;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.4));
   }
 
   .svg-container {
     padding: 6px 5px 6px 15px;
-    color: $dark_gray;
+    color: rgba(231, 240, 245, 0.5);
     vertical-align: middle;
     width: 30px;
     display: inline-block;
@@ -444,7 +514,7 @@ $primary_color: #3b82f6;
     right: 10px;
     top: 7px;
     font-size: 16px;
-    color: $dark_gray;
+    color: rgba(231, 240, 245, 0.5);
     cursor: pointer;
     user-select: none;
   }
@@ -454,32 +524,33 @@ $primary_color: #3b82f6;
     margin-bottom: 20px;
     height: 48px;
     font-size: 16px;
-    border-radius: 8px;
-    background: linear-gradient(90deg, $primary_color 0%, color.adjust($primary_color, $lightness: -10%) 100%);
-    border: none;
+    border-radius: 14px !important;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%) !important;
+    border: none !important;
+    box-shadow: 0 12px 30px rgba(56, 242, 194, 0.25);
     transition: all 0.3s ease;
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 16px 38px rgba(63, 140, 255, 0.35) !important;
     }
   }
 
   .bottom_footer {
     width: 100%;
     padding: 20px;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(2, 4, 7, 0.65);
     backdrop-filter: blur(5px);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     margin-top: auto;
 
     .footer-content {
       max-width: 1200px;
       margin: 0 auto;
       text-align: center;
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(231, 240, 245, 0.6);
       font-size: 13px;
       line-height: 1.8;
       display: flex;
@@ -490,12 +561,12 @@ $primary_color: #3b82f6;
     }
 
     a {
-      color: $primary_color;
+      color: var(--accent);
       text-decoration: none;
       transition: color 0.3s ease;
 
       &:hover {
-        color: color.adjust($primary_color, $lightness: 15%);
+        color: #7cf7dd;
         text-decoration: underline;
       }
     }
@@ -567,10 +638,12 @@ $primary_color: #3b82f6;
   }
 
   /* Animations */
-  .fade-enter-active, .fade-leave-active {
+  .fade-enter-active,
+  .fade-leave-active {
     transition: opacity 0.3s;
   }
-  .fade-enter, .fade-leave-to {
+  .fade-enter,
+  .fade-leave-to {
     opacity: 0;
   }
 

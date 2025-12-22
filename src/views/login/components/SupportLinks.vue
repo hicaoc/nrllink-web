@@ -36,62 +36,66 @@
 
 <script>
 export default {
-  name: 'SupportLinks'
+  name: 'SupportLinks',
+  emits: ['toggle-image']
 }
 </script>
 
 <style lang="scss" scoped>
-$primary_color: #3b82f6;
-$title_color: #ffffff;
-$border_radius: 12px;
-
 .support-links-component {
   width: 100%;
+  background: var(--glass-bright);
+  border-radius: 20px;
+  border: 1px solid rgba(56, 242, 194, 0.16);
+  padding: 18px 18px 14px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
 
   .server-title {
-    font-size: 20px;
-    color: $title_color;
-    margin-bottom: 15px;
-    text-align: center;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 4px;
+    text-align: left;
   }
 
   ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .special-server {
+    margin: 0;
+    padding: 0;
   }
 
   .special-link {
     display: block;
-    padding: 16px;
-    margin-bottom: 10px;
+    padding: 14px 18px;
     text-align: center;
-    border-radius: $border_radius;
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    background: rgba(8, 14, 22, 0.7);
+    border: 1px solid rgba(63, 140, 255, 0.15);
     text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(5px);
+    transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  }
 
-    &:hover {
-      background: rgba(59, 130, 246, 0.25);
-      border-color: rgba(59, 130, 246, 0.4);
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
-    }
+  .special-link:hover {
+    border-color: rgba(56, 242, 194, 0.4);
+    background: rgba(56, 242, 194, 0.08);
+    transform: translateY(-1px);
   }
 
   .special-text {
-    color: #60a5fa;
+    color: rgba(231, 240, 245, 0.85);
     font-weight: 600;
     font-size: 14px;
-    transition: color 0.3s ease;
-  }
-
-  .special-link:hover .special-text {
-    color: #93c5fd;
+    line-height: 1.6;
   }
 }
 </style>
