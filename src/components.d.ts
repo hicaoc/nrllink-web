@@ -53,6 +53,7 @@ declare module 'vue' {
     ElTimeline: typeof import('element-plus/es')['ElTimeline']
     ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    ElUpload: typeof import('element-plus/es')['ElUpload']
     ErrorLog: typeof import('./components/ErrorLog/index.vue')['default']
     GithubCorner: typeof import('./components/GithubCorner/index.vue')['default']
     Hamburger: typeof import('./components/Hamburger/index.vue')['default']

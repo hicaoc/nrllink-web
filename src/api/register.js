@@ -8,6 +8,17 @@ export function createReg(data) {
   })
 }
 
+export function createRegUpload(data) {
+  return request({
+    url: '/user/reg/create',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
 export function listReg(data) {
   return request({
     url: '/user/reg/list',
@@ -47,4 +58,3 @@ export function deleteReg(data) {
     data
   })
 }
-

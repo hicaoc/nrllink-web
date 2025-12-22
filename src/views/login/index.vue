@@ -75,6 +75,9 @@
               class="login-button"
               @click.prevent="handleLogin"
             >{{ $t("login.logIn") }}</el-button>
+            <router-link class="register-link" to="/register">
+              注册新节点/账号
+            </router-link>
           </el-form>
         </div>
       </div>
@@ -553,6 +556,28 @@ $cursor: #e7f0f5;
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 16px 38px rgba(63, 140, 255, 0.35) !important;
+    }
+  }
+
+  .register-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    height: 44px;
+    border-radius: 14px;
+    border: 1px solid rgba(63, 140, 255, 0.5);
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    background: rgba(9, 15, 22, 0.6);
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: rgba(56, 242, 194, 0.6);
+      box-shadow: 0 12px 24px rgba(56, 242, 194, 0.2);
+      transform: translateY(-1px);
     }
   }
 
