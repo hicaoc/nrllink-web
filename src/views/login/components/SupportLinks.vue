@@ -44,16 +44,16 @@ export default {
 <style lang="scss" scoped>
 .support-links-component {
   width: 100%;
-  background: var(--glass-bright);
+  background: linear-gradient(140deg, rgba(18, 34, 42, 0.95) 0%, rgba(20, 42, 50, 0.95) 100%);
   border-radius: 20px;
-  border: 1px solid rgba(56, 242, 194, 0.16);
+  border: 1px solid rgba(79, 231, 214, 0.3);
   padding: 12px 18px 14px;
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
   min-height: unset !important;
   height: auto;
 
   .server-title {
-    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: inherit;
     font-size: 14px;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -81,16 +81,16 @@ export default {
     padding: 14px 18px;
     text-align: center;
     border-radius: 12px;
-    background: rgba(8, 14, 22, 0.7);
-    border: 1px solid rgba(63, 140, 255, 0.15);
+    background: rgba(70, 124, 188, 0.35);
+    border: 1px solid rgba(110, 186, 255, 0.35);
     text-decoration: none;
     transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
     margin: 0 !important;
   }
 
   .special-link:hover {
-    border-color: rgba(56, 242, 194, 0.4);
-    background: rgba(56, 242, 194, 0.08);
+    border-color: rgba(79, 231, 214, 0.5);
+    background: rgba(79, 231, 214, 0.15);
     transform: translateY(-1px);
   }
 
@@ -99,7 +99,7 @@ export default {
   }
 
   .special-text {
-    color: rgba(231, 240, 245, 0.85);
+    color: rgba(231, 240, 245, 0.9);
     font-weight: 600;
     font-size: 14px;
     line-height: 1.6;

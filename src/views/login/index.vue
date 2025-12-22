@@ -280,21 +280,19 @@ export default {
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
-
 :root {
-  --ink: #e7f0f5;
-  --ink-dim: rgba(231, 240, 245, 0.7);
-  --glass: rgba(10, 16, 22, 0.68);
-  --glass-bright: rgba(18, 28, 40, 0.9);
-  --accent: #38f2c2;
-  --accent-2: #3f8cff;
-  --warn: #ffb020;
+  --ink: #eef4fb;
+  --ink-dim: rgba(238, 244, 251, 0.7);
+  --glass: rgba(16, 26, 40, 0.72);
+  --glass-bright: rgba(22, 34, 50, 0.9);
+  --accent: #4fe7d6;
+  --accent-2: #5aaeff;
+  --warn: #f5a524;
 }
 
 /* Global overrides for Element UI inputs in login page */
-$bg: #0b121a;
-$cursor: #e7f0f5;
+$bg: #101826;
+$cursor: #eef4fb;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
@@ -328,7 +326,7 @@ $cursor: #e7f0f5;
       }
 
       &::placeholder {
-        color: rgba(231, 240, 245, 0.6);
+        color: rgba(238, 244, 251, 0.6);
         opacity: 1;
       }
     }
@@ -355,8 +353,8 @@ $cursor: #e7f0f5;
     position: relative;
     display: flex;
     align-items: center;
-    background: rgba(5, 10, 16, 0.7) !important;
-    border: 1px solid rgba(63, 140, 255, 0.18) !important;
+    background: rgba(16, 26, 40, 0.65) !important;
+    border: 1px solid rgba(90, 174, 255, 0.28) !important;
     border-radius: 12px !important;
     color: #454545;
     padding-right: 40px;
@@ -364,8 +362,8 @@ $cursor: #e7f0f5;
   }
 
   .el-form-item:hover {
-    border-color: rgba(56, 242, 194, 0.5) !important;
-    box-shadow: 0 0 0 1px rgba(56, 242, 194, 0.3) inset;
+    border-color: rgba(79, 231, 214, 0.6) !important;
+    box-shadow: 0 0 0 1px rgba(79, 231, 214, 0.25) inset;
   }
 }
 </style>
@@ -374,14 +372,14 @@ $cursor: #e7f0f5;
 .login-container {
   min-height: 100vh;
   width: 100%;
-  background: radial-gradient(1200px 600px at 18% -10%, rgba(63, 140, 255, 0.45) 0%, rgba(11, 18, 30, 0.82) 55%, #0b111a 100%);
+  background: radial-gradient(980px 460px at 18% -14%, rgba(48, 84, 138, 0.18) 0%, rgba(22, 32, 50, 0.94) 62%, #111a28 100%);
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   color: var(--ink);
-  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: inherit;
 
   &::before {
     content: "";
@@ -389,7 +387,7 @@ $cursor: #e7f0f5;
     inset: -40% auto auto -20%;
     width: 640px;
     height: 640px;
-    background: radial-gradient(circle, rgba(56, 242, 194, 0.25) 0%, rgba(56, 242, 194, 0) 70%);
+    background: radial-gradient(circle, rgba(79, 231, 214, 0.26) 0%, rgba(79, 231, 214, 0) 70%);
     filter: blur(4px);
     pointer-events: none;
   }
@@ -401,7 +399,7 @@ $cursor: #e7f0f5;
     bottom: -30%;
     width: 720px;
     height: 720px;
-    background: radial-gradient(circle, rgba(63, 140, 255, 0.3) 0%, rgba(63, 140, 255, 0) 70%);
+    background: radial-gradient(circle, rgba(90, 174, 255, 0.26) 0%, rgba(90, 174, 255, 0) 70%);
     filter: blur(6px);
     pointer-events: none;
   }
@@ -467,9 +465,9 @@ $cursor: #e7f0f5;
   }
 
   .login-form-card {
-    background: linear-gradient(140deg, rgba(5, 10, 16, 0.82) 0%, rgba(15, 24, 35, 0.95) 100%);
-    border: 1px solid rgba(56, 242, 194, 0.15);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    background: linear-gradient(140deg, rgba(28, 40, 60, 0.88) 0%, rgba(34, 48, 70, 0.94) 100%);
+    border: 1px solid rgba(110, 186, 255, 0.22);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
     border-radius: 20px;
     padding: 40px 34px 32px;
     min-height: 0 !important;
@@ -495,7 +493,7 @@ $cursor: #e7f0f5;
       font-size: 13px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: rgba(56, 242, 194, 0.7);
+      color: rgba(79, 231, 214, 0.7);
       margin-top: 6px;
     }
 
@@ -519,12 +517,12 @@ $cursor: #e7f0f5;
     height: auto;
     margin: 0 auto 20px;
     display: block;
-    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.4));
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.38));
   }
 
   .svg-container {
     padding: 6px 5px 6px 15px;
-    color: rgba(231, 240, 245, 0.5);
+    color: rgba(238, 244, 251, 0.5);
     vertical-align: middle;
     width: 30px;
     display: inline-block;
@@ -535,7 +533,7 @@ $cursor: #e7f0f5;
     right: 10px;
     top: 7px;
     font-size: 16px;
-    color: rgba(231, 240, 245, 0.5);
+    color: rgba(238, 244, 251, 0.5);
     cursor: pointer;
     user-select: none;
   }
@@ -548,14 +546,14 @@ $cursor: #e7f0f5;
     border-radius: 14px !important;
     background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%) !important;
     border: none !important;
-    box-shadow: 0 12px 30px rgba(56, 242, 194, 0.25);
+    box-shadow: 0 12px 30px rgba(90, 174, 255, 0.25);
     transition: all 0.3s ease;
     font-weight: 600;
     letter-spacing: 0.6px;
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 16px 38px rgba(63, 140, 255, 0.35) !important;
+      box-shadow: 0 16px 38px rgba(90, 174, 255, 0.35) !important;
     }
   }
 
@@ -566,17 +564,17 @@ $cursor: #e7f0f5;
     gap: 8px;
     height: 44px;
     border-radius: 14px;
-    border: 1px solid rgba(63, 140, 255, 0.5);
+    border: 1px solid rgba(90, 174, 255, 0.45);
     color: var(--ink);
     text-decoration: none;
     font-weight: 600;
     letter-spacing: 0.3px;
-    background: rgba(9, 15, 22, 0.6);
+    background: rgba(18, 28, 44, 0.6);
     transition: all 0.3s ease;
 
     &:hover {
-      border-color: rgba(56, 242, 194, 0.6);
-      box-shadow: 0 12px 24px rgba(56, 242, 194, 0.2);
+      border-color: rgba(79, 231, 214, 0.6);
+      box-shadow: 0 12px 24px rgba(79, 231, 214, 0.2);
       transform: translateY(-1px);
     }
   }
@@ -584,16 +582,16 @@ $cursor: #e7f0f5;
   .bottom_footer {
     width: 100%;
     padding: 20px;
-    background: rgba(2, 4, 7, 0.65);
+    background: rgba(12, 20, 32, 0.7);
     backdrop-filter: blur(5px);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(90, 174, 255, 0.2);
     margin-top: auto;
 
     .footer-content {
       max-width: 1200px;
       margin: 0 auto;
       text-align: center;
-      color: rgba(231, 240, 245, 0.6);
+      color: rgba(238, 244, 251, 0.6);
       font-size: 13px;
       line-height: 1.8;
       display: flex;
@@ -609,13 +607,13 @@ $cursor: #e7f0f5;
       transition: color 0.3s ease;
 
       &:hover {
-        color: #7cf7dd;
+        color: #8af6ea;
         text-decoration: underline;
       }
     }
 
     .separator {
-      color: rgba(255, 255, 255, 0.2);
+      color: rgba(238, 244, 251, 0.24);
       margin: 0 5px;
       display: none;
       @media (min-width: 768px) {

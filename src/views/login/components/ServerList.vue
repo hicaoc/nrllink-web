@@ -50,7 +50,7 @@ export default {
   padding-bottom: 30px !important;
 
   .server-title {
-    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: inherit;
     font-size: 14px;
     letter-spacing: 2px;
     text-transform: uppercase;
