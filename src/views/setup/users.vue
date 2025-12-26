@@ -227,7 +227,7 @@
         <el-form-item :label="$t('employee.birthday')" prop="birthday">
           <el-date-picker
             v-model="temp.birthday"
-            value-format="yyyy-MM-dd"
+            value-format="YYYY-MM-DD"
             type="date"
             placeholder="请选择生日"
           />
