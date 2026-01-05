@@ -80,7 +80,7 @@
         >
           <template #default="scope">
             <div class="tag-wrap">
-              <el-tag :type="scope.row.is_online ? 'success' : 'info'">{{ scope.row.callsign + "-" +
+              <el-tag :type="scope.row.is_online ? 'primary' : 'info'">{{ scope.row.callsign + "-" +
                 scope.row.ssid
               }}
               </el-tag>
@@ -92,7 +92,7 @@
           <template #default="scope">
             <div class="status-actions">
               <el-button
-                :type="safeButtonType(((scope.row.status ?? 0) & 1) === 1 ? 'danger' : 'success')"
+                :type="safeButtonType(((scope.row.status ?? 0) & 1) === 1 ? 'danger' : 'info')"
                 size="small"
                 plain
                 class="compact-btn"
@@ -101,7 +101,7 @@
               }}</el-button>
 
               <el-button
-                :type="safeButtonType(((scope.row.status ?? 0) & 2) === 2 ? 'danger' : 'success')"
+                :type="safeButtonType(((scope.row.status ?? 0) & 2) === 2 ? 'danger' : 'info')"
                 size="small"
                 plain
                 class="compact-btn"
@@ -171,7 +171,7 @@
                 v-if="checkPermission(['admin']) || row.callsign === callsign"
                 :disabled="row.is_online === false"
                 size="small"
-                type="info"
+                type="success"
                 plain
                 class="compact-btn"
                 @click="handleOpenAT(row)"
