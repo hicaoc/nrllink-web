@@ -40,6 +40,7 @@ export const DevModelOptions = [
   { id: 102, name: 'NRL-IOS' },
   { id: 103, name: 'NRL-Win' },
   { id: 105, name: 'NRL-浏览器' },
+  { id: 106, name: 'NRL-救援' },
   { id: 200, name: 'NRL-Server' },
   { id: 250, name: 'NRL-保姆' }
 
@@ -139,6 +140,14 @@ export const ATREADMEOptions = {
   'AT+S_PORT': '源端口 必须5位数',
   'AT+S_SN': '源序列号 6位',
   'AT+VOX_D': 'VOX延迟断开时间 必须5位数，单位5ms',
-  'AT+WDJD': 'APRS坐标值  格式 3118.55N/12018.00EI'
+  'AT+WDJD': 'APRS坐标值  格式 3118.55N/12018.00EI',
+  'AT+PREW': '上一首',
+  'AT+NEXT': '下一首',
+  'AT+VOLUME': '音量 0-100',
+  'AT+PAUSE': '暂停',
+  'AT+PLAY': '播放',
+  'AT+STOP': '停止',
+  'AT+REPEAT': '重复',
+  'AT+PLAY_ID': '播放ID'
 }
 

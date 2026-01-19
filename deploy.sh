@@ -19,6 +19,8 @@ time=`date "+%Y%m%d%H%M%S"`
 #yarn lint --fix
 #yarn build:prod
 
+ssh root@192.168.35.40 "cd /root/nrllink/nrllink; rm -rf www; mkdir www "
+scp -r *  root@192.168.35.40:/root/nrllink/nrllink/www/
 
 for i in $hostlist ; do
 echo "deploying to $i"
