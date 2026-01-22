@@ -105,7 +105,7 @@ export default {
     type: 'Type',
     rf_type: 'RF Type',
     change: 'Parameters',
-    cpuid: 'Device ID',
+    dmrid: 'DMR-ID',
     bind: 'Bind',
     status: 'Status',
     name: 'Name',

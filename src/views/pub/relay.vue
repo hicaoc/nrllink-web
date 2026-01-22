@@ -422,9 +422,9 @@ export default {
       })
     },
 
-    cpuidValueFilter(cpuid, array) {
+    dmridValueFilter(dmrid, array) {
       for (const v of array) {
-        if (v.cpuid === cpuid) {
+        if (v.dmrid === dmrid) {
           return v.callsign + '-' + v.ssid + ' ' + v.name
         }
       }

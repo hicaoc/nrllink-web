@@ -97,6 +97,18 @@
         </template>
       </el-table-column>
 
+      <el-table-column :label="$t('employee.dmrid')" width="110px" align="center">
+        <template #default="scope">
+          <span>{{ scope.row.dmrid }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="$t('employee.mdcid')" width="110px" align="center">
+        <template #default="scope">
+          <span>{{ scope.row.mdcid }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column :label="$t('employee.name')" width="110px" align="center">
         <template #default="scope">
           <span>{{ scope.row.name }}</span>
@@ -105,7 +117,7 @@
       <el-table-column :label="$t('Account.avatar')" width="60px" align="center">
         <template #default="scope">
           <span>
-            <img style="witdh:30px;height:30px" :src="scope.row.avatar">
+            <img style="width:30px;height:30px" :src="scope.row.avatar">
           </span>
         </template>
       </el-table-column>
@@ -212,16 +224,23 @@
         style="width: 400px; margin-left:50px;"
       >
 
-        <el-form-item :label="$t('employee.callsign')" prop="callsign">
-          <el-input v-model="temp.callsign" />
-        </el-form-item>
         <el-form-item :label="$t('employee.name')" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
-        <el-form-item :label="$t('employee.gird')" prop="name">
+        <el-form-item :label="$t('employee.callsign')" prop="callsign">
+          <el-input v-model="temp.callsign" />
+        </el-form-item>
+        <el-form-item :label="$t('employee.dmrid')" prop="dmrid">
+          <el-input v-model="temp.dmrid" />
+        </el-form-item>
+        <el-form-item :label="$t('employee.mdcid')" prop="mdcid">
+          <el-input v-model="temp.mdcid" />
+        </el-form-item>
+
+        <el-form-item :label="$t('employee.gird')" prop="gird">
           <el-input v-model="temp.gird" />
         </el-form-item>
-        <el-form-item :label="$t('Account.avatar')" prop="name">
+        <el-form-item :label="$t('Account.avatar')" prop="avatar">
           <el-input v-model="temp.avatar" />
         </el-form-item>
         <el-form-item :label="$t('employee.birthday')" prop="birthday">
@@ -351,24 +370,24 @@ export default {
       pvData: [],
       rules: {
         callsign: [{ required: true, message: '呼号是必选项', trigger: 'change' }],
-        gird: [{ required: true, message: '网格是必选项', trigger: 'change' }],
+        // gird: [{ required: true, message: '网格是必选项', trigger: 'change' }],
         name: [{ required: true, message: '姓名是必选项', trigger: 'change' }],
-        sex: [{ required: true, message: '性别是必选项', trigger: 'change' }],
+        // sex: [{ required: true, message: '性别是必选项', trigger: 'change' }],
         roles: [{ required: true, message: '角色是必选项', trigger: 'change' }],
-        birthday: [
-          { required: true, message: '生日是必选项', trigger: 'change' }
-        ],
-        job_time: [
-          { required: true, message: '入职时间是必选项', trigger: 'change' }
-        ],
-        timestamp: [
-          {
-            type: 'date',
-            required: true,
-            message: '入职时间是必选项',
-            trigger: 'change'
-          }
-        ],
+        // birthday: [
+        //   { required: true, message: '生日是必选项', trigger: 'change' }
+        // ],
+        // job_time: [
+        //   { required: true, message: '入职时间是必选项', trigger: 'change' }
+        // ],
+        // timestamp: [
+        //   {
+        //     type: 'date',
+        //     required: true,
+        //     message: '入职时间是必选项',
+        //     trigger: 'change'
+        //   }
+        // ],
         phone: [
           { required: true, message: '电话号码是必选项', trigger: 'blur' }
         ]

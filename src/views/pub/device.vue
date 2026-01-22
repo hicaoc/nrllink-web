@@ -88,6 +88,22 @@
           </template>
         </el-table-column>
 
+        <el-table-column
+
+          prop="dmrid"
+          :label="$t('device.dmrid')"
+          width="100px"
+          align="center"
+          :sortable="true"
+        >
+          <template #default="scope">
+            <div class="tag-wrap">
+              <el-tag :type="scope.row.is_online ? 'primary' : 'info'">{{ scope.row.dmrid }}
+              </el-tag>
+            </div>
+          </template>
+        </el-table-column>
+
         <el-table-column :label="$t('device.status')" prop="status" width="140px" align="center">
           <template #default="scope">
             <div class="status-actions">
@@ -268,7 +284,7 @@
         <template #header>
           <div class="clearfix">
             <div class="tag-wrap">
-              <el-tag :type="item.is_online ? 'success' : 'info'">{{ item.id }}. {{ item.callsign + "-" + item.ssid + " "
+              <el-tag :type="item.is_online ? 'success' : 'info'">{{ item.id }}. {{ item.callsign + "-" + item.ssid + " "+ item.dmrid + " "
               }}{{ item.status == 1 ? "🈲" : ""
               }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
                 ValueFilter(item.dev_type, DevTypeOptions)
@@ -370,6 +386,10 @@
       >
         <el-form-item :label="$t('device.name')" prop="name">
           <el-input v-model="temp.name" style="width: 90%" />
+        </el-form-item>
+
+        <el-form-item :label="$t('device.dmrid')" prop="dmrid">
+          <el-input v-model="temp.dmrid" style="width: 90%" />
         </el-form-item>
 
         <el-form-item :label="$t('device.grouproom')" prop="group_id">
@@ -563,13 +583,6 @@
               </el-popconfirm>
             </el-form-item>
 
-            <el-form-item label="对端CPUID:" prop="peer_password">
-              <el-input v-model="temp.device_parm.peer_password" :disabled="true" style="width: 150px" />
-            </el-form-item>
-
-            <el-form-item label="对端密码:" prop="peer_password">
-              <el-input v-model="temp.device_parm.peer_password" :disabled="true" style="width: 150px" />
-            </el-form-item>
           </el-collapse-item>
 
           <el-collapse-item title="参数设置" name="2">
@@ -1446,8 +1459,8 @@ export default {
 
     changeByte(name, val) {
       changeDeviceParm(
-        'CPUID=' +
-        this.temp.cpuid +
+        'DMRID=' +
+        this.temp.dmrid +
         '&callsign=' +
         this.temp.callsign +
         '&ssid=' +
@@ -1468,8 +1481,8 @@ export default {
 
     changeIP(val) {
       changeDeviceParm(
-        'CPUID=' +
-        this.temp.cpuid +
+        'DMRID=' +
+        this.temp.dmrid +
         '&callsign=' +
         this.temp.callsign +
         '&ssid=' +

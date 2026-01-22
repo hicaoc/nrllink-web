@@ -36,7 +36,7 @@ export default defineConfig(({ mode }) => {
       open: false,
       proxy: {
         [baseApi]: {
-          target: 'https://nrlptt.com/',
+          target: 'https://js.nrlptt.com/',
           changeOrigin: true,
           rewrite: (pathValue) => pathValue.replace(new RegExp(`^${baseApi}`), '')
         }

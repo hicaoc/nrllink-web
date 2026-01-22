@@ -97,6 +97,7 @@ export default {
     priority: '优先级',
     showtable: '表格',
     callsign: '呼号',
+    dmrid: 'DMR-ID',
     qth: 'QTH',
     public_group_id: '公共群组',
     public_group: '公共群组',
@@ -105,8 +106,6 @@ export default {
     type: '类型',
     rf_type: '射频类型',
     change: '参数',
-    cpuid: '设备ID',
-    bind: '绑定',
     status: '状态',
     name: '名称',
     edit: '编辑',
@@ -333,6 +332,8 @@ export default {
     confirm: '确 定'
   },
   employee: {
+    dmrid: 'DMR-ID',
+    mdcid: 'MDC-ID',
     address: '联系地址',
     dynamicTips1: '固定表头, 按照表头顺序排序',
     dynamicTips2: '不固定表头, 按照点击顺序排序',
