@@ -148,7 +148,7 @@ export default {
     thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
   },
   documentation: {
-    documentation: '南京信风网络科技有限公司'
+    documentation: 'HAM互联'
   },
   permission: {
     addRole: '新增职位',

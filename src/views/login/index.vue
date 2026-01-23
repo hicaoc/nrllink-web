@@ -101,7 +101,7 @@
     <!-- Footer -->
     <div v-if="icp !== ''" class="bottom_footer">
       <div class="footer-content">
-        <a href="https://beian.miit.gov.cn" target="_blank">公信部ICP备案号：{{ icp }}</a>
+        <a href="https://beian.miit.gov.cn" target="_blank">工信部ICP备案号：{{ icp }}</a>
         <span class="separator">|</span>
         <span>技术支持：BH4TDV BG6FCS BA4RN BA1GM BH4TIH BD4VKI BA4QAO</span>
         <span class="copyright">Copyright © 2017-2022 BH4RPN 版权所有</span>
