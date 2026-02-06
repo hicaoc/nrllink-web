@@ -20,12 +20,7 @@
         <el-option v-for="item in groupsOptions" :key="item.id" :label="item.id + '-' + item.name" :value="item.id" />
       </el-select>
 
-      <el-button
-        v-waves
-        class="filter-item action-btn"
-        type="primary"
-        @click="getList"
-      >
+      <el-button v-waves class="filter-item action-btn" type="primary" @click="getList">
         <el-icon>
           <Search />
         </el-icon>
@@ -88,14 +83,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-
-          prop="dmrid"
-          :label="$t('device.dmrid')"
-          width="100px"
-          align="center"
-          :sortable="true"
-        >
+        <el-table-column prop="dmrid" :label="$t('device.dmrid')" width="100px" align="center" :sortable="true">
           <template #default="scope">
             <div class="tag-wrap">
               <el-tag :type="scope.row.is_online ? 'primary' : 'info'">{{ scope.row.dmrid }}
@@ -113,7 +101,8 @@
                 plain
                 class="compact-btn"
                 @click="updateStatus(scope.row, 1)"
-              >{{ (scope.row.status & 1) === 1 ? '禁收' : '接收'
+              >{{ (scope.row.status & 1) === 1 ? '禁收' :
+                '接收'
               }}</el-button>
 
               <el-button
@@ -122,7 +111,8 @@
                 plain
                 class="compact-btn"
                 @click="updateStatus(scope.row, 2)"
-              >{{ (scope.row.status & 2) === 2 ? '禁发' : '发送'
+              >{{ (scope.row.status & 2) === 2 ? '禁发' :
+                '发送'
               }}</el-button>
             </div>
           </template>
@@ -148,8 +138,8 @@
 
         <el-table-column label="当前群组" prop="group_id" width="180px" align="center" :sortable="true">
           <template #default="scope">
-            <span v-if="scope.row.group_id > 0 && scope.row.group_id < 1000">
-              私人房间{{ scope.row.group_id }}</span>
+            <span v-if="scope.row.group_id > 0 && scope.row.group_id < 999">
+              个人房间{{ scope.row.group_id }}</span>
             <span v-else>{{
               ValueFilter(scope.row.group_id, groupsOptions)
             }}</span>
@@ -284,11 +274,9 @@
         <template #header>
           <div class="clearfix">
             <div class="tag-wrap">
-              <el-tag :type="item.is_online ? 'success' : 'info'">{{ item.id }}. {{ item.callsign + "-" + item.ssid + " "+ item.dmrid + " "
-              }}{{ item.status == 1 ? "🈲" : ""
-              }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
-                ValueFilter(item.dev_type, DevTypeOptions)
-              }}</el-tag>
+              <el-tag :type="item.is_online ? 'success' : 'info'">{{ item.id }}. {{ item.callsign }}-{{ item.ssid }} {{
+                item.dmrid }} {{ item.status == 1 ? "🈲" : "" }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
+                ValueFilter(item.dev_type, DevTypeOptions) }}</el-tag>
             </div>
 
             <el-button
@@ -1394,13 +1382,8 @@ export default {
         // this.tempat = response.data.items.last_atcommand
 
         if (!response.data.items.last_atcommand) {
-          ElNotification({
-            title: '加载AT参数列表失败,可能是设备固件版本不支持',
-            message: response?.data?.message || '加载失败',
-            type: 'warning',
-            duration: 5000
-          })
-          return
+          const message = response?.data?.message || '加载失败'
+          ElMessage.error(message)
         } else {
           this.tempat = response.data.items.last_atcommand
           this.dialogFormATVisible = true

@@ -41,8 +41,11 @@ export const DevModelOptions = [
   { id: 103, name: 'NRL-Win' },
   { id: 105, name: 'NRL-浏览器' },
   { id: 106, name: 'NRL-救援' },
+
   { id: 200, name: 'NRL-Server' },
-  { id: 250, name: 'NRL-保姆' }
+  { id: 201, name: 'NRL-BM' },
+  { id: 250, name: 'NRL-保姆' },
+  { id: 255, name: 'NRL-全网互通' }
 
 ]
 
