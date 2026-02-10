@@ -10,7 +10,19 @@
 
       <li class="special-server">
         <a :href="'https://73ham.com/'" target="_blank" class="server-link special-link">
-          <div class="special-text">NRL安卓APP BA4QGT</div>
+          <div class="special-text">NRL安卓 73HAM APP BA4QGT</div>
+        </a>
+      </li>
+
+      <li class="special-server">
+        <a :href="'https://app.pgarlic.com/'" target="_blank" class="server-link special-link">
+          <div class="special-text">NRL互联 苹果iOS APP BG4QG</div>
+        </a>
+      </li>
+
+      <li class="special-server">
+        <a :href="'https://apps.apple.com/cn/app/nrl工具集/id6756867499'" target="_blank" class="server-link special-link">
+          <div class="special-text">NRL工具集 苹果iOS APP BD1BHO</div>
         </a>
       </li>
 
