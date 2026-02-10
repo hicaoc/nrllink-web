@@ -288,14 +288,6 @@
             >{{ $t("device.change")
             }}</el-button>
 
-            <el-button
-              v-if="checkPermission(['admin']) || item.callsign === callsign"
-              style="float: right; padding: 3px 3px"
-              link
-              :disabled="item.is_online === false"
-              @click="handleChangeAT(item)"
-            >{{ $t("device.change")
-            }}</el-button>
 
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
@@ -1382,8 +1374,12 @@ export default {
         // this.tempat = response.data.items.last_atcommand
 
         if (!response.data.items.last_atcommand) {
-          const message = response?.data?.message || '加载失败'
-          ElMessage.error(message)
+          ElNotification({
+            title: 'AT指令加载失败',
+            message: response?.data?.message || '可能是设备固件不支持，或者设备不在线',
+            type: 'warning',
+            duration: 5000
+          })
         } else {
           this.tempat = response.data.items.last_atcommand
           this.dialogFormATVisible = true
@@ -1408,10 +1404,21 @@ export default {
       }
 
       changeDeviceAT(at).then((response) => {
-        const message = response?.data?.message || '操作完成'
-        ElMessage.success(message)
-
-        // this.temp = response.data.items
+        if (response.code === 20000) {
+          ElNotification({
+            title: '成功',
+            message: response?.data?.message || 'AT指令执行成功',
+            type: 'success',
+            duration: 2000
+          })
+        } else {
+          ElNotification({
+            title: '失败',
+            message: response?.data?.message || 'AT指令执行失败',
+            type: 'error',
+            duration: 3000
+          })
+        }
       }) // copy obj
       //  this.temp.timestamp = new Date(this.temp.timestamp);
     },
