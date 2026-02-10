@@ -77,7 +77,7 @@ import {
   updateRole
 } from '@/api/role'
 import i18n from '@/lang'
-import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const resolveRoutePath = (basePath, routePath) => {
   if (routePath.startsWith('/')) {
@@ -274,18 +274,9 @@ export default {
         this.rolesList.push(this.role)
       }
 
-      const { description, key, name } = this.role
+      const { name } = this.role
       this.dialogVisible = false
-      ElNotification({
-        title: '成功',
-        dangerouslyUseHTMLString: true,
-        message: `
-            <div>角色Key: ${key}</div>
-            <div>角色名称: ${name}</div>
-            <div>描述: ${description}</div>
-          `,
-        type: 'success'
-      })
+      ElMessage.success(`角色 ${name} 保存成功`)
     },
     // reference: src/view/layout/components/Sidebar/SidebarItem.vue
     onlyOneShowingChild(children = [], parent) {

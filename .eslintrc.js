@@ -27,6 +27,10 @@ module.exports = {
     "vue/multiline-html-element-content-newline":"off",
     "vue/name-property-casing": "off",
     "vue/no-v-html": "off",
+    "vue/multi-word-component-names": "off",
+    "vue/require-explicit-emits": "off",
+    "vue/no-mutating-props": "off",
+    "vue/no-deprecated-dollar-listeners-api": "off",
     'accessor-pairs': 2,
     'arrow-spacing': [2, {
       'before': true,

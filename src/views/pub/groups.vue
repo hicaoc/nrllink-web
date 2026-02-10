@@ -154,7 +154,7 @@ import checkPermission from '@/utils/permission' // 权限判断函数
 import waves from '@/directive/waves' // waves directive
 import { parseTime, ValueFilter } from '@/utils'
 import { groupTypeOptions } from '@/utils/system'
-import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapState } from 'pinia'
 import { useAppStore } from '@/store/modules/app'
@@ -277,12 +277,7 @@ export default {
         this.getList()
 
         this.dialogFormVisible = false
-        ElNotification({
-          title: '成功',
-          message: response?.data?.message || '操作成功',
-          type: 'success',
-          duration: 2000
-        })
+        ElMessage.success(response?.data?.message || '操作成功')
       })
     },
     createData() {
@@ -293,12 +288,7 @@ export default {
           createGroup(this.temp).then(response => {
             this.getList()
             this.dialogFormVisible = false
-            ElNotification({
-              title: '成功',
-              message: response?.message || '创建成功',
-              type: 'success',
-              duration: 2000
-            })
+            ElMessage.success(response?.message || '创建成功')
           })
         }
       })
@@ -337,19 +327,9 @@ export default {
             }
 
             if (response && response.code === 20000) {
-              ElNotification({
-                title: '成功',
-                message: '修改成功',
-                type: 'success',
-                duration: 2000
-              })
+              ElMessage.success('修改成功')
             } else {
-              ElNotification({
-                title: '失败',
-                message: response?.message || '请求失败',
-                type: 'warning',
-                duration: 2000
-              })
+              ElMessage.warning(response?.message || '请求失败')
             }
 
             this.dialogFormVisible = false

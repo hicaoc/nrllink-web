@@ -288,6 +288,15 @@
             >{{ $t("device.change")
             }}</el-button>
 
+            <el-button
+              v-if="checkPermission(['admin']) || item.callsign === callsign"
+              :disabled="item.is_online === false"
+              style="float: right; padding: 3px 3px"
+
+              link
+
+              @click="handleOpenAT(item)"
+            >{{ $t("device.at") }}</el-button>
 
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
@@ -1012,7 +1021,7 @@ import Pagination from '@/components/Pagination/index.vue' // secondary package 
 import { mapState } from 'pinia'
 import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
-import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default {
   name: 'ComplexTable',
@@ -1209,22 +1218,12 @@ export default {
           //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           updateDevice(tempData).then((response) => {
             if (response.code === 20000) {
-              ElNotification({
-                title: '成功',
-                message: response?.data?.message || '更新成功',
-                type: 'success',
-                duration: 2000
-              })
+              ElMessage.success(response?.data?.message || '更新成功')
 
               this.getList()
               this.dialogFormVisible = false
             } else {
-              ElNotification({
-                title: '失败',
-                message: response?.data?.message || '请求失败',
-                type: 'warning',
-                duration: 2000
-              })
+              ElMessage.warning(response?.data?.message || '请求失败')
             }
           })
         }
@@ -1276,21 +1275,11 @@ export default {
       //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
       updateDevice(tempData).then((response) => {
         if (response.code === 20000) {
-          ElNotification({
-            title: '成功',
-            message: response?.data?.message || '更新成功',
-            type: 'success',
-            duration: 2000
-          })
+          ElMessage.success(response?.data?.message || '更新成功')
 
           this.getList()
         } else {
-          ElNotification({
-            title: '失败',
-            message: response?.data?.message || '请求失败',
-            type: 'warning',
-            duration: 2000
-          })
+          ElMessage.warning(response?.data?.message || '请求失败')
         }
       })
     },
@@ -1301,12 +1290,7 @@ export default {
           changeDevice1w(device_parm).then((response) => {
             this.getList()
 
-            ElNotification({
-              title: '1w模块参数:',
-              message: response?.data?.message || '保存成功',
-              type: 'success',
-              duration: 2000
-            })
+            ElMessage.success(response?.data?.message || '1w模块参数保存成功')
           })
         } else {
           alert('频率小数点后面必须有4位!')
@@ -1322,12 +1306,7 @@ export default {
       changeDevice2w(device_parm).then((response) => {
         this.getList()
 
-        ElNotification({
-          title: '2w模块参数:',
-          message: response?.data?.message || '保存成功',
-          type: 'success',
-          duration: 2000
-        })
+        ElMessage.success(response?.data?.message || '2w模块参数保存成功')
       })
     },
     handleChange(row) {
@@ -1335,12 +1314,7 @@ export default {
         this.temp = response.data.items
 
         if (this.temp.device_parm === null) {
-          ElNotification({
-            title: '加载参数失败,可能是设备固件不支持，或者设备不在线',
-            message: response?.data?.message || '加载失败',
-            type: 'warning',
-            duration: 5000
-          })
+          ElMessage.warning(response?.data?.message || '加载参数失败,可能是设备固件不支持，或者设备不在线')
 
           this.temp.device_parm = { callsign: '', one_recive_freq: '', one_transmit_freq: '' }
           return
@@ -1374,12 +1348,7 @@ export default {
         // this.tempat = response.data.items.last_atcommand
 
         if (!response.data.items.last_atcommand) {
-          ElNotification({
-            title: 'AT指令加载失败',
-            message: response?.data?.message || '可能是设备固件不支持，或者设备不在线',
-            type: 'warning',
-            duration: 5000
-          })
+          ElMessage.warning(response?.data?.message || 'AT指令加载失败，可能是设备固件不支持，或者设备不在线')
         } else {
           this.tempat = response.data.items.last_atcommand
           this.dialogFormATVisible = true
@@ -1405,19 +1374,9 @@ export default {
 
       changeDeviceAT(at).then((response) => {
         if (response.code === 20000) {
-          ElNotification({
-            title: '成功',
-            message: response?.data?.message || 'AT指令执行成功',
-            type: 'success',
-            duration: 2000
-          })
+          ElMessage.success(response?.data?.message || 'AT指令执行成功')
         } else {
-          ElNotification({
-            title: '失败',
-            message: response?.data?.message || 'AT指令执行失败',
-            type: 'error',
-            duration: 3000
-          })
+          ElMessage.error(response?.data?.message || 'AT指令执行失败')
         }
       }) // copy obj
       //  this.temp.timestamp = new Date(this.temp.timestamp);
@@ -1460,12 +1419,7 @@ export default {
         '=' +
         val
       ).then((response) => {
-        ElNotification({
-          title: '消息',
-          message: response?.data?.message || '操作完成',
-          type: 'info',
-          duration: 5000
-        })
+        ElMessage.info(response?.data?.message || '操作完成')
       })
     },
 
@@ -1488,12 +1442,7 @@ export default {
         '&dest_domainname=' +
         val.dest_domainname
       ).then((response) => {
-        ElNotification({
-          title: '消息',
-          message: response?.data?.message || '操作完成',
-          type: 'info',
-          duration: 5000
-        })
+        ElMessage.info(response?.data?.message || '操作完成')
       })
     },
 

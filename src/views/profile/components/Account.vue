@@ -37,7 +37,7 @@
 import { password } from '@/api/user'
 import { mapState } from 'pinia'
 import { useAppStore } from '@/store/modules/app'
-import { ElNotification } from 'element-plus'
+import { ElMessage } from 'element-plus'
 
 export default {
   props: {
@@ -106,12 +106,7 @@ export default {
     // },
     submit() {
       password(this.user).then(response => {
-        ElNotification({
-          title: '成功',
-          message: response?.data?.message || '修改成功',
-          type: 'success',
-          duration: 2000
-        })
+        ElMessage.success(response?.data?.message || '修改成功')
       })
 
       // this.user.current_area_name = changearea(this.user).then(response => {

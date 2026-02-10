@@ -1,6 +1,4 @@
 import { createApp } from 'vue'
-import Cookies from 'js-cookie'
-
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
 import 'virtual:svg-icons-register'

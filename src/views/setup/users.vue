@@ -328,7 +328,7 @@ import {
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue' // secondary package based on el-pagination
-import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default {
   name: 'ComplexTable',
@@ -496,12 +496,7 @@ export default {
           createEmployee(this.temp).then(response => {
             this.getList()
             this.dialogFormVisible = false
-            ElNotification({
-              title: '成功',
-              message: response?.data?.message || '创建成功',
-              type: 'success',
-              duration: 2000
-            })
+            ElMessage.success(response?.data?.message || '创建成功')
           })
         }
       })
@@ -529,12 +524,7 @@ export default {
               }
             }
             this.dialogFormVisible = false
-            ElNotification({
-              title: '成功',
-              message: response?.data?.message || '更新成功',
-              type: 'success',
-              duration: 2000
-            })
+            ElMessage.success(response?.data?.message || '更新成功')
           })
         }
       })
