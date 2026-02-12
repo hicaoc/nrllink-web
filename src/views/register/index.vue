@@ -5,7 +5,7 @@
         <div class="login-form-card register-card">
           <div class="title-container">
             <img src="/images/logo.png" alt="Logo" class="logo">
-            <h3 class="title">注册新节点/账号</h3>
+            <h3 class="title">注册账号</h3>
             <p class="subtitle">提交后等待管理员审核</p>
             <router-link class="back-link" to="/login">返回登录</router-link>
           </div>
@@ -21,7 +21,7 @@
               <el-form-item prop="callsign" label="呼号">
                 <el-input
                   v-model="registerForm.callsign"
-                  placeholder="例如：BH4RPN"
+                  placeholder="例如：BA4XXX"
                   maxlength="6"
                   @input="handleCallsignInput"
                 />
@@ -35,18 +35,18 @@
                 <el-input v-model="registerForm.phone" placeholder="11位以上数字" />
               </el-form-item>
 
-              <el-form-item prop="mail" label="邮箱">
-                <el-input v-model="registerForm.mail" placeholder="name@example.com" />
+              <el-form-item prop="password" label="密码">
+                <el-input
+                  v-model="registerForm.password"
+                  placeholder="至少6位"
+                  show-password
+                  type="password"
+                />
               </el-form-item>
             </div>
 
-            <el-form-item prop="password" label="密码">
-              <el-input
-                v-model="registerForm.password"
-                placeholder="至少6位"
-                show-password
-                type="password"
-              />
+            <el-form-item prop="mail" label="邮箱">
+              <el-input v-model="registerForm.mail" placeholder="name@example.com" />
             </el-form-item>
 
             <el-form-item prop="address" label="地址">
@@ -58,7 +58,7 @@
               />
             </el-form-item>
 
-            <el-form-item prop="license" label="操作证和电台执照">
+            <el-form-item prop="license" label="操作证和电台执照合影">
               <el-upload
                 class="upload-box"
                 action="#"
@@ -79,7 +79,7 @@
             </el-form-item>
 
             <el-button
-              :loading="loading"
+              :loading="loading || fileProcessing"
               type="primary"
               class="login-button register-button"
               @click.prevent="handleSubmit"
@@ -94,8 +94,10 @@
 </template>
 
 <script>
-import { ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { createRegUpload } from '@/api/register'
+
+const MAX_LICENSE_BYTES = 800 * 1024
 
 export default {
   name: 'RegisterView',
@@ -150,7 +152,8 @@ export default {
       },
       licenseFile: null,
       licenseName: '',
-      loading: false
+      loading: false,
+      fileProcessing: false
     }
   },
   methods: {
@@ -162,18 +165,133 @@ export default {
     handleBeforeUpload() {
       return false
     },
-    handleFileChange(file) {
-      this.licenseFile = file.raw || file
-      this.licenseName = file.name || '已选择文件'
-      this.registerForm.license = this.licenseName
-      this.$nextTick(() => {
-        if (this.$refs.registerForm) {
-          this.$refs.registerForm.validateField('license')
-        }
+    formatSize(size) {
+      if (!Number.isFinite(size) || size <= 0) return '0KB'
+      const units = ['B', 'KB', 'MB']
+      let value = size
+      let index = 0
+      while (value >= 1024 && index < units.length - 1) {
+        value /= 1024
+        index += 1
+      }
+      return `${value.toFixed(value < 10 && index > 0 ? 1 : 0)}${units[index]}`
+    },
+    replaceFileExt(name, ext) {
+      const baseName = String(name || 'license').replace(/\.[^.]+$/, '')
+      return `${baseName}.${ext}`
+    },
+    readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = () => reject(new Error('读取图片失败'))
+        reader.readAsDataURL(file)
       })
+    },
+    loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image()
+        img.onload = () => resolve(img)
+        img.onerror = () => reject(new Error('加载图片失败'))
+        img.src = src
+      })
+    },
+    canvasToBlob(canvas, type, quality) {
+      return new Promise((resolve, reject) => {
+        canvas.toBlob(blob => {
+          if (blob) resolve(blob)
+          else reject(new Error('图片压缩失败'))
+        }, type, quality)
+      })
+    },
+    async compressImageToLimit(file, maxBytes) {
+      const dataUrl = await this.readFileAsDataURL(file)
+      const img = await this.loadImage(dataUrl)
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      if (!ctx) throw new Error('无法创建画布')
+
+      let width = img.naturalWidth || img.width
+      let height = img.naturalHeight || img.height
+      const maxSide = 2200
+      if (Math.max(width, height) > maxSide) {
+        const ratio = maxSide / Math.max(width, height)
+        width = Math.round(width * ratio)
+        height = Math.round(height * ratio)
+      }
+
+      let quality = 0.9
+      let scale = 1
+      let blob = null
+      const type = file.type === 'image/png' ? 'image/jpeg' : (file.type || 'image/jpeg')
+
+      for (let i = 0; i < 8; i += 1) {
+        canvas.width = Math.max(1, Math.round(width * scale))
+        canvas.height = Math.max(1, Math.round(height * scale))
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+
+        blob = await this.canvasToBlob(canvas, type, quality)
+        if (blob.size <= maxBytes) break
+
+        if (quality > 0.55) {
+          quality -= 0.1
+        } else {
+          scale *= 0.85
+          quality = 0.85
+        }
+      }
+
+      if (!blob) throw new Error('图片压缩失败')
+      if (blob.size > maxBytes) {
+        throw new Error('图片压缩后仍超过800KB，请更换清晰但更小的图片')
+      }
+
+      const ext = type === 'image/png' ? 'png' : 'jpg'
+      const outputName = this.replaceFileExt(file.name, ext)
+      return new File([blob], outputName, { type, lastModified: Date.now() })
+    },
+    async handleFileChange(file) {
+      const rawFile = file.raw || file
+      if (!rawFile || !String(rawFile.type || '').startsWith('image/')) {
+        ElMessage.error('请上传图片格式文件')
+        return
+      }
+
+      this.fileProcessing = true
+      try {
+        let finalFile = rawFile
+        let compressed = false
+
+        if (rawFile.size > MAX_LICENSE_BYTES) {
+          finalFile = await this.compressImageToLimit(rawFile, MAX_LICENSE_BYTES)
+          compressed = true
+          ElMessage.success(`图片已压缩：${this.formatSize(rawFile.size)} -> ${this.formatSize(finalFile.size)}`)
+        }
+
+        this.licenseFile = finalFile
+        this.licenseName = `${finalFile.name} (${this.formatSize(finalFile.size)})${compressed ? '，已压缩' : ''}`
+        this.registerForm.license = this.licenseName
+      } catch (error) {
+        this.licenseFile = null
+        this.licenseName = ''
+        this.registerForm.license = ''
+        ElMessage.error(error?.message || '图片处理失败，请更换图片后重试')
+      } finally {
+        this.fileProcessing = false
+        this.$nextTick(() => {
+          if (this.$refs.registerForm) {
+            this.$refs.registerForm.validateField('license')
+          }
+        })
+      }
     },
     handleSubmit() {
       if (!this.$refs.registerForm) return
+      if (this.fileProcessing) {
+        ElMessage.warning('图片处理中，请稍后再提交')
+        return
+      }
       this.$refs.registerForm.validate(valid => {
         if (!valid) return
         if (!this.licenseFile) {
@@ -431,12 +549,6 @@ $cursor: #eef4fb;
   @media (min-width: 768px) {
     .form-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .form-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 

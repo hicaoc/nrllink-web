@@ -75,9 +75,13 @@
               class="login-button"
               @click.prevent="handleLogin"
             >{{ $t("login.logIn") }}</el-button>
-            <router-link class="register-link" to="/register">
-              注册新节点/账号
-            </router-link>
+            <button
+              type="button"
+              class="register-link"
+              @click="goRegister"
+            >
+              注册
+            </button>
           </el-form>
         </div>
       </div>
@@ -252,6 +256,9 @@ export default {
         this.$refs.password.focus()
       })
     },
+    goRegister() {
+      this.$router.push('/register')
+    },
     async toggleImage(show) {
       this.isImageVisible = show
       if (show && !this.nrlmpImg) {
@@ -284,18 +291,22 @@ export default {
 
 <style lang="scss">
 :root {
-  --ink: #eef4fb;
-  --ink-dim: rgba(238, 244, 251, 0.7);
-  --glass: rgba(16, 26, 40, 0.72);
-  --glass-bright: rgba(22, 34, 50, 0.9);
-  --accent: #4fe7d6;
-  --accent-2: #5aaeff;
-  --warn: #f5a524;
+  --ink: #f4f8ff;
+  --ink-dim: rgba(228, 239, 255, 0.76);
+  --glass: rgba(13, 24, 42, 0.76);
+  --glass-bright: rgba(19, 33, 56, 0.92);
+  --accent: #36f0cb;
+  --accent-2: #4f98ff;
+  --warn: #f7bb43;
+  --field-bg: rgba(12, 30, 56, 0.78);
+  --field-border: rgba(90, 173, 255, 0.46);
+  --field-border-hover: rgba(54, 240, 203, 0.85);
+  --card-border: rgba(116, 194, 255, 0.36);
 }
 
 /* Global overrides for Element UI inputs in login page */
-$bg: #101826;
-$cursor: #eef4fb;
+$bg: #0f1c31;
+$cursor: #f4f8ff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
@@ -329,7 +340,7 @@ $cursor: #eef4fb;
       }
 
       &::placeholder {
-        color: rgba(238, 244, 251, 0.6);
+        color: rgba(228, 239, 255, 0.62);
         opacity: 1;
       }
     }
@@ -356,17 +367,17 @@ $cursor: #eef4fb;
     position: relative;
     display: flex;
     align-items: center;
-    background: rgba(16, 26, 40, 0.65) !important;
-    border: 1px solid rgba(90, 174, 255, 0.28) !important;
+    background: var(--field-bg) !important;
+    border: 1px solid var(--field-border) !important;
     border-radius: 12px !important;
-    color: #454545;
+    color: var(--ink);
     padding-right: 40px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .el-form-item:hover {
-    border-color: rgba(79, 231, 214, 0.6) !important;
-    box-shadow: 0 0 0 1px rgba(79, 231, 214, 0.25) inset;
+    border-color: var(--field-border-hover) !important;
+    box-shadow: 0 0 0 1px rgba(82, 227, 194, 0.26) inset;
   }
 }
 </style>
@@ -375,7 +386,7 @@ $cursor: #eef4fb;
 .login-container {
   min-height: 100vh;
   width: 100%;
-  background: radial-gradient(980px 460px at 18% -14%, rgba(48, 84, 138, 0.18) 0%, rgba(22, 32, 50, 0.94) 62%, #111a28 100%);
+  background: radial-gradient(980px 460px at 18% -14%, rgba(83, 140, 229, 0.22) 0%, rgba(20, 35, 58, 0.95) 56%, #0b1424 100%);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -390,8 +401,8 @@ $cursor: #eef4fb;
     inset: -40% auto auto -20%;
     width: 640px;
     height: 640px;
-    background: radial-gradient(circle, rgba(79, 231, 214, 0.26) 0%, rgba(79, 231, 214, 0) 70%);
-    filter: blur(4px);
+    background: radial-gradient(circle, rgba(54, 240, 203, 0.34) 0%, rgba(54, 240, 203, 0) 70%);
+    filter: blur(3px);
     pointer-events: none;
   }
 
@@ -402,8 +413,8 @@ $cursor: #eef4fb;
     bottom: -30%;
     width: 720px;
     height: 720px;
-    background: radial-gradient(circle, rgba(90, 174, 255, 0.26) 0%, rgba(90, 174, 255, 0) 70%);
-    filter: blur(6px);
+    background: radial-gradient(circle, rgba(79, 152, 255, 0.4) 0%, rgba(79, 152, 255, 0) 70%);
+    filter: blur(5px);
     pointer-events: none;
   }
 
@@ -419,11 +430,11 @@ $cursor: #eef4fb;
     padding: clamp(24px, 4vw, 52px);
 
     @media (min-width: 1024px) {
-      grid-template-columns: minmax(260px, 320px) minmax(320px, 520px) minmax(260px, 320px);
-      gap: clamp(24px, 6vw, 80px) !important;
-      column-gap: clamp(24px, 6vw, 80px) !important;
-      padding-left: clamp(24px, 6vw, 72px) !important;
-      padding-right: clamp(24px, 6vw, 72px) !important;
+      grid-template-columns: repeat(3, minmax(320px, 1fr));
+      gap: clamp(22px, 4vw, 48px) !important;
+      column-gap: clamp(22px, 4vw, 48px) !important;
+      padding-left: clamp(20px, 4vw, 56px) !important;
+      padding-right: clamp(20px, 4vw, 56px) !important;
       max-width: 1400px !important;
     }
   }
@@ -444,12 +455,9 @@ $cursor: #eef4fb;
 
   @media (min-width: 1024px) {
     .support-column,
-    .server-column {
-      max-width: 360px;
-    }
-
+    .server-column,
     .form-column {
-      max-width: 560px;
+      max-width: 440px;
     }
   }
 
@@ -468,9 +476,9 @@ $cursor: #eef4fb;
   }
 
   .login-form-card {
-    background: linear-gradient(140deg, rgba(28, 40, 60, 0.88) 0%, rgba(34, 48, 70, 0.94) 100%);
-    border: 1px solid rgba(110, 186, 255, 0.22);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+    background: linear-gradient(140deg, rgba(22, 45, 78, 0.9) 0%, rgba(18, 34, 63, 0.96) 100%);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 26px 68px rgba(1, 8, 20, 0.58), 0 0 0 1px rgba(54, 240, 203, 0.08) inset;
     border-radius: 20px;
     padding: 40px 34px 32px;
     min-height: 0 !important;
@@ -496,7 +504,7 @@ $cursor: #eef4fb;
       font-size: 13px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: rgba(79, 231, 214, 0.7);
+      color: rgba(131, 248, 221, 0.92);
       margin-top: 6px;
     }
 
@@ -525,7 +533,7 @@ $cursor: #eef4fb;
 
   .svg-container {
     padding: 6px 5px 6px 15px;
-    color: rgba(238, 244, 251, 0.5);
+    color: rgba(228, 239, 255, 0.56);
     vertical-align: middle;
     width: 30px;
     display: inline-block;
@@ -536,7 +544,7 @@ $cursor: #eef4fb;
     right: 10px;
     top: 7px;
     font-size: 16px;
-    color: rgba(238, 244, 251, 0.5);
+    color: rgba(228, 239, 255, 0.56);
     cursor: pointer;
     user-select: none;
   }
@@ -547,37 +555,41 @@ $cursor: #eef4fb;
     height: 48px;
     font-size: 16px;
     border-radius: 14px !important;
-    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%) !important;
+    background: linear-gradient(90deg, #26efc7 0%, #3f8dff 52%, #6c79ff 100%) !important;
     border: none !important;
-    box-shadow: 0 12px 30px rgba(90, 174, 255, 0.25);
+    box-shadow: 0 14px 34px rgba(63, 141, 255, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.14) inset;
     transition: all 0.3s ease;
     font-weight: 600;
     letter-spacing: 0.6px;
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 16px 38px rgba(90, 174, 255, 0.35) !important;
+      box-shadow: 0 18px 44px rgba(38, 239, 199, 0.46), 0 0 18px rgba(79, 152, 255, 0.35) !important;
     }
   }
 
   .register-link {
+    appearance: none;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
-    height: 44px;
+    width: 100%;
+    height: 48px;
     border-radius: 14px;
-    border: 1px solid rgba(90, 174, 255, 0.45);
+    border: 1px solid rgba(94, 166, 255, 0.62);
     color: var(--ink);
     text-decoration: none;
     font-weight: 600;
-    letter-spacing: 0.3px;
-    background: rgba(18, 28, 44, 0.6);
-    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    background: linear-gradient(90deg, rgba(30, 73, 121, 0.86) 0%, rgba(45, 76, 130, 0.84) 100%);
+    box-shadow: 0 10px 24px rgba(63, 141, 255, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 
     &:hover {
-      border-color: rgba(79, 231, 214, 0.6);
-      box-shadow: 0 12px 24px rgba(79, 231, 214, 0.2);
+      border-color: rgba(54, 240, 203, 0.74);
+      box-shadow: 0 14px 32px rgba(63, 141, 255, 0.28), 0 0 14px rgba(54, 240, 203, 0.2);
       transform: translateY(-1px);
     }
   }
@@ -585,16 +597,16 @@ $cursor: #eef4fb;
   .bottom_footer {
     width: 100%;
     padding: 20px;
-    background: rgba(12, 20, 32, 0.7);
+    background: rgba(8, 18, 34, 0.72);
     backdrop-filter: blur(5px);
-    border-top: 1px solid rgba(90, 174, 255, 0.2);
+    border-top: 1px solid rgba(104, 176, 255, 0.24);
     margin-top: auto;
 
     .footer-content {
       max-width: 1200px;
       margin: 0 auto;
       text-align: center;
-      color: rgba(238, 244, 251, 0.6);
+      color: rgba(228, 239, 255, 0.68);
       font-size: 13px;
       line-height: 1.8;
       display: flex;
@@ -610,7 +622,7 @@ $cursor: #eef4fb;
       transition: color 0.3s ease;
 
       &:hover {
-        color: #8af6ea;
+        color: #9ef8e6;
         text-decoration: underline;
       }
     }
