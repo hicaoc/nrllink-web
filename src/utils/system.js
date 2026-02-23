@@ -6,6 +6,7 @@ export const DevTypeOptions = [
   { id: 4, name: 'WEB' }
 ]
 
+//1-99为硬件设备，100-199为软件 APP，200-299为服务器端
 export const DevModelOptions = [
   { id: 0, name: '未知' },
   { id: 1, name: 'NRL-2100' },
@@ -35,17 +36,26 @@ export const DevModelOptions = [
   { id: 25, name: '4G便携' },
   { id: 26, name: '董哥定制便携' },
   { id: 28, name: '即时通9000' },
+
+ //爱好者作品 
+  { id: 80, name: 'BG4QG-ESP32' },
+  { id: 86, name: 'BG4SF-ESP32' },
+  { id: 90, name: 'BH6BBH-ESP32' },
+
+//软件端
   { id: 100, name: 'NRL-微信小程序' },
-  { id: 101, name: 'NRL-安卓' },
-  { id: 102, name: 'NRL-IOS' },
+  { id: 101, name: 'NRL-73HAM安卓' },
+  { id: 102, name: 'NR工具集-IOS' },
   { id: 103, name: 'NRL-Win' },
   { id: 105, name: 'NRL-浏览器' },
-  { id: 106, name: 'NRL-救援' },
+  { id: 106, name: 'NRL-救援-ios' },
 
+//服务器端
   { id: 200, name: 'NRL-Server' },
-  { id: 201, name: 'NRL-BM' },
+  { id: 201, name: 'NRL-会议' },
+  { id: 202, name: 'NRL-BM' },
   { id: 250, name: 'NRL-保姆' },
-  { id: 255, name: 'NRL-全网互通' }
+  { id: 255, name: 'NRL-全网互连' }
 
 ]
 
