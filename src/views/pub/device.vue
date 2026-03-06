@@ -404,7 +404,7 @@
           <el-input-number v-model="temp.priority" :disabled="!checkPermission(['admin'])" :min="0" :max="255" />
         </el-form-item>
 
-        <el-form-item prop="type" for="">
+        <!-- <el-form-item prop="type" for="">
           <template #label>
             <span id="device-type-label">{{ $t('device.type') }}</span>
           </template>
@@ -413,7 +413,7 @@
               d.name
             }}</el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item prop="model" for="">
           <template #label>
@@ -437,37 +437,18 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item v-if="temp.rf_type == 3" label="频道1名称:" prop="chan1_name">
-          <el-input v-model="temp.chan_name[1]" style="width: 80%" />
-        </el-form-item>
+        <div v-if="temp.rf_type == 3" class="channel-grid">
+          <el-form-item
+            v-for="channel in 16"
+            :key="channel"
+            :label="`频道${channel}名称:`"
+            :prop="`chan${channel}_name`"
+            class="channel-form-item"
+          >
+            <el-input v-model="temp.chan_name[channel]" />
+          </el-form-item>
+        </div>
 
-        <el-form-item v-if="temp.rf_type == 3" label="频道2名称:" prop="chan2_name">
-          <el-input v-model="temp.chan_name[2]" style="width: 80%" />
-        </el-form-item>
-
-        <el-form-item v-if="temp.rf_type == 3" label="频道3名称:" prop="chan3_name">
-          <el-input v-model="temp.chan_name[3]" style="width: 80%" />
-        </el-form-item>
-
-        <el-form-item v-if="temp.rf_type == 3" label="频道4名称:" prop="chan4_name">
-          <el-input v-model="temp.chan_name[4]" style="width: 80%" />
-        </el-form-item>
-
-        <el-form-item v-if="temp.rf_type == 3" label="频道5名称:" prop="chan5_name">
-          <el-input v-model="temp.chan_name[5]" style="width: 80%" />
-        </el-form-item>
-
-        <el-form-item v-if="temp.rf_type == 3" label="频道6名称:" prop="chan6_name">
-          <el-input v-model="temp.chan_name[6]" style="width: 80%" />
-        </el-form-item>
-
-        <el-form-item v-if="temp.rf_type == 3" label="频道7名称:" prop="chan7_name">
-          <el-input v-model="temp.chan_name[7]" style="width: 80%" />
-        </el-form-item>
-
-        <el-form-item v-if="temp.rf_type == 3" label="频道8名称:" prop="chan8_name">
-          <el-input v-model="temp.chan_name[8]" style="width: 80%" />
-        </el-form-item>
 
       </el-form>
 
@@ -1745,6 +1726,21 @@ export default {
   }
 }
 
+.channel-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+}
+
+.channel-form-item {
+  margin-right: 0;
+}
+
+.channel-form-item :deep(.el-input) {
+  width: 100%;
+}
+
 .clearfix:before,
 .clearfix:after {
   display: table;
@@ -1753,5 +1749,11 @@ export default {
 
 .clearfix:after {
   clear: both;
+}
+
+@media (max-width: 768px) {
+  .channel-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

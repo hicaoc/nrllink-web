@@ -3,10 +3,10 @@
 set -euo pipefail
 
 # hostlist='bh4tdv.nrlptt.com'
-hostlist='182.92.158.141 nrlptt.com ba1gm.nrlptt.com nrlptt.bd4vki.xyz bd4vki.nrlptt.com ah.nrlptt.com nrl.bd4two.site ptt.nrlptt.com bh1osw.nrlptt.com yz.hamoa.cn ham.73ham.com bd4two.nrlptt.com js.nrlptt.com bg1vif.nrlptt.com usa.nrlptt.com yz.hamuv.com'
+hostlist='182.92.158.141 nrlptt.com ba1gm.nrlptt.com nrlptt.bd4vki.xyz bd4vki.nrlptt.com ah.nrlptt.com nrl.bd4two.site ptt.nrlptt.com bh1osw.nrlptt.com ham.73ham.com bd4two.nrlptt.com js.nrlptt.com bg1vif.nrlptt.com usa.nrlptt.com yz.hamuv.com'
 
 # 调试单机时可覆盖：
-hostlist=''
+#hostlist='js.nrlptt.com'
 #hostlist="ptt.nrlptt.com"
 #hostlist='nrl.bd4two.site'
 
@@ -46,7 +46,7 @@ tar -C dist -czf "${dist_pkg}" .
  
 echo "deploying to ${docker_host} ..."
 scp "${dist_pkg}" "root@${docker_host}:${remote_pkg}"
-echo ssh "root@${docker_host}" "rm -rf '${docker_target}' && mkdir -p '${docker_target}' && tar -xzf '${remote_pkg}' -C '${docker_target}' && rm -f '${remote_pkg}'"
+ssh "root@${docker_host}" "rm -rf '${docker_target}' && mkdir -p '${docker_target}' && tar -xzf '${remote_pkg}' -C '${docker_target}' && rm -f '${remote_pkg}'"
 
 for host in $hostlist; do
   echo "deploying to ${host} ..."

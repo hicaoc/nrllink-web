@@ -37,9 +37,16 @@ export const DevModelOptions = [
   { id: 26, name: '董哥定制便携' },
   { id: 28, name: '即时通9000' },
 
- //爱好者作品 
+//BG4SF作品 
+  { id: 60, name: 'BG4SF-ESP32' },
+  { id: 61, name: 'BG4SF-ESP32-RF' },
+  { id: 62, name: 'BG4SF-ESP32-NARRY' },
+
+
+//BG4QG作品
   { id: 80, name: 'BG4QG-ESP32' },
-  { id: 86, name: 'BG4SF-ESP32' },
+ 
+//BH6BBH作品 
   { id: 90, name: 'BH6BBH-ESP32' },
 
 //软件端
@@ -54,6 +61,10 @@ export const DevModelOptions = [
   { id: 200, name: 'NRL-Server' },
   { id: 201, name: 'NRL-会议' },
   { id: 202, name: 'NRL-BM' },
+
+  // { id: 221, name: 'BG4SF-Format-conversion-1' },//221和222的数据包长度互转160-500
+  // { id: 222, name: 'BG4SF-Format-conversion-2' },//221和222的数据包长度互转160-500
+
   { id: 250, name: 'NRL-保姆' },
   { id: 255, name: 'NRL-全网互连' }
 
