@@ -25,8 +25,8 @@
       </li>
 
       <li class="special-server">
-        <a :href="'https://testflight.apple.com/join/CdeJgc2w'" target="_blank" class="server-link special-link">
-          <div class="special-text">NRL互联(公测) 苹果iOS APP BG4QG</div>
+        <a :href="'https://apps.apple.com/cn/app/nrl%E4%BA%92%E8%81%94/id6758810758'" target="_blank" class="server-link special-link">
+          <div class="special-text">NRL互联 苹果iOS APP BG4QG</div>
         </a>
       </li>
 
