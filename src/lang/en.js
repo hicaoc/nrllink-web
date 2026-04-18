@@ -145,7 +145,24 @@ export default {
     csqr: 'Contact Customer Service',
     csqrTips: 'Please scan the customer service WeChat QR code with WeChat',
     thirdparty: 'Third-party Login',
-    thirdpartyTips: 'Cannot simulate locally, please simulate based on your own business!!!'
+    thirdpartyTips: 'Cannot simulate locally, please simulate based on your own business!!!',
+    visibleRooms: 'Visible Rooms',
+    currentCall: 'Active Calls',
+    voiceSubscription: 'Voice Subscription',
+    login: 'Login',
+    register: 'Register',
+    realTimeCall: 'Live Calls',
+    connected: 'Connected',
+    connecting: 'Connecting',
+    idle: 'Idle',
+    recent20calls: 'Recent 20 Calls',
+    noCallRecord: 'No Call Record',
+    subscribedRooms: 'Subscribed to {count} rooms, backend will mix and stream audio',
+    loginDialogTip: 'Enter username and password to access the platform',
+    noAccount: 'No account? Register',
+    newUserRegister: 'New User Registration',
+    registerDesc: 'Complete the form in the popup, submit and wait for admin approval.',
+    brandDesc: 'Live call overview, room monitoring and platform access'
   },
   documentation: {
     documentation: 'Nanjing Xinfeng Network Technology Co., Ltd.'

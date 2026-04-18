@@ -63,7 +63,8 @@ export default {
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background: #2b2f3a;
+  background: linear-gradient(150deg, rgba(16, 39, 68, 0.98) 0%, rgba(12, 25, 48, 0.96) 100%);
+  border-bottom: 1px solid rgba(112, 192, 255, 0.24);
   text-align: center;
   overflow: hidden;
 

@@ -1,96 +1,220 @@
 <template>
   <div class="login-container">
+    <div class="topbar">
+      <div class="brand-block">
+        <img src="/images/logo.png" alt="Logo" class="topbar-logo">
+        <div class="brand-text">
+          <h1>{{ title }}</h1>
+          <p>{{ $t('login.brandDesc') }}</p>
+        </div>
+      </div>
+
+      <div class="topbar-stats">
+        <div class="topbar-stat">
+          <strong>{{ rooms.length }}</strong>
+          <span>{{ $t('login.visibleRooms') }}</span>
+        </div>
+        <div class="topbar-stat">
+          <strong>{{ activeRoomCount }}</strong>
+          <span>{{ $t('login.currentCall') }}</span>
+        </div>
+        <div class="topbar-stat">
+          <strong>{{ subscribedRoomKeys.length }}</strong>
+          <span>{{ $t('login.voiceSubscription') }}</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="language-switch">
+          <button
+            type="button"
+            class="lang-button"
+            :class="{ active: $i18n.locale === 'zh' }"
+            @click="setLanguage('zh')"
+          >
+            中
+          </button>
+          <button
+            type="button"
+            class="lang-button"
+            :class="{ active: $i18n.locale === 'en' }"
+            @click="setLanguage('en')"
+          >
+            EN
+          </button>
+        </div>
+        <button type="button" class="topbar-button ghost" @click="openLoginDialog">{{ $t('login.login') }}</button>
+        <button type="button" class="topbar-button solid" @click="openRegisterDialog">{{ $t('login.register') }}</button>
+      </div>
+    </div>
+
     <div class="content-wrapper">
-      <!-- Left Column: Support Links -->
-      <div class="column support-column">
+      <div class="column left-column">
         <support-links @toggle-image="toggleImage" />
       </div>
 
-      <!-- Center Column: Login Form -->
-      <div class="column form-column">
-        <div class="login-form-card">
-          <el-form
-            ref="loginForm"
-            :model="loginForm"
-            :rules="loginRules"
-            class="login-form"
-            autocomplete="on"
-            label-position="left"
-          >
-            <div class="title-container">
-              <img src="/images/logo.png" alt="Logo" class="logo">
-              <h3 class="title">{{ title }}</h3>
-              <lang-select class="set-language" />
-            </div>
+      <div class="column middle-column">
+        <div class="monitor-card">
+          <div class="monitor-header">
+            <h4>{{ $t('login.realTimeCall') }}</h4>
+            <span class="monitor-status" :class="{ online: wsConnected }">
+              {{ wsConnected ? $t('login.connected') : $t('login.connecting') }}
+            </span>
+          </div>
 
-            <el-form-item prop="username">
+          <div class="monitor-room-grid">
+            <button
+              v-for="room in sortedMonitorRooms"
+              :key="room.room_key"
+              type="button"
+              class="monitor-room-button"
+              :class="{
+                active: subscribedRoomKeys.includes(room.room_key),
+                speaking: room.active,
+                'multi-speakers': roomSpeakerCount(room) > 1
+              }"
+              @click="toggleRoomSubscription(room.room_key)"
+            >
+              <span class="room-title">#{{ room.room_id }} · {{ room.room_name }}</span>
+              <span v-if="room.active && roomSpeakerText(room)" class="room-caller">
+                {{ roomSpeakerText(room) }}
+              </span>
+              <span v-else class="room-idle">{{ $t('login.idle') }}</span>
+            </button>
+          </div>
+
+          <div class="monitor-subscription-tip">
+            <span v-if="subscribedRoomKeys.length > 0">
+              {{ $t('login.subscribedRooms', { count: subscribedRoomKeys.length }) }}
+            </span>
+          </div>
+
+          <div class="recent-call-panel">
+            <div class="section-title">{{ $t('login.recent20calls') }}</div>
+            <div v-if="recentCalls.length === 0" class="empty-state">
+              {{ $t('login.noCallRecord') }}
+            </div>
+            <div v-else class="recent-call-list">
+              <div
+                v-for="item in recentCalls"
+                :key="`${item.room_key}-${item.started_at}-${item.callsign}-${item.ssid}`"
+                class="recent-call-item"
+              >
+                <span class="recent-room">#{{ item.room_id }} · {{ item.room_name }}</span>
+                <span class="recent-caller">{{ item.callsign }}-{{ item.ssid }}</span>
+                <span class="recent-duration">{{ item.duration_text || '00:00' }}</span>
+                <span class="recent-time">{{ item.started_at }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column right-column">
+        <server-list :list="sortedServerList" />
+      </div>
+    </div>
+
+    <el-dialog
+      v-model="loginDialogVisible"
+      :title="$t('login.login')"
+      width="480px"
+      append-to-body
+      align-center
+      modal-class="portal-dialog-overlay"
+      class="portal-dialog login-dialog"
+      @opened="focusLoginField"
+    >
+      <div class="login-dialog-inner">
+        <el-form
+          ref="loginForm"
+          :model="loginForm"
+          :rules="loginRules"
+          class="login-form"
+          autocomplete="on"
+          label-position="left"
+        >
+          <div class="dialog-title-container">
+            <p>{{ $t('login.loginDialogTip') }}</p>
+          </div>
+
+          <el-form-item prop="username">
+            <span class="svg-container">
+              <svg-icon icon-class="user" />
+            </span>
+            <el-input
+              ref="username"
+              v-model="loginForm.username"
+              :placeholder="$t('login.username')"
+              name="username"
+              type="text"
+              tabindex="1"
+              autocomplete="on"
+            />
+          </el-form-item>
+
+          <el-tooltip
+            v-model="capsTooltip"
+            content="Caps lock is On"
+            placement="right"
+            manual
+          >
+            <el-form-item prop="password">
               <span class="svg-container">
-                <svg-icon icon-class="user" />
+                <svg-icon icon-class="password" />
               </span>
               <el-input
-                ref="username"
-                v-model="loginForm.username"
-                :placeholder="$t('login.username')"
-                name="username"
-                type="text"
-                tabindex="1"
+                :key="passwordType"
+                ref="password"
+                v-model="loginForm.password"
+                :type="passwordType"
+                :placeholder="$t('login.password')"
+                name="password"
+                tabindex="2"
                 autocomplete="on"
+                @keyup="checkCapslock"
+                @blur="capsTooltip = false"
+                @keyup.enter="handleLogin"
               />
-            </el-form-item>
-
-            <el-tooltip
-              v-model="capsTooltip"
-              content="Caps lock is On"
-              placement="right"
-              manual
-            >
-              <el-form-item prop="password">
-                <span class="svg-container">
-                  <svg-icon icon-class="password" />
-                </span>
-                <el-input
-                  :key="passwordType"
-                  ref="password"
-                  v-model="loginForm.password"
-                  :type="passwordType"
-                  :placeholder="$t('login.password')"
-                  name="password"
-                  tabindex="2"
-                  autocomplete="on"
-                  @keyup="checkCapslock"
-                  @blur="capsTooltip = false"
-                  @keyup.enter="handleLogin"
+              <span class="show-pwd" @click="showPwd">
+                <svg-icon
+                  :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
                 />
-                <span class="show-pwd" @click="showPwd">
-                  <svg-icon
-                    :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-                  />
-                </span>
-              </el-form-item>
-            </el-tooltip>
+              </span>
+            </el-form-item>
+          </el-tooltip>
 
+          <div class="login-button-wrapper">
             <el-button
               :loading="loading"
               type="primary"
               class="login-button"
               @click.prevent="handleLogin"
             >{{ $t("login.logIn") }}</el-button>
-            <button
-              type="button"
-              class="register-link"
-              @click="goRegister"
-            >
-              注册
-            </button>
-          </el-form>
+          </div>
+        </el-form>
+      </div>
+    </el-dialog>
+
+    <el-dialog
+      v-model="registerDialogVisible"
+      :title="$t('login.register')"
+      width="1320px"
+      append-to-body
+      align-center
+      modal-class="portal-dialog-overlay"
+      class="portal-dialog register-dialog"
+    >
+      <div class="register-dialog-inner">
+        <div class="register-dialog-copy">
+          <strong>{{ $t('login.newUserRegister') }}</strong>
+          <span>{{ $t('login.registerDesc') }}</span>
+        </div>
+        <div class="register-panel">
+          <register-view embedded />
         </div>
       </div>
-
-      <!-- Right Column: Server List -->
-      <div class="column server-column">
-        <server-list :list="sortedServerList" />
-      </div>
-    </div>
+    </el-dialog>
 
     <!-- Floating Image Overlay -->
     <transition name="fade">
@@ -117,16 +241,17 @@
 <script>
 import { getplatforminfo, fetchPlatformList } from '@/api/platform'
 import { validUsername } from '@/utils/validate'
-import LangSelect from '@/components/LangSelect/index.vue'
 import { mapState } from 'pinia'
 import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
+import { getToken } from '@/utils/auth'
 import ServerList from './components/ServerList.vue'
 import SupportLinks from './components/SupportLinks.vue'
+import RegisterView from '../register/index.vue'
 
 export default {
   name: 'LoginView',
-  components: { LangSelect, ServerList, SupportLinks },
+  components: { ServerList, SupportLinks, RegisterView },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -163,9 +288,21 @@ export default {
       capsTooltip: false,
       loading: false,
       showDialog: false,
+      loginDialogVisible: false,
+      registerDialogVisible: false,
       redirect: undefined,
       serverList: [],
-      nrlmpImg: ''
+      nrlmpImg: '',
+      websock: null,
+      wsConnected: false,
+      wsRetryTimer: null,
+      monitorDestroyed: false,
+      rooms: [],
+      recentCalls: [],
+      subscribedRoomKeys: [],
+      audioContext: null,
+      audioGainNode: null,
+      nextPlayTime: 0
     }
   },
   computed: {
@@ -195,6 +332,17 @@ export default {
         const nameB = b && b.name ? String(b.name) : ''
         return nameA.localeCompare(nameB)
       })
+    },
+    sortedMonitorRooms() {
+      const recentRoomKeys = new Set(this.recentCalls.map(item => item.room_key))
+      const visibleRooms = this.rooms.filter(item => item.active || recentRoomKeys.has(item.room_key))
+
+      return [...visibleRooms].sort((a, b) => {
+        return Number(a.room_id || 0) - Number(b.room_id || 0)
+      })
+    },
+    activeRoomCount() {
+      return this.rooms.filter(item => item.active).length
     }
   },
   watch: {
@@ -219,13 +367,12 @@ export default {
     })
 
     this.fetchServerList()
+    this.initCallMonitor()
   },
   mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
-    }
+  },
+  beforeUnmount() {
+    this.destroyCallMonitor()
   },
   methods: {
     fetchServerList() {
@@ -234,6 +381,14 @@ export default {
       }).catch(error => {
         console.error('Failed to fetch server list:', error)
       })
+    },
+    setLanguage(language) {
+      if (this.$i18n.locale === language) {
+        return
+      }
+      this.$i18n.locale = language
+      const appStore = useAppStore()
+      appStore.setLanguage(language)
     },
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
@@ -253,11 +408,29 @@ export default {
     showPwd() {
       this.passwordType = this.passwordType === 'password' ? 'text' : 'password'
       this.$nextTick(() => {
-        this.$refs.password.focus()
+        if (this.$refs.password) {
+          this.$refs.password.focus()
+        }
       })
     },
-    goRegister() {
-      this.$router.push('/register')
+    openLoginDialog() {
+      this.loginDialogVisible = true
+    },
+    openRegisterDialog() {
+      this.registerDialogVisible = true
+    },
+    switchToRegisterDialog() {
+      this.loginDialogVisible = false
+      this.openRegisterDialog()
+    },
+    focusLoginField() {
+      this.$nextTick(() => {
+        if (this.loginForm.username === '' && this.$refs.username) {
+          this.$refs.username.focus()
+        } else if (this.$refs.password) {
+          this.$refs.password.focus()
+        }
+      })
     },
     async toggleImage(show) {
       this.isImageVisible = show
@@ -266,6 +439,208 @@ export default {
         this.nrlmpImg = mod.default || mod
       }
     },
+    initCallMonitor() {
+      this.monitorDestroyed = false
+      this.connectMonitorWebSocket()
+    },
+    destroyCallMonitor() {
+      this.monitorDestroyed = true
+      if (this.wsRetryTimer) {
+        clearTimeout(this.wsRetryTimer)
+        this.wsRetryTimer = null
+      }
+      if (this.websock) {
+        this.websock.close()
+        this.websock = null
+      }
+      if (this.audioContext) {
+        this.audioContext.close()
+        this.audioContext = null
+      }
+    },
+    buildMonitorWsUrl() {
+      const baseApi = import.meta.env.VITE_BASE_API || ''
+      const token = getToken()
+      let baseUrl = baseApi
+
+      if (!baseUrl || baseUrl.startsWith('/')) {
+        baseUrl = `${window.location.origin}${baseUrl}`
+      }
+
+      baseUrl = baseUrl.replace(/^http:/i, 'ws:').replace(/^https:/i, 'wss:')
+      const url = `${baseUrl.replace(/\/$/, '')}/ws/calls`
+      return token ? `${url}?token=${encodeURIComponent(token)}` : url
+    },
+    connectMonitorWebSocket() {
+      if (this.websock && (this.websock.readyState === WebSocket.OPEN || this.websock.readyState === WebSocket.CONNECTING)) {
+        return
+      }
+
+      const ws = new WebSocket(this.buildMonitorWsUrl())
+      ws.binaryType = 'arraybuffer'
+      ws.onopen = () => {
+        this.wsConnected = true
+      }
+      ws.onmessage = this.handleMonitorMessage
+      ws.onerror = () => {
+        this.wsConnected = false
+      }
+      ws.onclose = () => {
+        this.wsConnected = false
+        this.websock = null
+        if (!this.monitorDestroyed) {
+          this.wsRetryTimer = window.setTimeout(() => {
+            this.connectMonitorWebSocket()
+          }, 2000)
+        }
+      }
+      this.websock = ws
+    },
+    handleMonitorMessage(event) {
+      if (typeof event.data === 'string') {
+        try {
+          const payload = JSON.parse(event.data)
+          this.handleMonitorJSON(payload)
+        } catch (error) {
+          console.error('Invalid monitor payload:', error)
+        }
+        return
+      }
+
+      const bytes = new Uint8Array(event.data)
+      if (bytes.length > 0) {
+        this.playG711Frame(bytes)
+      }
+    },
+    handleMonitorJSON(payload) {
+      switch (payload.type) {
+      case 'snapshot':
+        this.rooms = Array.isArray(payload.rooms) ? payload.rooms : []
+        this.recentCalls = Array.isArray(payload.recent_calls) ? payload.recent_calls : []
+        this.subscribedRoomKeys = Array.isArray(payload.subscriptions) ? payload.subscriptions : []
+        break
+      case 'room_state':
+        if (payload.room) {
+          this.mergeRoomState(payload.room)
+        }
+        break
+      case 'recent_calls':
+        this.recentCalls = Array.isArray(payload.recent_calls) ? payload.recent_calls : []
+        break
+      case 'subscriptions':
+        this.subscribedRoomKeys = Array.isArray(payload.subscriptions) ? payload.subscriptions : []
+        break
+      default:
+        break
+      }
+    },
+    mergeRoomState(roomState) {
+      const index = this.rooms.findIndex(item => item.room_key === roomState.room_key)
+      if (index === -1) {
+        this.rooms = [...this.rooms, roomState]
+        return
+      }
+
+      const nextRooms = [...this.rooms]
+      nextRooms.splice(index, 1, { ...nextRooms[index], ...roomState })
+      this.rooms = nextRooms
+    },
+    roomSpeakers(room) {
+      if (room && Array.isArray(room.speakers) && room.speakers.length > 0) {
+        return room.speakers
+      }
+      if (room && room.callsign) {
+        return [{ callsign: room.callsign, ssid: room.ssid }]
+      }
+      return []
+    },
+    roomSpeakerCount(room) {
+      return this.roomSpeakers(room).length
+    },
+    roomSpeakerText(room) {
+      return this.roomSpeakers(room)
+        .map(item => `${item.callsign}-${item.ssid}`)
+        .join(' / ')
+    },
+    async ensureAudioReady() {
+      if (!this.audioContext) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext
+        if (!AudioCtx) {
+          throw new Error('当前浏览器不支持音频播放')
+        }
+        this.audioContext = new AudioCtx({ sampleRate: 8000 })
+        this.audioGainNode = this.audioContext.createGain()
+        this.audioGainNode.gain.value = 0.9
+        this.audioGainNode.connect(this.audioContext.destination)
+        this.nextPlayTime = this.audioContext.currentTime
+      }
+
+      if (this.audioContext.state === 'suspended') {
+        await this.audioContext.resume()
+      }
+    },
+    decodeALawSample(value) {
+      let code = value ^ 0x55
+      let exponent = (code & 0x70) >> 4
+      let mantissa = code & 0x0f
+
+      if (exponent > 0) {
+        mantissa += 16
+      }
+
+      let sample = (mantissa << 4) + 8
+      if (exponent > 1) {
+        sample <<= (exponent - 1)
+      }
+
+      return (code & 0x80) !== 0 ? sample : -sample
+    },
+    playG711Frame(g711Bytes) {
+      if (!this.audioContext || !this.audioGainNode) {
+        return
+      }
+
+      const pcm = new Float32Array(g711Bytes.length)
+      for (let i = 0; i < g711Bytes.length; i++) {
+        pcm[i] = this.decodeALawSample(g711Bytes[i]) / 32768
+      }
+
+      const buffer = this.audioContext.createBuffer(1, pcm.length, 8000)
+      buffer.copyToChannel(pcm, 0)
+
+      const source = this.audioContext.createBufferSource()
+      source.buffer = buffer
+      source.connect(this.audioGainNode)
+
+      const now = this.audioContext.currentTime
+      if (this.nextPlayTime < now || this.nextPlayTime-now > 1) {
+        this.nextPlayTime = now + 0.05
+      }
+
+      source.start(this.nextPlayTime)
+      this.nextPlayTime += buffer.duration
+    },
+    async toggleRoomSubscription(roomKey) {
+      if (!this.websock || this.websock.readyState !== WebSocket.OPEN) {
+        return
+      }
+
+      const subscribed = this.subscribedRoomKeys.includes(roomKey)
+
+      if (!subscribed) {
+        try {
+          await this.ensureAudioReady()
+        } catch (error) {
+          console.error('Audio init failed:', error)
+          return
+        }
+      }
+
+      this.websock.send(JSON.stringify({
+        action: subscribed ? 'unsubscribe' : 'subscribe',
+        room_keys: [roomKey]
+      }))
+    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -273,6 +648,7 @@ export default {
           const userStore = useUserStore()
           userStore.login(this.loginForm)
             .then(() => {
+              this.loginDialogVisible = false
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             })
@@ -311,6 +687,183 @@ $cursor: #f4f8ff;
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
     color: $cursor;
+  }
+}
+
+.portal-dialog,
+.portal-dialog.el-dialog {
+  &.el-dialog {
+    margin: 0 !important;
+    width: min(92vw, 520px) !important;
+    height: auto !important;
+    max-height: calc(100vh - 40px);
+    border-radius: 26px;
+    overflow: hidden;
+    background: linear-gradient(160deg, rgba(15, 35, 63, 0.98) 0%, rgba(10, 21, 42, 0.98) 100%) !important;
+    border: 1px solid rgba(105, 182, 255, 0.22) !important;
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(54, 240, 203, 0.08) inset !important;
+  }
+
+  .login-button-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    box-sizing: border-box;
+
+    .login-button {
+      width: 200px !important;
+      min-width: 200px !important;
+      height: 48px !important;
+      font-size: 16px !important;
+      border-radius: 14px !important;
+      background: linear-gradient(90deg, #26efc7 0%, #3f8dff 52%, #6c79ff 100%) !important;
+      border: none !important;
+      box-shadow: 0 14px 34px rgba(63, 141, 255, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.14) inset !important;
+      transition: all 0.3s ease;
+      font-weight: 600 !important;
+      letter-spacing: 0.6px;
+      display: flex !important;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 44px rgba(38, 239, 199, 0.46), 0 0 18px rgba(79, 152, 255, 0.35) !important;
+      }
+    }
+  }
+
+  .el-dialog__header {
+    padding: 22px 24px 14px !important;
+    border-bottom: 1px solid rgba(105, 182, 255, 0.12);
+    background: transparent !important;
+  }
+
+  .el-dialog__title {
+    color: var(--ink) !important;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+  }
+
+  .el-dialog__headerbtn {
+    top: 18px !important;
+    right: 18px !important;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    transition: background 0.2s ease, transform 0.2s ease;
+
+    .el-dialog__close {
+      color: rgba(228, 239, 255, 0.72) !important;
+      font-size: 18px;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: scale(1.04);
+    }
+  }
+
+  .el-dialog__body {
+    padding: 22px 24px 24px !important;
+    color: var(--ink);
+    background: transparent !important;
+  }
+
+  .el-input {
+    display: inline-block;
+    height: 47px;
+    flex: 1;
+    min-width: 0;
+
+    input,
+    .el-input__inner {
+      box-sizing: border-box;
+      background: transparent !important;
+      border: 0;
+      -webkit-appearance: none;
+      border-radius: 0;
+      padding: 12px 5px 12px 15px;
+      color: var(--ink) !important;
+      height: 47px;
+      caret-color: $cursor;
+      font-size: 16px;
+
+      &:-webkit-autofill {
+        box-shadow: 0 0 0 1000px $bg inset !important;
+        -webkit-text-fill-color: $cursor !important;
+      }
+
+      &::placeholder {
+        color: rgba(228, 239, 255, 0.62);
+        opacity: 1;
+      }
+    }
+  }
+
+  .el-input__wrapper {
+    width: 100%;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0;
+    padding: 0;
+  }
+
+  .el-input__wrapper.is-focus,
+  .el-input__wrapper:hover {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .el-form-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--field-bg) !important;
+    border: 1px solid var(--field-border) !important;
+    border-radius: 12px !important;
+    color: var(--ink);
+    padding-right: 40px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .el-form-item:hover {
+    border-color: var(--field-border-hover) !important;
+    box-shadow: 0 0 0 1px rgba(82, 227, 194, 0.26) inset;
+  }
+}
+
+.register-dialog {
+  &.el-dialog {
+    width: min(96vw, 1320px) !important;
+    max-height: calc(100vh - 40px);
+  }
+
+  .el-dialog__body {
+    padding-top: 18px !important;
+    max-height: calc(100vh - 120px);
+    overflow: auto;
+  }
+}
+
+.portal-dialog-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(6, 12, 24, 0.46) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  .el-overlay-dialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
   }
 }
 
@@ -418,61 +971,368 @@ $cursor: #f4f8ff;
     pointer-events: none;
   }
 
+  .topbar {
+    width: min(1400px, calc(100% - 48px));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .brand-block {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .topbar-logo {
+    width: 240px;
+    height: auto;
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.38));
+    flex-shrink: 0;
+  }
+
+  .brand-text {
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 2.8vw, 34px);
+      line-height: 1.1;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 8px 0 0;
+      color: rgba(228, 239, 255, 0.72);
+      font-size: 14px;
+      letter-spacing: 0.4px;
+    }
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .language-switch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 4px;
+  }
+
+  .lang-button {
+    appearance: none;
+    min-width: 44px;
+    height: 42px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(104, 176, 255, 0.28);
+    background: rgba(13, 31, 57, 0.68);
+    color: rgba(228, 239, 255, 0.76);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      border-color: rgba(54, 240, 203, 0.42);
+      color: var(--ink);
+    }
+  }
+
+  .lang-button.active {
+    background: linear-gradient(90deg, rgba(38, 239, 199, 0.18) 0%, rgba(63, 141, 255, 0.22) 100%);
+    border-color: rgba(54, 240, 203, 0.5);
+    color: #bdfbe1;
+    box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.12) inset;
+  }
+
+  .topbar-stats {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .topbar-stat {
+    min-width: 120px;
+    padding: 12px 14px;
+    border-radius: 18px;
+    background: rgba(12, 31, 58, 0.74);
+    border: 1px solid rgba(112, 192, 255, 0.14);
+    text-align: center;
+
+    strong {
+      display: block;
+      font-size: 26px;
+      line-height: 1.1;
+      color: #8ff9de;
+    }
+
+    span {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      color: rgba(228, 239, 255, 0.62);
+      white-space: nowrap;
+    }
+  }
+
+  .topbar-button {
+    appearance: none;
+    height: 42px;
+    padding: 0 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(104, 176, 255, 0.3);
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  .topbar-button.ghost {
+    background: rgba(13, 31, 57, 0.72);
+  }
+
+  .topbar-button.solid {
+    background: linear-gradient(90deg, #26efc7 0%, #3f8dff 100%);
+    border: none;
+    box-shadow: 0 12px 28px rgba(63, 141, 255, 0.28);
+  }
+
   .content-wrapper {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 28px;
+    gap: 24px;
     align-items: start !important;
     position: relative;
     z-index: 1;
-    max-width: 1400px;
+    width: min(1400px, calc(100% - 48px));
     margin: 0 auto;
-    padding: clamp(24px, 4vw, 52px);
+    padding: 20px 0 clamp(24px, 4vw, 52px);
 
     @media (min-width: 1024px) {
-      grid-template-columns: repeat(3, minmax(320px, 1fr));
-      gap: clamp(22px, 4vw, 48px) !important;
-      column-gap: clamp(22px, 4vw, 48px) !important;
-      padding-left: clamp(20px, 4vw, 56px) !important;
-      padding-right: clamp(20px, 4vw, 56px) !important;
-      max-width: 1400px !important;
+      grid-template-columns: minmax(260px, 0.8fr) minmax(520px, 1.35fr) minmax(260px, 0.9fr);
+      column-gap: 24px;
     }
   }
 
-  .support-column,
-  .form-column {
-    display: block;
-    align-self: start;
-  }
-
-  .support-column,
-  .server-column,
-  .form-column {
+  .left-column,
+  .middle-column,
+  .right-column {
     width: 100%;
-    max-width: 560px;
-    justify-self: center;
-  }
-
-  @media (min-width: 1024px) {
-    .support-column,
-    .server-column,
-    .form-column {
-      max-width: 440px;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .server-column {
-      order: 2;
-    }
-
-    .form-column {
-      order: 1;
-    }
-  }
-
-  .server-column {
     align-self: start;
+  }
+
+  .monitor-card {
+    background: linear-gradient(150deg, rgba(16, 39, 68, 0.94) 0%, rgba(12, 25, 48, 0.92) 100%);
+    border: 1px solid rgba(112, 192, 255, 0.24);
+    box-shadow: 0 20px 54px rgba(3, 9, 21, 0.42);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 22px;
+  }
+
+  .middle-column .monitor-card {
+    margin-bottom: 0;
+  }
+
+  .monitor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+
+    h4 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--ink);
+    }
+
+    p {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: rgba(228, 239, 255, 0.65);
+      line-height: 1.6;
+    }
+  }
+
+  .monitor-status {
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #ffd9aa;
+    background: rgba(247, 187, 67, 0.16);
+    border: 1px solid rgba(247, 187, 67, 0.28);
+    white-space: nowrap;
+  }
+
+  .monitor-status.online {
+    color: #bdfbe1;
+    background: rgba(54, 240, 203, 0.14);
+    border-color: rgba(54, 240, 203, 0.34);
+  }
+
+  .monitor-room-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .monitor-room-button {
+    appearance: none;
+    border: 1px solid rgba(94, 166, 255, 0.26);
+    border-radius: 16px;
+    background: rgba(18, 41, 72, 0.84);
+    color: var(--ink);
+    min-height: 60px;
+    flex: 1 1 220px;
+    min-width: 220px;
+    max-width: 100%;
+    padding: 10px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      border-color: rgba(54, 240, 203, 0.54);
+      box-shadow: 0 12px 28px rgba(10, 22, 42, 0.4);
+    }
+  }
+
+  .monitor-room-button.active {
+    border-color: #36f0cb;
+    background: linear-gradient(140deg, rgba(16, 80, 70, 0.95) 0%, rgba(12, 55, 65, 0.95) 100%);
+    box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.25) inset, 0 12px 32px rgba(54, 240, 203, 0.2);
+  }
+
+  .monitor-room-button.speaking {
+    border-color: #f7bb43;
+    box-shadow: 0 0 0 1px rgba(247, 187, 67, 0.35) inset, 0 0 20px rgba(247, 187, 67, 0.3);
+  }
+
+  .monitor-room-button.multi-speakers {
+    flex-basis: 360px;
+  }
+
+  .room-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .room-caller {
+    color: #8ff9de;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .room-idle {
+    color: rgba(228, 239, 255, 0.54);
+    font-size: 12px;
+  }
+
+  .monitor-subscription-tip {
+    margin-top: 14px;
+    font-size: 12px;
+    color: rgba(228, 239, 255, 0.68);
+  }
+
+  .recent-call-panel {
+    margin-top: 20px;
+    border-top: 1px solid rgba(104, 176, 255, 0.16);
+    padding-top: 16px;
+  }
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .recent-call-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 280px;
+    overflow: auto;
+    padding-right: 4px;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(12, 30, 56, 0.5);
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(54, 240, 203, 0.35);
+      border-radius: 3px;
+
+      &:hover {
+        background: rgba(54, 240, 203, 0.55);
+      }
+    }
+  }
+
+  .recent-call-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(12, 31, 58, 0.68);
+    border: 1px solid rgba(112, 192, 255, 0.12);
+    font-size: 12px;
+  }
+
+  .recent-room {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .recent-caller {
+    color: #8ff9de;
+  }
+
+  .recent-duration {
+    color: #ffd9aa;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  .recent-time,
+  .empty-state {
+    color: rgba(228, 239, 255, 0.58);
+  }
+
+  .empty-state {
+    font-size: 12px;
+    padding: 10px 0;
   }
 
   .login-form-card {
@@ -485,50 +1345,37 @@ $cursor: #f4f8ff;
     height: auto !important;
   }
 
-  .title-container {
-    position: relative;
+  .login-dialog-inner {
+    padding: 4px 2px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .dialog-title-container {
+    margin-bottom: 20px;
     text-align: center;
-    margin-bottom: 24px;
+    width: 100%;
 
-    .title {
-      font-size: 28px;
-      letter-spacing: 0.6px;
-      margin-bottom: 6px;
-      color: var(--ink);
-      font-weight: 600;
-    }
-
-    &::after {
-      content: "实时互联 · 指挥中枢";
-      display: block;
-      font-size: 13px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: rgba(131, 248, 221, 0.92);
-      margin-top: 6px;
-    }
-
-    .set-language {
-      color: var(--ink-dim);
-      position: absolute;
-      top: 0;
-      right: 0;
-      font-size: 20px;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-
-      &:hover {
-        transform: scale(1.1);
-      }
+    p {
+      margin: 0;
+      color: rgba(228, 239, 255, 0.72);
+      font-size: 14px;
+      line-height: 1.7;
+      text-align: center;
     }
   }
 
-  .logo {
-    width: 180px;
-    height: auto;
-    margin: 0 auto 20px;
-    display: block;
-    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.38));
+  .login-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .el-form-item {
+      margin-bottom: 16px;
+      width: 100%;
+    }
   }
 
   .svg-container {
@@ -549,22 +1396,28 @@ $cursor: #f4f8ff;
     user-select: none;
   }
 
-  .login-button {
+  .login-button-wrapper {
     width: 100%;
-    margin-bottom: 20px;
-    height: 48px;
-    font-size: 16px;
-    border-radius: 14px !important;
-    background: linear-gradient(90deg, #26efc7 0%, #3f8dff 52%, #6c79ff 100%) !important;
-    border: none !important;
-    box-shadow: 0 14px 34px rgba(63, 141, 255, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.14) inset;
-    transition: all 0.3s ease;
-    font-weight: 600;
-    letter-spacing: 0.6px;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
 
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 44px rgba(38, 239, 199, 0.46), 0 0 18px rgba(79, 152, 255, 0.35) !important;
+    .login-button {
+      width: 200px !important;
+      height: 48px;
+      font-size: 16px;
+      border-radius: 14px;
+      background: linear-gradient(90deg, #26efc7 0%, #3f8dff 52%, #6c79ff 100%) !important;
+      border: none !important;
+      box-shadow: 0 14px 34px rgba(63, 141, 255, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.14) inset;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      letter-spacing: 0.6px;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 44px rgba(38, 239, 199, 0.46), 0 0 18px rgba(79, 152, 255, 0.35) !important;
+      }
     }
   }
 
@@ -591,6 +1444,41 @@ $cursor: #f4f8ff;
       border-color: rgba(54, 240, 203, 0.74);
       box-shadow: 0 14px 32px rgba(63, 141, 255, 0.28), 0 0 14px rgba(54, 240, 203, 0.2);
       transform: translateY(-1px);
+    }
+  }
+
+  .register-panel {
+    width: 100%;
+    min-height: min(68vh, 680px);
+    border-radius: 20px;
+    background: rgba(9, 20, 39, 0.82);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    padding: 14px 16px;
+    border: 1px solid rgba(105, 182, 255, 0.16);
+  }
+
+  .register-dialog-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .register-dialog-copy {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 0 2px;
+
+    strong {
+      font-size: 20px;
+      color: var(--ink);
+    }
+
+    span {
+      color: rgba(228, 239, 255, 0.7);
+      font-size: 14px;
+      line-height: 1.5;
     }
   }
 
@@ -634,6 +1522,149 @@ $cursor: #f4f8ff;
       @media (min-width: 768px) {
         display: inline;
       }
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .topbar,
+    .content-wrapper {
+      width: min(100%, calc(100% - 32px));
+    }
+
+    .topbar {
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-block {
+      align-items: center;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .topbar-logo {
+      width: 200px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .brand-text {
+      text-align: center;
+
+      h1 {
+        text-align: center;
+      }
+
+      p {
+        text-align: center;
+      }
+    }
+
+    .topbar-stats {
+      width: 100%;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .topbar-actions {
+      width: 100%;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .content-wrapper {
+      grid-template-columns: 1fr;
+    }
+
+    .left-column {
+      order: 2;
+    }
+
+    .middle-column {
+      order: 1;
+    }
+
+    .right-column {
+      order: 3;
+    }
+
+  }
+
+  @media (max-width: 767px) {
+    .brand-block {
+      align-items: center;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .topbar-logo {
+      width: 200px;
+    }
+
+    .brand-text {
+      text-align: center;
+    }
+
+    .topbar-stats {
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .language-switch {
+      margin-right: 0;
+    }
+
+    .topbar-actions {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .topbar-stat {
+      min-width: 96px;
+      padding: 10px 12px;
+
+      strong {
+        font-size: 22px;
+      }
+    }
+
+    .monitor-header {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .recent-call-item {
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 4px 8px;
+    }
+
+    .recent-room {
+      grid-column: 1 / 4;
+      grid-row: 1;
+    }
+
+    .recent-time,
+    .recent-caller,
+    .recent-duration {
+      grid-row: 2;
+      white-space: nowrap;
+    }
+
+    .register-panel {
+      min-height: 68vh;
+      padding: 12px;
+    }
+
+    .register-dialog-copy {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 

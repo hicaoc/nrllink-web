@@ -1,13 +1,13 @@
 <template>
-  <div class="register-container">
+  <div class="register-container" :class="{ embedded: isEmbedded }">
     <div class="content-wrapper">
       <div class="column form-column">
         <div class="login-form-card register-card">
           <div class="title-container">
-            <img src="/images/logo.png" alt="Logo" class="logo">
+            <img v-if="!isEmbedded" src="/images/logo.png" alt="Logo" class="logo">
             <h3 class="title">注册账号</h3>
             <p class="subtitle">提交后等待管理员审核</p>
-            <router-link class="back-link" to="/login">返回登录</router-link>
+            <router-link v-if="!isEmbedded" class="back-link" to="/login">返回登录</router-link>
           </div>
 
           <el-form
@@ -101,6 +101,27 @@ const MAX_LICENSE_BYTES = 800 * 1024
 
 export default {
   name: 'RegisterView',
+  props: {
+    embedded: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    isEmbedded() {
+      if (this.embedded) {
+        return true
+      }
+      const queryValue = this.$route?.query?.embed
+      if (queryValue === '1' || queryValue === 'true') {
+        return true
+      }
+      if (typeof window === 'undefined') {
+        return false
+      }
+      return window.self !== window.top
+    }
+  },
   data() {
     const validateCallsign = (rule, value, callback) => {
       if (!value || !/^[A-Z0-9]{5,6}$/.test(value)) {
@@ -349,6 +370,13 @@ $cursor: #eef4fb;
   }
 }
 
+html,
+body,
+#app {
+  min-height: 100%;
+  background: #111a28;
+}
+
 .register-container {
   .el-input {
     display: inline-block;
@@ -429,6 +457,10 @@ $cursor: #eef4fb;
     box-shadow: none !important;
     resize: none;
   }
+
+  .el-button {
+    border-radius: 12px;
+  }
 }
 </style>
 
@@ -493,6 +525,128 @@ $cursor: #eef4fb;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
     border-radius: 20px;
     padding: 28px 28px 24px;
+  }
+
+  &.embedded {
+    min-height: auto;
+    background: linear-gradient(160deg, rgba(15, 35, 63, 0.96) 0%, rgba(10, 21, 42, 0.98) 100%);
+    overflow: auto;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+
+    .content-wrapper {
+      max-width: none;
+      padding: 0;
+    }
+
+    .form-column {
+      max-width: none;
+    }
+
+    .login-form-card {
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      border-radius: 0;
+      padding: 4px 4px 0;
+    }
+
+    .title-container {
+      text-align: left;
+      margin-bottom: 8px;
+
+      .title {
+        display: none;
+      }
+
+      .subtitle {
+        display: none;
+      }
+    }
+
+    .form-grid,
+    .register-form {
+      gap: 10px;
+    }
+
+    .form-grid {
+      margin-bottom: 8px;
+    }
+
+    .el-form-item {
+      padding: 6px 10px;
+      min-height: 62px;
+      border-radius: 16px !important;
+      display: flex;
+      flex-direction: row !important;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .el-form-item__label {
+      font-size: 14px;
+      padding-bottom: 0;
+      line-height: 1.4;
+      justify-content: flex-start;
+      width: auto !important;
+      min-width: 0;
+      margin-right: 0;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .el-input,
+    .el-input input,
+    .el-input .el-input__inner {
+      height: 38px;
+      font-size: 15px;
+    }
+
+    .el-input input,
+    .el-input .el-input__inner {
+      padding: 8px 5px 8px 12px;
+    }
+
+    .el-textarea__inner {
+      min-height: 52px !important;
+      padding: 6px 5px 6px 12px;
+      line-height: 1.5;
+    }
+
+    .el-form-item__content {
+      min-width: 0;
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    .upload-inner {
+      min-height: 92px;
+      padding: 12px 14px;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .upload-title {
+      font-size: 14px;
+    }
+
+    .upload-meta {
+      font-size: 12px;
+    }
+
+    .upload-button {
+      min-height: 38px;
+      padding: 0 16px;
+    }
+
+    .register-button {
+      margin-top: 2px;
+      height: 46px;
+    }
   }
 
   .title-container {
@@ -664,6 +818,22 @@ $cursor: #eef4fb;
 
     .register-button {
       height: 42px;
+    }
+
+    &.embedded {
+      .login-form-card {
+        padding: 2px;
+      }
+
+      .title-container {
+        .title {
+          font-size: 28px;
+        }
+
+        .subtitle {
+          font-size: 14px;
+        }
+      }
     }
   }
 }

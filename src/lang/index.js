@@ -31,7 +31,7 @@ export function getLanguage() {
   return 'en'
 }
 const i18n = createI18n({
-  legacy: true,
+  legacy: false,
   globalInjection: true,
   locale: getLanguage(),
   messages

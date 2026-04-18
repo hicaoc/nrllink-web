@@ -146,7 +146,24 @@ export default {
     csqr: '联系客服',
     csqrTips: '请用微信扫描客服微信二维码',
     thirdparty: '第三方登录',
-    thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
+    thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！',
+    visibleRooms: '可见房间',
+    currentCall: '当前通话',
+    voiceSubscription: '语音订阅',
+    login: '登录',
+    register: '注册',
+    realTimeCall: '实时通话',
+    connected: '已连接',
+    connecting: '连接中',
+    idle: '当前空闲',
+    recent20calls: '最近 20 条通话',
+    noCallRecord: '暂无通话记录',
+    subscribedRooms: '已订阅 {count} 个房间，后端会先混音再下发语音',
+    loginDialogTip: '输入用户名和密码后进入平台',
+    noAccount: '没有账号？去注册',
+    newUserRegister: '新用户注册',
+    registerDesc: '在弹窗中直接完成资料填写，提交后等待管理员审核。',
+    brandDesc: '实时通话总览、房间监听与平台入口'
   },
   documentation: {
     documentation: 'HAM互联'

@@ -9,17 +9,18 @@ import path from 'path'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const baseApi = env.VITE_BASE_API || '/dev-api'
+  const generateDts = mode !== 'production'
 
   return {
     plugins: [
       vue(),
       AutoImport({
         resolvers: [ElementPlusResolver({ importStyle: 'css' })],
-        dts: 'src/auto-imports.d.ts'
+        dts: generateDts ? 'src/auto-imports.d.ts' : false
       }),
       Components({
         resolvers: [ElementPlusResolver({ importStyle: 'css', directives: true })],
-        dts: 'src/components.d.ts'
+        dts: generateDts ? 'src/components.d.ts' : false
       }),
       createSvgIconsPlugin({
         iconDirs: [path.resolve(process.cwd(), 'src/icons/svg')],
@@ -37,6 +38,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         [baseApi]: {
           target: 'https://js.nrlptt.com/',
+          ws: true,
           changeOrigin: true,
           rewrite: (pathValue) => pathValue.replace(new RegExp(`^${baseApi}`), '')
         }

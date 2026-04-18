@@ -74,8 +74,18 @@ export default {
   margin-left: 8px;
 
   .no-redirect {
-    color: #97a8be;
+    color: rgba(228, 239, 255, 0.76);
     cursor: text;
+  }
+
+  :deep(.el-breadcrumb__inner),
+  :deep(.el-breadcrumb__separator) {
+    color: rgba(228, 239, 255, 0.58);
+  }
+
+  :deep(a),
+  :deep(a:hover) {
+    color: rgba(228, 239, 255, 0.76);
   }
 }
 </style>

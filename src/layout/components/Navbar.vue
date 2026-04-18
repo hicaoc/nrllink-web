@@ -25,7 +25,9 @@
 
         <!-- <error-log class="errLog-container right-menu-item hover-effect"/> -->
 
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        <button class="lang-toggle right-menu-item hover-effect" @click="toggleLanguage">
+          {{ $i18n.locale === 'zh' ? 'EN' : '中' }}
+        </button>
 
         <!-- <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect"/>
@@ -61,28 +63,20 @@
 </template>
 
 <script>
-import { mapState } from 'pinia'
+import { mapState, storeToRefs } from 'pinia'
+import { pinia } from '@/store'
 import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import Hamburger from '@/components/Hamburger/index.vue'
-// import ErrorLog from '@/components/ErrorLog'
-import Screenfull from '@/components/Screenfull/index.vue'
-// import SizeSelect from '@/components/SizeSelect'
-// import LangSelect from '@/components/LangSelect'
-// import Search from '@/components/HeaderSearch'
-
-// import { changearea } from "@/api/employee";
+import { computed } from 'vue'
+import i18n from '@/lang'
+import router from '@/router'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger,
-    //  ErrorLog,
-    Screenfull
-    // SizeSelect,
-    // LangSelect,
-    // Search
+    Hamburger
   },
   data() {
     return {
@@ -90,55 +84,41 @@ export default {
       total: 0
     }
   },
-  computed: {
-    ...mapState(useAppStore, ['sidebar', 'device']),
-    ...mapState(useUserStore, ['avatar', 'name', 'callsign'])
-    // callsign() {
-    //   return this.$store.state.user.callsign
-    // }
-  },
-  // create() {
-  //   this.getList();
-  // },
-  methods: {
-    toggleSideBar() {
-      const appStore = useAppStore()
+  setup() {
+    const appStore = useAppStore(pinia)
+    const userStore = useUserStore(pinia)
+
+    const sidebar = computed(() => appStore.sidebar)
+    const device = computed(() => appStore.device)
+    const name = computed(() => userStore.name)
+    const callsign = computed(() => userStore.callsign)
+    const avatar = computed(() => userStore.avatar)
+
+    const toggleSideBar = () => {
       appStore.toggleSideBar()
-    },
-    async logout() {
-      const userStore = useUserStore()
-      await userStore.logout()
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
-    // getList() {
-    //   this.listLoading = true;
-    //   fetchareasList(this.listQuery).then(response => {
-    //     this.list = response.data.items;
-    //     this.total = response.data.total;
-    //     console.log(list)
 
-    //     // Just to simulate the time of the request
-    //     setTimeout(() => {
-    //       this.listLoading = false;
-    //     }, 1.5 * 100);
-    //   });
-    // },
-    // submit() {
-    //   changearea({current_area:this.current_area}).then(response => {
-    //     this.$message(response.data.message);
+    const toggleLanguage = () => {
+      const locale = i18n.global.locale === 'zh' ? 'en' : 'zh'
+      i18n.global.locale = locale
+      appStore.setLanguage(locale)
+    }
 
-    //     //this.$store.commit('user/SET_current_area', this.user.current_area)
-    //     //this.$store.commit('user/SET_current_area_name', this.user.current_area_name)
+    const logout = async () => {
+      await userStore.logout()
+      router.push(`/login?redirect=${window.location.pathname}`)
+    }
 
-    //     this.$store.dispatch("user/getInfo", this.current_area_name);
-    //     this.$store.dispatch("user/getInfo", this.user.current_area);
-
-    //     // Just to simulate the time of the request
-    //     setTimeout(() => {
-    //       this.listLoading = false;
-    //     }, 1.5 * 100);
-    //   });
-    // }
+    return {
+      sidebar,
+      device,
+      name,
+      callsign,
+      avatar,
+      toggleSideBar,
+      toggleLanguage,
+      logout
+    }
   }
 }
 </script>
@@ -148,8 +128,9 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  background: linear-gradient(150deg, rgba(16, 39, 68, 0.98) 0%, rgba(12, 25, 48, 0.96) 100%) !important;
+  border-bottom: 1px solid rgba(112, 192, 255, 0.24);
+  box-shadow: 0 4px 16px rgba(3, 9, 21, 0.3);
 
   .hamburger-container {
     line-height: 46px;
@@ -187,7 +168,7 @@ export default {
       padding: 0 8px;
       height: 100%;
       font-size: 18px;
-      color: #5a5e66;
+      color: rgba(228, 239, 255, 0.76);
       vertical-align: text-bottom;
 
       &.hover-effect {
@@ -195,8 +176,28 @@ export default {
         transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, 0.025);
+          background: rgba(54, 240, 203, 0.1);
         }
+      }
+    }
+
+    .lang-toggle {
+      appearance: none;
+      border: 1px solid rgba(104, 176, 255, 0.28);
+      border-radius: 999px;
+      background: rgba(13, 31, 57, 0.68);
+      color: rgba(228, 239, 255, 0.76);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 0 12px;
+      height: 36px;
+      margin: 0 4px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: rgba(54, 240, 203, 0.42);
+        color: #f4f8ff;
       }
     }
 
