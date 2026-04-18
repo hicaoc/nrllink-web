@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="login-container" :style="pulseStyle">
     <div class="topbar">
       <div class="brand-block">
         <img src="/images/logo.png" alt="Logo" class="topbar-logo">
@@ -11,16 +11,12 @@
 
       <div class="topbar-stats">
         <div class="topbar-stat">
-          <strong>{{ rooms.length }}</strong>
-          <span>{{ $t('login.visibleRooms') }}</span>
+          <strong>{{ connectedClients }}</strong>
+          <span>{{ $t('login.onlineBrowsers') }}</span>
         </div>
         <div class="topbar-stat">
-          <strong>{{ activeRoomCount }}</strong>
-          <span>{{ $t('login.currentCall') }}</span>
-        </div>
-        <div class="topbar-stat">
-          <strong>{{ subscribedRoomKeys.length }}</strong>
-          <span>{{ $t('login.voiceSubscription') }}</span>
+          <strong>{{ totalSubs }}</strong>
+          <span>{{ $t('login.audioSubscriptions') }}</span>
         </div>
       </div>
 
@@ -57,9 +53,23 @@
         <div class="monitor-card">
           <div class="monitor-header">
             <h4>{{ $t('login.realTimeCall') }}</h4>
-            <span class="monitor-status" :class="{ online: wsConnected }">
-              {{ wsConnected ? $t('login.connected') : $t('login.connecting') }}
+            <div class="monitor-stats-inline">
+            <span class="stat-item" :title="$t('login.visibleRooms')">
+              <el-icon><Grid /></el-icon>
+              <strong>{{ rooms.length }}</strong>
             </span>
+            <span class="stat-item" :title="$t('login.currentCall')">
+              <el-icon><Microphone /></el-icon>
+              <strong>{{ activeRoomCount }}</strong>
+            </span>
+            <span class="stat-item" :title="$t('login.voiceSubscription')">
+              <el-icon><Bell /></el-icon>
+              <strong>{{ subscribedRoomKeys.length }}</strong>
+            </span>
+            <span class="stat-item" :class="{ online: wsConnected }" :title="wsConnected ? $t('login.connected') : $t('login.connecting')">
+              <el-icon><Connection /></el-icon>
+            </span>
+          </div>
           </div>
 
           <div class="monitor-room-grid">
@@ -84,9 +94,6 @@
           </div>
 
           <div class="monitor-subscription-tip">
-            <span v-if="subscribedRoomKeys.length > 0">
-              {{ $t('login.subscribedRooms', { count: subscribedRoomKeys.length }) }}
-            </span>
           </div>
 
           <div class="recent-call-panel">
@@ -99,6 +106,7 @@
                 v-for="item in recentCalls"
                 :key="`${item.room_key}-${item.started_at}-${item.callsign}-${item.ssid}`"
                 class="recent-call-item"
+                :class="{ active: item.active }"
               >
                 <span class="recent-room">#{{ item.room_id }} · {{ item.room_name }}</span>
                 <span class="recent-caller">{{ item.callsign }}-{{ item.ssid }}</span>
@@ -249,9 +257,11 @@ import ServerList from './components/ServerList.vue'
 import SupportLinks from './components/SupportLinks.vue'
 import RegisterView from '../register/index.vue'
 
+import { Grid, Microphone, Bell, Connection } from '@element-plus/icons-vue'
+
 export default {
   name: 'LoginView',
-  components: { ServerList, SupportLinks, RegisterView },
+  components: { ServerList, SupportLinks, RegisterView, Grid, Microphone, Bell, Connection },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -296,17 +306,27 @@ export default {
       websock: null,
       wsConnected: false,
       wsRetryTimer: null,
+      wsPingTimer: null,
       monitorDestroyed: false,
       rooms: [],
       recentCalls: [],
       subscribedRoomKeys: [],
       audioContext: null,
       audioGainNode: null,
-      nextPlayTime: 0
+      audioWorker: null,
+      nextPlayTime: 0,
+      totalSubs: 0,
+      connectedClients: 0,
+      pulsePhaseMs: typeof window !== 'undefined' ? Date.now() % 800 : 0
     }
   },
   computed: {
     ...mapState(useAppStore, ['device']),
+    pulseStyle() {
+      return {
+        '--speaking-pulse-delay': `${-this.pulsePhaseMs}ms`
+      }
+    },
     sortedServerList() {
       const currentHost = typeof window !== 'undefined' ? window.location.host : ''
       const currentHostname = typeof window !== 'undefined' ? window.location.hostname : ''
@@ -335,7 +355,8 @@ export default {
     },
     sortedMonitorRooms() {
       const recentRoomKeys = new Set(this.recentCalls.map(item => item.room_key))
-      const visibleRooms = this.rooms.filter(item => item.active || recentRoomKeys.has(item.room_key))
+      const subscribedRoomKeys = new Set(this.subscribedRoomKeys)
+      const visibleRooms = this.rooms.filter(item => recentRoomKeys.has(item.room_key) || subscribedRoomKeys.has(item.room_key))
 
       return [...visibleRooms].sort((a, b) => {
         return Number(a.room_id || 0) - Number(b.room_id || 0)
@@ -370,8 +391,12 @@ export default {
     this.initCallMonitor()
   },
   mounted() {
+    window.addEventListener('beforeunload', this.handleWindowUnload)
+    window.addEventListener('pagehide', this.handleWindowUnload)
   },
   beforeUnmount() {
+    window.removeEventListener('beforeunload', this.handleWindowUnload)
+    window.removeEventListener('pagehide', this.handleWindowUnload)
     this.destroyCallMonitor()
   },
   methods: {
@@ -449,6 +474,10 @@ export default {
         clearTimeout(this.wsRetryTimer)
         this.wsRetryTimer = null
       }
+      if (this.wsPingTimer) {
+        clearInterval(this.wsPingTimer)
+        this.wsPingTimer = null
+      }
       if (this.websock) {
         this.websock.close()
         this.websock = null
@@ -456,6 +485,10 @@ export default {
       if (this.audioContext) {
         this.audioContext.close()
         this.audioContext = null
+      }
+      if (this.audioWorker) {
+        this.audioWorker.terminate()
+        this.audioWorker = null
       }
     },
     buildMonitorWsUrl() {
@@ -475,11 +508,20 @@ export default {
       if (this.websock && (this.websock.readyState === WebSocket.OPEN || this.websock.readyState === WebSocket.CONNECTING)) {
         return
       }
+      if (this.wsPingTimer) {
+        clearInterval(this.wsPingTimer)
+        this.wsPingTimer = null
+      }
 
       const ws = new WebSocket(this.buildMonitorWsUrl())
       ws.binaryType = 'arraybuffer'
       ws.onopen = () => {
         this.wsConnected = true
+        this.wsPingTimer = window.setInterval(() => {
+          if (this.websock && this.websock.readyState === WebSocket.OPEN) {
+            this.websock.send(JSON.stringify({ action: 'ping' }))
+          }
+        }, 10000)
       }
       ws.onmessage = this.handleMonitorMessage
       ws.onerror = () => {
@@ -487,6 +529,10 @@ export default {
       }
       ws.onclose = () => {
         this.wsConnected = false
+        if (this.wsPingTimer) {
+          clearInterval(this.wsPingTimer)
+          this.wsPingTimer = null
+        }
         this.websock = null
         if (!this.monitorDestroyed) {
           this.wsRetryTimer = window.setTimeout(() => {
@@ -512,12 +558,37 @@ export default {
         this.playG711Frame(bytes)
       }
     },
+    handleWindowUnload() {
+      this.monitorDestroyed = true
+      if (this.wsRetryTimer) {
+        clearTimeout(this.wsRetryTimer)
+        this.wsRetryTimer = null
+      }
+      if (this.wsPingTimer) {
+        clearInterval(this.wsPingTimer)
+        this.wsPingTimer = null
+      }
+      if (this.websock) {
+        try {
+          this.websock.close(1000, 'page unload')
+        } catch (error) {
+          console.error('Failed to close monitor websocket:', error)
+        }
+        this.websock = null
+      }
+    },
     handleMonitorJSON(payload) {
       switch (payload.type) {
       case 'snapshot':
         this.rooms = Array.isArray(payload.rooms) ? payload.rooms : []
         this.recentCalls = Array.isArray(payload.recent_calls) ? payload.recent_calls : []
         this.subscribedRoomKeys = Array.isArray(payload.subscriptions) ? payload.subscriptions : []
+        this.totalSubs = typeof payload.total_subs === 'number' ? payload.total_subs : this.totalSubs
+        this.connectedClients = typeof payload.connected_clients === 'number' ? payload.connected_clients : this.connectedClients
+        break
+      case 'stats':
+        this.totalSubs = typeof payload.total_subs === 'number' ? payload.total_subs : 0
+        this.connectedClients = typeof payload.connected_clients === 'number' ? payload.connected_clients : 0
         break
       case 'room_state':
         if (payload.room) {
@@ -595,15 +666,18 @@ export default {
 
       return (code & 0x80) !== 0 ? sample : -sample
     },
-    playG711Frame(g711Bytes) {
-      if (!this.audioContext || !this.audioGainNode) {
-        return
+    initAudioWorker() {
+      if (this.audioWorker) return
+      this.audioWorker = new Worker(
+        new URL('@/workers/alawDecode.worker.js', import.meta.url),
+        { type: 'module' }
+      )
+      this.audioWorker.onmessage = (e) => {
+        this.playPcmBuffer(e.data.pcm)
       }
-
-      const pcm = new Float32Array(g711Bytes.length)
-      for (let i = 0; i < g711Bytes.length; i++) {
-        pcm[i] = this.decodeALawSample(g711Bytes[i]) / 32768
-      }
+    },
+    playPcmBuffer(pcm) {
+      if (!this.audioContext || !this.audioGainNode) return
 
       const buffer = this.audioContext.createBuffer(1, pcm.length, 8000)
       buffer.copyToChannel(pcm, 0)
@@ -613,12 +687,20 @@ export default {
       source.connect(this.audioGainNode)
 
       const now = this.audioContext.currentTime
-      if (this.nextPlayTime < now || this.nextPlayTime-now > 1) {
+      if (this.nextPlayTime < now || this.nextPlayTime - now > 1) {
         this.nextPlayTime = now + 0.05
       }
 
       source.start(this.nextPlayTime)
       this.nextPlayTime += buffer.duration
+    },
+    playG711Frame(g711Bytes) {
+      if (!this.audioContext || !this.audioGainNode) {
+        return
+      }
+
+      this.initAudioWorker()
+      this.audioWorker.postMessage({ g711Bytes: Array.from(g711Bytes) })
     },
     async toggleRoomSubscription(roomKey) {
       if (!this.websock || this.websock.readyState !== WebSocket.OPEN) {
@@ -1154,6 +1236,7 @@ $cursor: #f4f8ff;
     justify-content: space-between;
     gap: 16px;
     margin-bottom: 18px;
+    flex-wrap: wrap;
 
     h4 {
       margin: 0;
@@ -1166,6 +1249,33 @@ $cursor: #f4f8ff;
       font-size: 13px;
       color: rgba(228, 239, 255, 0.65);
       line-height: 1.6;
+    }
+  }
+
+  .monitor-stats-inline {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: rgba(228, 239, 255, 0.65);
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      .el-icon {
+        font-size: 14px;
+      }
+
+      strong {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      &.online .el-icon {
+        color: #bdfbe1;
+      }
     }
   }
 
@@ -1226,6 +1336,8 @@ $cursor: #f4f8ff;
   .monitor-room-button.speaking {
     border-color: #f7bb43;
     box-shadow: 0 0 0 1px rgba(247, 187, 67, 0.35) inset, 0 0 20px rgba(247, 187, 67, 0.3);
+    animation: speakingPulse 0.8s ease-in-out infinite;
+    animation-delay: var(--speaking-pulse-delay);
   }
 
   .monitor-room-button.multi-speakers {
@@ -1265,7 +1377,7 @@ $cursor: #f4f8ff;
   }
 
   .section-title {
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 600;
     color: var(--ink);
     margin-bottom: 12px;
@@ -1300,14 +1412,22 @@ $cursor: #f4f8ff;
 
   .recent-call-item {
     display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto auto;
-    gap: 10px;
+    grid-template-columns: 2fr 0.8fr auto auto auto;
+    gap: 8px;
     align-items: center;
     padding: 10px 12px;
     border-radius: 14px;
     background: rgba(12, 31, 58, 0.68);
     border: 1px solid rgba(112, 192, 255, 0.12);
     font-size: 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  }
+
+  .recent-call-item.active {
+    border-color: #f7bb43;
+    box-shadow: 0 0 0 1px rgba(247, 187, 67, 0.35) inset, 0 0 20px rgba(247, 187, 67, 0.3);
+    animation: speakingPulse 0.8s ease-in-out infinite;
+    animation-delay: var(--speaking-pulse-delay);
   }
 
   .recent-room {
@@ -1640,20 +1760,24 @@ $cursor: #f4f8ff;
     }
 
     .recent-call-item {
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: auto auto;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
       gap: 4px 8px;
     }
 
     .recent-room {
-      grid-column: 1 / 4;
+      grid-column: 1 / 3;
       grid-row: 1;
     }
 
-    .recent-time,
     .recent-caller,
     .recent-duration {
       grid-row: 2;
+      white-space: nowrap;
+    }
+
+    .recent-time {
+      grid-row: 3;
       white-space: nowrap;
     }
 
@@ -1742,6 +1866,19 @@ $cursor: #f4f8ff;
     to {
       transform: scale(1);
       opacity: 1;
+    }
+  }
+
+  @keyframes speakingPulse {
+    0%,
+    100% {
+      border-color: rgba(247, 187, 67, 0.75);
+      box-shadow: 0 0 0 1px rgba(247, 187, 67, 0.3) inset, 0 0 14px rgba(247, 187, 67, 0.18);
+    }
+
+    50% {
+      border-color: #f7bb43;
+      box-shadow: 0 0 0 1px rgba(247, 187, 67, 0.45) inset, 0 0 28px rgba(247, 187, 67, 0.42);
     }
   }
 }
