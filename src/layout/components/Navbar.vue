@@ -26,7 +26,7 @@
         <!-- <error-log class="errLog-container right-menu-item hover-effect"/> -->
 
         <button class="lang-toggle right-menu-item hover-effect" @click="toggleLanguage">
-          {{ $i18n.locale === 'zh' ? 'EN' : '中' }}
+          {{ language === 'zh' ? 'EN' : '中' }}
         </button>
 
         <!-- <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
@@ -70,7 +70,7 @@ import { useUserStore } from '@/store/modules/user'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import Hamburger from '@/components/Hamburger/index.vue'
 import { computed } from 'vue'
-import i18n from '@/lang'
+import { setI18nLanguage } from '@/lang'
 import router from '@/router'
 
 export default {
@@ -90,6 +90,7 @@ export default {
 
     const sidebar = computed(() => appStore.sidebar)
     const device = computed(() => appStore.device)
+    const language = computed(() => appStore.language)
     const name = computed(() => userStore.name)
     const callsign = computed(() => userStore.callsign)
     const avatar = computed(() => userStore.avatar)
@@ -99,8 +100,8 @@ export default {
     }
 
     const toggleLanguage = () => {
-      const locale = i18n.global.locale === 'zh' ? 'en' : 'zh'
-      i18n.global.locale = locale
+      const locale = language.value === 'zh' ? 'en' : 'zh'
+      setI18nLanguage(locale)
       appStore.setLanguage(locale)
     }
 
@@ -112,6 +113,7 @@ export default {
     return {
       sidebar,
       device,
+      language,
       name,
       callsign,
       avatar,

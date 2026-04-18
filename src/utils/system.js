@@ -54,8 +54,7 @@ export const DevModelOptions = [
   { id: 86, name: 'BG4SF-Cottell' },//开拓者
   { id: 68, name: 'BG4SF-Zeenow' },//指南者
   { id: 88, name: 'BG4SF-Leapower' },//领跑者
-  { id: 221, name: 'BG4SF-FormatConversion-1' },//221和222的数据包长度互转160-500
-  { id: 222, name: 'BG4SF-FormatConversion-2' },//221和222的数据包长度互转160-500
+
 
 
 //BA4QAO作品
@@ -88,12 +87,15 @@ export const DevModelOptions = [
   { id: 109, name: 'NRL-win-BG5FOX' },
   { id: 111, name: 'NRL-BH6BBH' },
   { id: 119, name: 'NRL-73HAM Pro 安卓' },
-  { id: 120-180, name: '多守扫描用虚拟SSID' },
+ 
 
 //服务器端
+
   { id: 200, name: 'NRL-Server' },
   { id: 201, name: 'NRL-会议' },
   { id: 202, name: 'NRL-BM' },
+ // { id: 221, name: 'BG4SF-FormatConversion-1' },//221和222的数据包长度互转160-500
+ // { id: 222, name: 'BG4SF-FormatConversion-2' },//221和222的数据包长度互转160-500
   { id: 250, name: 'NRL-保姆' },
   { id: 255, name: 'NRL-全网互连' }
 

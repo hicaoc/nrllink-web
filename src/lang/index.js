@@ -37,4 +37,18 @@ const i18n = createI18n({
   messages
 })
 
+export function setI18nLanguage(locale) {
+  if (i18n.global && i18n.global.locale && typeof i18n.global.locale === 'object' && 'value' in i18n.global.locale) {
+    i18n.global.locale.value = locale
+  } else {
+    i18n.global.locale = locale
+  }
+
+  if (typeof document !== 'undefined') {
+    document.documentElement.setAttribute('lang', locale)
+  }
+
+  return locale
+}
+
 export default i18n

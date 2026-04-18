@@ -248,6 +248,7 @@
 
 <script>
 import { getplatforminfo, fetchPlatformList } from '@/api/platform'
+import { setI18nLanguage } from '@/lang'
 import { validUsername } from '@/utils/validate'
 import { mapState } from 'pinia'
 import { useAppStore } from '@/store/modules/app'
@@ -381,7 +382,7 @@ export default {
       this.icp = response.data.items.icp
 
       if (response.data.items.language === 'en') {
-        this.$i18n.locale = 'en'
+        setI18nLanguage('en')
         const appStore = useAppStore()
         appStore.setLanguage('en')
       }
@@ -411,7 +412,7 @@ export default {
       if (this.$i18n.locale === language) {
         return
       }
-      this.$i18n.locale = language
+      setI18nLanguage(language)
       const appStore = useAppStore()
       appStore.setLanguage(language)
     },
@@ -1412,7 +1413,7 @@ $cursor: #f4f8ff;
 
   .recent-call-item {
     display: grid;
-    grid-template-columns: 2fr 0.8fr auto auto auto;
+    grid-template-columns: 2fr 0.9fr auto auto auto;
     gap: 8px;
     align-items: center;
     padding: 10px 12px;

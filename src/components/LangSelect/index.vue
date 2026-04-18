@@ -20,6 +20,7 @@
 import { ElMessage } from 'element-plus'
 import { mapState } from 'pinia'
 import { useAppStore } from '@/store/modules/app'
+import { setI18nLanguage } from '@/lang'
 
 export default {
   computed: {
@@ -27,7 +28,7 @@ export default {
   },
   methods: {
     handleSetLanguage(lang) {
-      this.$i18n.locale = lang
+      setI18nLanguage(lang)
       const appStore = useAppStore()
       appStore.setLanguage(lang)
       ElMessage({

@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia'
 import defaultSettings from '@/settings'
+import { DEFAULT_THEME } from '@/styles/variables'
 
 const { showSettings, tagsView, fixedHeader, sidebarLogo, title } = defaultSettings
 
 export const useSettingsStore = defineStore('settings', {
   state: () => ({
     title,
-    theme: '#1890ff',
+    theme: DEFAULT_THEME,
     showSettings,
     tagsView,
     fixedHeader,
