@@ -208,7 +208,11 @@ export default {
     atSuccess: 'AT指令执行成功',
     atFailed: 'AT指令执行失败',
     operationSuccess: '操作成功',
-    operationCompleted: '操作完成'
+    operationCompleted: '操作完成',
+    basicInfo: '基本信息',
+    groupAndOwner: '分组和所有者',
+    statistics: '统计信息',
+    statusControl: '状态控制'
   },
   group: {
     name: '名称',

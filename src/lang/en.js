@@ -208,7 +208,11 @@ export default {
     atSuccess: 'AT command executed successfully',
     atFailed: 'AT command failed',
     operationSuccess: 'Operation successful',
-    operationCompleted: 'Operation completed'
+    operationCompleted: 'Operation completed',
+    basicInfo: 'Basic Info',
+    groupAndOwner: 'Group & Owner',
+    statistics: 'Statistics',
+    statusControl: 'Status Control'
   },
   group: {
     name: 'Name',

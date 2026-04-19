@@ -262,100 +262,106 @@
       @pagination="getList"
     />
 
-    <div v-if="showtable == false">
-      <el-card
+    <div v-if="showtable == false" class="box-grid">
+      <div
         v-for="item in list"
         :key="item.id"
-        :label="item.name"
-        :name="item.name"
-        class="box-card"
-        :body-style="{ padding: '20px' }"
+        class="box-item"
       >
-        <template #header>
-          <div class="clearfix">
-            <div class="tag-wrap">
-              <el-tag :type="item.is_online ? 'success' : 'info'">{{ item.id }}. {{ item.callsign }}-{{ item.ssid }} {{
-                item.dmrid }} {{ item.status == 1 ? "🈲" : "" }}{{ ValueFilter(item.dev_model, DevModelOptions) }}-{{
-                ValueFilter(item.dev_type, DevTypeOptions) }}</el-tag>
-            </div>
-
+        <div class="box-header">
+          <el-tag :type="item.is_online ? 'success' : 'info'" size="small" effect="dark" class="id-tag">{{ item.id }}</el-tag>
+          <span class="callsign">{{ item.callsign }}-{{ item.ssid }}</span>
+          <el-tag size="small" type="info">DMR {{ item.dmrid }}</el-tag>
+          <el-tag v-if="item.status == 1" size="small" type="danger">🈲</el-tag>
+        </div>
+        <div class="box-info">
+          <div class="info-row">
+            <span class="label">{{ $t('device.name') }}:</span>
+            <span class="value">{{ item.ssid === 200 && item.name === '' ? $t('device.serverLink') : item.name || '-' }}</span>
+            <span class="label">{{ $t('device.priority') }}:</span>
+            <span class="value">{{ item.priority }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">{{ $t('device.rfTypeLabel') }}:</span>
+            <span class="value">{{ ValueFilter(item.rf_type, DevRFtypeOptions) }}</span>
+            <span class="label">{{ $t('device.model') }}:</span>
+            <span class="value">{{ ValueFilter(item.dev_model, DevModelOptions) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">{{ $t('device.channelFrequency') }}:</span>
+            <span class="value freq">
+              <template v-if="item.device_parm !== null">
+                <template v-if="item.rf_type == 1">R{{ item.device_parm.one_recive_freq }}/T{{ item.device_parm.one_transmit_freq }}</template>
+                <template v-else-if="item.rf_type == 2">R{{ item.device_parm.two_recive_freq }}/T{{ item.device_parm.two_transmit_freq }}</template>
+                <template v-else-if="item.rf_type == 3">{{ $t('device.channelLabel') }}{{ item.device_parm.moto_channel }} {{ item.chan_name[item.device_parm.moto_channel] }}</template>
+              </template>
+              <template v-else>-</template>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="label">{{ $t('device.currentGroup') }}:</span>
+            <span class="value">
+              <template v-if="item.group_id > 0 && item.group_id < 1000">{{ $t('device.privateGroup') }}</template>
+              <template v-else>{{ ValueFilter(item.group_id, groupsOptions) }}</template>
+            </span>
+            <span class="label">{{ $t('device.owner') }}:</span>
+            <span class="value">{{ ValueFilter(item.ower_id, userOptions) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">{{ $t('device.totalVoiceTime') }}:</span>
+            <span class="value">{{ formatVoiceTime(item.voice_time) }}</span>
+            <span class="label">{{ $t('device.totalTraffic') }}:</span>
+            <span class="value">{{ formatFileSize(item.traffic) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">{{ $t('device.lastVoiceDuration') }}:</span>
+            <span class="value">{{ formatVoiceTime(item.last_voice_duration) }}</span>
+            <span class="label">{{ $t('device.lastVoiceTime') }}:</span>
+            <span class="value">{{ parseTime(item.last_voice_end_time) }}</span>
+          </div>
+        </div>
+        <div class="box-footer">
+          <div class="status-btns">
+            <el-button
+              :type="((item.status ?? 0) & 1) === 1 ? 'danger' : 'success'"
+              size="small"
+              :disabled="item.is_online === false"
+              @click="updateStatus(item, 1)"
+            >{{ ((item.status ?? 0) & 1) === 1 ? $t('device.disableReceive') : $t('device.receive') }}</el-button>
+            <el-button
+              :type="((item.status ?? 0) & 2) === 2 ? 'danger' : 'success'"
+              size="small"
+              :disabled="item.is_online === false"
+              @click="updateStatus(item, 2)"
+            >{{ ((item.status ?? 0) & 2) === 2 ? $t('device.disableTransmit') : $t('device.transmit') }}</el-button>
+          </div>
+          <div class="action-btns">
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
-              style="float: right; padding: 3px 3px"
-              link
+              type="primary"
+              plain
+              size="small"
               :disabled="item.is_online === false"
               @click="handleChange(item)"
-            >{{ $t("device.change")
-            }}</el-button>
-
+            >{{ $t("device.change") }}</el-button>
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
+              type="warning"
+              plain
+              size="small"
               :disabled="item.is_online === false"
-              style="float: right; padding: 3px 3px"
-
-              link
-
               @click="handleOpenAT(item)"
             >{{ $t("device.at") }}</el-button>
-
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
-              style="float: right; padding: 3px 0"
-              link
+              type="danger"
+              plain
+              size="small"
               @click="handleUpdate(item)"
-            >{{ $t("device.edit")
-
-            }}</el-button>
+            >{{ $t("device.edit") }}</el-button>
           </div>
-        </template>
-
-        <span>{{ $t('device.name') }}:{{ item.name }}</span><br>
-        <span>{{ $t('device.priority') }}:{{ item.priority }}</span><br>
-
-        <span>{{ $t('device.rfTypeLabel') }}:{{ ValueFilter(item.rf_type, DevRFtypeOptions) }}</span><br>
-
-        {{ $t('device.channelFrequency') }}:
-        <span v-if="item.device_parm !== null"><span v-if="item.rf_type == 1">
-                                                 R{{ item.device_parm.one_recive_freq }}/T{{
-                                                   item.device_parm.one_transmit_freq
-                                                 }}
-                                               </span>
-          <span v-if="item.rf_type == 2">
-            R{{ item.device_parm.two_recive_freq }}/T{{
-              item.device_parm.two_transmit_freq
-            }}
-          </span>
-          <span v-if="item.rf_type == 3">{{ $t('device.channelLabel') }}{{ item.device_parm.moto_channel }}
-            {{ item.chan_name[item.device_parm.moto_channel] }}
-          </span> </span><br>
-
-        {{ $t('device.currentGroup') }}:
-
-        <span v-if="item.group_id > 0 && item.group_id < 1000"> {{ $t('device.privateGroup') }} </span>
-        <span v-else>{{ ValueFilter(item.group_id, groupsOptions) }} </span><br>
-        <span>{{ $t('device.lastVoiceDuration') }}：{{ formatVoiceTime(item.last_voice_duration) }}</span><br>
-        <span>{{ $t('device.lastVoiceTime') }}：{{ parseTime(item.last_voice_end_time) }}</span><br>
-        <span>{{ $t('device.duration') }}：{{ formatVoiceTime(item.voice_time) }}</span><br>
-        <span>{{ $t('device.traffic') }}：{{ formatFileSize(item.traffic) }}</span><br>
-
-        <span>{{ $t('device.owner') }}：{{ ValueFilter(item.ower_id, userOptions) }}</span><br>
-        <span>{{ $t('device.status') }}:
-
-          <span><el-button
-            :type="safeButtonType(((item.status ?? 0) & 1) === 1 ? 'danger' : 'success')"
-            plain
-            size="small"
-            @click="updateStatus(item, 1)"
-          >{{ $t('device.disableReceive') }}</el-button></span>
-          <span><el-button
-            :type="safeButtonType(((item.status ?? 0) & 2) === 2 ? 'danger' : 'success')"
-            plain
-            size="small"
-            @click="updateStatus(item, 2)"
-          >{{ $t('device.disableTransmit') }}</el-button></span>
-
-        </span>
-      </el-card>
+        </div>
+      </div>
     </div>
 
     <el-dialog
@@ -1711,21 +1717,7 @@ export default {
   }
 }
 
-.box-card {
-  width: 340px;
-  float: left;
-  margin-right: 20px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s, box-shadow 0.3s;
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  }
-}
 
 .channel-grid {
   width: 100%;
@@ -1754,6 +1746,109 @@ export default {
 
 @media (max-width: 768px) {
   .channel-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.box-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.box-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+}
+
+.box-item {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #ebeef5;
+  padding: 10px 12px;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.box-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f2f5;
+
+  .id-tag {
+    flex-shrink: 0;
+  }
+
+  .callsign {
+    font-size: 14px;
+    font-weight: 600;
+    color: #303133;
+  }
+}
+
+.box-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+
+  .label {
+    color: #909399;
+    white-space: nowrap;
+  }
+
+  .value {
+    color: #606266;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.freq {
+      font-size: 11px;
+      color: #409eff;
+    }
+  }
+}
+
+.box-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f0f2f5;
+}
+
+.status-btns,
+.action-btns {
+  display: flex;
+  gap: 4px;
+
+  .el-button {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 768px) {
+  .box-grid {
     grid-template-columns: 1fr;
   }
 }
