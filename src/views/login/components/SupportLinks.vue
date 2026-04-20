@@ -12,6 +12,13 @@
       <span>NRL 设备与软件支持</span>
     </h4>
     <ul>
+
+      <li class="special-server">
+        <a :href="'https://www.nrlptt.com/'" target="_blank" class="server-link special-link">
+          <div class="special-text">NRL技术交流官网</div>
+        </a>
+      </li>
+
       <li class="special-server">
         <a :href="'https://bh4tdv.taobao.com/'" target="_blank" class="server-link special-link">
           <div class="special-text">支持NRL协议的设备 BH4TDV作坊</div>
