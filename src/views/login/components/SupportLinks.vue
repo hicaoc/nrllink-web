@@ -36,14 +36,20 @@
         </a>
       </li>
 
+            <li class="special-server">
+        <a :href="'https://github.com/hicaoc/nrl-pulse/releases'" target="_blank" class="server-link special-link">
+          <div class="special-text">NRL桌面版(MacOS,Windows,Linux)</div>
+        </a>
+      </li>
+
       <li class="special-server">
         <a :href="'https://github.com/hicaoc/nrlnanny'" target="_blank" class="server-link special-link">
-          <div class="special-text">NRL保姆(录音，信标播放) BH4RPN</div>
+          <div class="special-text">NRL保姆(录音，信标播放) </div>
         </a>
       </li>
       <li class="special-server">
         <a href="#" class="server-link special-link" @click.prevent="$emit('toggle-image', true)">
-          <div class="special-text">NRL微信小程序 BH4RPN</div>
+          <div class="special-text">NRL微信小程序</div>
         </a>
       </li>
 
