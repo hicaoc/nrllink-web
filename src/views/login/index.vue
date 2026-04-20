@@ -11,6 +11,10 @@
 
       <div class="topbar-stats">
         <div class="topbar-stat">
+          <strong>{{ onlineDevices }}</strong>
+          <span>{{ $t('login.onlineDevices') }}</span>
+        </div>
+        <div class="topbar-stat">
           <strong>{{ connectedClients }}</strong>
           <span>{{ $t('login.onlineBrowsers') }}</span>
         </div>
@@ -318,6 +322,7 @@ export default {
       nextPlayTime: 0,
       totalSubs: 0,
       connectedClients: 0,
+      onlineDevices: 0,
       pulsePhaseMs: typeof window !== 'undefined' ? Date.now() % 800 : 0
     }
   },
@@ -586,10 +591,12 @@ export default {
         this.subscribedRoomKeys = Array.isArray(payload.subscriptions) ? payload.subscriptions : []
         this.totalSubs = typeof payload.total_subs === 'number' ? payload.total_subs : this.totalSubs
         this.connectedClients = typeof payload.connected_clients === 'number' ? payload.connected_clients : this.connectedClients
+        this.onlineDevices = typeof payload.online_devices === 'number' ? payload.online_devices : this.onlineDevices
         break
       case 'stats':
         this.totalSubs = typeof payload.total_subs === 'number' ? payload.total_subs : 0
         this.connectedClients = typeof payload.connected_clients === 'number' ? payload.connected_clients : 0
+        this.onlineDevices = typeof payload.online_devices === 'number' ? payload.online_devices : 0
         break
       case 'room_state':
         if (payload.room) {
@@ -1030,6 +1037,14 @@ $cursor: #f4f8ff;
   align-items: center;
   color: var(--ink);
   font-family: inherit;
+  box-sizing: border-box;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    min-width: 0;
+  }
 
   &::before {
     content: "";
@@ -1060,6 +1075,7 @@ $cursor: #f4f8ff;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+    flex-wrap: wrap;
     padding-top: 28px;
     position: relative;
     z-index: 1;
@@ -1069,6 +1085,7 @@ $cursor: #f4f8ff;
     display: flex;
     align-items: center;
     gap: 24px;
+    min-width: 0;
   }
 
   .topbar-logo {
@@ -1098,6 +1115,9 @@ $cursor: #f4f8ff;
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    min-width: 0;
   }
 
   .language-switch {
@@ -1140,11 +1160,13 @@ $cursor: #f4f8ff;
     align-items: center;
     gap: 12px;
     flex: 1;
+    flex-wrap: wrap;
     justify-content: flex-end;
+    min-width: 0;
   }
 
   .topbar-stat {
-    min-width: 120px;
+    min-width: 104px;
     padding: 12px 14px;
     border-radius: 18px;
     background: rgba(12, 31, 58, 0.74);
@@ -1256,6 +1278,7 @@ $cursor: #f4f8ff;
   .monitor-stats-inline {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 12px;
     font-size: 12px;
     color: rgba(228, 239, 255, 0.65);
@@ -1310,7 +1333,7 @@ $cursor: #f4f8ff;
     color: var(--ink);
     min-height: 60px;
     flex: 1 1 220px;
-    min-width: 220px;
+    min-width: min(220px, 100%);
     max-width: 100%;
     padding: 10px;
     text-align: left;
@@ -1646,6 +1669,37 @@ $cursor: #f4f8ff;
     }
   }
 
+  @media (max-width: 1480px) and (min-width: 1024px) {
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        "brand actions"
+        "stats stats";
+      align-items: center;
+      gap: 18px 24px;
+    }
+
+    .brand-block {
+      grid-area: brand;
+    }
+
+    .topbar-actions {
+      grid-area: actions;
+      justify-content: flex-end;
+    }
+
+    .topbar-stats {
+      grid-area: stats;
+      justify-content: center;
+    }
+
+    .topbar-stat {
+      flex: 0 1 180px;
+      min-width: 132px;
+    }
+  }
+
   @media (max-width: 1023px) {
     .topbar,
     .content-wrapper {
@@ -1686,14 +1740,12 @@ $cursor: #f4f8ff;
 
     .topbar-stats {
       width: 100%;
-      justify-content: flex-start;
-      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .topbar-actions {
       width: 100%;
-      justify-content: flex-end;
-      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .content-wrapper {
@@ -1712,6 +1764,60 @@ $cursor: #f4f8ff;
       order: 3;
     }
 
+  }
+
+  @media (max-width: 900px) {
+    .topbar {
+      gap: 14px;
+    }
+
+    .topbar-stat {
+      flex: 1 1 100px;
+      padding: 10px 12px;
+
+      strong {
+        font-size: 22px;
+      }
+    }
+
+    .topbar-button,
+    .lang-button {
+      height: 40px;
+    }
+
+    .monitor-card {
+      padding: 18px;
+    }
+
+    .recent-call-item {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      grid-template-areas:
+        "room room room"
+        "caller duration time";
+      gap: 6px 10px;
+    }
+
+    .recent-room {
+      grid-area: room;
+    }
+
+    .recent-caller {
+      grid-area: caller;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .recent-duration {
+      grid-area: duration;
+      white-space: nowrap;
+    }
+
+    .recent-time {
+      grid-area: time;
+      white-space: nowrap;
+      justify-self: end;
+    }
   }
 
   @media (max-width: 767px) {
@@ -1745,7 +1851,7 @@ $cursor: #f4f8ff;
     }
 
     .topbar-stat {
-      min-width: 96px;
+      min-width: 0;
       padding: 10px 12px;
 
       strong {
@@ -1761,25 +1867,33 @@ $cursor: #f4f8ff;
     }
 
     .recent-call-item {
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto auto;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      grid-template-areas:
+        "room room room"
+        "caller duration time";
       gap: 4px 8px;
     }
 
     .recent-room {
-      grid-column: 1 / 3;
-      grid-row: 1;
+      grid-area: room;
     }
 
-    .recent-caller,
+    .recent-caller {
+      grid-area: caller;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .recent-duration {
-      grid-row: 2;
+      grid-area: duration;
       white-space: nowrap;
     }
 
     .recent-time {
-      grid-row: 3;
+      grid-area: time;
       white-space: nowrap;
+      justify-self: end;
     }
 
     .register-panel {
@@ -1790,6 +1904,45 @@ $cursor: #f4f8ff;
     .register-dialog-copy {
       flex-direction: column;
       align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .topbar,
+    .content-wrapper {
+      width: min(100%, calc(100% - 20px));
+    }
+
+    .monitor-card {
+      padding: 14px;
+      border-radius: 16px;
+    }
+
+    .topbar-stat {
+      flex: 1 1 calc(50% - 10px);
+    }
+
+    .monitor-room-button,
+    .monitor-room-button.multi-speakers {
+      flex-basis: 100%;
+      min-width: 0;
+      padding: 10px 12px;
+    }
+
+    .room-title,
+    .room-caller,
+    .recent-room {
+      overflow-wrap: anywhere;
+    }
+
+    .recent-caller,
+    .recent-duration,
+    .recent-time {
+      font-size: 11px;
+    }
+
+    .monitor-stats-inline {
+      gap: 8px;
     }
   }
 

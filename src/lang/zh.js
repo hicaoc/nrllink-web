@@ -264,7 +264,8 @@ export default {
     newUserRegister: '新用户注册',
     registerDesc: '在弹窗中直接完成资料填写，提交后等待管理员审核。',
     brandDesc: '实时通话总览、房间监听与平台入口',
-    onlineBrowsers: '在线浏览器',
+    onlineBrowsers: '浏览器数',
+    onlineDevices: '在线设备',
     audioSubscriptions: '音频订阅'
   },
   documentation: {

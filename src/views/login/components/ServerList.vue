@@ -204,5 +204,33 @@ export default {
     color: var(--warn);
     font-weight: 500;
   }
+
+  @media (max-width: 900px) {
+    .server-item {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .server-stats {
+      align-items: flex-start;
+    }
+
+    .server-host {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 560px) {
+    padding: 14px 14px 20px;
+
+    .server-item {
+      padding: 10px 12px;
+    }
+
+    .stats-line {
+      flex-wrap: wrap;
+      gap: 6px 10px;
+    }
+  }
 }
 </style>

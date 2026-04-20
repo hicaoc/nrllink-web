@@ -265,6 +265,7 @@ export default {
     registerDesc: 'Complete the form in the popup, submit and wait for admin approval.',
     brandDesc: 'Live call overview, room monitoring and platform access',
     onlineBrowsers: 'Online Browsers',
+    onlineDevices: 'Online Devices',
     audioSubscriptions: 'Audio Subscriptions'
   },
   documentation: {
