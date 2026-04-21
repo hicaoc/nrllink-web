@@ -266,7 +266,13 @@ export default {
     brandDesc: 'Live call overview, room monitoring and platform access',
     onlineBrowsers: 'Online Browsers',
     onlineDevices: 'Online Devices',
-    audioSubscriptions: 'Audio Subscriptions'
+    audioSubscriptions: 'Audio Subscriptions',
+    supportEntry: 'Support',
+    monitorPanel: 'Monitor',
+    serverListPanel: 'Servers',
+    showAllPanels: 'Show All Panels',
+    switchToChinese: 'Switch to Chinese',
+    switchToEnglish: 'Switch to English'
   },
   documentation: {
     documentation: 'Nanjing Xinfeng Network Technology Co., Ltd.'

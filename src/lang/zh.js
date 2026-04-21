@@ -266,7 +266,13 @@ export default {
     brandDesc: '实时通话总览、房间监听与平台入口',
     onlineBrowsers: '浏览器数',
     onlineDevices: '在线设备',
-    audioSubscriptions: '音频订阅'
+    audioSubscriptions: '音频订阅',
+    supportEntry: '支持入口',
+    monitorPanel: '实时监控',
+    serverListPanel: '服务器列表',
+    showAllPanels: '全部显示',
+    switchToChinese: '切换到中文',
+    switchToEnglish: '切换到英文'
   },
   documentation: {
     documentation: 'HAM互联'

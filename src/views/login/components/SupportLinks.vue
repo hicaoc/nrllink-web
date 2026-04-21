@@ -1,16 +1,5 @@
 <template>
   <div class="support-links-component">
-    <h4 class="server-title">
-      <span class="title-icon title-icon-support" aria-hidden="true">
-        <svg viewBox="0 0 24 24" focusable="false">
-          <path d="M4 7.5A3.5 3.5 0 0 1 7.5 4h9A3.5 3.5 0 0 1 20 7.5v4A3.5 3.5 0 0 1 16.5 15h-1.8l-2.3 2.8a.6.6 0 0 1-.9 0L9.2 15H7.5A3.5 3.5 0 0 1 4 11.5v-4Zm3.5-2.3A2.3 2.3 0 0 0 5.2 7.5v4a2.3 2.3 0 0 0 2.3 2.3h2a.6.6 0 0 1 .47.22l1.98 2.42 1.98-2.42a.6.6 0 0 1 .47-.22h2.05a2.3 2.3 0 0 0 2.3-2.3v-4a2.3 2.3 0 0 0-2.3-2.3h-9Z"/>
-          <circle cx="8.5" cy="9.5" r="1"/>
-          <circle cx="12" cy="9.5" r="1"/>
-          <circle cx="15.5" cy="9.5" r="1"/>
-        </svg>
-      </span>
-      <span>NRL 设备与软件支持</span>
-    </h4>
     <ul>
 
       <li class="special-server">
@@ -80,49 +69,12 @@ export default {
 .support-links-component {
   width: 100%;
   background: linear-gradient(140deg, rgba(18, 34, 42, 0.95) 0%, rgba(20, 42, 50, 0.95) 100%);
-  border-radius: 20px;
-  border: 1px solid rgba(79, 231, 214, 0.3);
-  padding: 12px 18px 14px;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+  border-radius: 18px;
+  border: 1px solid rgba(79, 231, 214, 0.14);
+  padding: 10px 12px 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
   min-height: unset !important;
   height: auto;
-
-  .server-title {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    font-family: inherit;
-    font-size: 13px;
-    letter-spacing: 0.8px;
-    color: rgba(198, 210, 228, 0.92);
-    font-weight: 700;
-    line-height: 1.35;
-    margin: 0 0 14px;
-    text-align: center;
-    padding: 7px 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(126, 145, 170, 0.34);
-    background: linear-gradient(90deg, rgba(24, 33, 47, 0.9) 0%, rgba(29, 38, 54, 0.88) 100%);
-    box-shadow: none;
-  }
-
-  .title-icon {
-    width: 16px;
-    height: 16px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-
-    svg {
-      width: 16px;
-      height: 16px;
-      display: block;
-      fill: rgba(184, 204, 232, 0.95);
-    }
-  }
 
   ul {
     list-style-type: none;
@@ -130,7 +82,7 @@ export default {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
   }
 
   .special-server {
@@ -140,11 +92,11 @@ export default {
 
   .special-link {
     display: block;
-    padding: 14px 18px;
+    padding: 12px 14px;
     text-align: center;
     border-radius: 12px;
     background: rgba(70, 124, 188, 0.35);
-    border: 1px solid rgba(110, 186, 255, 0.35);
+    border: 1px solid rgba(110, 186, 255, 0.16);
     text-decoration: none;
     transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
     margin: 0 !important;
@@ -164,7 +116,7 @@ export default {
     color: rgba(231, 240, 245, 0.9);
     font-weight: 600;
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.45;
   }
 }
 </style>
