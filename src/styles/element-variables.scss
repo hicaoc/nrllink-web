@@ -4,15 +4,15 @@
 **/
 
 /* theme color */
-$--color-primary: #1890ff;
-$--color-success: #13ce66;
+$--color-primary: #8ff9de;
+$--color-success: #8ff9de;
 $--color-warning: #FFBA00;
 $--color-danger: #ff4949;
 
 $--button-font-weight: 400;
-$--border-color-light: #dfe4ed;
-$--border-color-lighter: #e6ebf5;
-$--table-border: 1px solid #dfe6ec;
+$--border-color-light: rgba(104, 176, 255, 0.1);
+$--border-color-lighter: rgba(104, 176, 255, 0.08);
+$--table-border: 1px solid rgba(104, 176, 255, 0.1);
 
 /* Element Plus uses CSS variables by default */
 :root {

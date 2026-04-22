@@ -33,31 +33,32 @@ export default {
   min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
+  background: var(--platform-deep-98);
   scrollbar-width: thin;
-  scrollbar-color: rgba(143, 249, 222, 0.38) rgba(8, 20, 36, 0.22);
+  scrollbar-color: var(--platform-accent-42) var(--platform-surface-soft);
 
   &::-webkit-scrollbar {
     width: 10px;
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(8, 20, 36, 0.22);
-    border-left: 1px solid rgba(104, 176, 255, 0.08);
+    background: var(--platform-surface-soft);
+    border-left: 1px solid var(--platform-border-lighter);
   }
 
   &::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(143, 249, 222, 0.72) 0%, rgba(63, 141, 255, 0.72) 100%);
+    background: linear-gradient(180deg, var(--platform-accent-62) 0%, var(--platform-accent-72) 100%);
     border-radius: 999px;
-    border: 2px solid rgba(8, 20, 36, 0.14);
+    border: 2px solid var(--platform-surface-0);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgba(143, 249, 222, 0.92) 0%, rgba(63, 141, 255, 0.9) 100%);
+    background: linear-gradient(180deg, var(--platform-accent-85) 0%, var(--platform-accent-88) 100%);
   }
 
   &::-webkit-scrollbar-corner {
-    background: rgba(8, 20, 36, 0.22);
+    background: var(--platform-surface-soft);
   }
 }
 

@@ -68,9 +68,9 @@ export default {
 <style lang="scss" scoped>
 .support-links-component {
   width: 100%;
-  background: linear-gradient(140deg, rgba(18, 34, 42, 0.95) 0%, rgba(20, 42, 50, 0.95) 100%);
+  background: var(--platform-shell);
   border-radius: 18px;
-  border: 1px solid rgba(79, 231, 214, 0.14);
+  border: 1px solid var(--platform-border);
   padding: 10px 12px 12px;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
   min-height: unset !important;
@@ -95,16 +95,16 @@ export default {
     padding: 12px 14px;
     text-align: center;
     border-radius: 12px;
-    background: rgba(70, 124, 188, 0.35);
-    border: 1px solid rgba(110, 186, 255, 0.16);
+    background: var(--platform-surface-68);
+    border: 1px solid var(--platform-border);
     text-decoration: none;
     transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
     margin: 0 !important;
   }
 
   .special-link:hover {
-    border-color: rgba(79, 231, 214, 0.5);
-    background: rgba(79, 231, 214, 0.15);
+    border-color: var(--platform-accent);
+    background: var(--platform-accent-10);
     transform: translateY(-1px);
   }
 
@@ -113,7 +113,7 @@ export default {
   }
 
   .special-text {
-    color: rgba(231, 240, 245, 0.9);
+    color: var(--platform-ink);
     font-weight: 600;
     font-size: 14px;
     line-height: 1.45;

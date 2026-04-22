@@ -93,10 +93,10 @@ export default {
 <style lang="scss" scoped>
 .dashboard-home {
   min-height: 100%;
-  background: radial-gradient(980px 460px at 18% -14%, rgba(83, 140, 229, 0.22) 0%, rgba(20, 35, 58, 0.95) 56%, #0b1424 100%);
+  background: radial-gradient(980px 460px at 18% -14%, var(--platform-accent-2) 0%, var(--platform-surface) 56%, var(--platform-surface-soft) 100%);
   position: relative;
   overflow: hidden;
-  color: #f4f8ff;
+  color: var(--platform-ink);
 }
 
 .dashboard-home::before {
@@ -105,7 +105,7 @@ export default {
   inset: -40% auto auto -20%;
   width: 640px;
   height: 640px;
-  background: radial-gradient(circle, rgba(54, 240, 203, 0.34) 0%, rgba(54, 240, 203, 0) 70%);
+  background: radial-gradient(circle, var(--platform-accent) 0%, var(--platform-accent) 0%, transparent 70%);
   filter: blur(3px);
   pointer-events: none;
 }
@@ -117,7 +117,7 @@ export default {
   bottom: -30%;
   width: 720px;
   height: 720px;
-  background: radial-gradient(circle, rgba(79, 152, 255, 0.4) 0%, rgba(79, 152, 255, 0) 70%);
+  background: radial-gradient(circle, var(--platform-accent-2) 0%, var(--platform-accent-2) 0%, transparent 70%);
   filter: blur(5px);
   pointer-events: none;
 }
@@ -174,8 +174,8 @@ export default {
   min-width: 0;
   padding: 12px 14px;
   border-radius: 18px;
-  background: rgba(12, 31, 58, 0.74);
-  border: 1px solid rgba(112, 192, 255, 0.14);
+  background: var(--platform-surface);
+  border: 1px solid var(--platform-border);
   text-align: center;
   backdrop-filter: blur(8px);
   display: flex;
@@ -190,7 +190,7 @@ export default {
   justify-content: center;
   font-size: 26px;
   line-height: 1.1;
-  color: #8ff9de;
+  color: var(--platform-accent);
   min-height: 58px;
   text-align: center;
   overflow-wrap: anywhere;
@@ -201,7 +201,7 @@ export default {
   display: block;
   margin-top: 4px;
   font-size: 12px;
-  color: rgba(228, 239, 255, 0.62);
+  color: var(--platform-ink-dim);
   line-height: 1.35;
 }
 

@@ -5,10 +5,10 @@
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
-        :background-color="variables.menuBg"
-        :text-color="variables.menuText"
+        background-color="var(--sidebar-bg)"
+        text-color="var(--sidebar-text)"
         :unique-opened="false"
-        :active-text-color="variables.menuActiveText"
+        active-text-color="var(--sidebar-active-text)"
         :collapse-transition="false"
         mode="vertical"
       >
@@ -19,37 +19,41 @@
 </template>
 
 <script>
-import { mapState } from 'pinia'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { pinia } from '@/store'
 import Logo from './Logo.vue'
 import SidebarItem from './SidebarItem.vue'
-import variables from '@/styles/variables'
 import { useAppStore } from '@/store/modules/app'
 import { usePermissionStore } from '@/store/modules/permission'
 import { useSettingsStore } from '@/store/modules/settings'
 
 export default {
   components: { SidebarItem, Logo },
-  computed: {
-    ...mapState(usePermissionStore, { permission_routes: 'routes' }),
-    ...mapState(useAppStore, ['sidebar']),
-    ...mapState(useSettingsStore, ['sidebarLogo']),
-    activeMenu() {
-      const route = this.$route
+  setup() {
+    const route = useRoute()
+    const permissionStore = usePermissionStore(pinia)
+    const appStore = useAppStore(pinia)
+    const settingsStore = useSettingsStore(pinia)
+
+    const activeMenu = computed(() => {
       const { meta, path } = route
-      // if set path, the sidebar will highlight the path you set
       if (meta.activeMenu) {
         return meta.activeMenu
       }
       return path
-    },
-    showLogo() {
-      return this.sidebarLogo
-    },
-    variables() {
-      return variables
-    },
-    isCollapse() {
-      return !this.sidebar.opened
+    })
+
+    const sidebar = computed(() => appStore.sidebar)
+    const permission_routes = computed(() => permissionStore.routes)
+    const sidebarLogo = computed(() => settingsStore.sidebarLogo)
+    const isCollapse = computed(() => !sidebar.value.opened)
+
+    return {
+      activeMenu,
+      permission_routes,
+      showLogo: sidebarLogo,
+      isCollapse
     }
   }
 }

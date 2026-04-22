@@ -401,9 +401,9 @@ export default {
 }
 
 .monitor-card {
-  background: linear-gradient(150deg, rgba(16, 39, 68, 0.94) 0%, rgba(12, 25, 48, 0.92) 100%);
-  border: 1px solid rgba(112, 192, 255, 0.14);
-  box-shadow: 0 12px 30px rgba(3, 9, 21, 0.26);
+  background: var(--platform-shell);
+  border: 1px solid var(--platform-border);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.26);
   border-radius: 20px;
   padding: 18px;
   display: flex;
@@ -424,7 +424,7 @@ export default {
 .monitor-header h4 {
   margin: 0;
   font-size: 20px;
-  color: #f4f8ff;
+  color: var(--platform-ink);
 }
 
 .monitor-stats-inline {
@@ -433,7 +433,7 @@ export default {
   flex-wrap: wrap;
   gap: 12px;
   font-size: 12px;
-  color: rgba(228, 239, 255, 0.65);
+  color: var(--platform-ink-dim);
 }
 
 .monitor-stats-inline .stat-item {
@@ -452,7 +452,7 @@ export default {
 }
 
 .monitor-stats-inline .stat-item.online .el-icon {
-  color: #bdfbe1;
+  color: var(--platform-accent);
 }
 
 .monitor-room-grid {
@@ -463,10 +463,10 @@ export default {
 
 .monitor-room-button {
   appearance: none;
-  border: 1px solid rgba(94, 166, 255, 0.16);
+  border: 1px solid var(--platform-border);
   border-radius: 16px;
-  background: rgba(18, 41, 72, 0.84);
-  color: #f4f8ff;
+  background: var(--platform-surface);
+  color: var(--platform-ink);
   min-height: 56px;
   flex: 1 1 220px;
   min-width: min(220px, 100%);
@@ -483,19 +483,19 @@ export default {
 
 .monitor-room-button:hover {
   transform: translateY(-1px);
-  border-color: rgba(54, 240, 203, 0.54);
-  box-shadow: 0 12px 28px rgba(10, 22, 42, 0.4);
+  border-color: var(--platform-border-strong);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
 }
 
 .monitor-room-button.active {
-  border-color: #36f0cb;
-  background: linear-gradient(140deg, rgba(16, 80, 70, 0.95) 0%, rgba(12, 55, 65, 0.95) 100%);
-  box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.25) inset, 0 12px 32px rgba(54, 240, 203, 0.2);
+  border-color: var(--platform-accent);
+  background: linear-gradient(140deg, rgba(6, 214, 160, 0.2) 0%, rgba(17, 138, 178, 0.2) 100%);
+  box-shadow: 0 0 0 1px var(--platform-accent) inset, 0 12px 32px var(--platform-accent);
 }
 
 .monitor-room-button.speaking {
-  border-color: #f7bb43;
-  box-shadow: 0 0 0 1px rgba(247, 187, 67, 0.35) inset, 0 0 20px rgba(247, 187, 67, 0.3);
+  border-color: var(--platform-accent-2);
+  box-shadow: 0 0 0 1px var(--platform-accent-2) inset, 0 0 20px var(--platform-accent-2);
   animation: speakingPulse 0.8s ease-in-out infinite;
   animation-delay: var(--speaking-pulse-delay);
 }
@@ -508,10 +508,11 @@ export default {
   font-size: 14px;
   font-weight: 600;
   line-height: 1.5;
+  color: var(--platform-ink);
 }
 
 .room-caller {
-  color: #8ff9de;
+  color: var(--platform-accent);
   font-size: 13px;
   font-weight: 600;
   line-height: 1.5;
@@ -520,19 +521,19 @@ export default {
 }
 
 .room-idle {
-  color: rgba(228, 239, 255, 0.54);
+  color: var(--platform-ink-dim);
   font-size: 12px;
 }
 
 .monitor-subscription-tip {
   margin-top: 14px;
   font-size: 12px;
-  color: rgba(228, 239, 255, 0.68);
+  color: var(--platform-ink-dim);
 }
 
 .recent-call-panel {
   margin-top: 16px;
-  border-top: 1px solid rgba(104, 176, 255, 0.16);
+  border-top: 1px solid var(--platform-border);
   padding-top: 14px;
   display: flex;
   flex-direction: column;
@@ -543,7 +544,7 @@ export default {
 .section-title {
   font-size: 20px;
   font-weight: 600;
-  color: #f4f8ff;
+  color: var(--platform-ink);
   margin-bottom: 10px;
 }
 
@@ -578,26 +579,19 @@ export default {
 
 .realtime-monitor-panel:hover .recent-call-list,
 .realtime-monitor-panel:focus-within .recent-call-list {
-  scrollbar-color: rgba(143, 249, 222, 0.42) rgba(8, 20, 36, 0.32);
+  scrollbar-color: var(--platform-accent) var(--platform-surface);
 }
 
 .realtime-monitor-panel:hover .recent-call-list::-webkit-scrollbar-track,
 .realtime-monitor-panel:focus-within .recent-call-list::-webkit-scrollbar-track {
-  background: linear-gradient(180deg, rgba(8, 20, 36, 0.2) 0%, rgba(8, 20, 36, 0.42) 100%);
-  border-color: rgba(109, 180, 255, 0.08);
+  background: var(--platform-surface-soft);
+  border-color: var(--platform-border);
 }
 
 .realtime-monitor-panel:hover .recent-call-list::-webkit-scrollbar-thumb,
 .realtime-monitor-panel:focus-within .recent-call-list::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(117, 148, 184, 0.78) 0%, rgba(88, 109, 140, 0.94) 100%);
-  border-color: rgba(223, 232, 245, 0.18);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-}
-
-.realtime-monitor-panel:hover .recent-call-list::-webkit-scrollbar-thumb:hover,
-.realtime-monitor-panel:focus-within .recent-call-list::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(143, 249, 222, 0.62) 0%, rgba(94, 166, 255, 0.72) 100%);
-  border-color: rgba(143, 249, 222, 0.24);
+  background: linear-gradient(180deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%);
+  border-color: var(--platform-border);
 }
 
 .recent-call-item {
@@ -607,37 +601,37 @@ export default {
   align-items: center;
   padding: 9px 12px;
   border-radius: 12px;
-  background: rgba(12, 31, 58, 0.68);
-  border: 1px solid rgba(112, 192, 255, 0.08);
+  background: var(--platform-surface);
+  border: 1px solid var(--platform-border);
   font-size: 12px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 
 .recent-call-item.active {
-  border-color: #f7bb43;
-  box-shadow: 0 0 0 1px rgba(247, 187, 67, 0.35) inset, 0 0 20px rgba(247, 187, 67, 0.3);
+  border-color: var(--platform-accent-2);
+  box-shadow: 0 0 0 1px var(--platform-accent-2) inset, 0 0 20px var(--platform-accent-2);
   animation: speakingPulse 0.8s ease-in-out infinite;
   animation-delay: var(--speaking-pulse-delay);
 }
 
 .recent-room {
-  color: #f4f8ff;
+  color: var(--platform-ink);
   font-weight: 600;
 }
 
 .recent-caller {
-  color: #8ff9de;
+  color: var(--platform-accent);
 }
 
 .recent-duration {
-  color: #ffd9aa;
+  color: var(--platform-accent-2);
   font-variant-numeric: tabular-nums;
   font-weight: 600;
 }
 
 .recent-time,
 .empty-state {
-  color: rgba(228, 239, 255, 0.58);
+  color: var(--platform-ink-dim);
 }
 
 .empty-state {

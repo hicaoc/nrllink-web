@@ -228,9 +228,9 @@ export default {
 .tags-view-container {
   height: 34px;
   width: 100%;
-  background: linear-gradient(180deg, rgba(12, 28, 49, 0.96) 0%, rgba(10, 22, 40, 0.94) 100%);
-  border-bottom: 1px solid rgba(112, 192, 255, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 24px rgba(3, 9, 21, 0.18);
+  background: var(--platform-shell);
+  border-bottom: 1px solid var(--platform-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 24px rgba(0, 0, 0, 0.18);
   .tags-view-wrapper {
     height: 100%;
     display: flex;
@@ -244,9 +244,9 @@ export default {
       cursor: pointer;
       height: 28px;
       line-height: 28px;
-      border: 1px solid rgba(104, 176, 255, 0.18);
-      color: rgba(228, 239, 255, 0.72);
-      background: rgba(14, 33, 58, 0.82);
+      border: 1px solid var(--platform-border);
+      color: var(--platform-ink-dim);
+      background: var(--platform-surface);
       padding: 0 12px;
       font-size: 12px;
       border-radius: 10px;
@@ -263,17 +263,17 @@ export default {
       }
 
       &:hover {
-        color: #f4f8ff;
-        border-color: rgba(54, 240, 203, 0.28);
-        background: rgba(16, 38, 66, 0.92);
+        color: var(--platform-ink);
+        border-color: var(--platform-border-strong);
+        background: var(--platform-surface-soft);
         transform: translateY(-1px);
       }
 
       &.active {
-        background: linear-gradient(135deg, rgba(39, 214, 182, 0.92) 0%, rgba(45, 135, 255, 0.88) 100%);
-        color: #f8fdff;
-        border-color: rgba(108, 221, 255, 0.34);
-        box-shadow: 0 10px 24px rgba(21, 121, 180, 0.26);
+        background: linear-gradient(135deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%);
+        color: var(--platform-ink);
+        border-color: var(--platform-border-strong);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
 
         &::before {
           content: '';
@@ -290,7 +290,7 @@ export default {
   }
   .contextmenu {
     margin: 0;
-    background: linear-gradient(180deg, rgba(14, 32, 58, 0.98) 0%, rgba(10, 22, 40, 0.98) 100%);
+    background: var(--platform-shell);
     z-index: 3000;
     position: absolute;
     list-style-type: none;
@@ -298,8 +298,8 @@ export default {
     border-radius: 12px;
     font-size: 12px;
     font-weight: 400;
-    color: rgba(228, 239, 255, 0.82);
-    border: 1px solid rgba(104, 176, 255, 0.14);
+    color: var(--platform-ink-dim);
+    border: 1px solid var(--platform-border);
     box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
 
     li {
@@ -309,8 +309,8 @@ export default {
       transition: background 0.2s ease, color 0.2s ease;
 
       &:hover {
-        background: rgba(54, 240, 203, 0.12);
-        color: #f4f8ff;
+        background: var(--platform-accent);
+        color: var(--platform-ink);
       }
     }
   }
@@ -318,7 +318,6 @@ export default {
 </style>
 
 <style lang="scss">
-//reset element css of el-icon-close
 .tags-view-wrapper {
   .tags-view-item {
     .el-icon-close {
@@ -341,8 +340,8 @@ export default {
       }
 
       &:hover {
-        background-color: rgba(8, 18, 32, 0.22);
-        color: #fff;
+        background-color: var(--platform-surface);
+        color: var(--platform-ink);
       }
     }
   }

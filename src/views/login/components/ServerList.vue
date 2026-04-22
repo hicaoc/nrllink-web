@@ -39,9 +39,9 @@ export default {
 .server-list-component {
   width: 100%;
   container-type: inline-size;
-  background: var(--glass);
+  background: var(--platform-shell);
   border-radius: 18px;
-  border: 1px solid rgba(63, 140, 255, 0.12);
+  border: 1px solid var(--platform-border);
   padding: 12px 14px 18px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
   backdrop-filter: blur(12px);
@@ -54,7 +54,6 @@ export default {
     overflow-y: auto;
     padding-right: 2px;
 
-    /* Custom scrollbar styling */
     &::-webkit-scrollbar {
       width: 6px;
     }
@@ -64,12 +63,12 @@ export default {
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
+      background: var(--platform-border);
       border-radius: 3px;
     }
 
     &::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: var(--platform-border-strong);
     }
   }
 
@@ -92,14 +91,14 @@ export default {
     padding: 8px 12px;
     margin-bottom: 6px;
     border-radius: 12px;
-    background: rgba(9, 15, 22, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.03);
+    background: var(--platform-surface-68);
+    border: 1px solid var(--platform-border-lighter);
     transition: border-color 0.2s ease, background 0.2s ease;
     margin-right: 0;
 
     &:hover {
-      background: rgba(56, 242, 194, 0.12);
-      border-color: rgba(56, 242, 194, 0.35);
+      background: var(--platform-accent-10);
+      border-color: var(--platform-border-strong);
     }
   }
 
@@ -116,7 +115,7 @@ export default {
     max-width: 100%;
     font-weight: 600;
     font-size: 14px;
-    color: var(--accent);
+    color: var(--platform-accent);
     line-height: 1.4;
     word-break: break-word;
   }
@@ -142,17 +141,17 @@ export default {
     line-height: 1.35;
     text-align: right;
     overflow-wrap: anywhere;
-    color: rgba(231, 240, 245, 0.5);
+    color: var(--platform-ink-dim);
     font-size: 12px;
   }
 
   .server-online {
-    color: var(--accent);
+    color: var(--platform-accent);
     font-weight: 500;
   }
 
   .server-peak {
-    color: var(--warn);
+    color: var(--platform-accent-2);
     font-weight: 500;
   }
 

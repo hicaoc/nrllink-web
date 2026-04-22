@@ -29,7 +29,7 @@ import i18n from './lang' // internationalization
 import { setupIcons } from './icons' // icon
 import './permission' // permission control
 import { setupErrorLog } from './utils/error-log' // error log
-import { setElementPlusTheme } from './utils/theme'
+import { setElementPlusTheme, setPlatformTheme } from './utils/theme'
 
 import * as filters from './filters' // global filters
 
@@ -67,6 +67,7 @@ setupErrorLog(app)
 
 const settingsStore = useSettingsStore(pinia)
 setElementPlusTheme(settingsStore.theme)
+setPlatformTheme(settingsStore.platformThemeKey)
 
 // register global utility filters (Vue3 removes template filters, use $filters)
 app.config.globalProperties.$filters = filters

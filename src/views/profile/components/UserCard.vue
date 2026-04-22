@@ -56,16 +56,9 @@ export default {
 
 <style lang="scss" scoped>
 .profile-user-card {
-  --el-card-bg-color: #0d1f39;
-  background: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%) !important;
-  background-color: #0d1f39 !important;
-  background-image: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%) !important;
-  border: 1px solid rgba(104, 176, 255, 0.14) !important;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22) !important;
-
   :deep(.el-card__header) {
     background: transparent !important;
-    border-bottom: 1px solid rgba(104, 176, 255, 0.12);
+    border-bottom: 1px solid var(--platform-border-light);
   }
 
   :deep(.el-card__body) {
@@ -78,7 +71,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #f4f8ff;
+  color: var(--platform-ink);
   font-weight: 700;
 }
 
@@ -88,12 +81,12 @@ export default {
 }
 
 .text-muted {
-  color: rgba(228, 239, 255, 0.58);
+  color: var(--platform-ink-dim);
 }
 
 .user-profile {
   .user-name {
-    color: #f4f8ff;
+    color: var(--platform-ink);
     font-size: 24px;
     font-weight: 700;
     letter-spacing: 0.02em;

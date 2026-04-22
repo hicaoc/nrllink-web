@@ -68,26 +68,23 @@ export default {
 <style lang="scss" scoped>
 .profile-timeline {
   :deep(.el-timeline-item__timestamp) {
-    color: rgba(228, 239, 255, 0.56);
+    color: var(--platform-ink-dim);
   }
 
   :deep(.el-timeline-item__node) {
-    background: linear-gradient(180deg, #26efc7 0%, #3f8dff 100%);
-    box-shadow: 0 0 0 4px rgba(63, 141, 255, 0.14);
+    background: linear-gradient(180deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%);
+    box-shadow: 0 0 0 4px var(--platform-accent-10);
   }
 
   :deep(.el-timeline-item__tail) {
-    border-left-color: rgba(104, 176, 255, 0.18);
+    border-left-color: var(--platform-border-light);
   }
 }
 
 .timeline-entry-card {
-  --el-card-bg-color: #0d1f39;
   border-radius: 20px;
-  background: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%) !important;
-  background-color: #0d1f39 !important;
-  background-image: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%) !important;
-  border: 1px solid rgba(104, 176, 255, 0.14) !important;
+  background: var(--platform-shell) !important;
+  border: 1px solid var(--platform-border) !important;
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22) !important;
 
   :deep(.el-card__body) {
@@ -97,14 +94,14 @@ export default {
 
   h4 {
     margin: 0 0 10px;
-    color: #f4f8ff;
+    color: var(--platform-ink);
     font-size: 16px;
     font-weight: 700;
   }
 
   p {
     margin: 0;
-    color: rgba(228, 239, 255, 0.74);
+    color: var(--platform-ink-dim);
     line-height: 1.6;
   }
 }

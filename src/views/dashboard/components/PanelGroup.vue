@@ -144,38 +144,38 @@ export default {
     font-size: 12px;
     position: relative;
     overflow: hidden;
-    color: #666;
-    background: #fff;
+    color: var(--platform-ink);
+    background: var(--platform-surface);
     box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--platform-border);
     &:hover {
       .card-panel-icon-wrapper {
         color: #fff;
       }
       .icon-people {
-        background: #40c9c6;
+        background: var(--platform-accent);
       }
       .icon-message {
-        background: #36a3f7;
+        background: var(--platform-accent-2);
       }
       .icon-money {
-        background: #f4516c;
+        background: var(--platform-warn);
       }
       .icon-shopping {
-        background: #34bfa3;
+        background: var(--platform-accent);
       }
     }
     .icon-people {
-      color: #40c9c6;
+      color: var(--platform-accent);
     }
     .icon-message {
-      color: #36a3f7;
+      color: var(--platform-accent-2);
     }
     .icon-money {
-      color: #f4516c;
+      color: var(--platform-warn);
     }
     .icon-shopping {
-      color: #34bfa3;
+      color: var(--platform-accent);
     }
     .card-panel-icon-wrapper {
       float: left;
@@ -195,7 +195,7 @@ export default {
       margin-left: 0px;
       .card-panel-text {
         line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--platform-ink-dim);
         font-size: 16px;
         margin-bottom: 12px;
       }

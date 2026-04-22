@@ -351,30 +351,13 @@ export default {
 </script>
 
 <style lang="scss">
-:root {
-  --ink: #eef4fb;
-  --ink-dim: rgba(238, 244, 251, 0.7);
-  --glass: rgba(16, 26, 40, 0.72);
-  --glass-bright: rgba(22, 34, 50, 0.9);
-  --accent: #4fe7d6;
-  --accent-2: #5aaeff;
-  --warn: #ffb020;
-}
-
-$bg: #101826;
-$cursor: #eef4fb;
-
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .register-container .el-input input {
-    color: $cursor;
-  }
-}
+@import url('@/styles/platform-theme.scss');
 
 html,
 body,
 #app {
   min-height: 100%;
-  background: #111a28;
+  background: var(--platform-surface);
 }
 
 .register-container {
@@ -392,18 +375,18 @@ body,
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: var(--ink) !important;
+      color: var(--platform-ink) !important;
       height: 47px;
-      caret-color: $cursor;
+      caret-color: var(--platform-ink);
       font-size: 16px;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
+        box-shadow: 0 0 0px 1000px var(--platform-surface) inset !important;
+        -webkit-text-fill-color: var(--platform-ink) !important;
       }
 
       &::placeholder {
-        color: rgba(238, 244, 251, 0.6);
+        color: var(--platform-ink-dim);
         opacity: 1;
       }
     }
@@ -431,20 +414,20 @@ body,
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    background: rgba(16, 26, 40, 0.65) !important;
-    border: 1px solid rgba(90, 174, 255, 0.28) !important;
+    background: var(--platform-surface) !important;
+    border: 1px solid var(--platform-border) !important;
     border-radius: 12px !important;
     padding: 10px 12px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .el-form-item:hover {
-    border-color: rgba(79, 231, 214, 0.6) !important;
-    box-shadow: 0 0 0 1px rgba(79, 231, 214, 0.25) inset;
+    border-color: var(--platform-border-strong) !important;
+    box-shadow: 0 0 0 1px var(--platform-accent-10) inset;
   }
 
   .el-form-item__label {
-    color: rgba(238, 244, 251, 0.75);
+    color: var(--platform-ink-dim);
     font-size: 12px;
     padding-bottom: 4px;
   }
@@ -452,7 +435,7 @@ body,
   .el-textarea__inner {
     background: transparent !important;
     border: none !important;
-    color: var(--ink) !important;
+    color: var(--platform-ink) !important;
     padding: 8px 5px 8px 15px;
     box-shadow: none !important;
     resize: none;
@@ -468,13 +451,13 @@ body,
 .register-container {
   min-height: 100vh;
   width: 100%;
-  background: radial-gradient(980px 460px at 18% -14%, rgba(48, 84, 138, 0.18) 0%, rgba(22, 32, 50, 0.94) 62%, #111a28 100%);
+  background: radial-gradient(980px 460px at 18% -14%, var(--platform-accent-2) 0%, var(--platform-surface) 56%, var(--platform-surface-soft) 100%);
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: var(--ink);
+  color: var(--platform-ink);
   font-family: inherit;
 
   &::before {
@@ -483,7 +466,7 @@ body,
     inset: -40% auto auto -20%;
     width: 640px;
     height: 640px;
-    background: radial-gradient(circle, rgba(79, 231, 214, 0.26) 0%, rgba(79, 231, 214, 0) 70%);
+    background: radial-gradient(circle, var(--platform-accent) 0%, var(--platform-accent) 0%, transparent 70%);
     filter: blur(4px);
     pointer-events: none;
   }
@@ -495,7 +478,7 @@ body,
     bottom: -30%;
     width: 720px;
     height: 720px;
-    background: radial-gradient(circle, rgba(90, 174, 255, 0.26) 0%, rgba(90, 174, 255, 0) 70%);
+    background: radial-gradient(circle, var(--platform-accent-2) 0%, var(--platform-accent-2) 0%, transparent 70%);
     filter: blur(6px);
     pointer-events: none;
   }
@@ -520,8 +503,8 @@ body,
   }
 
   .login-form-card {
-    background: linear-gradient(140deg, rgba(28, 40, 60, 0.88) 0%, rgba(34, 48, 70, 0.94) 100%);
-    border: 1px solid rgba(110, 186, 255, 0.22);
+    background: var(--platform-shell);
+    border: 1px solid var(--platform-border);
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
     border-radius: 20px;
     padding: 28px 28px 24px;
@@ -529,7 +512,7 @@ body,
 
   &.embedded {
     min-height: auto;
-    background: linear-gradient(160deg, rgba(15, 35, 63, 0.96) 0%, rgba(10, 21, 42, 0.98) 100%);
+    background: var(--platform-shell);
     overflow: auto;
 
     &::before,
@@ -658,7 +641,7 @@ body,
       font-size: 24px;
       letter-spacing: 0.6px;
       margin-bottom: 6px;
-      color: var(--ink);
+      color: var(--platform-ink);
       font-weight: 600;
     }
 
@@ -666,7 +649,8 @@ body,
       font-size: 12px;
       letter-spacing: 1.8px;
       text-transform: uppercase;
-      color: rgba(79, 231, 214, 0.7);
+      color: var(--platform-accent);
+      opacity: 0.7;
       margin: 0;
     }
 
@@ -674,13 +658,13 @@ body,
       position: absolute;
       right: 0;
       top: 0;
-      color: var(--ink-dim);
+      color: var(--platform-ink-dim);
       text-decoration: none;
       font-size: 13px;
       transition: color 0.3s ease;
 
       &:hover {
-        color: var(--accent);
+        color: var(--platform-accent);
       }
     }
   }
@@ -720,8 +704,8 @@ body,
     width: 100%;
     padding: 14px;
     border-radius: 14px;
-    border: 1px dashed rgba(90, 174, 255, 0.4);
-    background: rgba(18, 28, 44, 0.6);
+    border: 1px dashed var(--platform-border);
+    background: var(--platform-surface);
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -732,19 +716,19 @@ body,
   .upload-title {
     font-size: 15px;
     font-weight: 600;
-    color: var(--ink);
+    color: var(--platform-ink);
   }
 
   .upload-meta {
     font-size: 12px;
-    color: rgba(238, 244, 251, 0.65);
+    color: var(--platform-ink-dim);
   }
 
   .upload-button {
     border-radius: 12px;
-    border: 1px solid rgba(79, 231, 214, 0.55);
+    border: 1px solid var(--platform-border-strong);
     background: transparent;
-    color: var(--ink);
+    color: var(--platform-ink);
   }
 
   .register-button {
@@ -753,16 +737,16 @@ body,
     height: 44px;
     font-size: 15px;
     border-radius: 14px !important;
-    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%) !important;
+    background: linear-gradient(90deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%) !important;
     border: none !important;
-    box-shadow: 0 12px 30px rgba(90, 174, 255, 0.25);
+    box-shadow: 0 12px 30px var(--platform-accent-22);
     transition: all 0.3s ease;
     font-weight: 600;
     letter-spacing: 0.6px;
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 16px 38px rgba(90, 174, 255, 0.35) !important;
+      box-shadow: 0 16px 38px var(--platform-accent-25) !important;
     }
   }
 }

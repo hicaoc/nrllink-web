@@ -11,53 +11,54 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <!-- <div class="right-menu-item">{{ areaname }}</div> -->
         <div class="right-menu-item">{{ name }}</div>
         <div class="right-menu-item">{{ callsign }}</div>
-        <!-- <div class="right-menu-item">
-
-            <el-select v-model="current_area" class="filter-item" placeholder="请选择">
-              <el-option v-for="item in list" :key="item.id" :label="item.name" :value="item.id"/>
-            </el-select>
-
-        </div> -->
-        <!-- <search id="header-search" class="right-menu-item"/> -->
-
-        <!-- <error-log class="errLog-container right-menu-item hover-effect"/> -->
 
         <button class="lang-toggle right-menu-item hover-effect" @click="toggleLanguage">
           {{ language === 'zh' ? 'EN' : '中' }}
         </button>
 
-        <!-- <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect"/>
-        </el-tooltip>-->
+        <el-dropdown class="theme-picker-container right-menu-item hover-effect" trigger="click" popper-class="platform-theme-user-dropdown">
+          <div class="theme-trigger">
+            <span class="theme-icon">{{ currentTheme.icon }}</span>
+            <span class="theme-name">{{ currentTheme.name }}</span>
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item v-for="(theme, key) in themes" :key="key" @click="switchTheme(key)">
+                <span class="theme-option">
+                  <span class="theme-option-icon">{{ theme.icon }}</span>
+                  <span class="theme-option-name">{{ theme.name }}</span>
+                  <el-icon v-if="platformThemeKey === key" class="theme-check"><Check /></el-icon>
+                </span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
 
-        <!-- <lang-select class="right-menu-item hover-effect"/> -->
+        <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click" popper-class="platform-theme-user-dropdown">
+          <div class="avatar-wrapper">
+            <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+            <el-icon class="el-icon-caret-bottom">
+              <CaretBottom />
+            </el-icon>
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <router-link to="/profile/index">
+                <el-dropdown-item>{{ $t('navbar.profile') }}</el-dropdown-item>
+              </router-link>
+              <router-link to="/dashboard">
+                <el-dropdown-item>{{ $t('navbar.dashboard') }}</el-dropdown-item>
+              </router-link>
+
+              <el-dropdown-item divided>
+                <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </template>
-
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click" popper-class="platform-theme-user-dropdown">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <el-icon class="el-icon-caret-bottom">
-            <CaretBottom />
-          </el-icon>
-        </div>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <router-link to="/profile/index">
-              <el-dropdown-item>{{ $t('navbar.profile') }}</el-dropdown-item>
-            </router-link>
-            <router-link to="/dashboard">
-              <el-dropdown-item>{{ $t('navbar.dashboard') }}</el-dropdown-item>
-            </router-link>
-
-            <el-dropdown-item divided>
-              <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
     </div>
   </div>
 </template>
@@ -67,26 +68,31 @@ import { mapState, storeToRefs } from 'pinia'
 import { pinia } from '@/store'
 import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
+import { useSettingsStore } from '@/store/modules/settings'
+import { themes } from '@/styles/themes'
+import { setPlatformTheme } from '@/utils/theme'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import Hamburger from '@/components/Hamburger/index.vue'
 import { computed } from 'vue'
 import { setI18nLanguage } from '@/lang'
 import router from '@/router'
+import { Check } from '@element-plus/icons-vue'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    Check
   },
   data() {
     return {
-      list: [],
-      total: 0
+      themes
     }
   },
   setup() {
     const appStore = useAppStore(pinia)
     const userStore = useUserStore(pinia)
+    const settingsStore = useSettingsStore(pinia)
 
     const sidebar = computed(() => appStore.sidebar)
     const device = computed(() => appStore.device)
@@ -94,6 +100,8 @@ export default {
     const name = computed(() => userStore.name)
     const callsign = computed(() => userStore.callsign)
     const avatar = computed(() => userStore.avatar)
+    const platformThemeKey = computed(() => settingsStore.platformThemeKey)
+    const currentTheme = computed(() => themes[platformThemeKey.value] || themes.default)
 
     const toggleSideBar = () => {
       appStore.toggleSideBar()
@@ -103,6 +111,11 @@ export default {
       const locale = language.value === 'zh' ? 'en' : 'zh'
       setI18nLanguage(locale)
       appStore.setLanguage(locale)
+    }
+
+    const switchTheme = (key) => {
+      settingsStore.setPlatformTheme(key)
+      setPlatformTheme(key)
     }
 
     const logout = async () => {
@@ -117,8 +130,11 @@ export default {
       name,
       callsign,
       avatar,
+      platformThemeKey,
+      currentTheme,
       toggleSideBar,
       toggleLanguage,
+      switchTheme,
       logout
     }
   }
@@ -127,10 +143,10 @@ export default {
 
 <style lang="scss">
 .platform-theme-user-dropdown {
-  border: 1px solid rgba(104, 176, 255, 0.18) !important;
+  border: 1px solid var(--platform-border) !important;
   border-radius: 18px !important;
-  background: linear-gradient(160deg, rgba(15, 35, 63, 0.98) 0%, rgba(10, 21, 42, 0.98) 100%) !important;
-  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(54, 240, 203, 0.08) inset !important;
+  background: var(--platform-shell) !important;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.42), 0 0 0 1px var(--platform-border-strong) inset !important;
   overflow: hidden;
 
   .el-dropdown-menu {
@@ -142,20 +158,20 @@ export default {
     min-width: 148px;
     margin: 4px 0;
     border-radius: 12px;
-    color: rgba(228, 239, 255, 0.86) !important;
+    color: var(--platform-ink-dim) !important;
     font-weight: 600;
     transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
   }
 
   .el-dropdown-menu__item:not(.is-disabled):hover,
   .el-dropdown-menu__item:not(.is-disabled):focus {
-    background: linear-gradient(90deg, rgba(38, 239, 199, 0.1) 0%, rgba(63, 141, 255, 0.14) 100%) !important;
-    color: #dffcff !important;
+    background: linear-gradient(90deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%) !important;
+    color: var(--platform-ink) !important;
     transform: translateX(2px);
   }
 
   .el-dropdown-menu__item--divided {
-    border-top-color: rgba(104, 176, 255, 0.14) !important;
+    border-top-color: var(--platform-border) !important;
   }
 
   .el-dropdown-menu__item--divided:before {
@@ -163,8 +179,8 @@ export default {
   }
 
   .el-popper__arrow::before {
-    background: rgba(13, 29, 51, 0.98) !important;
-    border-color: rgba(104, 176, 255, 0.18) !important;
+    background: var(--platform-surface) !important;
+    border-color: var(--platform-border) !important;
   }
 
   a {
@@ -178,9 +194,9 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(150deg, rgba(16, 39, 68, 0.98) 0%, rgba(12, 25, 48, 0.96) 100%) !important;
-  border-bottom: 1px solid rgba(112, 192, 255, 0.24);
-  box-shadow: 0 4px 16px rgba(3, 9, 21, 0.3);
+  background: var(--platform-shell) !important;
+  border-bottom: 1px solid var(--platform-border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 
   .hamburger-container {
     line-height: 46px;
@@ -222,7 +238,7 @@ export default {
       padding: 0 8px;
       height: auto;
       font-size: 18px;
-      color: rgba(228, 239, 255, 0.76);
+      color: var(--platform-ink-dim);
       line-height: 1;
 
       &.hover-effect {
@@ -230,17 +246,17 @@ export default {
         transition: background 0.3s;
 
         &:hover {
-          background: rgba(54, 240, 203, 0.1);
+          background: rgba(var(--platform-accent), 0.1);
         }
       }
     }
 
     .lang-toggle {
       appearance: none;
-      border: 1px solid rgba(104, 176, 255, 0.28);
+      border: 1px solid var(--platform-border);
       border-radius: 999px;
-      background: rgba(13, 31, 57, 0.68);
-      color: rgba(228, 239, 255, 0.76);
+      background: var(--platform-surface);
+      color: var(--platform-ink-dim);
       cursor: pointer;
       font-size: 14px;
       font-weight: 700;
@@ -254,8 +270,39 @@ export default {
       transition: all 0.2s ease;
 
       &:hover {
-        border-color: rgba(54, 240, 203, 0.42);
-        color: #f4f8ff;
+        border-color: var(--platform-border-strong);
+        color: var(--platform-ink);
+      }
+    }
+
+    .theme-picker-container {
+      margin: 0 4px;
+
+      .theme-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border: 1px solid var(--platform-border);
+        border-radius: 999px;
+        background: var(--platform-surface);
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: var(--platform-border-strong);
+          background: var(--platform-surface-soft);
+        }
+
+        .theme-icon {
+          font-size: 16px;
+        }
+
+        .theme-name {
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--platform-ink-dim);
+        }
       }
     }
 

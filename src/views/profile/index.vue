@@ -84,13 +84,6 @@ export default {
   }
 
   .profile-content-card {
-    --el-card-bg-color: #0d1f39;
-    background: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%) !important;
-    background-color: #0d1f39 !important;
-    background-image: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%) !important;
-    border: 1px solid rgba(104, 176, 255, 0.14) !important;
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22) !important;
-
     :deep(.el-card__header),
     :deep(.el-card__body) {
       background: transparent !important;
@@ -116,20 +109,20 @@ export default {
     }
 
     :deep(.el-tabs__nav-wrap::after) {
-      background: rgba(104, 176, 255, 0.12);
+      background: var(--platform-border-light);
     }
 
     :deep(.el-tabs__item) {
-      color: rgba(228, 239, 255, 0.66);
+      color: var(--platform-ink-dim);
       font-weight: 600;
     }
 
     :deep(.el-tabs__item.is-active) {
-      color: #dffcff;
+      color: var(--platform-ink);
     }
 
     :deep(.el-tabs__active-bar) {
-      background: linear-gradient(90deg, #26efc7 0%, #3f8dff 100%);
+      background: linear-gradient(90deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%);
       border-radius: 999px;
     }
   }

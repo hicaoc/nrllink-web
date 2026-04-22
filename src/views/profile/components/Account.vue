@@ -140,18 +140,18 @@ export default {
 
 .profile-account-form {
   :deep(.el-form-item__label) {
-    color: #f4f8ff;
+    color: var(--platform-ink);
     font-weight: 600;
   }
 
   :deep(.el-input__wrapper) {
-    background: rgba(8, 23, 45, 0.86) !important;
-    box-shadow: 0 0 0 1px rgba(104, 176, 255, 0.16) inset !important;
+    background: var(--platform-deep-90) !important;
+    box-shadow: 0 0 0 1px var(--platform-border-input) inset !important;
     border-radius: 14px;
   }
 
   :deep(.el-input__inner) {
-    color: #f4f8ff !important;
+    color: var(--platform-ink) !important;
   }
 }
 
@@ -162,9 +162,9 @@ export default {
   width: 100%;
   padding: 0 16px;
   border-radius: 14px;
-  background: rgba(8, 23, 45, 0.66);
-  box-shadow: 0 0 0 1px rgba(104, 176, 255, 0.12) inset;
-  color: rgba(228, 239, 255, 0.86);
+  background: var(--platform-deep-86);
+  box-shadow: 0 0 0 1px var(--platform-border-light) inset;
+  color: var(--platform-ink-dim);
 }
 
 .profile-submit-btn {

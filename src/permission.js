@@ -2,6 +2,8 @@ import router from './router'
 import { pinia } from './store'
 import { useUserStore } from '@/store/modules/user'
 import { usePermissionStore } from '@/store/modules/permission'
+import { useSettingsStore } from '@/store/modules/settings'
+import { setPlatformTheme } from '@/utils/theme'
 import { ElMessage } from 'element-plus'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
@@ -85,6 +87,7 @@ router.beforeEach(async(to, from, next) => {
 })
 
 router.afterEach(() => {
-  // finish progress bar
+  const settingsStore = useSettingsStore(pinia)
+  setPlatformTheme(settingsStore.platformThemeKey)
   NProgress.done()
 })

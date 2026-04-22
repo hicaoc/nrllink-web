@@ -64,7 +64,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('group.allow_callsign_ssid')" min-width="240" align="center">
+        <el-table-column :label="$t('group.allow_callsign_ssid')" min-width="120" align="center">
           <template #default="scope">
             <div class="tag-wrap">
               <el-tag
@@ -77,25 +77,19 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="创建者呼号" width="150" align="center">
+        <el-table-column label="创建者" width="100" align="center">
           <template #default="scope">
             <el-tag class="owner-callsign-tag">{{ scope.row.callsign || '--' }}</el-tag>
           </template>
         </el-table-column>
-
-        <el-table-column label="创建者" width="110" align="center">
-          <template #default="scope">
-            <span>{{ scope.row.ower_id || '--' }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column :label="$t('device.createTime')" width="160" align="center">
+ 
+        <el-table-column :label="$t('device.createTime')" width="140" align="center">
           <template #default="scope">
             <span>{{ parseTime(scope.row.create_time) || '--' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.updateTime')" width="160" align="center">
+        <el-table-column :label="$t('device.updateTime')" width="140" align="center">
           <template #default="scope">
             <span>{{ parseTime(scope.row.update_time) || '--' }}</span>
           </template>
@@ -107,7 +101,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.bind')" align="center" class-name="small-padding fixed-width">
+        <el-table-column :label="$t('area.actions')" align="center" min-width="180">
           <template #default="{ row }">
             <el-button size="small" type="primary" plain class="compact-btn group-edit-btn" @click="handleUpdate(row)">
               {{ $t('device.edit') }}
@@ -652,13 +646,13 @@ export default {
   align-items: flex-start;
   gap: 8px;
   padding: 8px 12px;
-  border: 1px solid rgba(104, 176, 255, 0.2);
+  border: 1px solid var(--platform-border-input);
   border-radius: 8px;
-  background: rgba(12, 31, 58, 0.6);
+  background: var(--platform-surface-68);
   min-height: 42px;
 
   &:focus-within {
-    border-color: rgba(54, 240, 203, 0.5);
+    border-color: var(--platform-border-strong);
   }
 }
 
@@ -681,10 +675,11 @@ export default {
 
   :deep(.el-input__inner) {
     background: transparent;
-    color: #f4f8ff;
+    color: var(--platform-ink);
 
     &::placeholder {
-      color: rgba(228, 239, 255, 0.4);
+      color: var(--platform-ink-dim);
+      opacity: 0.6;
     }
   }
 }
@@ -698,8 +693,8 @@ export default {
 
 .groups-card {
   border-radius: 24px;
-  border: 1px solid rgba(104, 176, 255, 0.12);
-  background: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%);
+  border: 1px solid var(--platform-border);
+  background: var(--platform-shell);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
   padding: 18px;
   display: flex;
@@ -724,15 +719,15 @@ export default {
     margin: 0;
     font-size: 18px;
     line-height: 1.35;
-    color: #f4f8ff;
+    color: var(--platform-ink);
     word-break: break-word;
   }
 }
 
 .group-id-tag {
-  color: #9cccff !important;
-  border-color: rgba(88, 184, 255, 0.34) !important;
-  background: rgba(20, 48, 84, 0.72) !important;
+  color: var(--platform-accent-2) !important;
+  border-color: var(--platform-accent-16) !important;
+  background: var(--platform-surface-68) !important;
 }
 
 .groups-card__body {
@@ -748,8 +743,8 @@ export default {
   gap: 12px;
   padding: 12px 14px;
   border-radius: 16px;
-  background: rgba(12, 31, 58, 0.42);
-  border: 1px solid rgba(104, 176, 255, 0.12);
+  background: var(--platform-surface-xlight);
+  border: 1px solid var(--platform-border);
 }
 
 .groups-card__row--stack {
@@ -758,14 +753,14 @@ export default {
 }
 
 .groups-card__label {
-  color: rgba(228, 239, 255, 0.54);
+  color: var(--platform-ink-dim);
   font-size: 12px;
   letter-spacing: 0.02em;
 }
 
 .groups-card__value,
 .groups-card__note {
-  color: #f4f8ff;
+  color: var(--platform-ink);
   line-height: 1.55;
   text-align: right;
   word-break: break-word;
@@ -779,7 +774,7 @@ export default {
   width: 100%;
   margin: 0;
   text-align: left;
-  color: rgba(228, 239, 255, 0.78);
+  color: var(--platform-ink-dim);
 }
 
 .groups-card__actions {

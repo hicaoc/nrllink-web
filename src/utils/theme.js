@@ -1,3 +1,5 @@
+import { themes } from '@/styles/themes'
+
 function toHex(value) {
   const hex = value.toString(16)
   return hex.length === 1 ? `0${hex}` : hex
@@ -41,4 +43,20 @@ export function setElementPlusTheme(color) {
     const tint = level / 10
     root.style.setProperty(`--el-color-primary-light-${level}`, tintColor(hex, tint))
   })
+}
+
+export function setPlatformTheme(themeKey) {
+  const theme = themes[themeKey]
+  if (!theme) return
+
+  const root = document.documentElement
+  Object.entries(theme.vars).forEach(([key, value]) => {
+    root.style.setProperty(key, value)
+  })
+  setElementPlusTheme(theme.primary)
+}
+
+export function getThemePrimary(themeKey) {
+  const theme = themes[themeKey]
+  return theme ? theme.primary : themes.default.primary
 }

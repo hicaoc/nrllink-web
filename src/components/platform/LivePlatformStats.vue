@@ -70,8 +70,8 @@ export default {
   min-width: 104px;
   padding: 12px 14px;
   border-radius: 18px;
-  background: rgba(12, 31, 58, 0.74);
-  border: 1px solid rgba(112, 192, 255, 0.14);
+  background: var(--platform-shell);
+  border: 1px solid var(--platform-border);
   text-align: center;
   backdrop-filter: blur(8px);
 }
@@ -80,14 +80,14 @@ export default {
   display: block;
   font-size: 26px;
   line-height: 1.1;
-  color: #8ff9de;
+  color: var(--platform-accent);
 }
 
 .topbar-stat span {
   display: block;
   margin-top: 4px;
   font-size: 12px;
-  color: rgba(228, 239, 255, 0.62);
+  color: var(--platform-ink-dim);
   white-space: nowrap;
 }
 

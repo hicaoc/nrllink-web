@@ -63,8 +63,8 @@ export default {
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background: linear-gradient(150deg, rgba(16, 39, 68, 0.98) 0%, rgba(12, 25, 48, 0.96) 100%);
-  border-bottom: 1px solid rgba(112, 192, 255, 0.24);
+  background: var(--platform-shell);
+  border-bottom: 1px solid var(--platform-border);
   text-align: center;
   overflow: hidden;
 
@@ -82,7 +82,7 @@ export default {
     & .sidebar-title {
       display: inline-block;
       margin: 0;
-      color: #fff;
+      color: var(--platform-ink);
       font-weight: 600;
       line-height: 50px;
       font-size: 14px;
