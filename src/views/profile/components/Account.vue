@@ -1,19 +1,14 @@
 <template>
-  <div class="app-container">
-
-    <el-form>
-
+  <div class="profile-account">
+    <el-form label-width="88px" class="profile-account-form">
       <el-form-item label="姓名">
-        <!-- <el-input v-model.trim="user.name" /> -->
-        {{ user.name }}
+        <div class="static-field">{{ user.name || '--' }}</div>
       </el-form-item>
       <el-form-item label="电话">
-        <!-- <el-input v-model.trim="user.name" /> -->
-        {{ user.phone }}
+        <div class="static-field">{{ user.phone || '--' }}</div>
       </el-form-item>
       <el-form-item label="呼号">
-        <!-- <el-input v-model.trim="user.name" /> -->
-        {{ user.callsign }}
+        <div class="static-field">{{ user.callsign || '--' }}</div>
       </el-form-item>
 
       <el-form-item label="密码">
@@ -26,6 +21,7 @@
       <el-form-item>
         <el-button
           type="primary"
+          class="profile-submit-btn"
           @click="submit"
         >更新</el-button>
       </el-form-item>
@@ -136,3 +132,42 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.profile-account {
+  padding: 4px 2px 0;
+}
+
+.profile-account-form {
+  :deep(.el-form-item__label) {
+    color: #f4f8ff;
+    font-weight: 600;
+  }
+
+  :deep(.el-input__wrapper) {
+    background: rgba(8, 23, 45, 0.86) !important;
+    box-shadow: 0 0 0 1px rgba(104, 176, 255, 0.16) inset !important;
+    border-radius: 14px;
+  }
+
+  :deep(.el-input__inner) {
+    color: #f4f8ff !important;
+  }
+}
+
+.static-field {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 16px;
+  border-radius: 14px;
+  background: rgba(8, 23, 45, 0.66);
+  box-shadow: 0 0 0 1px rgba(104, 176, 255, 0.12) inset;
+  color: rgba(228, 239, 255, 0.86);
+}
+
+.profile-submit-btn {
+  min-width: 120px;
+}
+</style>

@@ -130,6 +130,8 @@ export default {
     at: 'AT指令',
     bind: '绑定',
     owner: '所有者',
+    createTime: '创建时间',
+    updateTime: '更新时间',
     totalVoiceTime: '总呼叫时长',
     totalTraffic: '总流量',
     lastVoiceDuration: '上次呼叫时长',
@@ -226,7 +228,9 @@ export default {
     up_freq: '上行频率',
     down_freq: '下行频率',
     ower_callsign: '创建者',
-    note: '备注'
+    note: '备注',
+    enabled: '启用',
+    disabled: '停用'
 
   },
   navbar: {
@@ -273,6 +277,24 @@ export default {
     showAllPanels: '全部显示',
     switchToChinese: '切换到中文',
     switchToEnglish: '切换到英文'
+  },
+  dashboardHome: {
+    heroBadge: '控制中心',
+    heroDesc: '登录后统一查看平台运行态势、实时通话和关键总览',
+    summaryEyebrow: '运行总览',
+    summaryTitle: '平台核心指标',
+    totalDevices: '设备总数',
+    deviceOverview: '设备概览',
+    deviceOverviewDesc: '当前在线 {online} 台，本地设备总数 {total} 台',
+    voiceDuration: '语音时长',
+    voiceDurationDesc: '累计语音时长来自平台总统计',
+    traffic: '累计流量',
+    trafficDesc: '累计处理报文 {packets} 个',
+    liveAccess: '在线接入',
+    liveAccessDesc: '当前音频订阅 {subs} 路',
+    platformName: '平台名称',
+    platformIcp: '备案信息',
+    platformLanguage: '当前语言'
   },
   documentation: {
     documentation: 'HAM互联'

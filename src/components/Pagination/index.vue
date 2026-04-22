@@ -4,8 +4,9 @@
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
       :background="background"
-      :layout="layout"
+      :layout="resolvedLayout"
       :page-sizes="pageSizes"
+      popper-class="platform-theme-select-dropdown"
       :total="total"
       v-bind="$attrs"
       @size-change="handleSizeChange"
@@ -55,7 +56,15 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      isMobile: false
+    }
+  },
   computed: {
+    resolvedLayout() {
+      return this.isMobile ? 'total, sizes, prev, pager, next' : this.layout
+    },
     currentPage: {
       get() {
         return this.page
@@ -73,7 +82,18 @@ export default {
       }
     }
   },
+  mounted() {
+    this.syncMobileState()
+    window.addEventListener('resize', this.syncMobileState, { passive: true })
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.syncMobileState)
+  },
   methods: {
+    syncMobileState() {
+      if (typeof window === 'undefined') return
+      this.isMobile = window.innerWidth <= 768
+    },
     handleSizeChange(val) {
       this.$emit('pagination', { page: this.currentPage, limit: val })
       if (this.autoScroll) {
@@ -92,7 +112,7 @@ export default {
 
 <style scoped>
 .pagination-container {
-  background: #fff;
+  background: transparent;
   padding: 32px 16px;
 }
 .pagination-container.hidden {

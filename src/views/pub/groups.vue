@@ -1,79 +1,66 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
+  <div class="app-container platform-theme-page groups-page">
+    <div class="filter-container platform-theme-toolbar">
       <el-input
         v-model.trim="name"
         :placeholder="$t('group.name')"
-        style="width: 200px"
-        class="filter-item"
+        class="filter-item search-input"
         clearable
         @keyup.enter="handleFilter"
       />
-
     </div>
 
-    <div>
-
-      <el-card v-for="g,idx in list.filter(item => item.name.includes(name))" :key="g.id" class="box-card" :body-style="{ padding: '0px' }">
+    <div class="group-grid">
+      <el-card v-for="g,idx in list.filter(item => item.name.includes(name))" :key="g.id" class="box-card platform-theme-card" :body-style="{ padding: '0px' }">
         <div
           class="card-header"
-          :style="g.id === 0
-            ? 'background: #e1f3d8;'
-            : (g.id === 1 || g.id === 2 || g.id === 3
-              ? 'background: #faecd8;'
-              : 'background: #d9ecff;')"
+          :class="{
+            'type-hall': g.id === 0,
+            'type-room': g.id === 1 || g.id === 2 || g.id === 3,
+            'type-link': g.id !== 0 && g.id !== 1 && g.id !== 2 && g.id !== 3
+          }"
         >
-          <span>{{
+          <span class="group-title">{{
             g.name + "-" + ValueFilter(g.type, groupTypeOptions) + " "
           }}</span>
 
           <el-button
             v-if="checkPermission(['admin'])"
-            style="padding: 3px 0"
-            link
+            class="group-edit-btn"
+            text
             @click="handleUpdate(g)"
           >{{ $t("device.edit") }}</el-button>
         </div>
         <div class="card-content">
-          <el-collapse v-model="g.a" accordion @change="handleChange(idx,g.a)">
-            <el-collapse-item title="我要加入" :name="g.id+'-1'">
-              <div v-for="mydev, index in mydevicesOptions" :key="index" class="text item">
-                <span v-if="!hasindevlist(mydev.id, g.devmap)">
-                  <el-button
-                    size="small"
-                    plain
-                    :type="mydev.is_online ? 'success' : 'info'"
-                    @click="changeGroup(mydev, g.id)"
-                  > {{ mydev.id +
-                    " " +
-                    mydev.callsign +
-                    "-" +
-                    mydev.ssid +
-                    " " +
-                    mydev.name }}</el-button>
-                </span>
-              </div>
-            </el-collapse-item>
-            <el-collapse-item :title="'已加入设备' + g.online_dev_number + '/' + g.total_dev_number + '台'" :name="g.id+'-2'">
-
-              <div v-for="d in g.devlist" :key="d.id" class="text item">
-                <div class="tag-wrap">
-                  <el-tag :type="d.is_online ? 'success' : 'info'">{{ d.id + " " + d.callsign + "-" + d.ssid + " " +
-                    d.name }} </el-tag>
-                </div>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
+          <div class="group-action-grid">
+            <button
+              type="button"
+              class="panel-tab primary-action"
+              @click="openJoinDevicesDialog(g)"
+            >
+              <span>我要加入</span>
+              <strong>{{ getJoinableDevices(g).length }}</strong>
+            </button>
+            <button
+              type="button"
+              class="panel-tab"
+              @click="openJoinedDevicesDialog(g, idx)"
+            >
+              <span>已加入设备</span>
+              <strong>{{ g.online_dev_number }}/{{ g.total_dev_number }}</strong>
+            </button>
+          </div>
         </div>
       </el-card>
     </div>
 
     <el-dialog
       v-model="dialogFormVisible"
-      width="70%"
+      :width="isNarrowDialogScreen ? '100%' : '70%'"
       :title="textMap[dialogStatus]"
-      :center="device === 'mobile'"
-      :fullscreen="device === 'mobile'"
+      :center="isNarrowDialogScreen"
+      :fullscreen="isNarrowDialogScreen"
+      class="platform-theme-dialog"
     >
       <el-form
         ref="dataForm"
@@ -106,6 +93,7 @@
             filterable
             multiple
             allow-create
+            popper-class="platform-theme-select-dropdown"
             placeholder="请输入设备ID,格式：BX1XXX-1"
             style="width: 320px"
             class="filter-item"
@@ -129,6 +117,71 @@
           }}</el-button>
           <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
             $t("employee.confirm") }}</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
+    <el-dialog
+      v-model="joinDevicesDialogVisible"
+      :width="isNarrowDialogScreen ? '100%' : '860px'"
+      :title="joinDevicesDialogTitle"
+      :center="isNarrowDialogScreen"
+      :fullscreen="isNarrowDialogScreen"
+      class="platform-theme-dialog"
+    >
+      <div class="joined-devices-dialog">
+        <div v-if="joinDevicesList.length" class="device-pill-list joined-device-list">
+          <div v-for="mydev in joinDevicesList" :key="mydev.id" class="text item">
+            <el-button
+              size="small"
+              plain
+              class="join-device-btn"
+              :type="mydev.is_online ? 'success' : 'info'"
+              @click="changeGroup(mydev, currentJoinGroupId)"
+            >{{ mydev.id +
+              " " +
+              mydev.callsign +
+              "-" +
+              mydev.ssid +
+              " " +
+              mydev.name }}</el-button>
+          </div>
+        </div>
+        <div v-else class="group-empty-state dialog-empty-state">暂无可加入设备</div>
+      </div>
+
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="joinDevicesDialogVisible = false">{{ $t("employee.cancel") }}</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
+    <el-dialog
+      v-model="joinedDevicesDialogVisible"
+      :width="isNarrowDialogScreen ? '100%' : '860px'"
+      :title="joinedDevicesDialogTitle"
+      :center="isNarrowDialogScreen"
+      :fullscreen="isNarrowDialogScreen"
+      class="platform-theme-dialog"
+    >
+      <div class="joined-devices-dialog" v-loading="joinedDevicesLoading">
+        <div v-if="joinedDevicesList.length" class="device-pill-list joined-device-list">
+          <div v-for="d in joinedDevicesList" :key="d.id" class="text item">
+            <div class="tag-wrap">
+              <el-tag
+                :type="d.is_online ? 'success' : 'info'"
+                :class="d.is_online ? 'group-device-online-tag' : 'group-device-offline-tag'"
+              >{{ d.id + " " + d.callsign + "-" + d.ssid + " " + d.name }}</el-tag>
+            </div>
+          </div>
+        </div>
+        <div v-else-if="!joinedDevicesLoading" class="group-empty-state dialog-empty-state">暂无已加入设备</div>
+      </div>
+
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="joinedDevicesDialogVisible = false">{{ $t("device.close") }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -193,6 +246,16 @@ export default {
       ],
 
       dialogFormVisible: false,
+      joinDevicesDialogVisible: false,
+      joinDevicesList: [],
+      joinDevicesDialogTitle: '我要加入',
+      currentJoinGroupId: null,
+      joinedDevicesDialogVisible: false,
+      joinedDevicesLoading: false,
+      joinedDevicesList: [],
+      joinedDevicesDialogTitle: '已加入设备',
+      currentJoinedGroupId: null,
+      isNarrowDialogScreen: false,
 
       dialogTimeLineVisible: false,
       dialogTimeLineChartVisible: false,
@@ -218,11 +281,18 @@ export default {
       this.showtable = true
     }
 
+    this.syncDialogScreenMode()
     this.getList()
 
     this.fetchMyDeviceList({}).then(response => {
       this.mydevicesOptions = Object.values(response.data.items)
     })
+  },
+  mounted() {
+    window.addEventListener('resize', this.syncDialogScreenMode, { passive: true })
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.syncDialogScreenMode)
   },
 
   methods: {
@@ -237,9 +307,18 @@ export default {
     updateGroup,
     deleteGroup,
     ValueFilter,
+    syncDialogScreenMode() {
+      if (typeof window === 'undefined') {
+        return
+      }
+      this.isNarrowDialogScreen = window.innerWidth <= 768
+    },
     getList() {
       this.fetchGroupListMini({}).then(response => {
-        this.list = response.data
+        this.list = response.data.map(group => ({
+          ...group,
+          devlist: Array.isArray(group.devlist) ? group.devlist : []
+        }))
       })
     },
 
@@ -247,23 +326,33 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleChange(idx, name) {
-      // console.log(idx, name)
-      if (name === this.list[idx].id + '-2') {
-        fetchGroupDevicesList({ group_id: this.list[idx].id }).then(response => {
-          // this.list[idx].devlist = response.data.items
+    getJoinableDevices(group) {
+      return this.mydevicesOptions.filter(device => !this.hasindevlist(device.id, group.devmap))
+    },
+    openJoinDevicesDialog(group) {
+      this.currentJoinGroupId = group.id
+      this.joinDevicesDialogTitle = `${group.name} - 我要加入 ${this.getJoinableDevices(group).length}`
+      this.joinDevicesList = this.getJoinableDevices(group)
+      this.joinDevicesDialogVisible = true
+    },
+    openJoinedDevicesDialog(group, idx) {
+      this.joinedDevicesDialogVisible = true
+      this.joinedDevicesDialogTitle = `${group.name} - 已加入设备 ${group.online_dev_number}/${group.total_dev_number}`
+      this.currentJoinedGroupId = group.id
 
-          this.list[idx].devlist = response.data.items
-          // this.list = this.list
-
-          // this.$notify({
-          //   title: '成功',
-          //   message: response.message,
-          //   type: 'success',
-          //   duration: 2000
-          // })
-        })
+      if (Array.isArray(group.devlist) && group.devlist.length) {
+        this.joinedDevicesList = group.devlist
+        return
       }
+
+      this.joinedDevicesLoading = true
+      fetchGroupDevicesList({ group_id: group.id }).then(response => {
+        const devices = response.data.items || []
+        this.list[idx].devlist = devices
+        this.joinedDevicesList = devices
+      }).finally(() => {
+        this.joinedDevicesLoading = false
+      })
     },
     handleModifiStatus(row, status) {
       ElMessage.success('操作成功')
@@ -275,7 +364,7 @@ export default {
       //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
       updateDevice(tempData).then(response => {
         this.getList()
-
+        this.joinDevicesDialogVisible = false
         this.dialogFormVisible = false
         ElMessage.success(response?.data?.message || '操作成功')
       })
@@ -471,38 +560,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-/* Global overrides for Element UI in groups page - Modern Light Theme */
-.app-container {
-  .el-dialog {
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-
-    .el-dialog__header {
-      padding: 20px;
-      border-bottom: 1px solid #ebeef5;
-    }
-
-    .el-dialog__footer {
-      padding: 20px;
-      border-top: 1px solid #ebeef5;
-    }
-  }
-}
-</style>
-
 <style lang="scss" scoped>
-.app-container {
-  padding: 20px;
-  background-color: #f0f2f5;
-  min-height: 100vh;
-}
-
 .filter-container {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
   display: flex;
   flex-wrap: wrap;
@@ -512,6 +571,14 @@ export default {
   .filter-item {
     margin-bottom: 0;
     margin-right: 0;
+  }
+
+  .search-input {
+    width: 240px;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
 }
 
@@ -533,19 +600,26 @@ export default {
   clear: both;
 }
 
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+
 .box-card {
-  width: 340px;
-  float: left;
-  margin-right: 20px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  float: none;
+  margin-right: 0;
+  margin-bottom: 0;
+  border-radius: 24px;
+  border: 1px solid rgba(104, 176, 255, 0.12);
+  background: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
   transition: transform 0.3s, box-shadow 0.3s;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.28);
   }
 
   :deep(.el-card__body) {
@@ -553,16 +627,245 @@ export default {
   }
 
   .card-header {
-    padding: 15px 20px;
+    padding: 18px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: bold;
-    color: #303133;
+    gap: 12px;
+    font-weight: 700;
+    color: #f4f8ff;
+    border-bottom: 1px solid rgba(104, 176, 255, 0.12);
+
+    &.type-hall {
+      background: linear-gradient(90deg, rgba(38, 239, 199, 0.12) 0%, rgba(63, 141, 255, 0.1) 100%);
+    }
+
+    &.type-room {
+      background: linear-gradient(90deg, rgba(255, 183, 89, 0.12) 0%, rgba(247, 187, 67, 0.08) 100%);
+    }
+
+    &.type-link {
+      background: linear-gradient(90deg, rgba(111, 182, 255, 0.12) 0%, rgba(63, 141, 255, 0.08) 100%);
+    }
+  }
+
+  .group-title {
+    min-width: 0;
+    color: #f4f8ff;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .group-edit-btn {
+    color: #9cccff !important;
+    border: 1px solid rgba(111, 182, 255, 0.36) !important;
+    background: rgba(34, 67, 112, 0.18) !important;
+    border-radius: 999px;
+    padding: 8px 14px !important;
+    margin-left: auto;
   }
 
   .card-content {
     padding: 20px;
+  }
+}
+
+.join-device-btn {
+  border-radius: 999px;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover,
+  &:focus {
+    transform: translateY(-1px);
+    color: #e7fffa !important;
+    border-color: rgba(54, 240, 203, 0.56) !important;
+    background: linear-gradient(90deg, rgba(38, 239, 199, 0.14) 0%, rgba(63, 141, 255, 0.16) 100%) !important;
+    box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.1) inset, 0 10px 22px rgba(4, 12, 26, 0.24);
+  }
+}
+
+.group-action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.panel-tab {
+  all: unset;
+  box-sizing: border-box;
+  flex: 1 1 0;
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  line-height: 1;
+  min-height: 52px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(104, 176, 255, 0.12);
+  background: rgba(12, 31, 58, 0.42);
+  color: rgba(228, 239, 255, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+
+  span {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  strong {
+    font-size: 13px;
+    color: rgba(228, 239, 255, 0.64);
+  }
+
+  &:hover {
+    border-color: rgba(54, 240, 203, 0.22);
+    color: #f4f8ff;
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    background: linear-gradient(90deg, rgba(38, 239, 199, 0.12) 0%, rgba(63, 141, 255, 0.16) 100%);
+    border-color: rgba(54, 240, 203, 0.24);
+    color: #f4f8ff;
+    box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.08) inset;
+
+    strong {
+      color: #96ffe7;
+    }
+  }
+ 
+  &.primary-action {
+    background: linear-gradient(90deg, rgba(38, 239, 199, 0.12) 0%, rgba(63, 141, 255, 0.16) 100%);
+    border-color: rgba(54, 240, 203, 0.24);
+    color: #f4f8ff;
+    box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.08) inset;
+
+    strong {
+      color: #96ffe7;
+    }
+  }
+}
+
+.device-pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.device-pill-list .item {
+  margin-bottom: 0;
+}
+
+.group-empty-state {
+  min-height: 128px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(228, 239, 255, 0.48);
+  font-size: 14px;
+}
+
+.joined-devices-dialog {
+  min-height: 220px;
+}
+
+.joined-device-list {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(143, 249, 222, 0.42) rgba(8, 20, 36, 0.18);
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(8, 20, 36, 0.18);
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(143, 249, 222, 0.42) 0%, rgba(63, 141, 255, 0.4) 100%);
+    border-radius: 999px;
+    border: 2px solid rgba(8, 20, 36, 0.18);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(143, 249, 222, 0.62) 0%, rgba(63, 141, 255, 0.56) 100%);
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+.dialog-empty-state {
+  min-height: 220px;
+}
+
+:deep(.el-tag) {
+  border-radius: 999px;
+  border-color: rgba(104, 176, 255, 0.16);
+  background: rgba(12, 31, 58, 0.8);
+  color: #f4f8ff;
+}
+
+:deep(.group-device-online-tag) {
+  color: #96ffe7 !important;
+  border-color: rgba(54, 240, 203, 0.42) !important;
+  background: linear-gradient(135deg, rgba(16, 86, 77, 0.42) 0%, rgba(14, 55, 74, 0.28) 100%) !important;
+  box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.08) inset, 0 10px 24px rgba(54, 240, 203, 0.12);
+}
+
+:deep(.group-device-offline-tag) {
+  color: rgba(228, 239, 255, 0.82) !important;
+  border-color: rgba(104, 176, 255, 0.18) !important;
+  background: rgba(12, 31, 58, 0.8) !important;
+}
+
+@media (max-width: 768px) {
+  .group-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .group-action-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-tab {
+    width: 100%;
+  }
+
+  .joined-devices-dialog {
+    min-height: calc(100vh - 180px);
+  }
+
+  .joined-device-list {
+    max-height: calc(100vh - 260px);
+    padding-right: 2px;
+  }
+
+  :deep(.platform-theme-dialog .el-dialog__body) {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+  }
+
+  :deep(.platform-theme-dialog .el-dialog__header) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  :deep(.platform-theme-dialog .el-dialog__footer) {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
   }
 }
 </style>

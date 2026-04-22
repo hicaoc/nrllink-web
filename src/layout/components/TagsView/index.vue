@@ -228,36 +228,56 @@ export default {
 .tags-view-container {
   height: 34px;
   width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+  background: linear-gradient(180deg, rgba(12, 28, 49, 0.96) 0%, rgba(10, 22, 40, 0.94) 100%);
+  border-bottom: 1px solid rgba(112, 192, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 24px rgba(3, 9, 21, 0.18);
   .tags-view-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
     .tags-view-item {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       position: relative;
       cursor: pointer;
-      height: 26px;
-      line-height: 26px;
-      border: 1px solid #d8dce5;
-      color: #495060;
-      background: #fff;
-      padding: 0 8px;
+      height: 28px;
+      line-height: 28px;
+      border: 1px solid rgba(104, 176, 255, 0.18);
+      color: rgba(228, 239, 255, 0.72);
+      background: rgba(14, 33, 58, 0.82);
+      padding: 0 12px;
       font-size: 12px;
-      margin-left: 5px;
-      margin-top: 4px;
+      border-radius: 10px;
+      margin-left: 8px;
+      margin-top: 0;
+      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+
       &:first-of-type {
         margin-left: 15px;
       }
+
       &:last-of-type {
         margin-right: 15px;
       }
+
+      &:hover {
+        color: #f4f8ff;
+        border-color: rgba(54, 240, 203, 0.28);
+        background: rgba(16, 38, 66, 0.92);
+        transform: translateY(-1px);
+      }
+
       &.active {
-        background-color: #42b983;
-        color: #fff;
-        border-color: #42b983;
+        background: linear-gradient(135deg, rgba(39, 214, 182, 0.92) 0%, rgba(45, 135, 255, 0.88) 100%);
+        color: #f8fdff;
+        border-color: rgba(108, 221, 255, 0.34);
+        box-shadow: 0 10px 24px rgba(21, 121, 180, 0.26);
+
         &::before {
           content: '';
-          background: #fff;
+          background: rgba(255, 255, 255, 0.92);
           display: inline-block;
           width: 8px;
           height: 8px;
@@ -270,22 +290,27 @@ export default {
   }
   .contextmenu {
     margin: 0;
-    background: #fff;
+    background: linear-gradient(180deg, rgba(14, 32, 58, 0.98) 0%, rgba(10, 22, 40, 0.98) 100%);
     z-index: 3000;
     position: absolute;
     list-style-type: none;
-    padding: 5px 0;
-    border-radius: 4px;
+    padding: 6px 0;
+    border-radius: 12px;
     font-size: 12px;
     font-weight: 400;
-    color: #333;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
+    color: rgba(228, 239, 255, 0.82);
+    border: 1px solid rgba(104, 176, 255, 0.14);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
+
     li {
       margin: 0;
       padding: 7px 16px;
       cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+
       &:hover {
-        background: #eee;
+        background: rgba(54, 240, 203, 0.12);
+        color: #f4f8ff;
       }
     }
   }
@@ -299,18 +324,24 @@ export default {
     .el-icon-close {
       width: 16px;
       height: 16px;
-      vertical-align: 2px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
       border-radius: 50%;
       text-align: center;
       transition: all .3s cubic-bezier(.645, .045, .355, 1);
       transform-origin: 100% 50%;
+      color: inherit;
+
       &:before {
         transform: scale(.6);
         display: inline-block;
         vertical-align: -3px;
       }
+
       &:hover {
-        background-color: #b4bccc;
+        background-color: rgba(8, 18, 32, 0.22);
         color: #fff;
       }
     }

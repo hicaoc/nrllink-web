@@ -1,26 +1,25 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
+  <div class="app-container platform-theme-page relay-page">
+    <div class="filter-container platform-theme-toolbar">
 
       <el-input
         v-model="listQuery.name"
         :placeholder="$t('relay.name')"
-        style="width: 200px;"
-        class="filter-item"
+        class="filter-item search-input"
+        clearable
         @keyup.enter="handleFilter"
       />
       <el-input
         v-model="listQuery.ower_callsign"
         :placeholder="$t('relay.ower_callsign')"
-        style="width: 320px;"
-        class="filter-item"
+        class="filter-item owner-input"
         clearable
         @keyup.enter="handleFilter"
       />
 
       <el-button
         v-waves
-        class="filter-item"
+        class="filter-item action-btn"
         type="primary"
         @click="handleFilter"
       >
@@ -31,8 +30,7 @@
       </el-button>
 
       <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
+        class="filter-item action-btn action-btn-secondary"
         type="primary"
         @click="handleCreate"
       >
@@ -42,9 +40,19 @@
         {{ $t('employee.add') }}
       </el-button>
 
+      <button
+        type="button"
+        class="toolbar-capsule"
+        :class="{ 'is-active': showtable }"
+        @click="showtable = !showtable"
+      >
+        <span class="capsule-indicator" />
+        <span>{{ $t('device.showtable') }}</span>
+      </button>
+
     </div>
 
-    <div>
+    <div v-if="showtable" class="table-shell">
       <el-table
         :key="tableKey"
         v-loading="listLoading"
@@ -68,32 +76,38 @@
         </el-table-column>
 
         <el-table-column
-          label="频点名称"
+          :label="$t('relay.name')"
           width="150px"
           align="center"
         >
           <template #default="scope">
-            <span>{{ scope.row.name }}</span>
+            <div class="relay-name-cell">
+              <span>{{ scope.row.name || '--' }}</span>
+            </div>
           </template>
         </el-table-column>
 
         <el-table-column
-          label="上行频率"
+          :label="$t('relay.up_freq')"
           width="110px"
           align="center"
         >
           <template #default="scope">
-            <span>{{ scope.row.up_freq }}</span>
+            <div class="freq-pill">
+              <span>{{ scope.row.up_freq || '--' }}</span>
+            </div>
           </template>
         </el-table-column>
 
         <el-table-column
-          label="下行频率"
+          :label="$t('relay.down_freq')"
           width="110px"
           align="center"
         >
           <template #default="scope">
-            <span>{{ scope.row.down_freq }}</span>
+            <div class="freq-pill">
+              <span>{{ scope.row.down_freq || '--' }}</span>
+            </div>
           </template>
         </el-table-column>
 
@@ -103,7 +117,7 @@
           align="center"
         >
           <template #default="scope">
-            <span>{{ ValueFilter( scope.row.send_ctss,ctcssOptions) }}</span>
+            <el-tag class="tone-tag">{{ ValueFilter(scope.row.send_ctss, ctcssOptions) || '--' }}</el-tag>
           </template>
         </el-table-column>
 
@@ -113,57 +127,59 @@
           align="center"
         >
           <template #default="scope">
-            <span>{{ ValueFilter(scope.row.recive_ctss,ctcssOptions) }}</span>
+            <el-tag class="tone-tag">{{ ValueFilter(scope.row.recive_ctss, ctcssOptions) || '--' }}</el-tag>
           </template>
         </el-table-column>
 
         <el-table-column
-          label="创建者"
+          :label="$t('relay.ower_callsign')"
+          width="150px"
+          align="center"
+        >
+          <template #default="scope">
+            <el-tag class="owner-tag">{{ scope.row.ower_callsign || '--' }}</el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          :label="$t('device.status')"
           width="110px"
           align="center"
         >
           <template #default="scope">
-            <span>{{ scope.row.ower_callsign }}</span>
+            <el-tag :class="relayStatusClass(scope.row.status)" class="relay-status-tag">
+              {{ relayStatusLabel(scope.row.status) }}
+            </el-tag>
           </template>
         </el-table-column>
 
         <el-table-column
-          label="状态"
-          width="110px"
-          align="center"
-        >
-          <template #default="scope">
-            <span>{{ scope.row.status }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          label="创建时间"
+          :label="$t('device.createTime')"
           width="160px"
           align="center"
         >
           <template #default="scope">
-            <span>{{ parseTime(scope.row.create_time) }}</span>
+            <span>{{ parseTime(scope.row.create_time) || '--' }}</span>
           </template>
         </el-table-column>
 
         <el-table-column
-          label="更新时间"
+          :label="$t('device.updateTime')"
           width="160px"
           align="center"
         >
           <template #default="scope">
-            <span>{{ parseTime(scope.row.update_time) }}</span>
+            <span>{{ parseTime(scope.row.update_time) || '--' }}</span>
           </template>
         </el-table-column>
 
         <el-table-column
-          label="备注"
-          width="100px"
+          :label="$t('relay.note')"
+          min-width="180px"
           align="center"
         >
           <template #default="scope">
-            <span>{{ scope.row.note }}</span>
+            <div class="note-cell">{{ scope.row.note || '--' }}</div>
           </template>
         </el-table-column>
 
@@ -177,6 +193,8 @@
               v-if="checkPermission(['admin']) || row.ower_callsign === callsign "
               size="small"
               type="primary"
+              plain
+              class="compact-btn relay-edit-btn"
               @click="handleUpdate(row)"
             >{{ $t('device.edit') }}</el-button>
 
@@ -184,6 +202,8 @@
               v-if="checkPermission(['admin']) || row.ower_callsign === callsign "
               size="small"
               type="danger"
+              plain
+              class="compact-btn relay-delete-btn"
               @click="handleDelete(row)"
             >{{ $t('device.delete') }}</el-button>
 
@@ -193,9 +213,84 @@
       </el-table>
     </div>
 
+    <div v-else class="relay-card-grid">
+      <article
+        v-for="item in list"
+        :key="item.id"
+        class="relay-card"
+      >
+        <div class="relay-card__header">
+          <div class="relay-card__headline">
+            <el-tag size="small" effect="dark" class="relay-id-tag">#{{ item.id }}</el-tag>
+            <h3>{{ item.name || '--' }}</h3>
+          </div>
+          <el-tag :class="relayStatusClass(item.status)" class="relay-status-tag">
+            {{ relayStatusLabel(item.status) }}
+          </el-tag>
+        </div>
+
+        <div class="relay-card__meta">
+          <div class="relay-meta-pill">
+            <span class="relay-meta-label">{{ $t('relay.up_freq') }}</span>
+            <strong>{{ item.up_freq || '--' }}</strong>
+          </div>
+          <div class="relay-meta-pill">
+            <span class="relay-meta-label">{{ $t('relay.down_freq') }}</span>
+            <strong>{{ item.down_freq || '--' }}</strong>
+          </div>
+        </div>
+
+        <div class="relay-card__body">
+          <div class="relay-card__row">
+            <span class="relay-card__label">发射哑音</span>
+            <el-tag class="tone-tag">{{ ValueFilter(item.send_ctss, ctcssOptions) || '--' }}</el-tag>
+          </div>
+          <div class="relay-card__row">
+            <span class="relay-card__label">接收哑音</span>
+            <el-tag class="tone-tag">{{ ValueFilter(item.recive_ctss, ctcssOptions) || '--' }}</el-tag>
+          </div>
+          <div class="relay-card__row">
+            <span class="relay-card__label">{{ $t('relay.ower_callsign') }}</span>
+            <el-tag class="owner-tag">{{ item.ower_callsign || '--' }}</el-tag>
+          </div>
+          <div class="relay-card__row">
+            <span class="relay-card__label">{{ $t('device.createTime') }}</span>
+            <span class="relay-card__value">{{ parseTime(item.create_time) || '--' }}</span>
+          </div>
+          <div class="relay-card__row">
+            <span class="relay-card__label">{{ $t('device.updateTime') }}</span>
+            <span class="relay-card__value">{{ parseTime(item.update_time) || '--' }}</span>
+          </div>
+          <div class="relay-card__row relay-card__row--stack">
+            <span class="relay-card__label">{{ $t('relay.note') }}</span>
+            <p class="relay-card__note">{{ item.note || '--' }}</p>
+          </div>
+        </div>
+
+        <div v-if="checkPermission(['admin']) || item.ower_callsign === callsign" class="relay-card__actions">
+          <el-button
+            size="small"
+            type="primary"
+            plain
+            class="compact-btn relay-edit-btn"
+            @click="handleUpdate(item)"
+          >{{ $t('device.edit') }}</el-button>
+
+          <el-button
+            size="small"
+            type="danger"
+            plain
+            class="compact-btn relay-delete-btn"
+            @click="handleDelete(item)"
+          >{{ $t('device.delete') }}</el-button>
+        </div>
+      </article>
+    </div>
+
     <el-dialog
       v-model="dialogFormVisible"
       :title="textMap[dialogStatus]"
+      class="platform-theme-dialog relay-dialog"
     >
       <el-form
         ref="dataForm"
@@ -203,7 +298,7 @@
         :model="temp"
         label-position="right"
         label-width="140px"
-        style="width: 400px; margin-left:50px;"
+        class="relay-form"
       >
 
         <el-form-item
@@ -231,6 +326,7 @@
           <el-select
             v-model="temp.recive_ctss"
             style="width: 150px"
+            popper-class="platform-theme-select-dropdown"
           >
             <el-option
               v-for="item in ctcssOptions"
@@ -245,6 +341,7 @@
           <el-select
             v-model="temp.send_ctss"
             style="width: 150px"
+            popper-class="platform-theme-select-dropdown"
           >
             <el-option
               v-for="item in ctcssOptions"
@@ -314,6 +411,7 @@ export default {
       listLoading: false,
       listQuery: {
         name: '',
+        ower_callsign: '',
         page: 1
       },
       showReviewer: false,
@@ -321,6 +419,7 @@ export default {
         id: undefined,
         name: ''
       },
+      showtable: true,
 
       dialogFormVisible: false,
 
@@ -343,14 +442,7 @@ export default {
   },
 
   created() {
-    if (this.device === 'mobile') {
-      this.showtable = false
-    } else {
-      this.showtable = true
-    }
-
-    this.getList()
-
+    this.showtable = this.device !== 'mobile'
     this.getList()
   },
 
@@ -362,10 +454,25 @@ export default {
     deleteRelay,
     ValueFilter,
     parseTime,
+    relayStatusLabel(status) {
+      if (status === 1 || status === '1' || status === true) return this.$t('relay.enabled')
+      if (status === 0 || status === '0' || status === false) return this.$t('relay.disabled')
+      if (status === 'online') return this.$t('device.online')
+      if (status === 'offline') return this.$t('device.offline')
+      return status ?? '--'
+    },
+    relayStatusClass(status) {
+      if (status === 1 || status === '1' || status === true || status === 'online') return 'status-online'
+      if (status === 0 || status === '0' || status === false || status === 'offline') return 'status-offline'
+      return 'status-neutral'
+    },
     getList() {
+      this.listLoading = true
       this.fetchRelayList(this.listQuery).then(response => {
-        this.list = response.data.items
-        // console.log(this.list)
+        this.list = response?.data?.items || []
+        this.total = response?.data?.total || this.list.length
+      }).finally(() => {
+        this.listLoading = false
       })
     },
     handleFilter() {
@@ -533,56 +640,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-/* Global overrides for Element UI in relay page - Modern Light Theme */
-.app-container {
-  .el-table {
-    border-radius: 8px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-
-    th {
-      background-color: #f8f9fa !important;
-      color: #606266;
-      font-weight: 600;
-      height: 50px;
-    }
-
-    td {
-      padding: 8px 0;
-    }
-  }
-
-  .el-dialog {
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-
-    .el-dialog__header {
-      padding: 20px;
-      border-bottom: 1px solid #ebeef5;
-    }
-
-    .el-dialog__footer {
-      padding: 20px;
-      border-top: 1px solid #ebeef5;
-    }
-  }
-}
-</style>
-
 <style lang="scss" scoped>
-.app-container {
-  padding: 20px;
-  background-color: #f0f2f5;
-  min-height: 100vh;
-}
-
 .filter-container {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
-  margin-bottom: 20px;
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
@@ -591,39 +650,357 @@ export default {
   .filter-item {
     margin-bottom: 0;
     margin-right: 0;
+
+    &.search-input {
+      width: 220px;
+    }
+
+    &.owner-input {
+      width: 320px;
+    }
+
+    &.action-btn {
+      height: 42px;
+      padding: 0 22px;
+      border-radius: 14px;
+    }
+
+    &.action-btn-secondary {
+      min-width: 124px;
+    }
+  }
+
+  :deep(.view-switch) {
+    --el-switch-on-color: linear-gradient(90deg, #26efc7 0%, #3f8dff 100%);
+    --el-switch-off-color: rgba(104, 176, 255, 0.22);
+
+    .el-switch__core {
+      border-color: rgba(104, 176, 255, 0.24);
+      background: rgba(12, 31, 58, 0.72);
+      min-width: 46px;
+      height: 24px;
+    }
+
+    &.is-checked .el-switch__core {
+      border-color: rgba(54, 240, 203, 0.34);
+      background: linear-gradient(90deg, rgba(38, 239, 199, 0.88) 0%, rgba(63, 141, 255, 0.82) 100%);
+    }
+
+    .el-switch__action {
+      width: 18px;
+      height: 18px;
+      top: 2px;
+    }
+
+    .el-switch__label,
+    .el-switch__label * {
+      color: rgba(228, 239, 255, 0.74) !important;
+    }
+
+    .el-switch__label.is-active,
+    .el-switch__label.is-active * {
+      color: #f4f8ff !important;
+    }
   }
 }
 
-.text {
-  font-size: 14px;
+.table-shell {
+  padding: 10px;
 }
 
-.item {
-  margin-bottom: 18px;
+.relay-page {
+  .relay-name-cell {
+    font-weight: 600;
+    color: #f2f7ff;
+  }
+
+  .freq-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 92px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(88, 184, 255, 0.22);
+    background: rgba(12, 31, 58, 0.72);
+    color: rgba(228, 239, 255, 0.88);
+    box-shadow: 0 0 0 1px rgba(88, 184, 255, 0.06) inset;
+  }
+
+  .tone-tag {
+    color: #c3f0ff !important;
+    border-color: rgba(104, 176, 255, 0.24) !important;
+    background: linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%) !important;
+  }
+
+  .owner-tag {
+    color: #9effea !important;
+    border-color: rgba(54, 240, 203, 0.28) !important;
+    background: linear-gradient(135deg, rgba(14, 77, 78, 0.32) 0%, rgba(12, 42, 67, 0.28) 100%) !important;
+    box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.08) inset;
+  }
+
+  .relay-status-tag {
+    min-width: 74px;
+    justify-content: center;
+    font-weight: 700;
+  }
+
+  .status-online {
+    color: #9effea !important;
+    border-color: rgba(54, 240, 203, 0.34) !important;
+    background: linear-gradient(135deg, rgba(17, 89, 80, 0.42) 0%, rgba(12, 48, 71, 0.32) 100%) !important;
+    box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.08) inset;
+  }
+
+  .status-offline {
+    color: #ffb7c8 !important;
+    border-color: rgba(255, 116, 145, 0.32) !important;
+    background: linear-gradient(135deg, rgba(89, 28, 45, 0.34) 0%, rgba(57, 20, 35, 0.26) 100%) !important;
+    box-shadow: 0 0 0 1px rgba(255, 116, 145, 0.08) inset;
+  }
+
+  .status-neutral {
+    color: rgba(228, 239, 255, 0.82) !important;
+    border-color: rgba(104, 176, 255, 0.2) !important;
+    background: rgba(12, 31, 58, 0.72) !important;
+  }
+
+  .note-cell {
+    color: rgba(228, 239, 255, 0.72);
+    line-height: 1.5;
+    word-break: break-word;
+    padding: 0 4px;
+  }
+
+  .compact-btn {
+    min-width: 84px;
+    padding: 6px 14px;
+    margin: 0 4px !important;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(3, 9, 21, 0.2);
+    }
+
+    span {
+      margin-left: 0 !important;
+    }
+  }
+
+  .relay-edit-btn {
+    color: #9feaff !important;
+    border-color: rgba(88, 184, 255, 0.44) !important;
+    background: linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%) !important;
+    box-shadow: 0 0 0 1px rgba(88, 184, 255, 0.08) inset;
+  }
+
+  .relay-delete-btn {
+    color: #ffb3bf !important;
+    border-color: rgba(255, 116, 145, 0.4) !important;
+    background: linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%) !important;
+    box-shadow: 0 0 0 1px rgba(255, 116, 145, 0.08) inset;
+  }
+
+  :deep(.el-table td.el-table__cell) {
+    padding: 10px 0;
+  }
+
+  :deep(.el-table th.el-table__cell) {
+    height: 56px;
+    font-weight: 700;
+  }
+
+  :deep(.el-dialog) {
+    width: min(680px, calc(100vw - 32px));
+  }
+
+  :deep(.el-form-item__label) {
+    font-weight: 600;
+  }
 }
 
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both;
+.relay-form {
+  width: min(100%, 520px);
+  margin: 0 auto;
 }
 
-.box-card {
-  width: 340px;
-  float: left;
-  margin-right: 20px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s, box-shadow 0.3s;
+.relay-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+  padding: 10px;
+}
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+.relay-card {
+  border-radius: 24px;
+  border: 1px solid rgba(104, 176, 255, 0.12);
+  background: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.relay-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.relay-card__headline {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.35;
+    color: #f4f8ff;
+    word-break: break-word;
+  }
+}
+
+.relay-id-tag {
+  color: #9cccff !important;
+  border-color: rgba(88, 184, 255, 0.34) !important;
+  background: rgba(20, 48, 84, 0.72) !important;
+}
+
+.relay-card__meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.relay-meta-pill {
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(104, 176, 255, 0.14);
+  background: rgba(12, 31, 58, 0.48);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  strong {
+    color: #f4f8ff;
+    font-size: 16px;
+    font-weight: 700;
+  }
+}
+
+.relay-meta-label,
+.relay-card__label {
+  color: rgba(228, 239, 255, 0.54);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.relay-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.relay-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(12, 31, 58, 0.42);
+  border: 1px solid rgba(104, 176, 255, 0.12);
+}
+
+.relay-card__row--stack {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.relay-card__value,
+.relay-card__note {
+  color: #f4f8ff;
+  line-height: 1.55;
+  text-align: right;
+  word-break: break-word;
+}
+
+.relay-card__note {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  color: rgba(228, 239, 255, 0.78);
+}
+
+.relay-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+@media (max-width: 768px) {
+.filter-container {
+    .filter-item {
+      &.search-input,
+      &.owner-input,
+      &.action-btn,
+      &.action-btn-secondary {
+        width: 100%;
+      }
+    }
+  }
+
+  .relay-page {
+    :deep(.el-table) {
+      font-size: 13px;
+    }
+
+    .compact-btn {
+      min-width: 72px;
+      margin: 4px !important;
+    }
+  }
+
+  .relay-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .relay-card {
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .relay-card__header,
+  .relay-card__row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .relay-card__meta {
+    grid-template-columns: 1fr;
+  }
+
+  .relay-card__value {
+    text-align: left;
+  }
+
+  .relay-card__actions {
+    justify-content: stretch;
+  }
+
+  .relay-card__actions .compact-btn {
+    flex: 1 1 calc(50% - 10px);
+    margin: 0 !important;
   }
 }
 </style>

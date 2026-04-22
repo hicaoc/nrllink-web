@@ -27,27 +27,44 @@ export default {
 
 <style lang="scss" scoped>
 .app-main {
-  /* 50= navbar  50  */
-  min-height: calc(100vh - 50px);
   width: 100%;
   position: relative;
-  overflow: hidden;
-}
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(143, 249, 222, 0.38) rgba(8, 20, 36, 0.22);
 
-.fixed-header+.app-main {
-  padding-top: 50px;
-  height: 100vh;
-  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(8, 20, 36, 0.22);
+    border-left: 1px solid rgba(104, 176, 255, 0.08);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(143, 249, 222, 0.72) 0%, rgba(63, 141, 255, 0.72) 100%);
+    border-radius: 999px;
+    border: 2px solid rgba(8, 20, 36, 0.14);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(143, 249, 222, 0.92) 0%, rgba(63, 141, 255, 0.9) 100%);
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: rgba(8, 20, 36, 0.22);
+  }
 }
 
 .hasTagsView {
   .app-main {
-    /* 84 = navbar + tags-view = 50 + 34 */
-    min-height: calc(100vh - 84px);
-  }
-
-  .fixed-header+.app-main {
-    padding-top: 84px;
+    flex: 1 1 auto;
+    min-height: 0;
   }
 }
 </style>

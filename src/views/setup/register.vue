@@ -1,52 +1,33 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-
+  <div class="app-container platform-theme-page setup-register-page">
+    <div class="filter-container platform-theme-toolbar">
       <el-input
         v-model="listQuery.callsign"
         :placeholder="$t('device.callsign')"
-        style="width: 200px;"
-        class="filter-item"
+        class="filter-item search-input"
+        clearable
         @keyup.enter="handleFilter"
       />
 
       <el-input
         v-model="listQuery.namephone"
         :placeholder="$t('Account.namephone')"
-        style="width: 200px;"
-        class="filter-item"
+        class="filter-item search-input"
+        clearable
         @keyup.enter="handleFilter"
       />
 
-      <!-- <el-select
-        v-model="listQuery.role"
-        :placeholder="$t('employee.position')"
-        clearable
-        class="filter-item"
-        style="width: 180px"
-      >
-        <el-option v-for="item in roles" :key="item.id" :label="item.name" :value="item.key" />
-      </el-select> -->
-      <!-- <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>-->
-      <el-button v-waves class="filter-item" type="primary" @click="handleFilter">
+      <el-button v-waves class="filter-item action-btn" type="primary" @click="handleFilter">
         <el-icon>
           <Search />
         </el-icon>
         {{ $t('employee.search') }}
       </el-button>
-      <!-- <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="primary"
-        icon="el-icon-edit"
-        @click="handleCreate"
-      >{{ $t('employee.add') }}</el-button> -->
+
       <el-button
         v-waves
         :loading="downloadLoading"
-        class="filter-item"
+        class="filter-item action-btn action-btn-secondary"
         type="primary"
         @click="handleDownload"
       >
@@ -55,129 +36,168 @@
         </el-icon>
         {{ $t('employee.export') }}
       </el-button>
-      <!-- <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
-        {{ $t('employee.reviewer') }}
-      </el-checkbox>-->
+
+      <button
+        type="button"
+        class="toolbar-capsule"
+        :class="{ 'is-active': showtable }"
+        @click="showtable = !showtable"
+      >
+        <span class="capsule-indicator" />
+        <span>{{ $t('device.showtable') }}</span>
+      </button>
     </div>
 
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%;"
-      @sort-change="sortChange"
-    >
-      <el-table-column :label="$t('employee.id')" prop="id" sortable="custom" align="center" width="80">
-        <template #default="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('employee.callsign')" width="110px" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.callsign }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('employee.name')" width="110px" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.name }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('employee.phone')" width="120px" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.phone }}</span>
-        </template>
-      </el-table-column>
-
-      <!-- <el-table-column :label="$t('Account.sex')" width="60px" align="center">
-        <template #default="scope">
-          <span>{{ SexFilter(scope.row.sex) }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('employee.birthday')" width="110px" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.birthday }}</span>
-        </template>
-      </el-table-column> -->
-
-      <el-table-column :label="$t('employee.address')" width="210px" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.address }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('register.mail')" width="210px" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.mail }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('register.create_time')" width="210px" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.create_time }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('register.update_time')" width="210px" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.update_time }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('employee.status')" width="160px" align="center">
-        <template #default="scope">
-          <span>{{ statusFilter(scope.row.status) }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('register.note')" width="210px" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.note }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        :label="$t('employee.actions')"
-        align="center"
-        width="180px"
-        class-name="small-padding fixed-width"
+    <div v-if="showtable" class="table-shell">
+      <el-table
+        :key="tableKey"
+        v-loading="listLoading"
+        :data="list"
+        border
+        fit
+        highlight-current-row
+        style="width: 100%"
+        @sort-change="sortChange"
       >
-        <template #default="{row}">
-          <el-button v-if="row.status === 1" type="primary" size="small" @click="handleUpdate(row)">{{
-            $t('register.audit') }}</el-button>
+        <el-table-column :label="$t('employee.id')" prop="id" sortable="custom" align="center" width="80">
+          <template #default="scope">
+            <span>{{ scope.row.id }}</span>
+          </template>
+        </el-table-column>
 
-          <el-button size="small" type="danger" @click="handleDelete(row, '删除')">{{ $t('employee.delete') }}</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        <el-table-column :label="$t('employee.callsign')" width="150" align="center">
+          <template #default="scope">
+            <el-tag class="callsign-tag">{{ scope.row.callsign || '--' }}</el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column :label="$t('employee.name')" width="140" align="center">
+          <template #default="scope">
+            <div class="primary-cell">{{ scope.row.name || '--' }}</div>
+          </template>
+        </el-table-column>
+
+        <el-table-column :label="$t('employee.phone')" width="140" align="center">
+          <template #default="scope">
+            <span>{{ scope.row.phone || '--' }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column :label="$t('employee.address')" min-width="220" align="center">
+          <template #default="scope">
+            <div class="note-cell">{{ scope.row.address || '--' }}</div>
+          </template>
+        </el-table-column>
+
+        <el-table-column :label="$t('register.mail')" min-width="220" align="center">
+          <template #default="scope">
+            <div class="mail-cell">{{ scope.row.mail || '--' }}</div>
+          </template>
+        </el-table-column>
+
+        <el-table-column :label="$t('register.create_time')" width="180" align="center">
+          <template #default="scope">
+            <span>{{ scope.row.create_time || '--' }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column :label="$t('register.update_time')" width="180" align="center">
+          <template #default="scope">
+            <span>{{ scope.row.update_time || '--' }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column :label="$t('employee.status')" width="130" align="center">
+          <template #default="scope">
+            <el-tag :class="statusClass(scope.row.status)" class="register-status-tag">
+              {{ statusFilter(scope.row.status) }}
+            </el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column :label="$t('register.note')" min-width="220" align="center">
+          <template #default="scope">
+            <div class="note-cell">{{ scope.row.note || '--' }}</div>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          :label="$t('employee.actions')"
+          align="center"
+          width="220"
+          class-name="small-padding fixed-width"
+        >
+          <template #default="{ row }">
+            <el-button
+              v-if="row.status === 1"
+              type="success"
+              plain
+              size="small"
+              class="compact-btn audit-btn"
+              @click="handleUpdate(row)"
+            >{{ $t('register.audit') }}</el-button>
+
+            <el-button
+              size="small"
+              type="danger"
+              plain
+              class="compact-btn delete-btn"
+              @click="handleDelete(row)"
+            >{{ $t('employee.delete') }}</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <div v-else class="register-card-grid">
+      <article v-for="item in list" :key="item.id" class="register-card">
+        <div class="register-card__header">
+          <div class="register-card__headline">
+            <el-tag size="small" effect="dark" class="register-id-tag">#{{ item.id }}</el-tag>
+            <div>
+              <h3>{{ item.name || '--' }}</h3>
+              <el-tag class="callsign-tag">{{ item.callsign || '--' }}</el-tag>
+            </div>
+          </div>
+          <el-tag :class="statusClass(item.status)" class="register-status-tag">{{ statusFilter(item.status) }}</el-tag>
+        </div>
+        <div class="register-card__body">
+          <div class="register-card__row"><span class="register-card__label">{{ $t('employee.phone') }}</span><span class="register-card__value">{{ item.phone || '--' }}</span></div>
+          <div class="register-card__row"><span class="register-card__label">{{ $t('register.mail') }}</span><span class="register-card__value">{{ item.mail || '--' }}</span></div>
+          <div class="register-card__row"><span class="register-card__label">{{ $t('register.create_time') }}</span><span class="register-card__value">{{ item.create_time || '--' }}</span></div>
+          <div class="register-card__row"><span class="register-card__label">{{ $t('register.update_time') }}</span><span class="register-card__value">{{ item.update_time || '--' }}</span></div>
+          <div class="register-card__row register-card__row--stack"><span class="register-card__label">{{ $t('employee.address') }}</span><p class="register-card__note">{{ item.address || '--' }}</p></div>
+          <div class="register-card__row register-card__row--stack"><span class="register-card__label">{{ $t('register.note') }}</span><p class="register-card__note">{{ item.note || '--' }}</p></div>
+        </div>
+        <div class="register-card__actions">
+          <el-button v-if="item.status === 1" type="success" plain size="small" class="compact-btn audit-btn" @click="handleUpdate(item)">{{ $t('register.audit') }}</el-button>
+          <el-button size="small" type="danger" plain class="compact-btn delete-btn" @click="handleDelete(item)">{{ $t('employee.delete') }}</el-button>
+        </div>
+      </article>
+    </div>
 
     <pagination
       v-show="total > 0"
       v-model:page="listQuery.page"
       v-model:limit="listQuery.limit"
+      class="platform-theme-pagination"
       :total="total"
       @pagination="getList"
     />
 
-    <el-dialog v-model="dialogFormVisible" :title="textMap[dialogStatus]">
+    <el-dialog v-model="dialogFormVisible" :title="textMap[dialogStatus]" class="platform-theme-dialog setup-register-dialog">
       <el-form
         ref="dataForm"
         :rules="rules"
         :model="temp"
         label-position="right"
         label-width="140px"
-        style="width: 400px; margin-left:50px;"
+        class="setup-register-form"
       >
-
         <el-form-item :label="$t('employee.callsign')" prop="callsign">
           <el-input v-model="temp.callsign" />
         </el-form-item>
+
         <el-form-item :label="$t('employee.name')" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
@@ -194,96 +214,74 @@
           <el-input v-model="temp.mail" />
         </el-form-item>
 
-        <!-- <div v-if="certificate">
-          <h2>操作证：</h2>
-          <img
-            :src="certificate"
-            alt="操作证和电台执照"
-            width="300"
-            style="max-width: 300px; cursor: pointer;"
-            @click="showcertificateFullScreenImage"
-          >
-
-        </div> -->
-
-        <!-- 原图模态框 -->
-        <!-- <div v-if="showcertificateFullScreen" class="fullscreen-overlay" @click.self="closecertificateFullScreen">
-          <img :src="originalcertificateImage" alt="原图" class="fullscreen-image">
-          <button class="close-button" @click="closecertificateFullScreen">关闭</button>
-        </div> -->
-
-        <div>
-          <h2>操作证和电台执照:</h2>
-          <img
-            :src="license"
-            alt="操作证和电台执照"
-            width="300"
-            style="max-width: 300px; cursor: pointer;"
-            @click="showlicenseFullScreenImage"
-          >
+        <div class="license-preview-panel">
+          <div class="license-preview-title">操作证和电台执照</div>
+          <div v-if="license" class="license-preview-shell">
+            <img
+              :src="license"
+              alt="操作证和电台执照"
+              class="license-preview-image"
+              @click="showlicenseFullScreenImage"
+            >
+          </div>
+          <div v-else class="image-empty-state">暂无证照图片</div>
         </div>
 
-        <!-- 原图模态框 -->
         <div v-if="showlicenseFullScreen" class="fullscreen-overlay" @click.self="closelicenseFullScreen">
           <img :src="originallicenseImage" alt="原图" class="fullscreen-image">
           <button class="close-button" @click="closelicenseFullScreen">关闭</button>
         </div>
-
       </el-form>
 
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
-          <el-button type="primary" @click="auditData()">{{ $t('register.audited') }}</el-button>
+          <el-button type="success" @click="auditData()">{{ $t('register.audited') }}</el-button>
           <el-button type="primary" @click="updateData()">{{ $t('employee.confirm') }}</el-button>
         </div>
       </template>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
-
 import {
   listReg,
   addReg,
   deleteReg,
   updateReg,
   getImage
-
 } from '@/api/register'
-import waves from '@/directive/waves' // waves directive
-import { parseTime } from '@/utils'
-import Pagination from '@/components/Pagination/index.vue' // secondary package based on el-pagination
+import waves from '@/directive/waves'
+import Pagination from '@/components/Pagination/index.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/store/modules/app'
 
 export default {
-  name: 'ComplexTable',
+  name: 'SetupRegisterPage',
   components: { Pagination },
   directives: { waves },
 
   data() {
     return {
-
       tableKey: 0,
-      list: null,
+      list: [],
       total: 0,
       listLoading: true,
       listQuery: {
         page: 1,
         limit: 10,
-        sort: '-id'
+        sort: '-id',
+        callsign: '',
+        namephone: ''
       },
-
       certificate: '',
       license: '',
-
-      showcertificateFullScreen: false, // 控制全屏显示的开关
-      showlicenseFullScreen: false, // 控制全屏显示的开关
-      originalcertificateImage: null, // 原图的 Base64 数据
-      originallicenseImage: null, // 原图的 Base64 数据
-
+      showcertificateFullScreen: false,
+      showlicenseFullScreen: false,
+      originalcertificateImage: null,
+      originallicenseImage: null,
       importanceOptions: [1, 2, 3],
       statusOptions: ['未审核', '未通过', '审核通过'],
       showReviewer: false,
@@ -292,9 +290,11 @@ export default {
         name: '',
         callsign: '',
         sex: '',
-        // update_time: new Date(),
-        phone: ''
-
+        phone: '',
+        address: '',
+        mail: '',
+        note: '',
+        status: 1
       },
       roles: [],
       dialogFormVisible: false,
@@ -311,81 +311,48 @@ export default {
         name: [{ required: true, message: '姓名是必选项', trigger: 'change' }],
         sex: [{ required: true, message: '性别是必选项', trigger: 'change' }],
         roles: [{ required: true, message: '角色是必选项', trigger: 'change' }],
-        birthday: [
-          { required: true, message: '生日是必选项', trigger: 'change' }
-        ],
-        job_time: [
-          { required: true, message: '入职时间是必选项', trigger: 'change' }
-        ],
-        timestamp: [
-          {
-            type: 'date',
-            required: true,
-            message: '入职时间是必选项',
-            trigger: 'change'
-          }
-        ],
-        phone: [
-          { required: true, message: '电话号码是必选项', trigger: 'blur' }
-        ]
+        birthday: [{ required: true, message: '生日是必选项', trigger: 'change' }],
+        job_time: [{ required: true, message: '入职时间是必选项', trigger: 'change' }],
+        timestamp: [{ type: 'date', required: true, message: '入职时间是必选项', trigger: 'change' }],
+        phone: [{ required: true, message: '电话号码是必选项', trigger: 'blur' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      showtable: true
     }
   },
+  computed: {
+    ...mapState(useAppStore, ['device'])
+  },
+
   created() {
+    this.showtable = this.device !== 'mobile'
     this.getList()
   },
   methods: {
-    SexFilter(type) {
-      const sexMap = {
-        '0': '女',
-        '1': '男',
-        '2': '未知'
-      }
-      return sexMap[type]
-    },
     statusFilter(status) {
       const statusMap = {
         1: '未审核',
         2: '审核通过'
       }
-      return statusMap[status]
+      return statusMap[status] || '未知'
     },
-    ValueFilter(type, array) {
-      for (const v of array) {
-        if (v.id === type) {
-          return v.name
-        }
-      }
-      return '未知'
-    },
-    RoleValueFilter(type, array) {
-      for (const v of array) {
-        if (v.key === type) {
-          return v.name
-        }
-      }
-      return '未知'
+    statusClass(status) {
+      if (status === 2) return 'status-approved'
+      if (status === 1) return 'status-pending'
+      return 'status-neutral'
     },
     getList() {
       this.listLoading = true
       listReg(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 100)
+        this.list = response?.data?.items || []
+        this.total = response?.data?.total || 0
+      }).finally(() => {
+        this.listLoading = false
       })
     },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
-    },
-    handleModifiStatus(row, status) {
-      ElMessage.success('操作成功')
-      row.status = status
     },
     sortChange(data) {
       const { prop, order } = data
@@ -401,22 +368,16 @@ export default {
       }
       this.handleFilter()
     },
-
     showcertificateFullScreenImage() {
-      // 显示全屏图片
       this.showcertificateFullScreen = true
     },
     closecertificateFullScreen() {
-      // 关闭全屏图片
       this.showcertificateFullScreen = false
     },
-
     showlicenseFullScreenImage() {
-      // 显示全屏图片
       this.showlicenseFullScreen = true
     },
     closelicenseFullScreen() {
-      // 关闭全屏图片
       this.showlicenseFullScreen = false
     },
     resetTemp() {
@@ -424,52 +385,22 @@ export default {
         id: undefined,
         name: '',
         phone: '',
-        // timestamp: new Date(),
         roles: [],
         password: '',
-
+        address: '',
+        mail: '',
+        note: '',
         status: 1
       }
     },
-    // handleCreate() {
-    //   this.resetTemp()
-    //   this.dialogStatus = 'create'
-    //   this.dialogFormVisible = true
-    //   this.$nextTick(() => {
-    //     this.$refs['dataForm'].clearValidate()
-    //   })
-    // },
-    // createData() {
-    //   this.$refs['dataForm'].validate(valid => {
-    //     if (valid) {
-    //       // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-    //       //  this.temp.roles = 'vue-element-admin'
-    //       createEmployee(this.temp).then(response => {
-    //         this.getList()
-    //         this.dialogFormVisible = false
-    //         this.$notify({
-    //           title: '成功',
-    //           message: response.data.message,
-    //           type: 'success',
-    //           duration: 2000
-    //         })
-    //       })
-    //     }
-    //   })
-    // },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      //  this.temp.timestamp = new Date(this.temp.timestamp);
+      this.temp = Object.assign({}, row)
       this.dialogStatus = 'update'
 
       if (row.license_path) {
         getImage({ path: row.license_path }).then(response => {
-          // 将 Blob 数据转换为 URL
-          // const blob = new Blob([response.data]);
-
           this.license = `data:image/jpeg;base64,${response.data}`
           this.originallicenseImage = this.license
-          // this.license = URL.createObjectURL(blob);
         }).catch(() => {
           this.license = ''
           this.originallicenseImage = ''
@@ -480,26 +411,16 @@ export default {
         this.originallicenseImage = ''
       }
 
-      // getImage({ path: row.op_cert_path }).then(response => {
-      //   // const blob = new Blob([response.data]);
-
-      //   this.certificate = `data:image/jpeg;base64,${response.data}`
-      //   this.originalcertificateImage = this.certificate
-
-      //   // this.certificate = URL.createObjectURL(blob);
-      // })
-
       this.dialogFormVisible = true
 
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+        this.$refs.dataForm.clearValidate()
       })
     },
     updateData() {
-      this.$refs['dataForm'].validate(valid => {
+      this.$refs.dataForm.validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           updateReg(tempData).then(response => {
             for (const v of this.list) {
               if (v.id === this.temp.id) {
@@ -514,12 +435,10 @@ export default {
         }
       })
     },
-
     auditData() {
-      this.$refs['dataForm'].validate(valid => {
+      this.$refs.dataForm.validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           addReg(tempData).then(response => {
             if (response && response.code === 20000) {
               this.getList()
@@ -536,7 +455,7 @@ export default {
       })
     },
     handleDelete(row) {
-      ElMessageBox.confirm('此操作将删除:' + row.name + '-' + row.callsign + ', 是否继续?', '提示', {
+      ElMessageBox.confirm(`此操作将删除:${row.name}-${row.callsign}, 是否继续?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -558,13 +477,7 @@ export default {
       this.downloadLoading = true
       const excel = await import('@/vendor/Export2Excel')
       const tHeader = ['更新时间', '电话', '角色', '工号', '角色']
-      const filterVal = [
-        'update_time',
-        'phone',
-        'zhiwu',
-        'employee_id',
-        'roles'
-      ]
+      const filterVal = ['update_time', 'phone', 'zhiwu', 'employee_id', 'roles']
       const data = this.formatJson(filterVal, this.list)
       await excel.export_json_to_excel({
         header: tHeader,
@@ -575,62 +488,249 @@ export default {
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
-        filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
-        })
+        filterVal.map(j => v[j])
       )
     }
   }
 }
 </script>
 
-<style>
-/* 全屏覆盖样式 */
+<style scoped lang="scss">
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+
+  .filter-item {
+    margin-bottom: 0;
+    margin-right: 0;
+
+    &.search-input {
+      width: 220px;
+    }
+
+    &.action-btn {
+      height: 42px;
+      padding: 0 22px;
+      border-radius: 14px;
+    }
+
+    &.action-btn-secondary {
+      min-width: 124px;
+    }
+  }
+
+  :deep(.view-switch) {
+    --el-switch-on-color: linear-gradient(90deg, #26efc7 0%, #3f8dff 100%);
+    --el-switch-off-color: rgba(104, 176, 255, 0.22);
+    .el-switch__core { border-color: rgba(104, 176, 255, 0.24); background: rgba(12, 31, 58, 0.72); min-width: 46px; height: 24px; }
+    &.is-checked .el-switch__core { border-color: rgba(54, 240, 203, 0.34); background: linear-gradient(90deg, rgba(38, 239, 199, 0.88) 0%, rgba(63, 141, 255, 0.82) 100%); }
+    .el-switch__action { width: 18px; height: 18px; top: 2px; }
+    .el-switch__label, .el-switch__label * { color: rgba(228, 239, 255, 0.74) !important; }
+    .el-switch__label.is-active, .el-switch__label.is-active * { color: #f4f8ff !important; }
+  }
+}
+
+.table-shell {
+  padding: 10px;
+}
+
+.setup-register-page {
+  .primary-cell {
+    color: #f4f8ff;
+    font-weight: 700;
+  }
+
+  .callsign-tag {
+    color: #9effea !important;
+    border-color: rgba(54, 240, 203, 0.28) !important;
+    background: linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%) !important;
+  }
+
+  .mail-cell,
+  .note-cell {
+    color: rgba(228, 239, 255, 0.74);
+    line-height: 1.5;
+    word-break: break-word;
+    padding: 0 4px;
+  }
+
+  .register-status-tag {
+    min-width: 82px;
+    justify-content: center;
+    font-weight: 700;
+  }
+
+  .status-approved {
+    color: #9effea !important;
+    border-color: rgba(54, 240, 203, 0.34) !important;
+    background: linear-gradient(135deg, rgba(17, 89, 80, 0.42) 0%, rgba(12, 48, 71, 0.32) 100%) !important;
+  }
+
+  .status-pending {
+    color: #ffd88c !important;
+    border-color: rgba(255, 194, 86, 0.36) !important;
+    background: linear-gradient(135deg, rgba(96, 68, 23, 0.34) 0%, rgba(62, 42, 16, 0.24) 100%) !important;
+  }
+
+  .status-neutral {
+    color: rgba(228, 239, 255, 0.82) !important;
+    border-color: rgba(104, 176, 255, 0.2) !important;
+    background: rgba(12, 31, 58, 0.72) !important;
+  }
+
+  .compact-btn {
+    min-width: 84px;
+    padding: 6px 14px;
+    margin: 0 4px !important;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(3, 9, 21, 0.2);
+    }
+  }
+
+  .audit-btn {
+    color: #96ffe7 !important;
+    border-color: rgba(54, 240, 203, 0.4) !important;
+    background: linear-gradient(135deg, rgba(15, 87, 79, 0.34) 0%, rgba(13, 54, 77, 0.26) 100%) !important;
+  }
+
+  .delete-btn {
+    color: #ffb3bf !important;
+    border-color: rgba(255, 116, 145, 0.4) !important;
+    background: linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%) !important;
+  }
+
+  :deep(.el-table td.el-table__cell) {
+    padding: 12px 0;
+  }
+
+  :deep(.el-table th.el-table__cell) {
+    height: 56px;
+    font-weight: 700;
+  }
+}
+
+.setup-register-form {
+  width: min(100%, 620px);
+  margin: 0 auto;
+}
+
+.register-card-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:18px; padding:10px; }
+.register-card { border-radius:24px; border:1px solid rgba(104,176,255,.12); background:linear-gradient(145deg, rgba(10,23,41,.82) 0%, rgba(12,29,50,.72) 100%); box-shadow:0 18px 44px rgba(0,0,0,.22); padding:18px; display:flex; flex-direction:column; gap:16px; }
+.register-card__header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.register-card__headline { min-width:0; display:flex; align-items:center; gap:10px; }
+.register-card__headline h3 { margin:0 0 6px; font-size:18px; line-height:1.35; color:#f4f8ff; word-break:break-word; }
+.register-id-tag { color:#9cccff !important; border-color:rgba(88,184,255,.34) !important; background:rgba(20,48,84,.72) !important; }
+.register-card__body { display:flex; flex-direction:column; gap:12px; }
+.register-card__row { display:grid; grid-template-columns:minmax(84px, 96px) minmax(0, 1fr); align-items:center; gap:12px; padding:12px 14px; border-radius:16px; background:rgba(12,31,58,.42); border:1px solid rgba(104,176,255,.12); }
+.register-card__row--stack { align-items:flex-start; flex-direction:column; }
+.register-card__label { color:rgba(228,239,255,.54); font-size:12px; letter-spacing:.02em; }
+.register-card__value, .register-card__note { color:#f4f8ff; line-height:1.55; text-align:left; word-break:break-word; min-width:0; }
+.register-card__note { width:100%; margin:0; text-align:left; color:rgba(228,239,255,.78); }
+.register-card__actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:10px; }
+
+.license-preview-panel {
+  margin-top: 12px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(104, 176, 255, 0.14);
+  background: linear-gradient(145deg, rgba(12, 31, 58, 0.48) 0%, rgba(10, 23, 41, 0.54) 100%);
+}
+
+.license-preview-title {
+  margin-bottom: 14px;
+  color: #f4f8ff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.license-preview-shell {
+  display: inline-flex;
+  max-width: 100%;
+  padding: 10px;
+  border-radius: 18px;
+  border: 1px solid rgba(104, 176, 255, 0.14);
+  background: rgba(8, 23, 45, 0.72);
+}
+
+.license-preview-image {
+  max-width: min(100%, 360px);
+  border-radius: 12px;
+  cursor: zoom-in;
+}
+
+.image-empty-state {
+  color: rgba(228, 239, 255, 0.52);
+}
+
 .fullscreen-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
-  /* 背景颜色为黑色，透明度为 90% */
+  inset: 0;
+  background: rgba(3, 8, 18, 0.88);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
 }
 
-/* 全屏显示图片的样式 */
 .fullscreen-image {
   max-width: 90%;
-  /* 图片宽度最多占 90% */
   max-height: 90%;
-  /* 图片高度最多占 90% */
-  border: 2px solid white;
-  /* 图片周围的白色边框 */
-  border-radius: 5px;
-  /* 圆角效果 */
+  border: 1px solid rgba(104, 176, 255, 0.18);
+  border-radius: 16px;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.45);
 }
 
-/* 关闭按钮的样式 */
 .close-button {
   position: absolute;
   top: 20px;
   right: 20px;
-  background-color: red;
-  color: white;
-  border: none;
+  background: linear-gradient(135deg, rgba(82, 24, 42, 0.84) 0%, rgba(56, 18, 34, 0.92) 100%);
+  color: #fff;
+  border: 1px solid rgba(255, 116, 145, 0.36);
   padding: 10px 15px;
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 12px;
+  font-size: 14px;
   cursor: pointer;
 }
 
 .close-button:hover {
-  background-color: darkred;
+  filter: brightness(1.08);
+}
+
+@media (max-width: 768px) {
+.filter-container {
+    .filter-item {
+      &.search-input,
+      &.action-btn,
+      &.action-btn-secondary {
+        width: 100%;
+      }
+    }
+  }
+
+  .setup-register-page {
+    .compact-btn {
+      min-width: 72px;
+      margin: 4px !important;
+    }
+  }
+
+  .register-card-grid { grid-template-columns: 1fr; gap: 14px; padding: 6px 0 0; }
+  .register-card { padding: 14px; border-radius: 18px; gap: 14px; }
+  .register-card__header { flex-direction: column; align-items: stretch; gap: 10px; }
+  .register-card__headline { width: 100%; align-items: flex-start; }
+  .register-card__headline h3 { font-size: 17px; }
+  .register-card__row { grid-template-columns: 80px minmax(0, 1fr); gap: 10px; padding: 10px 12px; }
+  .register-card__row--stack { display: flex; flex-direction: column; align-items: flex-start; }
+  .register-card__actions { justify-content: stretch; flex-direction: column; gap: 8px; }
+  .register-card__actions .compact-btn { width: 100%; margin: 0 !important; }
 }
 </style>

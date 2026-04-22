@@ -65,8 +65,9 @@ export default {
 .app-wrapper {
   @include clearfix;
   position: relative;
-  height: 100%;
+  height: 100vh;
   width: 100%;
+  overflow: hidden;
 
   &.mobile.openSidebar {
     position: fixed;
@@ -85,19 +86,10 @@ export default {
 }
 
 .fixed-header {
-  position: fixed;
+  position: relative;
+  flex: 0 0 auto;
   top: 0;
-  right: 0;
   z-index: 9;
-  width: calc(100% - #{$sideBarWidth});
-  transition: width 0.28s;
-}
-
-.hideSidebar .fixed-header {
-  width: calc(100% - 54px);
-}
-
-.mobile .fixed-header {
   width: 100%;
 }
 </style>

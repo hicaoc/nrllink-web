@@ -1,6 +1,6 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
+  <div class="app-container platform-theme-page device-page">
+    <div class="filter-container platform-theme-toolbar">
       <el-input
         v-model="listQuery.callsign"
         :placeholder="$t('device.callsign')"
@@ -15,39 +15,46 @@
         clearable
         :placeholder="$t('device.selectGroup')"
         class="filter-item group-select"
+        popper-class="platform-theme-select-dropdown"
         @change="handleFilter"
       >
         <el-option v-for="item in groupsOptions" :key="item.id" :label="item.id + '-' + item.name" :value="item.id" />
       </el-select>
 
-      <el-button v-waves class="filter-item action-btn" type="primary" @click="getList">
-        <el-icon>
-          <Search />
-        </el-icon>
-        {{ $t('employee.search') }}
-      </el-button>
+      <div class="filter-item action-row">
+        <el-button v-waves class="action-btn" type="primary" @click="getList">
+          <el-icon>
+            <Search />
+          </el-icon>
+          {{ $t('employee.search') }}
+        </el-button>
+      </div>
 
-      <el-switch
-        v-model="listQuery.isonline"
-        class="filter-item status-switch"
-        :active-text="$t('device.showOnline')"
-        active-color="#1890ff"
-        inactive-color="#dcdfe6"
-        :active-value="true"
-        :inactive-value="false"
-        @change="handleFilter"
-      />
+      <div class="filter-item switch-row">
+        <button
+          type="button"
+          class="toolbar-capsule"
+          :class="{ 'is-active': listQuery.isonline }"
+          @click="toggleOnline"
+        >
+          <span class="capsule-indicator" />
+          <span>{{ $t('device.showOnline') }}</span>
+        </button>
 
-      <el-switch
-        v-model="showtable"
-        class="filter-item view-switch"
-        :active-text="$t('device.showtable')"
-        inactive-text
-      />
+        <button
+          type="button"
+          class="toolbar-capsule"
+          :class="{ 'is-active': showtable }"
+          @click="showtable = !showtable"
+        >
+          <span class="capsule-indicator" />
+          <span>{{ $t('device.showtable') }}</span>
+        </button>
+      </div>
 
     </div>
 
-    <div v-if="showtable">
+    <div v-if="showtable" class="table-shell">
       <el-table
         :key="tableKey"
         v-loading="listLoading"
@@ -58,7 +65,7 @@
         style="width: 100%"
         @sort-change="sortChange"
       >
-        >
+      >
         <el-table-column fixed :label="$t('Account.id')" prop="id" sortable="custom" align="center" width="110">
           <template #default="scope">
             <span>{{ scope.row.id }}</span>
@@ -66,16 +73,16 @@
         </el-table-column>
 
         <el-table-column
-          fixed
-          prop="callsign"
-          :label="$t('device.callsign')"
-          width="150px"
+              fixed
+              prop="callsign"
+              :label="$t('device.callsign')"
+              width="150px"
           align="center"
           :sortable="true"
         >
           <template #default="scope">
             <div class="tag-wrap">
-              <el-tag :type="scope.row.is_online ? 'primary' : 'info'">{{ scope.row.callsign + "-" +
+              <el-tag :type="scope.row.is_online ? 'success' : 'info'" :class="scope.row.is_online ? 'callsign-online-tag' : 'callsign-offline-tag'">{{ scope.row.callsign + "-" +
                 scope.row.ssid
               }}
               </el-tag>
@@ -92,14 +99,14 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.status')" prop="status" width="140px" align="center">
+        <el-table-column :label="$t('device.status')" prop="status" width="170px" align="center">
           <template #default="scope">
             <div class="status-actions">
               <el-button
                 :type="safeButtonType(((scope.row.status ?? 0) & 1) === 1 ? 'danger' : 'info')"
                 size="small"
                 plain
-                class="compact-btn"
+                class="compact-btn status-receive-btn"
                 @click="updateStatus(scope.row, 1)"
               >{{ (scope.row.status & 1) === 1 ? $t('device.disableReceive') :
                 $t('device.receive')
@@ -109,7 +116,7 @@
                 :type="safeButtonType(((scope.row.status ?? 0) & 2) === 2 ? 'danger' : 'info')"
                 size="small"
                 plain
-                class="compact-btn"
+                class="compact-btn status-transmit-btn"
                 @click="updateStatus(scope.row, 2)"
               >{{ (scope.row.status & 2) === 2 ? $t('device.disableTransmit') :
                 $t('device.transmit')
@@ -159,7 +166,7 @@
                 size="small"
                 type="primary"
                 plain
-                class="compact-btn"
+                class="compact-btn action-edit-btn"
                 @click="handleUpdate(row)"
               >{{ $t("device.edit") }}</el-button>
 
@@ -169,7 +176,7 @@
                 size="small"
                 type="warning"
                 plain
-                class="compact-btn"
+                class="compact-btn action-change-btn"
                 @click="handleChange(row)"
               >{{ $t("device.change") }}</el-button>
 
@@ -179,7 +186,7 @@
                 size="small"
                 type="success"
                 plain
-                class="compact-btn"
+                class="compact-btn action-at-btn"
                 @click="handleOpenAT(row)"
               >{{ $t("device.at") }}</el-button>
 
@@ -188,7 +195,7 @@
                 size="small"
                 type="danger"
                 plain
-                class="compact-btn"
+                class="compact-btn action-delete-btn"
                 @click="handleDelete(row)"
               >{{ $t('employee.delete') }}</el-button>
             </div>
@@ -255,6 +262,7 @@
     </div>
 
     <pagination
+      class="platform-theme-pagination"
       v-show="total > 0"
       v-model:page="listQuery.page"
       v-model:limit="listQuery.limit"
@@ -278,14 +286,18 @@
           <div class="info-row">
             <span class="label">{{ $t('device.name') }}:</span>
             <span class="value">{{ item.ssid === 200 && item.name === '' ? $t('device.serverLink') : item.name || '-' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">{{ $t('device.model') }}:</span>
+            <span class="value">{{ ValueFilter(item.dev_model, DevModelOptions) }}</span>
+          </div>
+          <div class="info-row">
             <span class="label">{{ $t('device.priority') }}:</span>
             <span class="value">{{ item.priority }}</span>
           </div>
           <div class="info-row">
             <span class="label">{{ $t('device.rfTypeLabel') }}:</span>
             <span class="value">{{ ValueFilter(item.rf_type, DevRFtypeOptions) }}</span>
-            <span class="label">{{ $t('device.model') }}:</span>
-            <span class="value">{{ ValueFilter(item.dev_model, DevModelOptions) }}</span>
           </div>
           <div class="info-row">
             <span class="label">{{ $t('device.channelFrequency') }}:</span>
@@ -304,18 +316,24 @@
               <template v-if="item.group_id > 0 && item.group_id < 1000">{{ $t('device.privateGroup') }}</template>
               <template v-else>{{ ValueFilter(item.group_id, groupsOptions) }}</template>
             </span>
+          </div>
+          <div class="info-row">
             <span class="label">{{ $t('device.owner') }}:</span>
             <span class="value">{{ ValueFilter(item.ower_id, userOptions) }}</span>
           </div>
           <div class="info-row">
             <span class="label">{{ $t('device.totalVoiceTime') }}:</span>
             <span class="value">{{ formatVoiceTime(item.voice_time) }}</span>
+          </div>
+          <div class="info-row">
             <span class="label">{{ $t('device.totalTraffic') }}:</span>
             <span class="value">{{ formatFileSize(item.traffic) }}</span>
           </div>
           <div class="info-row">
             <span class="label">{{ $t('device.lastVoiceDuration') }}:</span>
             <span class="value">{{ formatVoiceTime(item.last_voice_duration) }}</span>
+          </div>
+          <div class="info-row">
             <span class="label">{{ $t('device.lastVoiceTime') }}:</span>
             <span class="value">{{ parseTime(item.last_voice_end_time) }}</span>
           </div>
@@ -325,12 +343,16 @@
             <el-button
               :type="((item.status ?? 0) & 1) === 1 ? 'danger' : 'success'"
               size="small"
+              plain
+              class="compact-btn status-receive-btn"
               :disabled="item.is_online === false"
               @click="updateStatus(item, 1)"
             >{{ ((item.status ?? 0) & 1) === 1 ? $t('device.disableReceive') : $t('device.receive') }}</el-button>
             <el-button
               :type="((item.status ?? 0) & 2) === 2 ? 'danger' : 'success'"
               size="small"
+              plain
+              class="compact-btn status-transmit-btn"
               :disabled="item.is_online === false"
               @click="updateStatus(item, 2)"
             >{{ ((item.status ?? 0) & 2) === 2 ? $t('device.disableTransmit') : $t('device.transmit') }}</el-button>
@@ -338,27 +360,38 @@
           <div class="action-btns">
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
-              type="primary"
+              type="warning"
               plain
               size="small"
+              class="compact-btn action-change-btn"
               :disabled="item.is_online === false"
               @click="handleChange(item)"
             >{{ $t("device.change") }}</el-button>
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
-              type="warning"
+              type="success"
               plain
               size="small"
+              class="compact-btn action-at-btn"
               :disabled="item.is_online === false"
               @click="handleOpenAT(item)"
             >{{ $t("device.at") }}</el-button>
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
+              type="primary"
+              plain
+              size="small"
+              class="compact-btn action-edit-btn"
+              @click="handleUpdate(item)"
+            >{{ $t("device.edit") }}</el-button>
+            <el-button
+              v-if="checkPermission(['admin']) || item.callsign === callsign"
               type="danger"
               plain
               size="small"
-              @click="handleUpdate(item)"
-            >{{ $t("device.edit") }}</el-button>
+              class="compact-btn action-delete-btn"
+              @click="handleDelete(item)"
+            >{{ $t('employee.delete') }}</el-button>
           </div>
         </div>
       </div>
@@ -370,6 +403,7 @@
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"
       width="70%"
+      class="platform-theme-dialog"
     >
       <el-form
         ref="dataForm"
@@ -389,6 +423,7 @@
 
         <el-form-item :label="$t('device.grouproom')" prop="group_id">
           <el-select
+            popper-class="platform-theme-select-dropdown"
             v-model="temp.group_id"
             filterable
             clearable
@@ -474,6 +509,7 @@
       v-model="dialogFormChangeVisible"
       :title="$t('device.parameterEdit')"
       width="70%"
+      class="platform-theme-dialog"
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"
     >
@@ -533,6 +569,7 @@
               <!-- <el-input v-model="temp.device_parm.dest_domainname" style="width: 150px" /> -->
 
               <el-select
+                popper-class="platform-theme-select-dropdown"
                 v-model="temp.device_parm.dest_domainname"
                 filterable
                 allow-create
@@ -711,6 +748,7 @@
           <el-collapse-item :title="$t('device.motoSection')" name="3">
             <el-form-item :label="$t('device.channelSwitch') + ':'" prop="moto_channel">
               <el-select
+            popper-class="platform-theme-select-dropdown"
                 v-model="temp.device_parm.moto_channel"
                 style="width: 95%"
                 @change="
@@ -764,6 +802,7 @@
             </el-form-item>
             <el-form-item :label="$t('device.relayTemplate') + ':'" prop="current_relay">
               <el-select
+            popper-class="platform-theme-select-dropdown"
                 v-model="current_relay"
                 style="width: 95%"
                 filterable
@@ -830,6 +869,7 @@
 
             <el-form-item :label="$t('device.relayTemplate') + ':'" prop="current_relay">
               <el-select
+            popper-class="platform-theme-select-dropdown"
                 v-model="current_relay"
                 style="width: 95%"
                 filterable
@@ -871,6 +911,7 @@
     <el-dialog
       v-model="dialogFormATVisible"
       width="70%"
+      class="platform-theme-dialog"
       :title="textMap[dialogStatus]"
       :center="device === 'mobile'"
       :fullscreen="device === 'mobile'"
@@ -891,6 +932,7 @@
 
         <el-form-item v-for="v, k in tempat.atmap" :key="k" :label="k + '='" :prop="k">
           <el-select
+            popper-class="platform-theme-select-dropdown"
             v-if="k === 'AT+D_IP'"
             v-model="tempat.atmap[k]"
             filterable
@@ -908,6 +950,7 @@
           </el-select>
 
           <el-select
+            popper-class="platform-theme-select-dropdown"
             v-else-if="['AT+APRS', 'AT+DHCP', 'AT+DUPLEX', 'AT+LOOP', 'AT+PTT_RES'].includes(k)"
             v-model="tempat.atmap[k]"
             default-first-option
@@ -915,7 +958,12 @@
             <el-option v-for="item, idx in ['ON', 'OFF',]" :key="idx" :label="item" :value="item" />
           </el-select>
 
-          <el-select v-else-if="k === 'AT+DCD'" v-model="tempat.atmap[k]" default-first-option>
+          <el-select
+            v-else-if="k === 'AT+DCD'"
+            popper-class="platform-theme-select-dropdown"
+            v-model="tempat.atmap[k]"
+            default-first-option
+          >
             <el-option
               v-for="item, idx in ['SQL_LO', 'VOX', 'MANUAL', 'DISABLE',]"
               :key="idx"
@@ -924,11 +972,21 @@
             />
           </el-select>
 
-          <el-select v-else-if="k === 'AT+PTT_EN'" v-model="tempat.atmap[k]" default-first-option>
+          <el-select
+            v-else-if="k === 'AT+PTT_EN'"
+            popper-class="platform-theme-select-dropdown"
+            v-model="tempat.atmap[k]"
+            default-first-option
+          >
             <el-option v-for="item, idx in ['ENABLE', 'DISABLE',]" :key="idx" :label="item" :value="item" />
           </el-select>
 
-          <el-select v-else-if="['AT+PW', 'AT+PTT_IO'].includes(k)" v-model="tempat.atmap[k]" default-first-option>
+          <el-select
+            v-else-if="['AT+PW', 'AT+PTT_IO'].includes(k)"
+            popper-class="platform-theme-select-dropdown"
+            v-model="tempat.atmap[k]"
+            default-first-option
+          >
             <el-option v-for="item, idx in ['H', 'L',]" :key="idx" :label="item" :value="item" />
           </el-select>
 
@@ -1438,6 +1496,11 @@ export default {
       row.status = status
     },
 
+    toggleOnline() {
+      this.listQuery.isonline = !this.listQuery.isonline
+      this.handleFilter()
+    },
+
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
@@ -1610,82 +1673,8 @@ export default {
 }
 </style>
 
-<style lang="scss">
-/* Global overrides for Element UI in device page - Modern Light Theme */
-.app-container {
-  .el-table {
-    border-radius: 8px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-
-    th {
-      background-color: #f8f9fa !important;
-      color: #606266;
-      font-weight: 600;
-      height: 50px;
-    }
-
-    td {
-      padding: 8px 0;
-    }
-  }
-
-  .el-dialog {
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-
-    .el-dialog__header {
-      padding: 20px;
-      border-bottom: 1px solid #ebeef5;
-    }
-
-    .el-dialog__footer {
-      padding: 20px;
-      border-top: 1px solid #ebeef5;
-    }
-  }
-
-  .compact-btn {
-    padding: 6px 12px;
-    margin: 0 4px !important;
-    font-size: 12px;
-    border-radius: 4px;
-    transition: all 0.3s;
-    white-space: nowrap;
-
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    span {
-      margin-left: 0 !important;
-    }
-  }
-
-  .status-actions,
-  .operation-actions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-}
-</style>
-
 <style lang="scss" scoped>
-.app-container {
-  padding: 20px;
-  background-color: #f0f2f5;
-  min-height: 100vh;
-}
-
 .filter-container {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
   margin-bottom: 20px;
   display: flex;
   flex-wrap: wrap;
@@ -1710,14 +1699,217 @@ export default {
       padding: 0 20px;
     }
 
+    &.action-row {
+      display: flex;
+      align-items: center;
+    }
+
+    &.switch-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
     &.status-switch,
     &.view-switch {
       margin-left: 10px;
     }
   }
+
+  .action-row .action-btn {
+    height: 36px;
+    padding: 0 20px;
+  }
+
+  .switch-row :deep(.status-switch),
+  .switch-row :deep(.view-switch) {
+    margin-left: 0;
+  }
+
+  :deep(.status-switch),
+  :deep(.view-switch) {
+    --el-switch-on-color: linear-gradient(90deg, #26efc7 0%, #3f8dff 100%);
+    --el-switch-off-color: rgba(104, 176, 255, 0.22);
+
+    .el-switch__core {
+      border: 1px solid rgba(104, 176, 255, 0.18) !important;
+      background: rgba(14, 28, 49, 0.92) !important;
+      box-shadow: 0 0 0 1px rgba(104, 176, 255, 0.08) inset;
+    }
+
+    &.is-checked .el-switch__core {
+      background: linear-gradient(90deg, rgba(38, 239, 199, 0.9) 0%, rgba(63, 141, 255, 0.92) 100%) !important;
+      border-color: rgba(54, 240, 203, 0.36) !important;
+      box-shadow: 0 8px 20px rgba(63, 141, 255, 0.18);
+    }
+
+    .el-switch__action {
+      background: #f4f8ff !important;
+      box-shadow: 0 2px 8px rgba(4, 11, 24, 0.28);
+    }
+
+    .el-switch__label,
+    .el-switch__label * {
+      color: rgba(228, 239, 255, 0.78) !important;
+    }
+
+    .el-switch__label.is-active,
+    .el-switch__label.is-active * {
+      color: #dffcff !important;
+    }
+  }
 }
 
+.table-shell {
+  padding: 10px;
+}
 
+.device-page {
+  .compact-btn {
+    padding: 6px 12px;
+    margin: 0 4px !important;
+    font-size: 12px;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(3, 9, 21, 0.18);
+    }
+
+    span {
+      margin-left: 0 !important;
+    }
+  }
+
+  .callsign-online-tag {
+    color: #96ffe7 !important;
+    border-color: rgba(54, 240, 203, 0.42) !important;
+    background: linear-gradient(135deg, rgba(16, 86, 77, 0.42) 0%, rgba(14, 55, 74, 0.28) 100%) !important;
+    box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.08) inset, 0 10px 24px rgba(54, 240, 203, 0.12);
+  }
+
+  .callsign-offline-tag {
+    color: rgba(228, 239, 255, 0.82) !important;
+    border-color: rgba(104, 176, 255, 0.18) !important;
+    background: rgba(12, 31, 58, 0.8) !important;
+  }
+
+  .status-receive-btn {
+    color: #95ffea !important;
+    border-color: rgba(54, 240, 203, 0.42) !important;
+    background: rgba(14, 86, 78, 0.18) !important;
+
+    &:hover,
+    &:focus {
+      color: #dcfff8 !important;
+      border-color: rgba(54, 240, 203, 0.72) !important;
+      background: rgba(18, 101, 90, 0.3) !important;
+      box-shadow: 0 10px 24px rgba(54, 240, 203, 0.16);
+    }
+
+    &.is-disabled,
+    &.is-disabled:hover,
+    &.is-disabled:focus {
+      color: rgba(149, 255, 234, 0.45) !important;
+      border-color: rgba(54, 240, 203, 0.16) !important;
+      background: rgba(14, 86, 78, 0.08) !important;
+      box-shadow: none;
+    }
+  }
+
+  .status-transmit-btn {
+    color: #ffd8a1 !important;
+    border-color: rgba(255, 183, 89, 0.42) !important;
+    background: rgba(104, 64, 18, 0.2) !important;
+
+    &:hover,
+    &:focus {
+      color: #fff0d4 !important;
+      border-color: rgba(255, 183, 89, 0.72) !important;
+      background: rgba(129, 79, 22, 0.32) !important;
+      box-shadow: 0 10px 24px rgba(255, 183, 89, 0.18);
+    }
+
+    &.is-disabled,
+    &.is-disabled:hover,
+    &.is-disabled:focus {
+      color: rgba(255, 216, 161, 0.45) !important;
+      border-color: rgba(255, 183, 89, 0.16) !important;
+      background: rgba(104, 64, 18, 0.08) !important;
+      box-shadow: none;
+    }
+  }
+
+  .action-edit-btn {
+    color: #9cccff !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-color: rgba(111, 182, 255, 0.68) !important;
+    background: rgba(34, 67, 112, 0.22) !important;
+    box-shadow: 0 0 0 1px rgba(111, 182, 255, 0.18) inset;
+
+    &:hover,
+    &:focus {
+      color: #d9eeff !important;
+      border-color: rgba(111, 182, 255, 0.9) !important;
+      background: rgba(43, 84, 140, 0.34) !important;
+      box-shadow: 0 0 0 1px rgba(111, 182, 255, 0.24) inset, 0 10px 24px rgba(63, 141, 255, 0.18);
+    }
+  }
+
+  .action-change-btn {
+    color: #ffd58f !important;
+    border-color: rgba(247, 187, 67, 0.42) !important;
+    background: rgba(122, 88, 17, 0.18) !important;
+
+    &:hover,
+    &:focus {
+      color: #ffe6ba !important;
+      border-color: rgba(247, 187, 67, 0.72) !important;
+      background: rgba(140, 101, 20, 0.3) !important;
+      box-shadow: 0 10px 24px rgba(247, 187, 67, 0.16);
+    }
+  }
+
+  .action-at-btn {
+    color: #8ff9de !important;
+    border-color: rgba(54, 240, 203, 0.42) !important;
+    background: rgba(14, 86, 78, 0.18) !important;
+
+    &:hover,
+    &:focus {
+      color: #d4fff4 !important;
+      border-color: rgba(54, 240, 203, 0.72) !important;
+      background: rgba(18, 101, 90, 0.3) !important;
+      box-shadow: 0 10px 24px rgba(54, 240, 203, 0.16);
+    }
+  }
+
+  .action-delete-btn {
+    color: #ffb0b7 !important;
+    border-color: rgba(255, 122, 122, 0.42) !important;
+    background: rgba(116, 31, 46, 0.18) !important;
+
+    &:hover,
+    &:focus {
+      color: #ffd7db !important;
+      border-color: rgba(255, 122, 122, 0.74) !important;
+      background: rgba(136, 38, 54, 0.3) !important;
+      box-shadow: 0 10px 24px rgba(255, 122, 122, 0.16);
+    }
+  }
+
+  .status-actions,
+  .operation-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}
 
 .channel-grid {
   width: 100%;
@@ -1763,14 +1955,16 @@ export default {
 }
 
 .box-item {
-  background: #fff;
-  border-radius: 8px;
-  border: 1px solid #ebeef5;
+  background: rgba(10, 23, 41, 0.72);
+  border-radius: 20px;
+  border: 1px solid rgba(104, 176, 255, 0.12);
   padding: 10px 12px;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: rgba(54, 240, 203, 0.18);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -1780,7 +1974,7 @@ export default {
   gap: 6px;
   margin-bottom: 8px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #f0f2f5;
+  border-bottom: 1px solid rgba(104, 176, 255, 0.1);
 
   .id-tag {
     flex-shrink: 0;
@@ -1789,7 +1983,7 @@ export default {
   .callsign {
     font-size: 14px;
     font-weight: 600;
-    color: #303133;
+    color: #f4f8ff;
   }
 }
 
@@ -1801,28 +1995,27 @@ export default {
 }
 
 .info-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
   font-size: 12px;
-  line-height: 1.4;
+  line-height: 1.45;
 
   .label {
-    color: #909399;
+    color: rgba(228, 239, 255, 0.54);
     white-space: nowrap;
   }
 
   .value {
-    color: #606266;
-    flex: 1;
+    color: rgba(228, 239, 255, 0.84);
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    word-break: break-word;
+    white-space: normal;
 
     &.freq {
       font-size: 11px;
-      color: #409eff;
+      color: #8ff9de;
     }
   }
 }
@@ -1833,23 +2026,113 @@ export default {
   justify-content: space-between;
   gap: 8px;
   padding-top: 8px;
-  border-top: 1px solid #f0f2f5;
+  border-top: 1px solid rgba(104, 176, 255, 0.1);
 }
 
 .status-btns,
 .action-btns {
   display: flex;
-  gap: 4px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
 
-  .el-button {
-    padding: 4px 8px;
-    font-size: 11px;
-  }
+.box-footer {
+  align-items: flex-start;
+}
+
+.box-footer :deep(.compact-btn) {
+  min-width: 64px;
+  padding: 5px 10px;
+  margin: 0 !important;
+  font-size: 12px;
+  line-height: 1.1;
 }
 
 @media (max-width: 768px) {
+  .filter-container {
+    .filter-item {
+      &.search-input,
+      &.group-select {
+        width: 100% !important;
+        flex: 1 1 100%;
+      }
+
+      &.action-row {
+        width: min(100%, 280px) !important;
+        flex: 0 0 100%;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+
+      &.switch-row {
+        width: 100% !important;
+        flex: 0 0 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+    }
+  }
+
+  .action-row .action-btn {
+    width: 100%;
+  }
+
+  .switch-row :deep(.status-switch),
+  .switch-row :deep(.view-switch) {
+    width: 100%;
+    justify-content: flex-start;
+
+    .el-switch__label {
+      flex: initial;
+      margin-left: 12px;
+    }
+
+    .el-switch__label--right {
+      text-align: left;
+    }
+  }
+
   .box-grid {
     grid-template-columns: 1fr;
+  }
+
+  .box-item {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .box-header {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+
+    .callsign {
+      min-width: 0;
+      word-break: break-word;
+    }
+  }
+
+  .info-row {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .box-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .status-btns,
+  .action-btns {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .box-footer :deep(.compact-btn) {
+    width: 100%;
   }
 }
 </style>

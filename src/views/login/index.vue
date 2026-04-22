@@ -1,7 +1,7 @@
 <template>
-  <div class="login-container" :style="pulseStyle">
-    <div class="topbar">
-      <div class="brand-block">
+  <div class="login-container">
+    <div ref="topbar" class="topbar" :class="{ 'topbar-stacked': topbarStacked }">
+      <div ref="brandBlock" class="brand-block">
         <img src="/images/logo.png" alt="Logo" class="topbar-logo">
         <div class="brand-text">
           <h1>{{ title }}</h1>
@@ -9,21 +9,13 @@
         </div>
       </div>
 
-      <div class="topbar-right">
-        <div class="topbar-stats">
-          <div class="topbar-stat">
-            <strong>{{ onlineDevices }}</strong>
-            <span>{{ $t('login.onlineDevices') }}</span>
-          </div>
-          <div class="topbar-stat">
-            <strong>{{ connectedClients }}</strong>
-            <span>{{ $t('login.onlineBrowsers') }}</span>
-          </div>
-          <div class="topbar-stat">
-            <strong>{{ totalSubs }}</strong>
-            <span>{{ $t('login.audioSubscriptions') }}</span>
-          </div>
-        </div>
+      <div ref="topbarRight" class="topbar-right">
+        <live-platform-stats
+          class="topbar-stats"
+          :online-devices="monitorStats.onlineDevices"
+          :connected-clients="monitorStats.connectedClients"
+          :total-subs="monitorStats.totalSubs"
+        />
 
         <div class="topbar-actions">
           <div class="language-switch">
@@ -120,72 +112,10 @@
           <button type="button" class="panel-close" @click.stop="closePanel('middle')">×</button>
         </div>
         <div class="panel-content monitor-panel-content">
-        <div class="monitor-card monitor-card--panel">
-          <div class="monitor-header">
-            <h4>{{ $t('login.realTimeCall') }}</h4>
-            <div class="monitor-stats-inline">
-            <span class="stat-item" :title="$t('login.visibleRooms')">
-              <el-icon><Grid /></el-icon>
-              <strong>{{ rooms.length }}</strong>
-            </span>
-            <span class="stat-item" :title="$t('login.currentCall')">
-              <el-icon><Microphone /></el-icon>
-              <strong>{{ activeRoomCount }}</strong>
-            </span>
-            <span class="stat-item" :title="$t('login.voiceSubscription')">
-              <el-icon><Bell /></el-icon>
-              <strong>{{ subscribedRoomKeys.length }}</strong>
-            </span>
-            <span class="stat-item" :class="{ online: wsConnected }" :title="wsConnected ? $t('login.connected') : $t('login.connecting')">
-              <el-icon><Connection /></el-icon>
-            </span>
-          </div>
-          </div>
-
-          <div class="monitor-room-grid">
-            <button
-              v-for="room in sortedMonitorRooms"
-              :key="room.room_key"
-              type="button"
-              class="monitor-room-button"
-              :class="{
-                active: subscribedRoomKeys.includes(room.room_key),
-                speaking: room.active,
-                'multi-speakers': roomSpeakerCount(room) > 1
-              }"
-              @click="toggleRoomSubscription(room.room_key)"
-            >
-              <span class="room-title">#{{ room.room_id }} · {{ room.room_name }}</span>
-              <span v-if="room.active && roomSpeakerText(room)" class="room-caller">
-                {{ roomSpeakerText(room) }}
-              </span>
-              <span v-else class="room-idle">{{ $t('login.idle') }}</span>
-            </button>
-          </div>
-
-          <div class="monitor-subscription-tip">
-          </div>
-
-          <div class="recent-call-panel">
-            <div class="section-title">{{ $t('login.recent20calls') }}</div>
-            <div v-if="recentCalls.length === 0" class="empty-state">
-              {{ $t('login.noCallRecord') }}
-            </div>
-            <div v-else class="recent-call-list">
-              <div
-                v-for="item in recentCalls"
-                :key="`${item.room_key}-${item.started_at}-${item.callsign}-${item.ssid}`"
-                class="recent-call-item"
-                :class="{ active: item.active }"
-              >
-                <span class="recent-room">#{{ item.room_id }} · {{ item.room_name }}</span>
-                <span class="recent-caller">{{ item.callsign }}-{{ item.ssid }}</span>
-                <span class="recent-duration">{{ item.duration_text || '00:00' }}</span>
-                <span class="recent-time">{{ item.started_at }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+          <realtime-monitor-panel
+            class="monitor-component-fill"
+            @stats-change="handleMonitorStatsChange"
+          />
         </div>
         <button
           v-if="isDesktopPanels"
@@ -364,16 +294,15 @@ import { validUsername } from '@/utils/validate'
 import { mapState } from 'pinia'
 import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
-import { getToken } from '@/utils/auth'
 import ServerList from './components/ServerList.vue'
 import SupportLinks from './components/SupportLinks.vue'
 import RegisterView from '../register/index.vue'
-
-import { Grid, Microphone, Bell, Connection } from '@element-plus/icons-vue'
+import LivePlatformStats from '@/components/platform/LivePlatformStats.vue'
+import RealtimeMonitorPanel from '@/components/platform/RealtimeMonitorPanel.vue'
 
 export default {
   name: 'LoginView',
-  components: { ServerList, SupportLinks, RegisterView, Grid, Microphone, Bell, Connection },
+  components: { ServerList, SupportLinks, RegisterView, LivePlatformStats, RealtimeMonitorPanel },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -415,22 +344,11 @@ export default {
       redirect: undefined,
       serverList: [],
       nrlmpImg: '',
-      websock: null,
-      wsConnected: false,
-      wsRetryTimer: null,
-      wsPingTimer: null,
-      monitorDestroyed: false,
-      rooms: [],
-      recentCalls: [],
-      subscribedRoomKeys: [],
-      audioContext: null,
-      audioGainNode: null,
-      audioWorker: null,
-      nextPlayTime: 0,
-      totalSubs: 0,
-      connectedClients: 0,
-      onlineDevices: 0,
-      pulsePhaseMs: typeof window !== 'undefined' ? Date.now() % 800 : 0,
+      monitorStats: {
+        totalSubs: 0,
+        connectedClients: 0,
+        onlineDevices: 0
+      },
       isDesktopPanels: false,
       panelLayouts: {
         left: { visible: true, x: 0, y: 0, w: 300, h: 640 },
@@ -444,16 +362,14 @@ export default {
       },
       nextPanelZIndex: 4,
       panelInteraction: null,
-      panelDefaultsInitialized: false
+      panelDefaultsInitialized: false,
+      topbarStacked: false,
+      topbarResizeObserver: null,
+      topbarLayoutFrame: null
     }
   },
   computed: {
     ...mapState(useAppStore, ['device']),
-    pulseStyle() {
-      return {
-        '--speaking-pulse-delay': `${-this.pulsePhaseMs}ms`
-      }
-    },
     sortedServerList() {
       const currentHost = typeof window !== 'undefined' ? window.location.host : ''
       const currentHostname = typeof window !== 'undefined' ? window.location.hostname : ''
@@ -479,18 +395,6 @@ export default {
         const nameB = b && b.name ? String(b.name) : ''
         return nameA.localeCompare(nameB)
       })
-    },
-    sortedMonitorRooms() {
-      const recentRoomKeys = new Set(this.recentCalls.map(item => item.room_key))
-      const subscribedRoomKeys = new Set(this.subscribedRoomKeys)
-      const visibleRooms = this.rooms.filter(item => recentRoomKeys.has(item.room_key) || subscribedRoomKeys.has(item.room_key))
-
-      return [...visibleRooms].sort((a, b) => {
-        return Number(a.room_id || 0) - Number(b.room_id || 0)
-      })
-    },
-    activeRoomCount() {
-      return this.rooms.filter(item => item.active).length
     },
     nextLanguage() {
       return this.$i18n.locale === 'zh' ? 'en' : 'zh'
@@ -539,27 +443,107 @@ export default {
         const appStore = useAppStore()
         appStore.setLanguage('en')
       }
+
+      this.$nextTick(() => {
+        this.scheduleTopbarLayoutCheck()
+      })
     })
 
     this.fetchServerList()
-    this.initCallMonitor()
   },
   mounted() {
-    window.addEventListener('beforeunload', this.handleWindowUnload)
-    window.addEventListener('pagehide', this.handleWindowUnload)
     window.addEventListener('resize', this.handleViewportResize)
     this.$nextTick(() => {
       this.initializePanels(true)
+      this.setupTopbarResizeObserver()
+      this.updateTopbarLayout()
     })
   },
   beforeUnmount() {
-    window.removeEventListener('beforeunload', this.handleWindowUnload)
-    window.removeEventListener('pagehide', this.handleWindowUnload)
     window.removeEventListener('resize', this.handleViewportResize)
     this.stopPanelInteraction()
-    this.destroyCallMonitor()
+    this.destroyTopbarResizeObserver()
+    if (this.topbarLayoutFrame) {
+      cancelAnimationFrame(this.topbarLayoutFrame)
+      this.topbarLayoutFrame = null
+    }
   },
   methods: {
+    setupTopbarResizeObserver() {
+      if (typeof window === 'undefined' || typeof ResizeObserver === 'undefined') {
+        return
+      }
+
+      this.destroyTopbarResizeObserver()
+      const targets = [this.$refs.topbar, this.$refs.brandBlock, this.$refs.topbarRight].filter(Boolean)
+      if (!targets.length) {
+        return
+      }
+
+      this.topbarResizeObserver = new ResizeObserver(() => {
+        this.scheduleTopbarLayoutCheck()
+      })
+
+      targets.forEach(target => this.topbarResizeObserver.observe(target))
+    },
+    destroyTopbarResizeObserver() {
+      if (this.topbarResizeObserver) {
+        this.topbarResizeObserver.disconnect()
+        this.topbarResizeObserver = null
+      }
+    },
+    scheduleTopbarLayoutCheck() {
+      if (typeof window === 'undefined') {
+        return
+      }
+
+      if (this.topbarLayoutFrame) {
+        cancelAnimationFrame(this.topbarLayoutFrame)
+      }
+
+      this.topbarLayoutFrame = requestAnimationFrame(() => {
+        this.topbarLayoutFrame = null
+        this.updateTopbarLayout()
+      })
+    },
+    updateTopbarLayout() {
+      if (typeof window === 'undefined') {
+        return
+      }
+
+      if (window.innerWidth <= 1023) {
+        this.topbarStacked = false
+        return
+      }
+
+      const topbar = this.$refs.topbar
+      const brandBlock = this.$refs.brandBlock
+      const topbarRight = this.$refs.topbarRight
+
+      if (!topbar || !brandBlock || !topbarRight) {
+        return
+      }
+
+      const topbarWidth = topbar.clientWidth
+      const brandWidth = brandBlock.scrollWidth
+      const rightWidth = topbarRight.scrollWidth
+      const computedStyle = window.getComputedStyle(topbar)
+      const columnGap = Number.parseFloat(computedStyle.columnGap || computedStyle.gap || '0') || 0
+      const reservedGap = columnGap || 20
+      const shouldStack = brandWidth + rightWidth + reservedGap > topbarWidth
+
+      if (shouldStack !== this.topbarStacked) {
+        this.topbarStacked = shouldStack
+      }
+    },
+    handleMonitorStatsChange(stats) {
+      this.monitorStats = {
+        totalSubs: Number(stats && stats.totalSubs) || 0,
+        connectedClients: Number(stats && stats.connectedClients) || 0,
+        onlineDevices: Number(stats && stats.onlineDevices) || 0
+      }
+      this.scheduleTopbarLayoutCheck()
+    },
     getPanelLimits(panelId) {
       const limits = {
         left: { minW: 260, minH: 280 },
@@ -655,6 +639,7 @@ export default {
     },
     handleViewportResize() {
       this.initializePanels(true)
+      this.scheduleTopbarLayoutCheck()
     },
     closePanel(panelId) {
       this.panelLayouts = {
@@ -665,6 +650,9 @@ export default {
         }
       }
       this.stopPanelInteraction()
+      this.$nextTick(() => {
+        this.scheduleTopbarLayoutCheck()
+      })
     },
     restoreAllPanels() {
       this.panelLayouts = {
@@ -674,6 +662,7 @@ export default {
       }
       this.$nextTick(() => {
         this.initializePanels(true)
+        this.scheduleTopbarLayoutCheck()
       })
     },
     startPanelDrag(panelId, event) {
@@ -780,6 +769,9 @@ export default {
     },
     toggleLanguage() {
       this.setLanguage(this.nextLanguage)
+      this.$nextTick(() => {
+        this.scheduleTopbarLayoutCheck()
+      })
     },
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
@@ -829,267 +821,6 @@ export default {
         const mod = await import('@/assets/nrlmp.jpg')
         this.nrlmpImg = mod.default || mod
       }
-    },
-    initCallMonitor() {
-      this.monitorDestroyed = false
-      this.connectMonitorWebSocket()
-    },
-    destroyCallMonitor() {
-      this.monitorDestroyed = true
-      if (this.wsRetryTimer) {
-        clearTimeout(this.wsRetryTimer)
-        this.wsRetryTimer = null
-      }
-      if (this.wsPingTimer) {
-        clearInterval(this.wsPingTimer)
-        this.wsPingTimer = null
-      }
-      if (this.websock) {
-        this.websock.close()
-        this.websock = null
-      }
-      if (this.audioContext) {
-        this.audioContext.close()
-        this.audioContext = null
-      }
-      if (this.audioWorker) {
-        this.audioWorker.terminate()
-        this.audioWorker = null
-      }
-    },
-    buildMonitorWsUrl() {
-      const baseApi = import.meta.env.VITE_BASE_API || ''
-      const token = getToken()
-      let baseUrl = baseApi
-
-      if (!baseUrl || baseUrl.startsWith('/')) {
-        baseUrl = `${window.location.origin}${baseUrl}`
-      }
-
-      baseUrl = baseUrl.replace(/^http:/i, 'ws:').replace(/^https:/i, 'wss:')
-      const url = `${baseUrl.replace(/\/$/, '')}/ws/calls`
-      return token ? `${url}?token=${encodeURIComponent(token)}` : url
-    },
-    connectMonitorWebSocket() {
-      if (this.websock && (this.websock.readyState === WebSocket.OPEN || this.websock.readyState === WebSocket.CONNECTING)) {
-        return
-      }
-      if (this.wsPingTimer) {
-        clearInterval(this.wsPingTimer)
-        this.wsPingTimer = null
-      }
-
-      const ws = new WebSocket(this.buildMonitorWsUrl())
-      ws.binaryType = 'arraybuffer'
-      ws.onopen = () => {
-        this.wsConnected = true
-        this.wsPingTimer = window.setInterval(() => {
-          if (this.websock && this.websock.readyState === WebSocket.OPEN) {
-            this.websock.send(JSON.stringify({ action: 'ping' }))
-          }
-        }, 10000)
-      }
-      ws.onmessage = this.handleMonitorMessage
-      ws.onerror = () => {
-        this.wsConnected = false
-      }
-      ws.onclose = () => {
-        this.wsConnected = false
-        if (this.wsPingTimer) {
-          clearInterval(this.wsPingTimer)
-          this.wsPingTimer = null
-        }
-        this.websock = null
-        if (!this.monitorDestroyed) {
-          this.wsRetryTimer = window.setTimeout(() => {
-            this.connectMonitorWebSocket()
-          }, 2000)
-        }
-      }
-      this.websock = ws
-    },
-    handleMonitorMessage(event) {
-      if (typeof event.data === 'string') {
-        try {
-          const payload = JSON.parse(event.data)
-          this.handleMonitorJSON(payload)
-        } catch (error) {
-          console.error('Invalid monitor payload:', error)
-        }
-        return
-      }
-
-      const bytes = new Uint8Array(event.data)
-      if (bytes.length > 0) {
-        this.playG711Frame(bytes)
-      }
-    },
-    handleWindowUnload() {
-      this.monitorDestroyed = true
-      if (this.wsRetryTimer) {
-        clearTimeout(this.wsRetryTimer)
-        this.wsRetryTimer = null
-      }
-      if (this.wsPingTimer) {
-        clearInterval(this.wsPingTimer)
-        this.wsPingTimer = null
-      }
-      if (this.websock) {
-        try {
-          this.websock.close(1000, 'page unload')
-        } catch (error) {
-          console.error('Failed to close monitor websocket:', error)
-        }
-        this.websock = null
-      }
-    },
-    handleMonitorJSON(payload) {
-      switch (payload.type) {
-      case 'snapshot':
-        this.rooms = Array.isArray(payload.rooms) ? payload.rooms : []
-        this.recentCalls = Array.isArray(payload.recent_calls) ? payload.recent_calls : []
-        this.subscribedRoomKeys = Array.isArray(payload.subscriptions) ? payload.subscriptions : []
-        this.totalSubs = typeof payload.total_subs === 'number' ? payload.total_subs : this.totalSubs
-        this.connectedClients = typeof payload.connected_clients === 'number' ? payload.connected_clients : this.connectedClients
-        this.onlineDevices = typeof payload.online_devices === 'number' ? payload.online_devices : this.onlineDevices
-        break
-      case 'stats':
-        this.totalSubs = typeof payload.total_subs === 'number' ? payload.total_subs : 0
-        this.connectedClients = typeof payload.connected_clients === 'number' ? payload.connected_clients : 0
-        this.onlineDevices = typeof payload.online_devices === 'number' ? payload.online_devices : 0
-        break
-      case 'room_state':
-        if (payload.room) {
-          this.mergeRoomState(payload.room)
-        }
-        break
-      case 'recent_calls':
-        this.recentCalls = Array.isArray(payload.recent_calls) ? payload.recent_calls : []
-        break
-      case 'subscriptions':
-        this.subscribedRoomKeys = Array.isArray(payload.subscriptions) ? payload.subscriptions : []
-        break
-      default:
-        break
-      }
-    },
-    mergeRoomState(roomState) {
-      const index = this.rooms.findIndex(item => item.room_key === roomState.room_key)
-      if (index === -1) {
-        this.rooms = [...this.rooms, roomState]
-        return
-      }
-
-      const nextRooms = [...this.rooms]
-      nextRooms.splice(index, 1, { ...nextRooms[index], ...roomState })
-      this.rooms = nextRooms
-    },
-    roomSpeakers(room) {
-      if (room && Array.isArray(room.speakers) && room.speakers.length > 0) {
-        return room.speakers
-      }
-      if (room && room.callsign) {
-        return [{ callsign: room.callsign, ssid: room.ssid }]
-      }
-      return []
-    },
-    roomSpeakerCount(room) {
-      return this.roomSpeakers(room).length
-    },
-    roomSpeakerText(room) {
-      return this.roomSpeakers(room)
-        .map(item => `${item.callsign}-${item.ssid}`)
-        .join(' / ')
-    },
-    async ensureAudioReady() {
-      if (!this.audioContext) {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext
-        if (!AudioCtx) {
-          throw new Error('当前浏览器不支持音频播放')
-        }
-        this.audioContext = new AudioCtx({ sampleRate: 8000 })
-        this.audioGainNode = this.audioContext.createGain()
-        this.audioGainNode.gain.value = 0.9
-        this.audioGainNode.connect(this.audioContext.destination)
-        this.nextPlayTime = this.audioContext.currentTime
-      }
-
-      if (this.audioContext.state === 'suspended') {
-        await this.audioContext.resume()
-      }
-    },
-    decodeALawSample(value) {
-      let code = value ^ 0x55
-      let exponent = (code & 0x70) >> 4
-      let mantissa = code & 0x0f
-
-      if (exponent > 0) {
-        mantissa += 16
-      }
-
-      let sample = (mantissa << 4) + 8
-      if (exponent > 1) {
-        sample <<= (exponent - 1)
-      }
-
-      return (code & 0x80) !== 0 ? sample : -sample
-    },
-    initAudioWorker() {
-      if (this.audioWorker) return
-      this.audioWorker = new Worker(
-        new URL('@/workers/alawDecode.worker.js', import.meta.url),
-        { type: 'module' }
-      )
-      this.audioWorker.onmessage = (e) => {
-        this.playPcmBuffer(e.data.pcm)
-      }
-    },
-    playPcmBuffer(pcm) {
-      if (!this.audioContext || !this.audioGainNode) return
-
-      const buffer = this.audioContext.createBuffer(1, pcm.length, 8000)
-      buffer.copyToChannel(pcm, 0)
-
-      const source = this.audioContext.createBufferSource()
-      source.buffer = buffer
-      source.connect(this.audioGainNode)
-
-      const now = this.audioContext.currentTime
-      if (this.nextPlayTime < now || this.nextPlayTime - now > 1) {
-        this.nextPlayTime = now + 0.05
-      }
-
-      source.start(this.nextPlayTime)
-      this.nextPlayTime += buffer.duration
-    },
-    playG711Frame(g711Bytes) {
-      if (!this.audioContext || !this.audioGainNode) {
-        return
-      }
-
-      this.initAudioWorker()
-      this.audioWorker.postMessage({ g711Bytes: Array.from(g711Bytes) })
-    },
-    async toggleRoomSubscription(roomKey) {
-      if (!this.websock || this.websock.readyState !== WebSocket.OPEN) {
-        return
-      }
-
-      const subscribed = this.subscribedRoomKeys.includes(roomKey)
-
-      if (!subscribed) {
-        try {
-          await this.ensureAudioReady()
-        } catch (error) {
-          console.error('Audio init failed:', error)
-          return
-        }
-      }
-
-      this.websock.send(JSON.stringify({
-        action: subscribed ? 'unsubscribe' : 'subscribe',
-        room_keys: [roomKey]
-      }))
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -1440,6 +1171,28 @@ $cursor: #f4f8ff;
     z-index: 1;
   }
 
+  .topbar.topbar-stacked {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+
+    .brand-block {
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .topbar-right {
+      width: 100%;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .topbar-stats,
+    .topbar-actions {
+      justify-content: center;
+      flex-wrap: nowrap;
+    }
+  }
+
   .brand-block {
     display: flex;
     align-items: center;
@@ -1755,6 +1508,10 @@ $cursor: #f4f8ff;
 
   .monitor-panel-content {
     padding: 3px;
+  }
+
+  .monitor-component-fill {
+    height: 100%;
   }
 
   .panel-resize {
@@ -2342,42 +2099,71 @@ $cursor: #f4f8ff;
     border-color: rgba(143, 249, 222, 0.24);
   }
 
-  @media (max-width: 1480px) and (min-width: 1024px) {
+  @media (max-width: 1680px) and (min-width: 1201px) {
     .topbar {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 18px;
+      gap: 18px 20px;
     }
 
     .brand-block {
-      width: 100%;
-      justify-content: flex-start;
+      gap: 18px;
+    }
+
+    .topbar-logo {
+      width: 212px;
+    }
+
+    .brand-text {
+      h1 {
+        font-size: clamp(24px, 2.2vw, 32px);
+      }
+
+      p {
+        font-size: 13px;
+      }
     }
 
     .topbar-right {
-      width: 100%;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      flex-wrap: nowrap;
+      gap: 10px;
     }
 
     .topbar-stats,
     .topbar-actions {
-      justify-content: center;
-      flex-wrap: nowrap;
+      gap: 10px;
+    }
+
+    .topbar-stat {
+      min-width: 96px;
+      padding: 10px 12px;
+
+      strong {
+        font-size: 22px;
+      }
+    }
+
+    .topbar-button {
+      height: 40px;
+      padding: 0 16px;
+      font-size: 13px;
+    }
+
+    .lang-toggle-button {
+      width: 48px;
+      min-width: 48px;
+      height: 40px;
+    }
+
+    .panel-icon-button {
+      width: 40px;
+      min-width: 40px;
     }
   }
 
-  @media (max-width: 1360px) and (min-width: 1024px) {
+  @media (max-width: 1200px) and (min-width: 1024px) {
     .topbar {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 18px;
+      gap: 18px 18px;
     }
 
     .brand-block {
-      width: 100%;
-      justify-content: flex-start;
       gap: 16px;
     }
 
@@ -2401,31 +2187,19 @@ $cursor: #f4f8ff;
     }
 
     .topbar-right {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
       gap: 18px;
-      flex-wrap: nowrap;
     }
 
     .topbar-stats {
-      width: auto;
-      flex: 0 0 auto;
-      justify-content: center;
-      flex-wrap: nowrap;
+      gap: 10px;
     }
 
     .topbar-actions {
-      width: auto;
-      flex: 0 0 auto;
-      justify-content: center;
-      flex-wrap: nowrap;
+      gap: 10px;
     }
 
     .topbar-stat {
-      min-width: 120px;
+      min-width: 96px;
       padding: 10px 12px;
 
       strong {

@@ -1,36 +1,40 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
+  <div class="app-container platform-theme-page setup-groups-page">
+    <div class="filter-container platform-theme-toolbar">
       <el-input
         v-model="listQuery.name"
         :placeholder="$t('device.name')"
-        style="width: 320px;"
-        class="filter-item"
+        class="filter-item search-input"
         clearable
         @keyup.enter="handleFilter"
       />
 
-      <el-button v-waves class="filter-item" type="primary" @click="handleFilter">
+      <el-button v-waves class="filter-item action-btn" type="primary" @click="handleFilter">
         <el-icon>
           <Search />
         </el-icon>
-        {{ $t("Account.search") }}
+        {{ $t('Account.search') }}
       </el-button>
 
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px"
-        type="primary"
-        @click="handleCreate"
-      >
+      <el-button class="filter-item action-btn action-btn-secondary" type="primary" @click="handleCreate">
         <el-icon>
           <Edit />
         </el-icon>
-        {{ $t("employee.add") }}
+        {{ $t('employee.add') }}
       </el-button>
+
+      <button
+        type="button"
+        class="toolbar-capsule"
+        :class="{ 'is-active': showtable }"
+        @click="showtable = !showtable"
+      >
+        <span class="capsule-indicator" />
+        <span>{{ $t('device.showtable') }}</span>
+      </button>
     </div>
 
-    <div>
+    <div v-if="showtable" class="table-shell">
       <el-table
         :key="tableKey"
         v-loading="listLoading"
@@ -48,129 +52,154 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="群组名称" width="120px" align="center">
+        <el-table-column :label="$t('group.name')" min-width="150" align="center">
           <template #default="scope">
-            <span>{{ scope.row.name }}</span>
+            <div class="group-name-cell">{{ scope.row.name || '--' }}</div>
           </template>
         </el-table-column>
 
-        <!-- <el-table-column label="主服务器" width="110px" align="center">
+        <el-table-column :label="$t('group.type')" width="120" align="center">
           <template #default="scope">
-            <span>{{
-              ValueFilter(scope.row.master_server, serversOptions)
-            }}</span>
+            <el-tag class="group-type-tag">{{ ValueFilter(scope.row.type, groupTypeOptions) || '--' }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column label="从服务器" width="110px" align="center">
-          <template #default="scope">
-            <span>{{
-              ValueFilter(scope.row.slave_server, serversOptions)
-            }}</span>
-          </template>
-        </el-table-column> -->
-
-        <el-table-column label="类型" width="110px" align="center">
-          <template #default="scope">
-            <span>{{ ValueFilter(scope.row.type, groupTypeOptions) }}</span>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="允许设备" width="200px" align="center">
+        <el-table-column :label="$t('group.allow_callsign_ssid')" min-width="240" align="center">
           <template #default="scope">
             <div class="tag-wrap">
-              <el-tag v-for="(item,idx) in scope.row.allow_callsign_ssid" :key="idx">{{ item }}</el-tag>
+              <el-tag
+                v-for="(item, idx) in normalizeAllowDevices(scope.row.allow_callsign_ssid)"
+                :key="idx"
+                class="allow-device-tag"
+              >{{ item }}</el-tag>
+              <span v-if="!normalizeAllowDevices(scope.row.allow_callsign_ssid).length" class="table-empty-value">--</span>
             </div>
-
           </template>
         </el-table-column>
 
-        <el-table-column label="创建者呼号" width="110px" align="center">
+        <el-table-column label="创建者呼号" width="150" align="center">
           <template #default="scope">
-            <span>{{ scope.row.callsign }}</span>
+            <el-tag class="owner-callsign-tag">{{ scope.row.callsign || '--' }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column label="创建者" width="110px" align="center">
+        <el-table-column label="创建者" width="110" align="center">
           <template #default="scope">
-            <span>{{ scope.row.ower_id }}</span>
+            <span>{{ scope.row.ower_id || '--' }}</span>
           </template>
         </el-table-column>
 
-        <!-- <el-table-column label="状态" width="110px" align="center">
+        <el-table-column :label="$t('device.createTime')" width="160" align="center">
           <template #default="scope">
-            <span>{{ scope.row.status }}</span>
-          </template>
-        </el-table-column> -->
-
-        <el-table-column label="创建时间" width="100px" align="center">
-          <template #default="scope">
-            <span>{{ parseTime(scope.row.create_time) }}</span>
+            <span>{{ parseTime(scope.row.create_time) || '--' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="更新时间" width="100px" align="center">
+        <el-table-column :label="$t('device.updateTime')" width="160" align="center">
           <template #default="scope">
-            <span>{{ parseTime(scope.row.update_time) }}</span>
+            <span>{{ parseTime(scope.row.update_time) || '--' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="备注" width="100px" align="center">
+        <el-table-column :label="$t('group.note')" min-width="180" align="center">
           <template #default="scope">
-            <span>{{ scope.row.note }}</span>
+            <div class="note-cell">{{ scope.row.note || '--' }}</div>
           </template>
         </el-table-column>
 
         <el-table-column :label="$t('device.bind')" align="center" class-name="small-padding fixed-width">
           <template #default="{ row }">
-            <el-button size="small" type="primary" @click="handleUpdate(row)">{{
-              $t("device.edit")
-            }}</el-button>
+            <el-button size="small" type="primary" plain class="compact-btn group-edit-btn" @click="handleUpdate(row)">
+              {{ $t('device.edit') }}
+            </el-button>
 
-            <el-button size="small" type="primary" @click="handleDelete(row)">{{
-              $t("device.delete")
-            }}</el-button>
+            <el-button size="small" type="danger" plain class="compact-btn group-delete-btn" @click="handleDelete(row)">
+              {{ $t('device.delete') }}
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
 
-    <el-dialog v-model="dialogFormVisible" :title="textMap[dialogStatus]">
+    <div v-else class="groups-card-grid">
+      <article
+        v-for="item in list"
+        :key="item.id"
+        class="groups-card"
+      >
+        <div class="groups-card__header">
+          <div class="groups-card__headline">
+            <el-tag size="small" effect="dark" class="group-id-tag">#{{ item.id }}</el-tag>
+            <h3>{{ item.name || '--' }}</h3>
+          </div>
+          <el-tag class="group-type-tag">{{ ValueFilter(item.type, groupTypeOptions) || '--' }}</el-tag>
+        </div>
+
+        <div class="groups-card__body">
+          <div class="groups-card__row">
+            <span class="groups-card__label">创建者呼号</span>
+            <el-tag class="owner-callsign-tag">{{ item.callsign || '--' }}</el-tag>
+          </div>
+
+          <div class="groups-card__row">
+            <span class="groups-card__label">创建者</span>
+            <span class="groups-card__value">{{ item.ower_id || '--' }}</span>
+          </div>
+
+          <div class="groups-card__row">
+            <span class="groups-card__label">{{ $t('device.createTime') }}</span>
+            <span class="groups-card__value">{{ parseTime(item.create_time) || '--' }}</span>
+          </div>
+
+          <div class="groups-card__row">
+            <span class="groups-card__label">{{ $t('device.updateTime') }}</span>
+            <span class="groups-card__value">{{ parseTime(item.update_time) || '--' }}</span>
+          </div>
+
+          <div class="groups-card__row groups-card__row--stack">
+            <span class="groups-card__label">{{ $t('group.allow_callsign_ssid') }}</span>
+            <div class="groups-card__tags">
+              <el-tag
+                v-for="(allowItem, idx) in normalizeAllowDevices(item.allow_callsign_ssid)"
+                :key="idx"
+                class="allow-device-tag"
+              >{{ allowItem }}</el-tag>
+              <span v-if="!normalizeAllowDevices(item.allow_callsign_ssid).length" class="table-empty-value">--</span>
+            </div>
+          </div>
+
+          <div class="groups-card__row groups-card__row--stack">
+            <span class="groups-card__label">{{ $t('group.note') }}</span>
+            <p class="groups-card__note">{{ item.note || '--' }}</p>
+          </div>
+        </div>
+
+        <div class="groups-card__actions">
+          <el-button size="small" type="primary" plain class="compact-btn group-edit-btn" @click="handleUpdate(item)">
+            {{ $t('device.edit') }}
+          </el-button>
+
+          <el-button size="small" type="danger" plain class="compact-btn group-delete-btn" @click="handleDelete(item)">
+            {{ $t('device.delete') }}
+          </el-button>
+        </div>
+      </article>
+    </div>
+
+    <el-dialog v-model="dialogFormVisible" :title="textMap[dialogStatus]" class="platform-theme-dialog setup-groups-dialog">
       <el-form
         ref="dataForm"
         :rules="rules"
         :model="temp"
         label-position="right"
         label-width="140px"
-        style="width: 400px; margin-left: 50px"
+        class="setup-groups-form"
       >
         <el-form-item :label="$t('group.name')" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
 
-        <!-- <el-form-item :label="$t('server.master_server')" prop="type">
-          <el-select v-model="temp.master_server" filterable>
-            <el-option
-              v-for="item in serversOptions"
-              :key="item.id"
-              :label="d.id == 0 ? '当前服务器' : item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item :label="$t('server.slave_server')" prop="type">
-          <el-select v-model="temp.slave_server" filterable>
-            <el-option
-              v-for="item in serversOptions"
-              :key="item.id"
-              :label="d.id == 0 ? '当前服务器' : item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item> -->
-
-        <el-form-item prop="type" for="">
+        <el-form-item prop="type">
           <template #label>
             <span id="group-type-label">{{ $t('group.type') }}</span>
           </template>
@@ -184,75 +213,38 @@
           :label="$t('group.allow_callsign_ssid')"
           prop="allow_callsign_ssid"
         >
-          <el-select
-            v-model="temp.allow_callsign_ssid"
-            filterable
-            multiple
-            placeholder="请选择设备"
-            style="width: 320px"
-            class="filter-item"
-          >
-
-            <el-option
-              v-for="item in devicesOptions"
-              :key="item.id"
-              :label="item.callsign + '-' + item.ssid + ' ' + item.name"
-              :value="item.callsign + '-' + item.ssid"
+          <div class="tag-input-wrapper">
+            <div class="tag-input-tags">
+              <el-tag
+                v-for="(tag, idx) in temp.allow_callsign_ssid"
+                :key="idx"
+                closable
+                class="allow-device-tag"
+                @close="handleRemoveTag(idx)"
+              >
+                {{ tag }}
+              </el-tag>
+            </div>
+            <el-input
+              v-model="temp.tagInput"
+              class="tag-input-field"
+              placeholder="输入呼号-SSID，按回车/逗号/空格添加"
+              @keydown="handleTagInput"
             />
-          </el-select>
+          </div>
         </el-form-item>
 
-        <!--
-        <el-form-item
-          v-if="temp.type === 3"
-          :label="$t('group.allow_callsign_ssid')"
-          prop="allow_callsign_ssid"
-        >
-          <el-select
-            v-model="temp.allow_callsign_ssid"
-            filterable
-            placeholder="请选择设备ID"
-            style="width: 320px"
-            class="filter-item"
-          >
-            <el-option label="没有限制" value="" />
-            <el-option
-              v-for="item in devicesOptions"
-              :key="item.id"
-              :label="item.callsign + '-' + item.ssid + ' ' + item.name"
-              :value="item.callsign + '-' + item.ssid"
-            />
-          </el-select>
-        </el-form-item> -->
-
-        <el-form-item :label="$t('group.note')" prop="name">
+        <el-form-item :label="$t('group.note')" prop="note">
           <el-input v-model="temp.note" />
         </el-form-item>
-
-        <!-- <el-form-item :label="$t('employee.employee_id')" prop="employee_id">
-          <el-input v-model="temp.employee_id"/>
-        </el-form-item>-->
-
-        <!-- <el-form-item :label="$t('employee.position')" prop="roles">
-          <el-select
-            v-model="temp.position"
-            :placeholder="$t('employee.position')"
-            class="filter-item"
-            style="width: 130px"
-          >
-            <el-option v-for="item in roles" :key="item.id" :value="item.id" :label="item.name"/>
-          </el-select>
-        </el-form-item>-->
       </el-form>
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">{{
-            $t("employee.cancel")
-          }}</el-button>
-          <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
-            $t("employee.confirm")
-          }}</el-button>
+          <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
+          <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">
+            {{ $t('employee.confirm') }}
+          </el-button>
         </div>
       </template>
     </el-dialog>
@@ -266,62 +258,45 @@ import {
   updateGroup,
   deleteGroup
 } from '@/api/groups'
-
-// import { fetchServerList } from '@/api/server'
-import { fetchDeviceList } from '@/api/device'
-// import permission from '@/directive/permission/index.js' // 权限判断指令
-import checkPermission from '@/utils/permission' // 权限判断函数
-// import LineChart from './components/LineChart'
-// import PanelGroup from './components/PanelGroup'
-
-import waves from '@/directive/waves' // waves directive
+import checkPermission from '@/utils/permission'
+import waves from '@/directive/waves'
 import { parseTime, ValueFilter } from '@/utils'
 import { groupTypeOptions } from '@/utils/system'
 import { ElMessage, ElMessageBox } from 'element-plus'
-// import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapState } from 'pinia'
 import { useAppStore } from '@/store/modules/app'
 
 export default {
-  name: 'ComplexTable',
-  // components: { Pagination },
+  name: 'SetupGroupsPage',
   directives: { waves },
   data() {
     return {
       tableKey: 0,
       list: [],
-
-      chartData: {},
-      devicesOptions: [],
-      // serversOptions: [],
       groupTypeOptions,
-
-      activeName: 'first',
       total: 0,
       listLoading: false,
       listQuery: {
-        callsign: ''
-
-        // sort: "+id"
+        name: ''
       },
-      showReviewer: false,
       temp: {
         id: undefined,
         name: '',
-        allow_callsign_ssid: ''
+        allow_callsign_ssid: [],
+        tagInput: '',
+        note: '',
+        type: 0,
+        status: 1,
+        master_server: '',
+        slave_server: ''
       },
-
-      //  roles: ["admin", "editer", "guest"],
+      showtable: true,
       dialogFormVisible: false,
-
-      dialogTimeLineVisible: false,
-      dialogTimeLineChartVisible: false,
       dialogStatus: '',
       textMap: {
         update: 'Edit',
         create: 'Create'
       },
-
       rules: {},
       downloadLoading: false,
       uploadLoading: false
@@ -332,44 +307,82 @@ export default {
   },
 
   created() {
-    if (this.device === 'mobile') {
-      this.showtable = false
-    } else {
-      this.showtable = true
-    }
-
-    this.fetchDeviceList({}).then(response => {
-      this.devicesOptions = Object.values(response.data.items)
-    })
+    this.showtable = this.device !== 'mobile'
+    // this.fetchDeviceList({}).then(response => {
+    //   this.devicesOptions = Object.values(response?.data?.items || {})
+    // })
 
     this.getList()
-
-    // this.fetchServerList({}).then(response => {
-    //   this.serversOptions = Object.values(response.data.items)
-    // })
   },
 
   methods: {
     checkPermission,
     fetchGroupList,
-    fetchDeviceList,
-    // fetchServerList,
     createGroup,
     updateGroup,
     deleteGroup,
     ValueFilter,
     parseTime,
+    normalizeAllowDevices(value) {
+      if (Array.isArray(value)) return value.filter(Boolean)
+      if (!value) return []
+      if (typeof value === 'string') {
+        return value
+          .split(',')
+          .map(item => item.trim())
+          .filter(Boolean)
+      }
+      return []
+    },
+    handleTagInput(e) {
+      if (['Enter', 'Comma', 'Space'].includes(e.code)) {
+        e.preventDefault()
+        const value = this.temp.tagInput.trim().replace(/[,，\s]+$/, '').toUpperCase()
+        if (!value) return
+        const parts = value.split('-')
+        if (parts.length !== 2) {
+          ElMessage.warning('格式错误，应为：呼号-数字，如 BG5ABC-1')
+          return
+        }
+        const [callsign, ssidStr] = parts
+        if (callsign.length < 4 || callsign.length > 6) {
+          ElMessage.warning('呼号长度应为4-6位')
+          return
+        }
+        if (!/\d/.test(callsign)) {
+          ElMessage.warning('呼号必须包含至少一位数字')
+          return
+        }
+        const ssid = parseInt(ssidStr, 10)
+        if (isNaN(ssid) || ssid < 1 || ssid > 255) {
+          ElMessage.warning('数字范围应为1-255')
+          return
+        }
+        if (value.length > 10) {
+          ElMessage.warning('总长度不超过10字符')
+          return
+        }
+        if (!this.temp.allow_callsign_ssid.includes(value)) {
+          this.temp.allow_callsign_ssid.push(value)
+        }
+        this.temp.tagInput = ''
+      }
+    },
+    handleRemoveTag(idx) {
+      this.temp.allow_callsign_ssid.splice(idx, 1)
+    },
     getList() {
-      this.fetchGroupList({}).then(response => {
-        this.list = Object.values(response.data.items)
-        // console.log(this.list)
+      this.listLoading = true
+      this.fetchGroupList(this.listQuery).then(response => {
+        this.list = Object.values(response?.data?.items || {})
+        this.total = this.list.length
+      }).finally(() => {
+        this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
       this.getList()
     },
-
     sortChange(data) {
       const { prop, order } = data
       if (prop === 'id') {
@@ -390,12 +403,11 @@ export default {
         name: '',
         master_server: '',
         slave_server: '',
+        allow_callsign_ssid: [],
+        tagInput: '',
+        note: '',
         type: 0,
         status: 1
-
-        // timestamp: new Date(),
-        // roles: [],
-        // password: ""
       }
     },
     handleCreate() {
@@ -403,14 +415,12 @@ export default {
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+        this.$refs.dataForm.clearValidate()
       })
     },
     createData() {
-      this.$refs['dataForm'].validate(valid => {
+      this.$refs.dataForm.validate(valid => {
         if (valid) {
-          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          //  this.temp.roles = 'vue-element-admin'
           createGroup(this.temp).then(response => {
             this.getList()
             this.dialogFormVisible = false
@@ -419,35 +429,30 @@ export default {
         }
       })
     },
-
-    callsignssidValueFilter(callsignssid, array) {
-      for (const v of array) {
-        if (v.callsignssid === callsignssid) {
-          return v.callsign + '-' + v.ssid + ' ' + v.name
-        }
-      }
-      return '未指定'
-    },
-
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      //  this.temp.timestamp = new Date(this.temp.timestamp);
+      const normalized = this.normalizeAllowDevices(row.allow_callsign_ssid)
+      this.temp = {
+        ...row,
+        allow_callsign_ssid: normalized,
+        tagInput: ''
+      }
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+        this.$refs.dataForm.clearValidate()
       })
     },
     updateData() {
-      this.$refs['dataForm'].validate(valid => {
+      this.$refs.dataForm.validate(valid => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+          const tempData = {
+            ...this.temp
+          }
           updateGroup(tempData).then(response => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
+            for (const item of this.list) {
+              if (item.id === this.temp.id) {
+                const index = this.list.indexOf(item)
+                this.list.splice(index, 1, tempData)
                 break
               }
             }
@@ -455,7 +460,7 @@ export default {
             if (response && response.code === 20000) {
               ElMessage.success('修改成功')
             } else {
-              ElMessage.warning(response?.message || '请求失败')
+              ElMessage.warning(response?.message || response?.data?.message || '请求失败')
             }
 
             this.dialogFormVisible = false
@@ -483,106 +488,379 @@ export default {
         .catch(() => {
           ElMessage.info('已取消删除')
         })
-    },
-    async handleDownload() {
-      this.downloadLoading = true
-      // console.log(this.list)
-      if (this.list === null) {
-        this.downloadLoading = false
-        return
-      }
-      const excel = await import('@/vendor/Export2Excel')
-      const tHeader = ['姓名', '电话', '性别', '出生年月日']
-      const filterVal = ['name', 'phone', 'sex']
-      const data = this.formatJson(filterVal, this.list)
-      await excel.export_json_to_excel({
-        header: tHeader,
-        data,
-        filename: 'device-list'
-      })
-      this.downloadLoading = false
-    },
-
-    handleUpload() {
-      // this.UploadLoading = true;
-      // import("@/vendor/Export2Excel").then(excel => {
-      //   const tHeader = ["姓名", "电话", "性别", "出生年月日", "意向账号", "意向等级"];
-      //   const filterVal = [
-      //     "name",
-      //     "phone",
-      //     "sex",
-      //     "intendent_course",
-      //     "intendent_level"
-      //   ];
-      //   const data = this.formatJson(filterVal, this.list);
-      //   excel.export_json_to_excel({
-      //     header: tHeader,
-      //     data,
-      //     filename: "table-list"
-      //   });
-      //   this.downloadLoading = false;
-      // });
-    },
-
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v =>
-        filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
-        })
-      )
-    },
-
-    returnIndex(id, array) {
-      for (const index in array) {
-        if (array[index].id === id) {
-          //  console.log('id:',id,index,array)
-          return index
-        }
-      }
-      // console.log("return 0")
-      return 0
-    },
-
-    hasin(id, array) {
-      //    console.log(id,array)
-      for (const i of array) {
-        if (i === id) {
-          return true
-        }
-      }
-      return false
     }
   }
 }
 </script>
 
-<style>
-.text {
-  font-size: 14px;
+<style scoped lang="scss">
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+
+  .filter-item {
+    margin-bottom: 0;
+    margin-right: 0;
+
+    &.search-input {
+      width: 320px;
+    }
+
+    &.action-btn {
+      height: 42px;
+      padding: 0 22px;
+      border-radius: 14px;
+    }
+
+    &.action-btn-secondary {
+      min-width: 124px;
+    }
+  }
+
+  :deep(.view-switch) {
+    --el-switch-on-color: linear-gradient(90deg, #26efc7 0%, #3f8dff 100%);
+    --el-switch-off-color: rgba(104, 176, 255, 0.22);
+
+    .el-switch__core {
+      border-color: rgba(104, 176, 255, 0.24);
+      background: rgba(12, 31, 58, 0.72);
+      min-width: 46px;
+      height: 24px;
+    }
+
+    &.is-checked .el-switch__core {
+      border-color: rgba(54, 240, 203, 0.34);
+      background: linear-gradient(90deg, rgba(38, 239, 199, 0.88) 0%, rgba(63, 141, 255, 0.82) 100%);
+    }
+
+    .el-switch__action {
+      width: 18px;
+      height: 18px;
+      top: 2px;
+    }
+
+    .el-switch__label,
+    .el-switch__label * {
+      color: rgba(228, 239, 255, 0.74) !important;
+    }
+
+    .el-switch__label.is-active,
+    .el-switch__label.is-active * {
+      color: #f4f8ff !important;
+    }
+  }
 }
 
-.item {
-  margin-bottom: 18px;
+.table-shell {
+  padding: 10px;
 }
 
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
+.setup-groups-page {
+  .group-name-cell {
+    color: #f4f8ff;
+    font-weight: 700;
+  }
+
+  .group-type-tag {
+    color: #bdf4ff !important;
+    border-color: rgba(104, 176, 255, 0.26) !important;
+    background: linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%) !important;
+  }
+
+  .allow-device-tag {
+    margin: 2px;
+    color: #9effea !important;
+    border-color: rgba(54, 240, 203, 0.26) !important;
+    background: linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%) !important;
+  }
+
+  .owner-callsign-tag {
+    color: #a8e8ff !important;
+    border-color: rgba(88, 184, 255, 0.24) !important;
+    background: linear-gradient(135deg, rgba(18, 55, 99, 0.36) 0%, rgba(13, 33, 60, 0.3) 100%) !important;
+  }
+
+  .table-empty-value {
+    color: rgba(228, 239, 255, 0.52);
+  }
+
+  .note-cell {
+    color: rgba(228, 239, 255, 0.72);
+    line-height: 1.5;
+    word-break: break-word;
+    padding: 0 4px;
+  }
+
+  .compact-btn {
+    min-width: 84px;
+    padding: 6px 14px;
+    margin: 0 4px !important;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(3, 9, 21, 0.2);
+    }
+  }
+
+  .group-edit-btn {
+    color: #9feaff !important;
+    border-color: rgba(88, 184, 255, 0.44) !important;
+    background: linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%) !important;
+    box-shadow: 0 0 0 1px rgba(88, 184, 255, 0.08) inset;
+  }
+
+  .group-delete-btn {
+    color: #ffb3bf !important;
+    border-color: rgba(255, 116, 145, 0.4) !important;
+    background: linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%) !important;
+    box-shadow: 0 0 0 1px rgba(255, 116, 145, 0.08) inset;
+  }
+
+  :deep(.el-table td.el-table__cell) {
+    padding: 12px 0;
+  }
+
+  :deep(.el-table th.el-table__cell) {
+    height: 56px;
+    font-weight: 700;
+  }
+
+  :deep(.el-select__tags) {
+    gap: 6px;
+  }
+
+  :deep(.el-radio-group) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
 }
 
-.clearfix:after {
-  clear: both;
+.setup-groups-form {
+  width: min(100%, 560px);
+  margin: 0 auto;
 }
 
-.box-card {
-  width: 340px;
-  float: left;
-  margin-right: 10px;
-  margin-bottom: 10px;
+.tag-input-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid rgba(104, 176, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(12, 31, 58, 0.6);
+  min-height: 42px;
+
+  &:focus-within {
+    border-color: rgba(54, 240, 203, 0.5);
+  }
+}
+
+.tag-input-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.tag-input-field {
+  flex: 1;
+  min-width: 180px;
+
+  :deep(.el-input__wrapper) {
+    box-shadow: none !important;
+    background: transparent;
+    padding: 4px 0;
+  }
+
+  :deep(.el-input__inner) {
+    background: transparent;
+    color: #f4f8ff;
+
+    &::placeholder {
+      color: rgba(228, 239, 255, 0.4);
+    }
+  }
+}
+
+.groups-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+  padding: 10px;
+}
+
+.groups-card {
+  border-radius: 24px;
+  border: 1px solid rgba(104, 176, 255, 0.12);
+  background: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.groups-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.groups-card__headline {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.35;
+    color: #f4f8ff;
+    word-break: break-word;
+  }
+}
+
+.group-id-tag {
+  color: #9cccff !important;
+  border-color: rgba(88, 184, 255, 0.34) !important;
+  background: rgba(20, 48, 84, 0.72) !important;
+}
+
+.groups-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.groups-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(12, 31, 58, 0.42);
+  border: 1px solid rgba(104, 176, 255, 0.12);
+}
+
+.groups-card__row--stack {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.groups-card__label {
+  color: rgba(228, 239, 255, 0.54);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.groups-card__value,
+.groups-card__note {
+  color: #f4f8ff;
+  line-height: 1.55;
+  text-align: right;
+  word-break: break-word;
+}
+
+.groups-card__tags {
+  width: 100%;
+}
+
+.groups-card__note {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  color: rgba(228, 239, 255, 0.78);
+}
+
+.groups-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+@media (max-width: 768px) {
+  .filter-container {
+    .filter-item {
+      &.search-input,
+      &.action-btn,
+      &.action-btn-secondary {
+        width: 100%;
+      }
+    }
+  }
+
+  .setup-groups-page {
+    .compact-btn {
+      min-width: 72px;
+      margin: 4px !important;
+    }
+  }
+
+  .groups-card-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 6px 0 0;
+  }
+
+  .groups-card {
+    padding: 14px;
+    border-radius: 18px;
+    gap: 14px;
+  }
+
+  .groups-card__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .groups-card__headline {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .groups-card__headline h3 {
+    font-size: 17px;
+  }
+
+  .groups-card__meta {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .groups-card__row {
+    grid-template-columns: 80px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .groups-card__row--stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .groups-card__actions {
+    justify-content: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .groups-card__actions .compact-btn {
+    width: 100%;
+    margin: 0 !important;
+  }
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-  <el-card>
+  <el-card class="platform-theme-card profile-user-card">
     <template #header>
-      <div class="clearfix">
-        <span>自我介绍</span>
+      <div class="card-header">
+        <span>个人信息</span>
       </div>
     </template>
 
@@ -55,61 +55,58 @@ export default {
 </script>
 
 <style lang="scss" scoped>
- .box-center {
-   margin: 0 auto;
-   display: table;
- }
+.profile-user-card {
+  --el-card-bg-color: #0d1f39;
+  background: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%) !important;
+  background-color: #0d1f39 !important;
+  background-image: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%) !important;
+  border: 1px solid rgba(104, 176, 255, 0.14) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22) !important;
 
- .text-muted {
-   color: #777;
- }
+  :deep(.el-card__header) {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(104, 176, 255, 0.12);
+  }
 
- .user-profile {
-   .user-name {
-     font-weight: bold;
-   }
+  :deep(.el-card__body) {
+    background: transparent !important;
+    padding: 28px 24px;
+  }
+}
 
-   .box-center {
-     padding-top: 10px;
-   }
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f4f8ff;
+  font-weight: 700;
+}
 
-   .user-role {
-     padding-top: 10px;
-     font-weight: 400;
-     font-size: 14px;
-   }
+.box-center {
+  margin: 0 auto;
+  display: table;
+}
 
-   .box-social {
-     padding-top: 30px;
+.text-muted {
+  color: rgba(228, 239, 255, 0.58);
+}
 
-     .el-table {
-       border-top: 1px solid #dfe6ec;
-     }
-   }
+.user-profile {
+  .user-name {
+    color: #f4f8ff;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
 
-   .user-follow {
-     padding-top: 20px;
-   }
- }
+  .box-center {
+    padding-top: 12px;
+  }
 
- .user-bio {
-   margin-top: 20px;
-   color: #606266;
-
-   span {
-     padding-left: 4px;
-   }
-
-   .user-bio-section {
-     font-size: 14px;
-     padding: 15px 0;
-
-     .user-bio-section-header {
-       border-bottom: 1px solid #dfe6ec;
-       padding-bottom: 10px;
-       margin-bottom: 10px;
-       font-weight: bold;
-     }
-   }
- }
+  .user-role {
+    padding-top: 10px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+}
 </style>

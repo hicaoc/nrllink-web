@@ -130,6 +130,8 @@ export default {
     active: 'Actions',
     at: 'AT Command',
     owner: 'Owner',
+    createTime: 'Created Time',
+    updateTime: 'Updated Time',
     totalVoiceTime: 'Total Call Duration',
     totalTraffic: 'Total Traffic',
     lastVoiceDuration: 'Last Call Duration',
@@ -226,7 +228,9 @@ export default {
     up_freq: 'Uplink Frequency',
     down_freq: 'Downlink Frequency',
     ower_callsign: 'Creator',
-    note: 'Note'
+    note: 'Note',
+    enabled: 'Enabled',
+    disabled: 'Disabled'
 
   },
   navbar: {
@@ -273,6 +277,24 @@ export default {
     showAllPanels: 'Show All Panels',
     switchToChinese: 'Switch to Chinese',
     switchToEnglish: 'Switch to English'
+  },
+  dashboardHome: {
+    heroBadge: 'Control Center',
+    heroDesc: 'A unified post-login view for platform health, live calls and key operational metrics',
+    summaryEyebrow: 'Overview',
+    summaryTitle: 'Core Platform Metrics',
+    totalDevices: 'Total Devices',
+    deviceOverview: 'Device Overview',
+    deviceOverviewDesc: '{online} online now, {total} local devices in total',
+    voiceDuration: 'Voice Duration',
+    voiceDurationDesc: 'Cumulative talk time from platform statistics',
+    traffic: 'Traffic Volume',
+    trafficDesc: '{packets} packets processed in total',
+    liveAccess: 'Live Access',
+    liveAccessDesc: '{subs} active audio subscriptions right now',
+    platformName: 'Platform Name',
+    platformIcp: 'ICP Filing',
+    platformLanguage: 'Current Language'
   },
   documentation: {
     documentation: 'Nanjing Xinfeng Network Technology Co., Ltd.'
