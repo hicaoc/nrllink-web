@@ -24,12 +24,6 @@
             g.name + "-" + ValueFilter(g.type, groupTypeOptions) + " "
           }}</span>
 
-          <el-button
-            v-if="checkPermission(['admin'])"
-            class="group-edit-btn"
-            text
-            @click="handleUpdate(g)"
-          >{{ $t("device.edit") }}</el-button>
         </div>
         <div class="card-content">
           <div class="group-action-grid">
@@ -53,73 +47,6 @@
         </div>
       </el-card>
     </div>
-
-    <el-dialog
-      v-model="dialogFormVisible"
-      :width="isNarrowDialogScreen ? '100%' : '70%'"
-      :title="textMap[dialogStatus]"
-      :center="isNarrowDialogScreen"
-      :fullscreen="isNarrowDialogScreen"
-      class="platform-theme-dialog"
-    >
-      <el-form
-        ref="dataForm"
-        :rules="rules"
-        :model="temp"
-        label-position="right"
-        label-width="120px"
-        style="width: 95%; margin-left: 5px"
-      >
-        <el-form-item :label="$t('group.name')" prop="name">
-          <el-input v-model="temp.name" style="width: 80%;" />
-        </el-form-item>
-
-        <el-form-item prop="sex" for="">
-          <template #label>
-            <span id="pub-group-type-label">{{ $t('group.type') }}</span>
-          </template>
-          <el-radio-group v-model="temp.type" aria-labelledby="pub-group-type-label">
-            <el-radio v-for="item in groupTypeOptions" :key="item.id" :value="item.id">{{ item.name }}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item
-          v-if="checkPermission(['admin'])"
-          :label="$t('group.allow_callsign_ssid')"
-          prop="allow_callsign_ssid"
-        >
-          <el-select
-            v-model="temp.allow_callsign_ssid"
-            filterable
-            multiple
-            allow-create
-            popper-class="platform-theme-select-dropdown"
-            placeholder="请输入设备ID,格式：BX1XXX-1"
-            style="width: 320px"
-            class="filter-item"
-          >
-
-            <el-option
-              v-for="item in devicesOptions"
-              :key="item.id"
-              :label="item.callsign + '-' + item.ssid + ' ' + item.name"
-              :value="item.callsign + '-' + item.ssid"
-            />
-          </el-select>
-        </el-form-item>
-
-      </el-form>
-
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">{{
-            $t("employee.cancel")
-          }}</el-button>
-          <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
-            $t("employee.confirm") }}</el-button>
-        </div>
-      </template>
-    </el-dialog>
 
     <el-dialog
       v-model="joinDevicesDialogVisible"
@@ -193,21 +120,15 @@
 import {
   fetchGroupList,
   fetchGroupDevicesList,
-  fetchGroupListMini,
-  createGroup,
-  updateGroup,
-  deleteGroup
+  fetchGroupListMini
 } from '@/api/groups'
-import { fetchMyDeviceList, fetchDeviceList, updateDevice } from '@/api/device'
+import { fetchMyDeviceList, updateDevice } from '@/api/device'
 // import { fetchServerList } from '@/api/server'
-
-// import permission from '@/directive/permission/index.js' // 权限判断指令
-import checkPermission from '@/utils/permission' // 权限判断函数
 
 import waves from '@/directive/waves' // waves directive
 import { parseTime, ValueFilter } from '@/utils'
 import { groupTypeOptions } from '@/utils/system'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapState } from 'pinia'
 import { useAppStore } from '@/store/modules/app'
@@ -222,7 +143,6 @@ export default {
       name: '',
       groupTypeOptions,
       mydevicesOptions: [],
-      devicesOptions: [],
       groupodevlist: null,
       activeNames: [],
 
@@ -237,15 +157,10 @@ export default {
         // sort: "+id"
       },
       showReviewer: false,
-      temp: {
-        id: undefined,
-        name: ''
-      },
       rooms: [
 
       ],
 
-      dialogFormVisible: false,
       joinDevicesDialogVisible: false,
       joinDevicesList: [],
       joinDevicesDialogTitle: '我要加入',
@@ -259,13 +174,6 @@ export default {
 
       dialogTimeLineVisible: false,
       dialogTimeLineChartVisible: false,
-      dialogStatus: '',
-      textMap: {
-        update: 'Edit',
-        create: 'Create'
-      },
-
-      rules: {},
       downloadLoading: false,
       uploadLoading: false
     }
@@ -296,16 +204,11 @@ export default {
   },
 
   methods: {
-    checkPermission,
     fetchMyDeviceList,
-    fetchDeviceList,
     updateDevice,
     fetchGroupList,
     fetchGroupListMini,
     fetchGroupDevicesList,
-    createGroup,
-    updateGroup,
-    deleteGroup,
     ValueFilter,
     syncDialogScreenMode() {
       if (typeof window === 'undefined') {
@@ -365,87 +268,8 @@ export default {
       updateDevice(tempData).then(response => {
         this.getList()
         this.joinDevicesDialogVisible = false
-        this.dialogFormVisible = false
         ElMessage.success(response?.data?.message || '操作成功')
       })
-    },
-    createData() {
-      this.$refs['dataForm'].validate(valid => {
-        if (valid) {
-          // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          //  this.temp.roles = 'vue-element-admin'
-          createGroup(this.temp).then(response => {
-            this.getList()
-            this.dialogFormVisible = false
-            ElMessage.success(response?.message || '创建成功')
-          })
-        }
-      })
-    },
-
-    dmridValueFilter(dmrid, array) {
-      for (const v of array) {
-        if (v.dmrid === dmrid) {
-          return v.callsign + '-' + v.ssid + ' ' + v.name
-        }
-      }
-      return '未指定'
-    },
-
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      //  this.temp.timestamp = new Date(this.temp.timestamp);
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    updateData() {
-      this.$refs['dataForm'].validate(valid => {
-        if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateGroup(tempData).then(response => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
-                break
-              }
-            }
-
-            if (response && response.code === 20000) {
-              ElMessage.success('修改成功')
-            } else {
-              ElMessage.warning(response?.message || '请求失败')
-            }
-
-            this.dialogFormVisible = false
-          })
-        }
-      })
-    },
-    handleDelete(row) {
-      ElMessageBox.confirm('此操作将永久删除该群组, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          deleteGroup(row).then(response => {
-            const message = response?.data?.message || '操作完成'
-            ElMessage.success(message)
-            this.listLoading = false
-          })
-          const index = this.list.indexOf(row)
-          this.list.splice(index, 1)
-
-          ElMessage.success('删除成功!')
-        })
-        .catch(() => {
-          ElMessage.info('已取消删除')
-        })
     },
     sortChange(data) {
       const { prop, order } = data
@@ -461,20 +285,6 @@ export default {
       }
       this.handleFilter()
     },
-    resetTemp() {
-      this.temp = {
-        id: undefined,
-        name: '',
-        name_pref: '',
-        type: 0,
-        status: 1
-
-        // timestamp: new Date(),
-        // roles: [],
-        // password: ""
-      }
-    },
-
     async handleDownload() {
       this.downloadLoading = true
       // console.log(this.list)
@@ -655,15 +465,6 @@ export default {
     color: var(--platform-ink);
     font-size: 15px;
     line-height: 1.4;
-  }
-
-  .group-edit-btn {
-    color: var(--platform-accent-2) !important;
-    border: 1px solid var(--platform-accent-16) !important;
-    background: var(--platform-surface-68) !important;
-    border-radius: 999px;
-    padding: 8px 14px !important;
-    margin-left: auto;
   }
 
   .card-content {
