@@ -537,12 +537,12 @@ export default {
 
     .el-switch__label,
     .el-switch__label * {
-      color: rgba(228, 239, 255, 0.74) !important;
+      color: var(--platform-ink-dim) !important;
     }
 
     .el-switch__label.is-active,
     .el-switch__label.is-active * {
-      color: #f4f8ff !important;
+      color: var(--platform-ink) !important;
     }
   }
 }
@@ -553,35 +553,35 @@ export default {
 
 .setup-groups-page {
   .group-name-cell {
-    color: #f4f8ff;
+    color: var(--platform-ink);
     font-weight: 700;
   }
 
   .group-type-tag {
-    color: #bdf4ff !important;
-    border-color: rgba(104, 176, 255, 0.26) !important;
-    background: linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%) !important;
+    color: var(--platform-chip-text, #bdf4ff) !important;
+    border-color: var(--platform-chip-border, rgba(104, 176, 255, 0.26)) !important;
+    background: var(--platform-chip-bg, linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)) !important;
   }
 
   .allow-device-tag {
     margin: 2px;
-    color: #9effea !important;
-    border-color: rgba(54, 240, 203, 0.26) !important;
-    background: linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%) !important;
+    color: var(--action-at-text, #9effea) !important;
+    border-color: var(--action-at-border, rgba(54, 240, 203, 0.26)) !important;
+    background: var(--action-at-bg, linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)) !important;
   }
 
   .owner-callsign-tag {
-    color: #a8e8ff !important;
-    border-color: rgba(88, 184, 255, 0.24) !important;
-    background: linear-gradient(135deg, rgba(18, 55, 99, 0.36) 0%, rgba(13, 33, 60, 0.3) 100%) !important;
+    color: var(--platform-id-text, #a8e8ff) !important;
+    border-color: var(--platform-id-border, rgba(88, 184, 255, 0.24)) !important;
+    background: var(--platform-id-bg, linear-gradient(135deg, rgba(18, 55, 99, 0.36) 0%, rgba(13, 33, 60, 0.3) 100%)) !important;
   }
 
   .table-empty-value {
-    color: rgba(228, 239, 255, 0.52);
+    color: var(--platform-empty-text, rgba(228, 239, 255, 0.52));
   }
 
   .note-cell {
-    color: rgba(228, 239, 255, 0.72);
+    color: var(--platform-note-text, rgba(228, 239, 255, 0.72));
     line-height: 1.5;
     word-break: break-word;
     padding: 0 4px;
@@ -602,17 +602,17 @@ export default {
   }
 
   .group-edit-btn {
-    color: #9feaff !important;
-    border-color: rgba(88, 184, 255, 0.44) !important;
-    background: linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%) !important;
-    box-shadow: 0 0 0 1px rgba(88, 184, 255, 0.08) inset;
+    color: var(--action-edit-text, #9feaff) !important;
+    border-color: var(--action-edit-border, rgba(88, 184, 255, 0.44)) !important;
+    background: var(--action-edit-bg, linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)) !important;
+    box-shadow: 0 0 0 1px var(--action-edit-shadow, rgba(88, 184, 255, 0.08)) inset;
   }
 
   .group-delete-btn {
-    color: #ffb3bf !important;
-    border-color: rgba(255, 116, 145, 0.4) !important;
-    background: linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%) !important;
-    box-shadow: 0 0 0 1px rgba(255, 116, 145, 0.08) inset;
+    color: var(--action-delete-text, #ffb3bf) !important;
+    border-color: var(--action-delete-border, rgba(255, 116, 145, 0.4)) !important;
+    background: var(--action-delete-bg, linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)) !important;
+    box-shadow: 0 0 0 1px var(--action-delete-shadow, rgba(255, 116, 145, 0.08)) inset;
   }
 
   :deep(.el-table td.el-table__cell) {

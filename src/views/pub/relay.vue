@@ -694,12 +694,12 @@ export default {
 
     .el-switch__label,
     .el-switch__label * {
-      color: rgba(228, 239, 255, 0.74) !important;
+      color: var(--platform-ink-dim) !important;
     }
 
     .el-switch__label.is-active,
     .el-switch__label.is-active * {
-      color: #f4f8ff !important;
+      color: var(--platform-ink) !important;
     }
   }
 }
@@ -711,7 +711,7 @@ export default {
 .relay-page {
   .relay-name-cell {
     font-weight: 600;
-    color: #f2f7ff;
+    color: var(--platform-ink);
   }
 
   .freq-pill {
@@ -721,22 +721,22 @@ export default {
     min-width: 92px;
     padding: 7px 12px;
     border-radius: 999px;
-    border: 1px solid rgba(88, 184, 255, 0.22);
-    background: rgba(12, 31, 58, 0.72);
-    color: rgba(228, 239, 255, 0.88);
+    border: 1px solid var(--platform-chip-border, rgba(88, 184, 255, 0.22));
+    background: var(--platform-chip-bg, rgba(12, 31, 58, 0.72));
+    color: var(--platform-chip-text, rgba(228, 239, 255, 0.88));
     box-shadow: 0 0 0 1px rgba(88, 184, 255, 0.06) inset;
   }
 
   .tone-tag {
-    color: #c3f0ff !important;
-    border-color: rgba(104, 176, 255, 0.24) !important;
-    background: linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%) !important;
+    color: var(--platform-chip-text, #c3f0ff) !important;
+    border-color: var(--platform-chip-border, rgba(104, 176, 255, 0.24)) !important;
+    background: var(--platform-chip-bg, linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)) !important;
   }
 
   .owner-tag {
-    color: #9effea !important;
-    border-color: rgba(54, 240, 203, 0.28) !important;
-    background: linear-gradient(135deg, rgba(14, 77, 78, 0.32) 0%, rgba(12, 42, 67, 0.28) 100%) !important;
+    color: var(--action-at-text, #9effea) !important;
+    border-color: var(--action-at-border, rgba(54, 240, 203, 0.28)) !important;
+    background: var(--action-at-bg, linear-gradient(135deg, rgba(14, 77, 78, 0.32) 0%, rgba(12, 42, 67, 0.28) 100%)) !important;
     box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.08) inset;
   }
 
@@ -747,27 +747,27 @@ export default {
   }
 
   .status-online {
-    color: #9effea !important;
-    border-color: rgba(54, 240, 203, 0.34) !important;
-    background: linear-gradient(135deg, rgba(17, 89, 80, 0.42) 0%, rgba(12, 48, 71, 0.32) 100%) !important;
+    color: var(--action-at-text, #9effea) !important;
+    border-color: var(--action-at-border, rgba(54, 240, 203, 0.34)) !important;
+    background: var(--action-at-bg, linear-gradient(135deg, rgba(17, 89, 80, 0.42) 0%, rgba(12, 48, 71, 0.32) 100%)) !important;
     box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.08) inset;
   }
 
   .status-offline {
-    color: #ffb7c8 !important;
-    border-color: rgba(255, 116, 145, 0.32) !important;
-    background: linear-gradient(135deg, rgba(89, 28, 45, 0.34) 0%, rgba(57, 20, 35, 0.26) 100%) !important;
+    color: var(--action-delete-text, #ffb7c8) !important;
+    border-color: var(--action-delete-border, rgba(255, 116, 145, 0.32)) !important;
+    background: var(--action-delete-bg, linear-gradient(135deg, rgba(89, 28, 45, 0.34) 0%, rgba(57, 20, 35, 0.26) 100%)) !important;
     box-shadow: 0 0 0 1px rgba(255, 116, 145, 0.08) inset;
   }
 
   .status-neutral {
-    color: rgba(228, 239, 255, 0.82) !important;
-    border-color: rgba(104, 176, 255, 0.2) !important;
-    background: rgba(12, 31, 58, 0.72) !important;
+    color: var(--platform-chip-text, rgba(228, 239, 255, 0.82)) !important;
+    border-color: var(--platform-chip-border, rgba(104, 176, 255, 0.2)) !important;
+    background: var(--platform-chip-bg, rgba(12, 31, 58, 0.72)) !important;
   }
 
   .note-cell {
-    color: rgba(228, 239, 255, 0.72);
+    color: var(--platform-note-text, rgba(228, 239, 255, 0.72));
     line-height: 1.5;
     word-break: break-word;
     padding: 0 4px;
@@ -792,17 +792,17 @@ export default {
   }
 
   .relay-edit-btn {
-    color: #9feaff !important;
-    border-color: rgba(88, 184, 255, 0.44) !important;
-    background: linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%) !important;
-    box-shadow: 0 0 0 1px rgba(88, 184, 255, 0.08) inset;
+    color: var(--action-edit-text, #9feaff) !important;
+    border-color: var(--action-edit-border, rgba(88, 184, 255, 0.44)) !important;
+    background: var(--action-edit-bg, linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)) !important;
+    box-shadow: 0 0 0 1px var(--action-edit-shadow, rgba(88, 184, 255, 0.08)) inset;
   }
 
   .relay-delete-btn {
-    color: #ffb3bf !important;
-    border-color: rgba(255, 116, 145, 0.4) !important;
-    background: linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%) !important;
-    box-shadow: 0 0 0 1px rgba(255, 116, 145, 0.08) inset;
+    color: var(--action-delete-text, #ffb3bf) !important;
+    border-color: var(--action-delete-border, rgba(255, 116, 145, 0.4)) !important;
+    background: var(--action-delete-bg, linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)) !important;
+    box-shadow: 0 0 0 1px var(--action-delete-shadow, rgba(255, 116, 145, 0.08)) inset;
   }
 
   :deep(.el-table td.el-table__cell) {
@@ -837,9 +837,9 @@ export default {
 
 .relay-card {
   border-radius: 24px;
-  border: 1px solid rgba(104, 176, 255, 0.12);
-  background: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--platform-border-light);
+  background: var(--platform-shell);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -863,15 +863,15 @@ export default {
     margin: 0;
     font-size: 18px;
     line-height: 1.35;
-    color: #f4f8ff;
+    color: var(--platform-ink);
     word-break: break-word;
   }
 }
 
 .relay-id-tag {
-  color: #9cccff !important;
-  border-color: rgba(88, 184, 255, 0.34) !important;
-  background: rgba(20, 48, 84, 0.72) !important;
+  color: var(--platform-id-text, #9cccff) !important;
+  border-color: var(--platform-id-border, rgba(88, 184, 255, 0.34)) !important;
+  background: var(--platform-id-bg, rgba(20, 48, 84, 0.72)) !important;
 }
 
 .relay-card__meta {
@@ -883,14 +883,14 @@ export default {
 .relay-meta-pill {
   padding: 12px 14px;
   border-radius: 16px;
-  border: 1px solid rgba(104, 176, 255, 0.14);
-  background: rgba(12, 31, 58, 0.48);
+  border: 1px solid var(--platform-border-light);
+  background: var(--platform-surface-light);
   display: flex;
   flex-direction: column;
   gap: 6px;
 
   strong {
-    color: #f4f8ff;
+    color: var(--platform-ink);
     font-size: 16px;
     font-weight: 700;
   }
@@ -898,7 +898,7 @@ export default {
 
 .relay-meta-label,
 .relay-card__label {
-  color: rgba(228, 239, 255, 0.54);
+  color: var(--platform-note-text, rgba(228, 239, 255, 0.54));
   font-size: 12px;
   letter-spacing: 0.02em;
 }
@@ -916,8 +916,8 @@ export default {
   gap: 12px;
   padding: 12px 14px;
   border-radius: 16px;
-  background: rgba(12, 31, 58, 0.42);
-  border: 1px solid rgba(104, 176, 255, 0.12);
+  background: var(--platform-surface-xlight);
+  border: 1px solid var(--platform-border-light);
 }
 
 .relay-card__row--stack {
@@ -927,7 +927,7 @@ export default {
 
 .relay-card__value,
 .relay-card__note {
-  color: #f4f8ff;
+  color: var(--platform-ink);
   line-height: 1.55;
   text-align: right;
   word-break: break-word;
@@ -937,7 +937,7 @@ export default {
   width: 100%;
   margin: 0;
   text-align: left;
-  color: rgba(228, 239, 255, 0.78);
+  color: var(--platform-note-text, rgba(228, 239, 255, 0.78));
 }
 
 .relay-card__actions {

@@ -271,7 +271,7 @@ export default {
 
       &.active {
         background: linear-gradient(135deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%);
-        color: var(--platform-ink);
+        color: var(--platform-on-accent, #ffffff);
         border-color: var(--platform-border-strong);
         box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
 

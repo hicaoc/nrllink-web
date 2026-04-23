@@ -74,18 +74,18 @@ export default {
   margin-left: 8px;
 
   .no-redirect {
-    color: rgba(228, 239, 255, 0.76);
+    color: var(--platform-ink-dim);
     cursor: text;
   }
 
   :deep(.el-breadcrumb__inner),
   :deep(.el-breadcrumb__separator) {
-    color: rgba(228, 239, 255, 0.58);
+    color: var(--platform-note-text, var(--platform-ink-dim));
   }
 
   :deep(a),
   :deep(a:hover) {
-    color: rgba(228, 239, 255, 0.76);
+    color: var(--platform-ink-dim);
   }
 }
 </style>

@@ -296,18 +296,74 @@ body, html {
 }
 
 .platform-theme-page .el-button--primary.is-plain,
+.platform-theme-dialog .el-button--primary.is-plain {
+  background: var(--action-edit-bg, var(--platform-surface-68)) !important;
+  border-color: var(--action-edit-border, var(--platform-border)) !important;
+  color: var(--action-edit-text, var(--platform-ink)) !important;
+}
+
+.platform-theme-page .el-button--primary.is-plain:hover,
+.platform-theme-page .el-button--primary.is-plain:focus,
+.platform-theme-dialog .el-button--primary.is-plain:hover,
+.platform-theme-dialog .el-button--primary.is-plain:focus {
+  background: var(--action-edit-hover-bg, var(--platform-surface-soft)) !important;
+  border-color: var(--action-edit-hover-border, var(--platform-border-strong)) !important;
+  color: var(--action-edit-hover-text, var(--platform-ink)) !important;
+}
+
 .platform-theme-page .el-button--warning.is-plain,
+.platform-theme-dialog .el-button--warning.is-plain {
+  background: var(--action-change-bg, var(--platform-surface-68)) !important;
+  border-color: var(--action-change-border, var(--platform-border)) !important;
+  color: var(--action-change-text, var(--platform-ink)) !important;
+}
+
+.platform-theme-page .el-button--warning.is-plain:hover,
+.platform-theme-page .el-button--warning.is-plain:focus,
+.platform-theme-dialog .el-button--warning.is-plain:hover,
+.platform-theme-dialog .el-button--warning.is-plain:focus {
+  background: var(--action-change-hover-bg, var(--platform-surface-soft)) !important;
+  border-color: var(--action-change-hover-border, var(--platform-border-strong)) !important;
+  color: var(--action-change-hover-text, var(--platform-ink)) !important;
+}
+
 .platform-theme-page .el-button--success.is-plain,
+.platform-theme-dialog .el-button--success.is-plain {
+  background: var(--action-at-bg, var(--platform-surface-68)) !important;
+  border-color: var(--action-at-border, var(--platform-border)) !important;
+  color: var(--action-at-text, var(--platform-ink)) !important;
+}
+
+.platform-theme-page .el-button--success.is-plain:hover,
+.platform-theme-page .el-button--success.is-plain:focus,
+.platform-theme-dialog .el-button--success.is-plain:hover,
+.platform-theme-dialog .el-button--success.is-plain:focus {
+  background: var(--action-at-hover-bg, var(--platform-surface-soft)) !important;
+  border-color: var(--action-at-hover-border, var(--platform-border-strong)) !important;
+  color: var(--action-at-hover-text, var(--platform-ink)) !important;
+}
+
 .platform-theme-page .el-button--danger.is-plain,
+.platform-theme-dialog .el-button--danger.is-plain {
+  background: var(--action-delete-bg, var(--platform-surface-68)) !important;
+  border-color: var(--action-delete-border, var(--platform-border)) !important;
+  color: var(--action-delete-text, var(--platform-ink)) !important;
+}
+
+.platform-theme-page .el-button--danger.is-plain:hover,
+.platform-theme-page .el-button--danger.is-plain:focus,
+.platform-theme-dialog .el-button--danger.is-plain:hover,
+.platform-theme-dialog .el-button--danger.is-plain:focus {
+  background: var(--action-delete-hover-bg, var(--platform-surface-soft)) !important;
+  border-color: var(--action-delete-hover-border, var(--platform-border-strong)) !important;
+  color: var(--action-delete-hover-text, var(--platform-ink)) !important;
+}
+
 .platform-theme-page .el-button--info.is-plain,
-.platform-theme-dialog .el-button--primary.is-plain,
-.platform-theme-dialog .el-button--warning.is-plain,
-.platform-theme-dialog .el-button--success.is-plain,
-.platform-theme-dialog .el-button--danger.is-plain,
 .platform-theme-dialog .el-button--info.is-plain {
-  background: var(--platform-surface-68);
-  border-color: var(--platform-border);
-  color: var(--platform-ink);
+  background: var(--platform-surface-68) !important;
+  border-color: var(--platform-border) !important;
+  color: var(--platform-ink) !important;
 }
 
 .platform-theme-page .el-tag,

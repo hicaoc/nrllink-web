@@ -241,12 +241,12 @@ export default {
 
 .operatorlog-page {
   .mono-cell {
-    color: rgba(228, 239, 255, 0.84);
+    color: var(--platform-ink-dim);
     font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   }
 
   .content-cell {
-    color: rgba(228, 239, 255, 0.78);
+    color: var(--platform-note-text, rgba(228, 239, 255, 0.78));
     line-height: 1.6;
     word-break: break-word;
     padding: 0 8px;
@@ -254,15 +254,15 @@ export default {
   }
 
   .event-type-tag {
-    color: #bdf4ff !important;
-    border-color: rgba(104, 176, 255, 0.26) !important;
-    background: linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%) !important;
+    color: var(--platform-chip-text, #bdf4ff) !important;
+    border-color: var(--platform-chip-border, rgba(104, 176, 255, 0.26)) !important;
+    background: var(--platform-chip-bg, linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)) !important;
   }
 
   .operator-tag {
-    color: #9effea !important;
-    border-color: rgba(54, 240, 203, 0.26) !important;
-    background: linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%) !important;
+    color: var(--action-at-text, #9effea) !important;
+    border-color: var(--action-at-border, rgba(54, 240, 203, 0.26)) !important;
+    background: var(--action-at-bg, linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)) !important;
   }
 
   :deep(.el-table td.el-table__cell) {
@@ -284,9 +284,9 @@ export default {
 
 .log-card {
   border-radius: 24px;
-  border: 1px solid rgba(104, 176, 255, 0.12);
-  background: linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--platform-border-light);
+  background: var(--platform-shell);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -295,8 +295,8 @@ export default {
 
   &:hover {
     transform: translateY(-2px);
-    border-color: rgba(54, 240, 203, 0.24);
-    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
+    border-color: var(--platform-border-strong);
+    box-shadow: 0 20px 48px var(--platform-accent-12);
   }
 }
 
@@ -314,13 +314,13 @@ export default {
 }
 
 .log-card__timestamp {
-  color: rgba(228, 239, 255, 0.54);
+  color: var(--platform-note-text, rgba(228, 239, 255, 0.54));
   font-size: 12px;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
 .log-card__content {
-  color: rgba(228, 239, 255, 0.84);
+  color: var(--platform-ink-dim);
   line-height: 1.6;
   word-break: break-word;
   margin: 0;

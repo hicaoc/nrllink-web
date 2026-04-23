@@ -1,5 +1,9 @@
 import { themes } from '@/styles/themes'
 
+const platformThemeVarKeys = Array.from(new Set(
+  Object.values(themes).flatMap(theme => Object.keys(theme.vars || {}))
+))
+
 function toHex(value) {
   const hex = value.toString(16)
   return hex.length === 1 ? `0${hex}` : hex
@@ -50,6 +54,9 @@ export function setPlatformTheme(themeKey) {
   if (!theme) return
 
   const root = document.documentElement
+  platformThemeVarKeys.forEach((key) => {
+    root.style.removeProperty(key)
+  })
   Object.entries(theme.vars).forEach(([key, value]) => {
     root.style.setProperty(key, value)
   })

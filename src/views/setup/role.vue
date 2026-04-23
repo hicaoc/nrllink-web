@@ -327,8 +327,8 @@ export default {
     .el-switch__core { border-color: rgba(104, 176, 255, 0.24); background: rgba(12, 31, 58, 0.72); min-width: 46px; height: 24px; }
     &.is-checked .el-switch__core { border-color: rgba(54, 240, 203, 0.34); background: linear-gradient(90deg, rgba(38, 239, 199, 0.88) 0%, rgba(63, 141, 255, 0.82) 100%); }
     .el-switch__action { width: 18px; height: 18px; top: 2px; }
-    .el-switch__label, .el-switch__label * { color: rgba(228, 239, 255, 0.74) !important; }
-    .el-switch__label.is-active, .el-switch__label.is-active * { color: #f4f8ff !important; }
+    .el-switch__label, .el-switch__label * { color: var(--platform-ink-dim) !important; }
+    .el-switch__label.is-active, .el-switch__label.is-active * { color: var(--platform-ink) !important; }
   }
 }
 
@@ -342,18 +342,18 @@ export default {
   }
 
   .role-key-tag {
-    color: #9effea !important;
-    border-color: rgba(54, 240, 203, 0.28) !important;
-    background: linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%) !important;
+    color: var(--action-at-text, #9effea) !important;
+    border-color: var(--action-at-border, rgba(54, 240, 203, 0.28)) !important;
+    background: var(--action-at-bg, linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)) !important;
   }
 
   .role-name-cell {
-    color: #f4f8ff;
+    color: var(--platform-ink);
     font-weight: 700;
   }
 
   .role-description-cell {
-    color: rgba(228, 239, 255, 0.74);
+    color: var(--platform-note-text, rgba(228, 239, 255, 0.74));
     line-height: 1.6;
     word-break: break-word;
     padding: 0 4px;
@@ -374,17 +374,17 @@ export default {
   }
 
   .role-edit-btn {
-    color: #9feaff !important;
-    border-color: rgba(88, 184, 255, 0.44) !important;
-    background: linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%) !important;
-    box-shadow: 0 0 0 1px rgba(88, 184, 255, 0.08) inset;
+    color: var(--action-edit-text, #9feaff) !important;
+    border-color: var(--action-edit-border, rgba(88, 184, 255, 0.44)) !important;
+    background: var(--action-edit-bg, linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)) !important;
+    box-shadow: 0 0 0 1px var(--action-edit-shadow, rgba(88, 184, 255, 0.08)) inset;
   }
 
   .role-delete-btn {
-    color: #ffb3bf !important;
-    border-color: rgba(255, 116, 145, 0.4) !important;
-    background: linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%) !important;
-    box-shadow: 0 0 0 1px rgba(255, 116, 145, 0.08) inset;
+    color: var(--action-delete-text, #ffb3bf) !important;
+    border-color: var(--action-delete-border, rgba(255, 116, 145, 0.4)) !important;
+    background: var(--action-delete-bg, linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)) !important;
+    box-shadow: 0 0 0 1px var(--action-delete-shadow, rgba(255, 116, 145, 0.08)) inset;
   }
 
   :deep(.el-table td.el-table__cell) {
@@ -403,13 +403,13 @@ export default {
 }
 
 .role-card-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:18px; padding:10px; }
-.role-card { border-radius:24px; border:1px solid rgba(104,176,255,.12); background:linear-gradient(145deg, rgba(10,23,41,.82) 0%, rgba(12,29,50,.72) 100%); box-shadow:0 18px 44px rgba(0,0,0,.22); padding:18px; display:flex; flex-direction:column; gap:16px; }
+.role-card { border-radius:24px; border:1px solid var(--platform-border-light); background:var(--platform-shell); box-shadow:0 18px 44px rgba(15,23,42,.08); padding:18px; display:flex; flex-direction:column; gap:16px; }
 .role-card__header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-.role-card__header h3 { margin:0; color:#f4f8ff; font-size:18px; line-height:1.35; word-break:break-word; }
-.role-card__row { display:grid; grid-template-columns:minmax(84px, 96px) minmax(0, 1fr); align-items:center; gap:12px; padding:12px 14px; border-radius:16px; background:rgba(12,31,58,.42); border:1px solid rgba(104,176,255,.12); }
+.role-card__header h3 { margin:0; color:var(--platform-ink); font-size:18px; line-height:1.35; word-break:break-word; }
+.role-card__row { display:grid; grid-template-columns:minmax(84px, 96px) minmax(0, 1fr); align-items:center; gap:12px; padding:12px 14px; border-radius:16px; background:var(--platform-surface-xlight); border:1px solid var(--platform-border-light); }
 .role-card__row--stack { align-items:flex-start; flex-direction:column; }
-.role-card__label { color:rgba(228,239,255,.54); font-size:12px; letter-spacing:.02em; }
-.role-card__note { width:100%; margin:0; text-align:left; color:rgba(228,239,255,.78); line-height:1.55; word-break:break-word; }
+.role-card__label { color:var(--platform-note-text, rgba(228,239,255,.54)); font-size:12px; letter-spacing:.02em; }
+.role-card__note { width:100%; margin:0; text-align:left; color:var(--platform-note-text, rgba(228,239,255,.78)); line-height:1.55; word-break:break-word; }
 .role-card__actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:10px; }
 
 .role-dialog-footer {
