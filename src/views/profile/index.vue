@@ -16,7 +16,7 @@
                 <timeline :user="user" />
               </el-tab-pane>
               <el-tab-pane label="账号" name="account">
-                <account :user="user" />
+                <account :user="user" @updated="getUser" />
               </el-tab-pane>
               <!-- <el-tab-pane label="采单二维码" name="advqr">
                 <advqr :user="user" />
@@ -55,7 +55,9 @@ export default {
       'avatar',
       'roles',
       'phone',
-      'callsign'
+      'callsign',
+      'dmrid',
+      'mdcid'
     ])
   },
   created() {
@@ -69,6 +71,8 @@ export default {
         role: this.roles.join(' | '),
         phone: this.phone,
         callsign: this.callsign,
+        dmrid: this.dmrid,
+        mdcid: this.mdcid,
         email: 'caoc@live.com',
         avatar: this.avatar
       }

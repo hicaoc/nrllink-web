@@ -41,3 +41,11 @@ export function password(data) {
     data
   })
 }
+
+export function updateProfile(data) {
+  return request({
+    url: '/user/profile/update',
+    method: 'post',
+    data
+  })
+}

@@ -10,6 +10,8 @@ export const useUserStore = defineStore('user', {
     name: '',
     phone: '',
     callsign: '',
+    dmrid: '',
+    mdcid: '',
     status: '',
     package_type: '',
     avatar: '',
@@ -31,7 +33,7 @@ export const useUserStore = defineStore('user', {
       if (!data) {
         throw new Error('Verification failed, please Login again.')
       }
-      const { routes, roles, id, name, phone, callsign, status, package_type, avatar, introduction } = data
+      const { routes, roles, id, name, phone, callsign, dmrid, mdcid, status, package_type, avatar, introduction } = data
       if (!roles || roles.length <= 0) {
         throw new Error('getInfo: roles must be a non-null array!')
       }
@@ -41,6 +43,8 @@ export const useUserStore = defineStore('user', {
       this.name = name
       this.phone = phone
       this.callsign = callsign
+      this.dmrid = dmrid
+      this.mdcid = mdcid
       this.status = status
       this.package_type = package_type
       this.avatar = avatar
@@ -55,6 +59,8 @@ export const useUserStore = defineStore('user', {
       this.name = ''
       this.phone = ''
       this.callsign = ''
+      this.dmrid = ''
+      this.mdcid = ''
       this.status = 0
       this.package_type = 0
       this.avatar = ''

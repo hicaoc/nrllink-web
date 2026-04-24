@@ -221,8 +221,8 @@
                   scope.row.device_parm.two_transmit_freq
                 }}
               </el-tag>
-              <el-tag v-if="scope.row.rf_type == 3 && scope.row.chan_name">{{ $t('device.channelLabel') }}{{ scope.row.device_parm.moto_channel }}
-                {{ scope.row.chan_name[scope.row.device_parm.moto_channel] }}
+              <el-tag v-if="scope.row.rf_type == 3">{{ $t('device.channelLabel') }}{{ scope.row.device_parm.moto_channel }}
+                {{ getChannelName(scope.row) }}
               </el-tag>
             </div>
           </template>
@@ -302,10 +302,10 @@
           <div class="info-row">
             <span class="label">{{ $t('device.channelFrequency') }}:</span>
             <span class="value freq">
-              <template v-if="item.device_parm !== null">
+              <template v-if="item.device_parm">
                 <template v-if="item.rf_type == 1">R{{ item.device_parm.one_recive_freq }}/T{{ item.device_parm.one_transmit_freq }}</template>
                 <template v-else-if="item.rf_type == 2">R{{ item.device_parm.two_recive_freq }}/T{{ item.device_parm.two_transmit_freq }}</template>
-                <template v-else-if="item.rf_type == 3">{{ $t('device.channelLabel') }}{{ item.device_parm.moto_channel }} {{ item.chan_name[item.device_parm.moto_channel] }}</template>
+                <template v-else-if="item.rf_type == 3">{{ $t('device.channelLabel') }}{{ item.device_parm.moto_channel }} {{ getChannelName(item) }}</template>
               </template>
               <template v-else>-</template>
             </span>
@@ -1228,7 +1228,7 @@ export default {
       this.fetchDeviceList(this.listQuery).then((response) => {
         // console.log('device list:', response.data)
         this.total = response.data.total
-        this.list = response.data.items
+        this.list = (response.data.items || []).map(item => this.normalizeDeviceRow(item))
 
         // this.handleFilter()
 
@@ -1236,15 +1236,36 @@ export default {
       })
     },
 
+    normalizeChanName(chanName) {
+      return chanName && typeof chanName === 'object' ? chanName : []
+    },
+
+    normalizeDeviceRow(row) {
+      if (!row || typeof row !== 'object') {
+        return row
+      }
+
+      return {
+        ...row,
+        chan_name: this.normalizeChanName(row.chan_name)
+      }
+    },
+
+    getChannelName(row) {
+      const channel = row?.device_parm?.moto_channel
+      if (channel === undefined || channel === null) {
+        return ''
+      }
+
+      const chanName = this.normalizeChanName(row?.chan_name)
+      return chanName[channel] || ''
+    },
+
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
+      this.temp = this.normalizeDeviceRow(Object.assign({}, row)) // copy obj
 
       if (this.temp.device_parm === null) {
         this.temp.device_parm = {}
-      }
-
-      if (this.temp.chan_name === null) {
-        this.temp.chan_name = []
       }
 
       this.dialogStatus = 'update'
@@ -1356,7 +1377,7 @@ export default {
     },
     handleChange(row) {
       queryDevice(row).then((response) => {
-        this.temp = response.data.items
+        this.temp = this.normalizeDeviceRow(response.data.items)
 
         if (this.temp.device_parm === null) {
           ElMessage.warning(response?.data?.message || this.$t('device.loadParamFailed'))
