@@ -31,7 +31,7 @@ export const DevModelOptions = [
   { id: 19, name: 'NRL-DR-635' },
   { id: 20, name: 'FTM-300D' },
   { id: 21, name: 'FTM-400D' },
-  { id: 22, name: 'ESP32' },
+  { id: 22, name: 'NRL-ESP32' },
   { id: 23, name: 'MMDVM' },
   { id: 24, name: 'W801S' },
   { id: 25, name: '4G便携' },

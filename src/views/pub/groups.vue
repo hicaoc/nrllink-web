@@ -21,7 +21,7 @@
           }"
         >
           <span class="group-title">{{
-            g.name + "-" + ValueFilter(g.type, groupTypeOptions) + " "
+            g.id + " " + g.name + "-" + ValueFilter(g.type, groupTypeOptions) + " "
           }}</span>
 
         </div>

@@ -8,6 +8,18 @@
         </a>
       </li>
 
+            <li class="special-server">
+        <a :href="'https://ota.nrlptt.com/'" target="_blank" class="server-link special-link">
+          <div class="special-text">NRL OTA固件升级管理站</div>
+        </a>
+      </li>
+
+      <li class="special-server">
+        <a :href="'https://dmr.nrlptt.com/'" target="_blank" class="server-link special-link">
+          <div class="special-text">NRL DMR数字模式通联</div>
+        </a>
+      </li>
+
       <li class="special-server">
         <a :href="'https://bh4tdv.taobao.com/'" target="_blank" class="server-link special-link">
           <div class="special-text">支持NRL协议的设备 BH4TDV作坊</div>
@@ -43,11 +55,24 @@
           <div class="special-text">NRL保姆(录音，信标播放) </div>
         </a>
       </li>
+
+      
+
+
       <li class="special-server">
         <a href="#" class="server-link special-link" @click.prevent="$emit('toggle-image', true)">
           <div class="special-text">NRL微信小程序</div>
         </a>
       </li>
+
+            <li class="special-server">
+        <a :href="'https://flash.dev.sfptt.com/cottell-v1/gen/h5/'" target="_blank" class="server-link special-link">
+          <div class="special-text">BG4SF 开拓者固件(适配盒子伴侣)</div>
+        </a>
+      </li>
+
+
+ 
 
       <li class="special-server">
         <a :href="'https://qm.qq.com/q/wu5lgyM5hK'" target="_blank" class="server-link special-link">
@@ -57,6 +82,9 @@
     </ul>
   </div>
 </template>
+
+
+
 
 <script>
 export default {

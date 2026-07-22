@@ -374,7 +374,7 @@ export default {
       },
       isDesktopPanels: false,
       panelLayouts: {
-        left: { visible: true, x: 0, y: 0, w: 300, h: 640 },
+        left: { visible: true, x: 0, y: 0, w: 300, h: 760 },
         middle: { visible: true, x: 324, y: 0, w: 720, h: 760 },
         right: { visible: true, x: 1068, y: 0, w: 320, h: 760 }
       },
@@ -603,7 +603,7 @@ export default {
       const rightWidth = Math.max(280, Math.min(340, Math.round(wrapperWidth * 0.24)))
       const middleWidth = Math.max(480, wrapperWidth - leftWidth - rightWidth - gap * 2)
       const defaults = {
-        left: { x: 0, y: topOffset, w: leftWidth, h: 640 },
+        left: { x: 0, y: topOffset, w: leftWidth, h: 760 },
         middle: { x: leftWidth + gap, y: topOffset, w: middleWidth, h: 760 },
         right: { x: leftWidth + gap + middleWidth + gap, y: topOffset, w: rightWidth, h: 760 }
       }
