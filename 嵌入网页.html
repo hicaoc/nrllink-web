@@ -1,0 +1,397 @@
+<p>
+	<br />
+</p>
+<style>
+	.nrl-live-listener {
+		margin: 16px 0 22px;
+		font-family: Microsoft YaHei, Arial, sans-serif;
+	}
+
+	.nrl-live-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		margin-bottom: 12px;
+		flex-wrap: wrap;
+	}
+
+	.nrl-live-title {
+		margin: 0;
+		color: #12315a;
+		font-size: 22px;
+		line-height: 1.35;
+	}
+
+	.nrl-live-status {
+		padding: 5px 10px;
+		border-radius: 999px;
+		background: #f1f5f9;
+		color: #64748b;
+		font-size: 13px;
+		white-space: nowrap;
+	}
+
+	.nrl-live-status.is-online {
+		background: #ecfdf3;
+		color: #168a4a;
+	}
+
+	.nrl-room-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+	}
+
+	.nrl-room-card {
+		width: 100%;
+		min-height: 132px;
+		box-sizing: border-box;
+		border: 1px solid #dbe4f0;
+		border-radius: 8px;
+		background: #ffffff;
+		padding: 14px;
+		text-align: left;
+		cursor: pointer;
+		box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+		transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+	}
+
+	.nrl-room-card:hover {
+		border-color: #5f8ee4;
+		box-shadow: 0 12px 26px rgba(15, 23, 42, 0.12);
+		transform: translateY(-1px);
+	}
+
+	.nrl-room-card.is-subscribed {
+		border-color: #1d76d3;
+		background: #f7fbff;
+	}
+
+	.nrl-room-card.is-speaking {
+		border-color: #16a34a;
+		background: #f3fff7;
+	}
+
+	.nrl-room-meta {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		margin-bottom: 8px;
+	}
+
+	.nrl-room-subscribe {
+		color: #64748b;
+		font-size: 12px;
+	}
+
+	.nrl-room-card.is-subscribed .nrl-room-subscribe {
+		color: #1d76d3;
+		font-weight: 700;
+	}
+
+	.nrl-room-name {
+		min-width: 0;
+		color: #0f172a;
+		font-size: 16px;
+		font-weight: 700;
+		line-height: 1.35;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.nrl-room-caller {
+		margin-top: 12px;
+		color: #16a34a;
+		font-size: 18px;
+		font-weight: 700;
+		line-height: 1.3;
+		word-break: break-word;
+	}
+
+	.nrl-room-idle {
+		margin-top: 12px;
+		color: #94a3b8;
+		font-size: 14px;
+	}
+
+	@media (max-width: 820px) {
+		.nrl-room-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
+<section class="nrl-live-listener" id="nrl-live-listener">
+	<div class="nrl-live-header">
+		<span class="nrl-live-status" data-live-status>正在连接</span>
+	</div>
+	<div class="nrl-room-grid" data-room-grid></div>
+</section>
+<script>
+(function() {
+	var WS_URL = 'wss://js.nrlptt.com/ws/calls';
+	var TARGET_ROOMS = [
+		{ id: 1107, name: '昆山协会BR4SKS中继-公共房间' },
+		{ id: 1161, name: 'TG460512昆山-数模互联' },
+		{ id: 1137, name: 'TG46001全国组-数模互联' }
+	];
+	var rooms = TARGET_ROOMS.map(function(room) {
+		return {
+			id: room.id,
+			name: room.name,
+			roomKey: String(room.id),
+			active: false,
+			speakers: [],
+			subscribed: false
+		};
+	});
+	var roomMap = {};
+	var ws = null;
+	var reconnectTimer = null;
+	var pingTimer = null;
+	var destroyed = false;
+	var audioContext = null;
+	var audioGainNode = null;
+	var nextPlayTime = 0;
+	var alawDecodeTable = buildAlawDecodeTable();
+
+	function initRoomMap() {
+		rooms.forEach(function(room) {
+			roomMap[String(room.id)] = room;
+		});
+	}
+
+	function buildAlawDecodeTable() {
+		var table = new Int16Array(256);
+		for (var i = 0; i < 256; i += 1) {
+			var code = i ^ 0x55;
+			var exponent = (code & 0x70) >> 4;
+			var mantissa = code & 0x0f;
+			if (exponent > 0) {
+				mantissa += 16;
+			}
+			var sample = (mantissa << 4) + 8;
+			if (exponent > 1) {
+				sample <<= (exponent - 1);
+			}
+			table[i] = (code & 0x80) !== 0 ? sample : -sample;
+		}
+		return table;
+	}
+
+	function setStatus(text, online) {
+		var statusEl = document.querySelector('[data-live-status]');
+		if (!statusEl) return;
+		statusEl.textContent = text;
+		statusEl.className = online ? 'nrl-live-status is-online' : 'nrl-live-status';
+	}
+
+	function speakerText(room) {
+		if (!room.speakers || !room.speakers.length) return '';
+		return room.speakers.map(function(item) {
+			var callsign = item.callsign || '';
+			var ssid = item.ssid === undefined || item.ssid === null || item.ssid === '' ? '' : '-' + item.ssid;
+			return callsign + ssid;
+		}).filter(Boolean).join(' / ');
+	}
+
+	function escapeHtml(value) {
+		return String(value || '').replace(/[&<>"']/g, function(char) {
+			return {
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#39;'
+			}[char];
+		});
+	}
+
+	function renderRooms() {
+		var grid = document.querySelector('[data-room-grid]');
+		if (!grid) return;
+		grid.innerHTML = rooms.map(function(room) {
+			var classes = ['nrl-room-card'];
+			var caller = speakerText(room);
+			if (room.subscribed) classes.push('is-subscribed');
+			if (room.active && caller) classes.push('is-speaking');
+			return '' +
+				'<button type="button" class="' + classes.join(' ') + '" data-room-id="' + room.id + '">' +
+					'<span class="nrl-room-meta">' +
+						'<span class="nrl-room-name">' + escapeHtml(room.name) + '</span>' +
+						'<span class="nrl-room-subscribe">' + (room.subscribed ? '收听中' : '点击收听') + '</span>' +
+					'</span>' +
+					(caller ? '<span class="nrl-room-caller">' + escapeHtml(caller) + '</span>' : '<span class="nrl-room-idle">当前空闲</span>') +
+				'</button>';
+		}).join('');
+		Array.prototype.forEach.call(grid.querySelectorAll('[data-room-id]'), function(button) {
+			button.addEventListener('click', function() {
+				toggleSubscription(button.getAttribute('data-room-id'));
+			});
+		});
+	}
+
+	function roomStateToSpeakerList(roomState) {
+		if (roomState && Array.isArray(roomState.speakers) && roomState.speakers.length) {
+			return roomState.speakers;
+		}
+		if (roomState && roomState.callsign) {
+			return [{ callsign: roomState.callsign, ssid: roomState.ssid }];
+		}
+		return [];
+	}
+
+	function mergeRoomState(roomState) {
+		if (!roomState) return;
+		var roomId = String(roomState.room_id || roomState.id || '');
+		var room = roomMap[roomId];
+		if (!room) return;
+		room.roomKey = roomState.room_key || room.roomKey || roomId;
+		room.name = roomState.room_name || room.name;
+		room.active = !!roomState.active;
+		room.speakers = roomStateToSpeakerList(roomState);
+		renderRooms();
+	}
+
+	function applySubscriptions(subscriptions) {
+		if (!Array.isArray(subscriptions)) return;
+		rooms.forEach(function(room) {
+			room.subscribed = subscriptions.indexOf(room.roomKey) !== -1 || subscriptions.indexOf(String(room.id)) !== -1;
+		});
+		renderRooms();
+	}
+
+	function handleJson(payload) {
+		if (!payload || !payload.type) return;
+		if (payload.type === 'snapshot') {
+			if (Array.isArray(payload.rooms)) {
+				payload.rooms.forEach(mergeRoomState);
+			}
+			applySubscriptions(payload.subscriptions);
+			return;
+		}
+		if (payload.type === 'room_state') {
+			mergeRoomState(payload.room);
+			return;
+		}
+		if (payload.type === 'subscriptions') {
+			applySubscriptions(payload.subscriptions);
+		}
+	}
+
+	function connectWs() {
+		if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
+		setStatus('正在连接', false);
+		ws = new WebSocket(WS_URL);
+		ws.binaryType = 'arraybuffer';
+		ws.onopen = function() {
+			setStatus('已连接', true);
+			pingTimer = window.setInterval(function() {
+				if (ws && ws.readyState === WebSocket.OPEN) {
+					ws.send(JSON.stringify({ action: 'ping' }));
+				}
+			}, 10000);
+		};
+		ws.onmessage = function(event) {
+			if (typeof event.data === 'string') {
+				try {
+					handleJson(JSON.parse(event.data));
+				} catch (error) {
+					if (window.console) console.error('Invalid live payload:', error);
+				}
+				return;
+			}
+			playG711Frame(new Uint8Array(event.data));
+		};
+		ws.onerror = function() {
+			setStatus('连接异常', false);
+		};
+		ws.onclose = function() {
+			setStatus('已断开，重连中', false);
+			if (pingTimer) {
+				window.clearInterval(pingTimer);
+				pingTimer = null;
+			}
+			ws = null;
+			if (!destroyed) {
+				reconnectTimer = window.setTimeout(connectWs, 2000);
+			}
+		};
+	}
+
+	function ensureAudioReady() {
+		var AudioCtor = window.AudioContext || window.webkitAudioContext;
+		if (!AudioCtor) {
+			window.alert('当前浏览器不支持音频播放');
+			return Promise.reject(new Error('AudioContext unsupported'));
+		}
+		if (!audioContext) {
+			audioContext = new AudioCtor({ sampleRate: 8000 });
+			audioGainNode = audioContext.createGain();
+			audioGainNode.gain.value = 0.9;
+			audioGainNode.connect(audioContext.destination);
+			nextPlayTime = audioContext.currentTime;
+		}
+		if (audioContext.state === 'suspended') {
+			return audioContext.resume();
+		}
+		return Promise.resolve();
+	}
+
+	function playG711Frame(g711Bytes) {
+		if (!audioContext || !audioGainNode || !g711Bytes.length) return;
+		var pcm = new Float32Array(g711Bytes.length);
+		for (var i = 0; i < g711Bytes.length; i += 1) {
+			pcm[i] = alawDecodeTable[g711Bytes[i]] / 32768;
+		}
+		var buffer = audioContext.createBuffer(1, pcm.length, 8000);
+		buffer.copyToChannel(pcm, 0);
+		var source = audioContext.createBufferSource();
+		source.buffer = buffer;
+		source.connect(audioGainNode);
+		var now = audioContext.currentTime;
+		if (nextPlayTime < now || nextPlayTime - now > 1) {
+			nextPlayTime = now + 0.05;
+		}
+		source.start(nextPlayTime);
+		nextPlayTime += buffer.duration;
+	}
+
+	function toggleSubscription(roomId) {
+		var room = roomMap[String(roomId)];
+		if (!room || !ws || ws.readyState !== WebSocket.OPEN) return;
+		var action = room.subscribed ? 'unsubscribe' : 'subscribe';
+		var sendMessage = function() {
+			ws.send(JSON.stringify({
+				action: action,
+				room_keys: [room.roomKey || String(room.id)]
+			}));
+			room.subscribed = action === 'subscribe';
+			renderRooms();
+		};
+		if (action === 'subscribe') {
+			ensureAudioReady().then(sendMessage).catch(function(error) {
+				if (window.console) console.error('Audio init failed:', error);
+			});
+		} else {
+			sendMessage();
+		}
+	}
+
+	function cleanup() {
+		destroyed = true;
+		if (reconnectTimer) window.clearTimeout(reconnectTimer);
+		if (pingTimer) window.clearInterval(pingTimer);
+		if (ws) ws.close(1000, 'page unload');
+		if (audioContext) audioContext.close();
+	}
+
+	initRoomMap();
+	renderRooms();
+	connectWs();
+	window.addEventListener('beforeunload', cleanup);
+	window.addEventListener('pagehide', cleanup);
+})();
+</script>
