@@ -794,7 +794,7 @@
             </el-form-item>
 
             <el-form-item :label="$t('device.sql1w') + ':'" prop="one_sql_level">
-              <el-slider v-model="temp.device_parm.one_sql_level" :max="9" show-input style="width: 95%" />
+              <el-slider v-model="temp.device_parm.one_sql_level" :max="8" show-input style="width: 95%" />
             </el-form-item>
 
             <el-form-item :label="$t('device.micGain1w') + ':'" prop="one_mic_sensitivity">

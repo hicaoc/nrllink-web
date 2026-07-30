@@ -10,6 +10,8 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const baseApi = env.VITE_BASE_API || '/dev-api'
   const generateDts = mode !== 'production'
+  // API 代理目标(可用 VITE_PROXY_TARGET 覆盖)
+  const proxyTarget = env.VITE_PROXY_TARGET || 'https://js.nrlptt.com/'
 
   return {
     plugins: [
@@ -37,7 +39,7 @@ export default defineConfig(({ mode }) => {
       open: false,
       proxy: {
         [baseApi]: {
-          target: 'https://js.nrlptt.com/',
+          target: proxyTarget,
           ws: true,
           changeOrigin: true,
           rewrite: (pathValue) => pathValue.replace(new RegExp(`^${baseApi}`), '')
@@ -56,9 +58,15 @@ export default defineConfig(({ mode }) => {
       assetsDir: 'static',
       sourcemap: false,
       rollupOptions: {
+        onwarn(warning, warn) {
+          // 屏蔽 node_modules 中 Rolldown 无法识别的 #__PURE__ 注释位置警告(第三方库写法问题,不影响产物)
+          if (warning.code === 'INVALID_ANNOTATION') return
+          warn(warning)
+        },
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) {
+              if (id.includes('/three/')) return 'three'
               if (id.includes('/xlsx/')) return 'xlsx'
               if (id.includes('/element-plus/')) return 'element-plus'
               if (id.includes('/echarts/')) return 'echarts'

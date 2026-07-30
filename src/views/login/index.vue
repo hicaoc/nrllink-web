@@ -60,6 +60,7 @@
             <path d="M4 7a3 3 0 0 1 3-3h3a1 1 0 1 1 0 2H7a1 1 0 0 0-1 1v3a1 1 0 1 1-2 0V7Zm10-3a1 1 0 0 1 1-1h2a3 3 0 0 1 3 3v2a1 1 0 1 1-2 0V7a1 1 0 0 0-1-1h-2a1 1 0 0 1-1-1ZM5 14a1 1 0 0 1 1 1v2a1 1 0 0 0 1 1h2a1 1 0 1 1 0 2H7a3 3 0 0 1-3-3v-2a1 1 0 0 1 1-1Zm14 0a1 1 0 0 1 1 1v2a3 3 0 0 1-3 3h-3a1 1 0 1 1 0-2h3a1 1 0 0 0 1-1v-2a1 1 0 0 1 1-1ZM9 9h6a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1Zm1 2v2h4v-2h-4Z" />
           </svg>
         </button>
+        <button type="button" class="topbar-button ghost" @click="goUniverse">3D宇宙</button>
         <button type="button" class="topbar-button ghost" @click="openLoginDialog">{{ $t('login.login') }}</button>
         <button type="button" class="topbar-button solid" @click="openRegisterDialog">{{ $t('login.register') }}</button>
       </div>
@@ -833,6 +834,9 @@ export default {
     },
     openLoginDialog() {
       this.loginDialogVisible = true
+    },
+    goUniverse() {
+      this.$router.push('/universe')
     },
     openRegisterDialog() {
       this.registerDialogVisible = true

@@ -65,6 +65,7 @@
         "screenfull": "6.0.2",
         "showdown": "2.1.0",
         "sortablejs": "1.15.6",
+        "three": "^0.185.1",
         "uni-webview-lib": "^1.5.2",
         "update-browserslist-db": "^1.2.3",
         "vue": "^3.5.28",

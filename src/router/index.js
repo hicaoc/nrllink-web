@@ -52,6 +52,12 @@ export const constantRoutes = [{
   hidden: true
 },
 {
+  path: '/universe',
+  component: () =>
+    import('@/views/universe/index.vue'),
+  hidden: true
+},
+{
   path: '/register',
   component: () =>
     import('@/views/register/index.vue'),
