@@ -12,7 +12,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/register', '/signtimes', '/getcustomer', '/auth-redirect', '/universe'] // no redirect whitelist
+const whiteList = ['/login', '/register', '/signtimes', '/getcustomer', '/auth-redirect', '/universe', '/serial'] // no redirect whitelist
 const catchAllRoute = { path: '/:pathMatch(.*)*', name: 'CatchAll', redirect: '/404', hidden: true }
 
 function ensureCatchAllRoute() {

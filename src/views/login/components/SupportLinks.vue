@@ -65,6 +65,12 @@
         </a>
       </li>
 
+      <li class="special-server">
+        <router-link to="/serial" class="server-link special-link">
+          <div class="special-text">{{ $t('serial.entry') }}</div>
+        </router-link>
+      </li>
+
             <li class="special-server">
         <a :href="'https://flash.dev.sfptt.com/cottell-v1/gen/h5/'" target="_blank" class="server-link special-link">
           <div class="special-text">BG4SF 开拓者固件(适配盒子伴侣)</div>

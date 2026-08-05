@@ -14,7 +14,7 @@ hostlist='182.92.158.141 nrlptt.com ba1gm.nrlptt.com nrlptt.bd4vki.xyz www.bg1vi
 #hostlist='nrlptt.bd4vki.xyz'
 #hostlist='nrlptt.com'
 #hostlist='bd4vki.nrlptt.com'
-#hostlist='yz.hamuv.com'
+hostlist='yz.hamuv.com'
 #hostlist='www.bg1vif.com'
 #hostlist='ah.nrlptt.com'
 

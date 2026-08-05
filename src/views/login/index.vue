@@ -1,23 +1,14 @@
 <template>
   <div class="login-container">
-    <div ref="topbar" class="topbar" :class="{ 'topbar-stacked': topbarStacked }">
-      <div ref="brandBlock" class="brand-block">
-        <img src="/images/logo.png" alt="Logo" class="topbar-logo">
-        <div class="brand-text">
-          <h1>{{ title }}</h1>
-          <p>{{ $t('login.brandDesc') }}</p>
-        </div>
-      </div>
+    <div class="topnav">
+      <nav class="topnav-links">
+        <a href="https://www.nrlptt.com" target="_blank" rel="noopener noreferrer" class="topnav-link">NRL官网</a>
+        <a href="https://ota.nrlptt.com" target="_blank" rel="noopener noreferrer" class="topnav-link">NRL固件</a>
+        <a href="https://dmr.nrlptt.com" target="_blank" rel="noopener noreferrer" class="topnav-link">DMR数字</a>
+        <router-link to="/serial" class="topnav-link">{{ $t('serial.navEntry') }}</router-link>
+      </nav>
 
-      <div ref="topbarRight" class="topbar-right">
-        <live-platform-stats
-          class="topbar-stats"
-          :online-devices="monitorStats.onlineDevices"
-          :connected-clients="monitorStats.connectedClients"
-          :total-subs="monitorStats.totalSubs"
-        />
-
-        <div class="topbar-actions">
+      <div class="topbar-actions">
           <div class="language-switch">
             <button
               type="button"
@@ -64,6 +55,24 @@
         <button type="button" class="topbar-button ghost" @click="openLoginDialog">{{ $t('login.login') }}</button>
         <button type="button" class="topbar-button solid" @click="openRegisterDialog">{{ $t('login.register') }}</button>
       </div>
+    </div>
+
+    <div ref="topbar" class="topbar" :class="{ 'topbar-stacked': topbarStacked }">
+      <div ref="brandBlock" class="brand-block">
+        <img src="/images/logo.png" alt="Logo" class="topbar-logo">
+        <div class="brand-text">
+          <h1>{{ title }}</h1>
+          <p>{{ $t('login.brandDesc') }}</p>
+        </div>
+      </div>
+
+      <div ref="topbarRight" class="topbar-right">
+        <live-platform-stats
+          class="topbar-stats"
+          :online-devices="monitorStats.onlineDevices"
+          :connected-clients="monitorStats.connectedClients"
+          :total-subs="monitorStats.totalSubs"
+        />
       </div>
     </div>
 
@@ -1212,13 +1221,54 @@ export default {
     pointer-events: none;
   }
 
+  .topnav {
+    width: min(1400px, calc(100% - 48px));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px 20px;
+    flex-wrap: wrap;
+    padding-top: 18px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .topnav-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .topnav-link {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid var(--platform-border);
+    background: var(--platform-surface);
+    color: var(--platform-ink-dim);
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+      border-color: var(--platform-border-strong);
+      background: var(--platform-surface-soft);
+      color: var(--platform-ink);
+    }
+  }
+
   .topbar {
     width: min(1400px, calc(100% - 48px));
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 20px 28px;
-    padding-top: 28px;
+    padding-top: 18px;
     position: relative;
     z-index: 1;
   }
@@ -2301,9 +2351,18 @@ export default {
   }
 
   @media (max-width: 1023px) {
+    .topnav,
     .topbar,
     .content-wrapper {
       width: min(100%, calc(100% - 32px));
+    }
+
+    .topnav {
+      justify-content: center;
+    }
+
+    .topnav-links {
+      justify-content: center;
     }
 
     .topbar {

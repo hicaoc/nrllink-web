@@ -58,6 +58,12 @@ export const constantRoutes = [{
   hidden: true
 },
 {
+  path: '/serial',
+  component: () =>
+    import('@/views/serial/index.vue'),
+  hidden: true
+},
+{
   path: '/register',
   component: () =>
     import('@/views/register/index.vue'),
