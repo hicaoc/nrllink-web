@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NRL串口工具</title>
+<style>
+  :root {
+    --bg: #0b1220;
+    --surface: rgba(255, 255, 255, 0.045);
+    --surface-strong: rgba(255, 255, 255, 0.08);
+    --border: rgba(148, 190, 255, 0.18);
+    --border-strong: rgba(148, 190, 255, 0.45);
+    --ink: #e8eefc;
+    --ink-dim: #9fb0d0;
+    --accent: #4fa3ff;
+    --accent-2: #7fd4ff;
+    --danger: #ff7875;
+    --success: #67d98f;
+    --warn: #ffc53d;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    background: radial-gradient(980px 460px at 18% -14%, rgba(79, 163, 255, 0.28) 0%, #0b1220 56%, #090e18 100%), var(--bg);
+    color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    font-size: 14px;
+  }
+  .page { max-width: 720px; margin: 0 auto; padding: 24px 24px 40px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .topbar-sub { margin-bottom: 18px; }
+  .topbar .title { font-size: 20px; font-weight: 700; letter-spacing: 0.4px; }
+  .topbar .hint { font-size: 12px; color: var(--ink-dim); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .card-title { font-size: 15px; font-weight: 600; }
+  .card-actions { display: flex; gap: 10px; align-items: center; }
+
+  .connect-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }
+  .connect-label { color: var(--ink-dim); }
+  .https-tip { font-size: 12px; color: var(--ink-dim); opacity: 0.8; width: 100%; }
+
+  button {
+    height: 36px; padding: 0 16px; border-radius: 10px; cursor: pointer;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-strong); color: var(--ink);
+    font-size: 14px; transition: filter 0.15s ease, background 0.15s ease;
+  }
+  button:hover:not(:disabled) { background: rgba(148, 190, 255, 0.18); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  button.primary {
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+    border-color: transparent; color: #06121f; font-weight: 600;
+  }
+  button.danger-plain { background: transparent; border-color: var(--danger); color: var(--danger); }
+  button.small { height: 30px; padding: 0 12px; font-size: 13px; }
+  button.text { background: transparent; border: none; color: var(--ink-dim); }
+  button.text:hover:not(:disabled) { color: var(--ink); background: transparent; }
+
+  input[type="text"], select {
+    height: 36px; padding: 0 10px; border-radius: 10px; width: 100%;
+    background: rgba(148, 190, 255, 0.10);
+    border: 1px solid var(--border-strong);
+    color: var(--ink); font-size: 14px; outline: none;
+    transition: border-color 0.15s ease;
+  }
+  input[type="text"]:focus, select:focus { border-color: var(--accent); }
+  input[type="text"]:disabled, select:disabled { opacity: 0.5; }
+  input::placeholder { color: var(--ink-dim); opacity: 0.6; }
+  select option { background: #101a2e; color: var(--ink); }
+  .baud-select { width: 130px; }
+  .lang-toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; background: var(--surface-strong); }
+  .lang-toggle button {
+    height: 30px; padding: 0 14px; border: none; border-radius: 0;
+    background: transparent; color: var(--ink-dim); font-size: 13px; cursor: pointer;
+  }
+  .lang-toggle button:hover:not(.active) { color: var(--ink); background: transparent; }
+  .lang-toggle button.active {
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+    color: #06121f; font-weight: 600;
+  }
+  .site-link {
+    display: inline-flex; align-items: center; height: 32px; padding: 0 14px;
+    border-radius: 999px; border: 1px solid var(--border);
+    background: var(--surface-strong); color: var(--ink-dim);
+    font-size: 13px; text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .site-link:hover { color: var(--ink); border-color: var(--border-strong); }
+  .topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+
+  .tag {
+    display: inline-block; padding: 4px 12px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--surface-strong); font-size: 12px;
+  }
+  .tag.success { border-color: rgba(103, 217, 143, 0.5); color: var(--success); }
+  .tag.warn { border-color: rgba(255, 197, 61, 0.5); color: var(--warn); }
+  .tag.info { color: var(--ink-dim); }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 28px; }
+  .field { display: block; min-width: 0; }
+  .field label { display: block; margin: 0 0 8px; color: var(--ink-dim); font-weight: 600; }
+  .field .tip { margin-top: 6px; font-size: 12px; color: var(--ink-dim); opacity: 0.8; }
+  .field.full { grid-column: 1 / -1; }
+  .server-row { display: flex; gap: 10px; }
+  .server-row input { flex: 1; min-width: 0; }
+  .server-row button { flex-shrink: 0; }
+
+  .check-row { display: flex; align-items: center; gap: 8px; color: var(--ink-dim); cursor: pointer; }
+  .check-row input { width: 16px; height: 16px; accent-color: var(--accent); }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 28px; }
+  .info-item { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .info-label { flex-shrink: 0; font-size: 13px; color: var(--ink-dim); }
+  .info-value { font-weight: 600; word-break: break-all; }
+  .mono { font-family: monospace; letter-spacing: 1px; }
+
+  details.advanced { border: 1px solid var(--border); border-radius: 16px; padding: 0; margin-bottom: 18px; background: var(--surface); }
+  details.advanced summary {
+    padding: 15px 20px; cursor: pointer; font-size: 15px; font-weight: 600; list-style: none;
+  }
+  details.advanced summary::-webkit-details-marker { display: none; }
+  details.advanced .content { padding: 4px 20px 18px; }
+
+  .at-row {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    padding: 8px 0; border-bottom: 1px dashed var(--border);
+  }
+  .at-row:last-child { border-bottom: none; }
+  .at-key { flex-shrink: 0; width: 150px; font-family: monospace; font-size: 13px; font-weight: 600; }
+  .at-value { width: 240px; }
+  .at-desc { flex: 1; min-width: 180px; font-size: 12px; color: var(--ink-dim); opacity: 0.85; }
+  .at-empty { padding: 18px 0; text-align: center; font-size: 13px; color: var(--ink-dim); opacity: 0.8; }
+
+  .custom-cmd-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .custom-cmd-row .at-custom-cmd { width: 180px; }
+  .custom-cmd-row .at-value { flex: 1; min-width: 200px; width: auto; }
+  .at-eq { color: var(--ink-dim); }
+
+  .log-box {
+    height: 180px; overflow-y: auto;
+    background: rgba(0, 0, 0, 0.28); border: 1px solid var(--border); border-radius: 10px;
+    padding: 8px 10px; font-family: monospace; font-size: 12px; line-height: 1.7;
+  }
+  .log-line { display: flex; gap: 8px; word-break: break-all; }
+  .log-prefix { flex-shrink: 0; }
+  .log-tx { color: #7fd4ff; }
+  .log-rx { color: #8ff9de; }
+  .log-sys { color: var(--ink-dim); opacity: 0.75; }
+  .log-empty { color: var(--ink-dim); opacity: 0.6; text-align: center; padding-top: 30px; }
+
+  #toastWrap { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .toast {
+    padding: 10px 18px; border-radius: 10px; font-size: 14px; max-width: 80vw;
+    border: 1px solid var(--border); background: #16233c; color: var(--ink);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45); animation: toastIn 0.2s ease;
+  }
+  .toast.success { border-color: rgba(103, 217, 143, 0.5); }
+  .toast.error { border-color: rgba(255, 120, 117, 0.55); }
+  .toast.warning { border-color: rgba(255, 197, 61, 0.55); }
+  .toast.info { border-color: var(--border-strong); }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 768px) {
+    .page { padding: 16px 16px 32px; }
+    .form-grid, .info-grid { grid-template-columns: 1fr; }
+    .at-key { width: 110px; }
+    .at-value { flex: 1; width: auto; min-width: 160px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <span class="title" data-i18n="title">NRL串口工具</span>
+    <span class="topbar-right">
+      <a class="site-link" href="https://www.nrlptt.com" target="_blank" rel="noopener" data-i18n="website">官网</a>
+      <a class="site-link" href="https://ota.nrlptt.com" target="_blank" rel="noopener" data-i18n="ota">OTA升级</a>
+      <a class="site-link" href="https://dmr.nrlptt.com" target="_blank" rel="noopener" data-i18n="dmr">DMR</a>
+      <span class="lang-toggle">
+        <button id="langZh" type="button">中文</button>
+        <button id="langEn" type="button">English</button>
+      </span>
+    </span>
+  </div>
+  <div class="topbar-sub">
+    <span class="hint" data-i18n="standaloneHint">独立版 · 双击本文件即可在 Chrome / Edge 中打开使用</span>
+  </div>
+
+  <div id="unsupported" class="card hidden" style="border-color: rgba(255,197,61,0.5); color: var(--warn);" data-i18n="unsupported"></div>
+
+  <!-- 连接栏 -->
+  <div class="card connect-bar">
+    <span class="connect-label" data-i18n="baudRate">波特率</span>
+    <select id="baudRate" class="baud-select"></select>
+    <button id="btnConnect" class="primary" data-i18n="connect">连接设备</button>
+    <button id="btnDisconnect" class="danger-plain hidden" data-i18n="disconnect">断开连接</button>
+    <span id="connTag" class="tag info" data-i18n="disconnected">未连接</span>
+    <span id="modeTag" class="tag warn hidden"></span>
+    <span class="https-tip" data-i18n="httpsTip"></span>
+  </div>
+
+  <!-- AT 设备：常用设置 -->
+  <div id="basicCard" class="card hidden">
+    <div class="card-header">
+      <span class="card-title" data-i18n="basicSettings">常用设置</span>
+      <div class="card-actions">
+        <button id="btnReadBasic" class="small" disabled data-i18n="refresh">重新读取</button>
+        <button id="btnWriteBasic" class="small primary" disabled data-i18n="writeAll">写入设备</button>
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label data-i18n="callsign">呼号</label>
+        <input id="basicCallsign" type="text" maxlength="6" data-i18n-ph="callsignPlaceholder" placeholder="最多6位" />
+      </div>
+      <div class="field">
+        <label data-i18n="ssid">SSID</label>
+        <input id="basicSsid" type="text" maxlength="3" data-i18n-ph="ssidPlaceholder" placeholder="3位数字 000-255" />
+      </div>
+      <div class="field full">
+        <label data-i18n="server">服务器地址</label>
+        <div class="server-row">
+          <input id="basicServer" type="text" list="serverList" data-i18n-ph="selectServer" placeholder="选择或输入服务器地址" />
+          <button id="btnOpenBasicServer" class="small" disabled data-i18n="visitServer">访问站点</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 寄存器设备：设备信息 -->
+  <div id="regInfoCard" class="card hidden">
+    <div class="card-header">
+      <span class="card-title" data-i18n="deviceInfo">设备信息</span>
+      <div class="card-actions">
+        <button id="btnReadReg" class="small" disabled data-i18n="refresh">重新读取</button>
+        <button id="btnWriteReg" class="small primary" disabled data-i18n="writeAll">写入设备</button>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="info-label" data-i18n="firmwareVersion">固件版本</span>
+        <span id="regVersion" class="info-value">-</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label" data-i18n="localSn">本机序列号</span>
+        <span id="regLocalSn" class="info-value mono">-</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 寄存器设备：网络设置 -->
+  <div id="regNetCard" class="card hidden">
+    <div class="card-header">
+      <span class="card-title" data-i18n="networkSettings">网络设置</span>
+      <label class="check-row"><input id="regDhcp" type="checkbox" /> <span data-i18n="dhcp">DHCP 自动获取</span></label>
+    </div>
+    <div class="form-grid">
+      <div class="field"><label data-i18n="ipAddress">IP 地址</label><input id="regIp" type="text" placeholder="192.168.1.100" /></div>
+      <div class="field"><label data-i18n="gateway">网关</label><input id="regGateway" type="text" placeholder="192.168.1.1" /></div>
+      <div class="field"><label data-i18n="mask">掩码</label><input id="regMask" type="text" placeholder="255.255.255.0" /></div>
+      <div class="field"><label data-i18n="dns">DNS</label><input id="regDns" type="text" placeholder="8.8.8.8" /></div>
+    </div>
+  </div>
+
+  <!-- 寄存器设备：模式设置 -->
+  <div id="regModeCard" class="card hidden">
+    <div class="card-header"><span class="card-title" data-i18n="modeSettings">模式设置</span></div>
+    <div class="form-grid">
+      <div class="field">
+        <label data-i18n="connectMode">连接方式</label>
+        <select id="regMode">
+          <option value="CLIENT">CLIENT</option>
+          <option value="SERVER">SERVER</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-i18n="deviceRole">设备角色</label>
+        <select id="regRole">
+          <option value="HOST" data-i18n="roleHost">机身 HOST</option>
+          <option value="PANEL" data-i18n="rolePanel">机头 PANEL</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-i18n="radioModel">电台型号</label>
+        <select id="regRadio"></select>
+      </div>
+      <div class="field">
+        <label data-i18n="pttTimeout">PTT 超时</label>
+        <select id="regPtt"></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- 寄存器设备：NRL 服务器 -->
+  <div id="regServerCard" class="card hidden">
+    <div class="card-header"><span class="card-title" data-i18n="nrlServer">NRL 服务器（呼号/编号）</span></div>
+    <div class="form-grid">
+      <div class="field">
+        <label data-i18n="callsign">呼号</label>
+        <input id="regCallsign" type="text" maxlength="14" data-i18n-ph="regCallsignPlaceholder" placeholder="最多14位" />
+      </div>
+      <div class="field">
+        <label data-i18n="ssid">SSID</label>
+        <input id="regSsid" type="text" maxlength="3" data-i18n-ph="ssidPlaceholder" placeholder="3位数字 000-255" />
+      </div>
+      <div class="field full">
+        <label data-i18n="server">服务器地址</label>
+        <div class="server-row">
+          <input id="regServer" type="text" list="serverList" data-i18n-ph="selectServer" placeholder="选择或输入服务器地址" />
+          <button id="btnOpenRegServer" class="small" disabled data-i18n="visitServer">访问站点</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 寄存器设备：202 服务器 -->
+  <div id="regSnCard" class="card hidden">
+    <div class="card-header"><span class="card-title" data-i18n="server202">202 服务器（序列号）</span></div>
+    <div class="field" style="max-width: 340px;">
+      <label data-i18n="remoteSn">远端序列号</label>
+      <input id="regRemoteSn" type="text" maxlength="14" placeholder="AABBCCDDEEFF00" class="mono" />
+      <div class="tip" data-i18n="remoteSnTip">14 个十六进制字符（7 字节），留空则不修改</div>
+    </div>
+  </div>
+
+  <!-- 自定义指令 -->
+  <div class="card">
+    <div class="card-header"><span class="card-title" data-i18n="customCommand">自定义指令</span></div>
+    <div class="custom-cmd-row">
+      <input id="customCommand" type="text" class="at-custom-cmd" placeholder="AT+XXX" />
+      <span class="at-eq">=</span>
+      <input id="customData" type="text" class="at-value" />
+      <button id="btnCustom" class="small" disabled data-i18n="execute">执行</button>
+    </div>
+  </div>
+
+  <!-- 高级 AT 指令 -->
+  <details id="advancedCard" class="advanced hidden">
+    <summary data-i18n="advanced">高级 AT 指令</summary>
+    <div class="content">
+      <div id="atList"><div class="at-empty" data-i18n="noAtList">连接设备并读取后，显示设备支持的指令列表</div></div>
+    </div>
+  </details>
+
+  <!-- 通信日志 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title" data-i18n="log">通信日志</span>
+      <button id="btnClearLog" class="text small" data-i18n="clear">清空</button>
+    </div>
+    <div id="logBox" class="log-box"><div class="log-empty" data-i18n="logEmpty">暂无通信记录</div></div>
+  </div>
+</div>
+
+<datalist id="serverList"></datalist>
+<div id="toastWrap"></div>
+
+<script>
+'use strict';
+/* =====================================================================
+ * 独立串口配置工具（从 nrllink-web 项目抽取，逻辑与 src/utils/serial.js、
+ * src/utils/register.js、src/views/serial/index.vue 保持一致）
+ * 无任何外部依赖，直接用 Chrome / Edge 打开本文件即可使用。
+ * =================================================================== */
+
+/* ---------------- 常量 ---------------- */
+const BAUD_RATE_OPTIONS = [9600, 19200, 38400, 57600, 115200];
+const REGISTER_SIZE = 128;
+const HELLO_PREFIX = [0x48, 0x45, 0x4c, 0x4c, 0x4f]; // 'HELLO'
+
+const RADIO_MODELS = [
+  { id: 10, name: 'IC-7100' },
+  { id: 11, name: 'FT-891' },
+  { id: 12, name: 'TS-480' },
+  { id: 13, name: 'IC-2720' },
+  { id: 14, name: 'IC-2730' },
+  { id: 15, name: 'FT-7900' },
+  { id: 16, name: 'D710 / V71' },
+  { id: 27, name: 'IC-706' },
+  { id: 28, name: 'D-9000' },
+  { id: 30, name: 'M-802' },
+  { id: 31, name: 'ICOM F8101' }
+];
+const PTT_TIMEOUT_OPTIONS = [30, 60, 90, 120, 150, 180, 210, 240];
+
+const ATREADMEOptions = {
+  'AT+1W_FREQ': '1W射频模块参数 见模块手册',
+  'AT+1W_MIC': '1W模块麦克风增益 见模块手册',
+  'AT+1W_VOL': '1W模块音量 见模块手册',
+  'AT+ADD_D': '添加尾音 必须5位数  00000-65000 单位5ms',
+  'AT+AMSG': 'APRS消息内容 最长64字节',
+  'AT+APRS': 'APRS开关 ON 或 OFF',
+  'AT+A_IP': 'APRS服务器地址或者域名 IP格式必须3位数',
+  'AT+BAT': '电池电量修正 +255 或 -255 ',
+  'AT+CALL': '呼号 最多6位',
+  'AT+DCD': 'DCD模式 MANUAL SQL_LO SQL_HI DISABLE VOX',
+  'AT+DEL_D': '消除中继尾音 必须5位数 00000-65000 单位5ms',
+  'AT+DHCP': 'DHCP开关 ON 或 OFF',
+  'AT+DNS': 'DNS服务器地址 格式必须3位数',
+  'AT+DUPLEX': '双工模式 ON 或 OFF',
+  'AT+D_ID': '目标设备CPU序列号  8位',
+  'AT+D_IP': '目标IP/域名 IP格式必须3位数',
+  'AT+D_PORT': '目标端口 必须5位数',
+  'AT+D_SN': '目标序列号 6位',
+  'AT+FILTER': '过滤器 对方设备编号 000-255',
+  'AT+GATEWAY': '网关 格式必须3位数',
+  'AT+IP': '本机IP 格式必须3位数',
+  'AT+LCD_TIME': '屏幕熄灭时间 000-255 单位秒',
+  'AT+LOGO': 'OLED 开机LOGO',
+  'AT+LOOP': '音频脱网环路测试',
+  'AT+MASK': '子网掩码 IP格式必须3位数',
+  'AT+PHY': 'MAC地址 固定 无法修改',
+  'AT+PTT_EN': 'PTT使能 ENABLE 或 DISABLE',
+  'AT+PTT_IO': 'PTT电平 H 或 L',
+  'AT+PTT_RES': '使能YAESU 或MOTO PTT下拉电阻',
+  'AT+PW': '功率 H 或 L',
+  'AT+SQL_TIME': '接收超时时间 000-255 单位秒',
+  'AT+SSID': 'SSID  必须3位数000-255',
+  'AT+S_ID': '源设备CPU序列号 8位',
+  'AT+S_PORT': '源端口 必须5位数',
+  'AT+S_SN': '源序列号 6位',
+  'AT+VOX_D': 'VOX延迟断开时间 必须5位数，单位5ms',
+  'AT+WDJD': 'APRS坐标值  格式 3118.55N/12018.00EI',
+  'AT+PREW': '上一首',
+  'AT+NEXT': '下一首',
+  'AT+VOLUME': '音量 0-100',
+  'AT+PAUSE': '暂停',
+  'AT+PLAY': '播放',
+  'AT+STOP': '停止',
+  'AT+REPEAT': '重复',
+  'AT+PLAY_ID': '播放ID'
+};
+const ON_OFF_KEYS = ['AT+APRS', 'AT+DHCP', 'AT+DUPLEX', 'AT+LOOP', 'AT+PTT_RES'];
+const HL_KEYS = ['AT+PW', 'AT+PTT_IO'];
+const BASIC_KEYS = { callsign: 'AT+CALL', ssid: 'AT+SSID', server: 'AT+D_IP' };
+
+// 独立版无后端接口，这里内置常用服务器地址供下拉选择（可自行增删）
+const SERVER_PRESETS = [
+  { name: '示例服务器', host: '127.0.0.1' }
+];
+
+/* ---------------- 多语言 ---------------- */
+const I18N = {
+  zh: {
+    title: 'NRL串口工具',
+    website: '官网',
+    ota: 'OTA升级',
+    dmr: 'DMR',
+    standaloneHint: '独立版 · 双击本文件即可在 Chrome / Edge 中打开使用',
+    unsupported: '当前浏览器不支持 Web Serial API，请使用 Chrome / Edge 打开本页面。',
+    baudRate: '波特率',
+    connect: '连接设备',
+    disconnect: '断开连接',
+    connected: '已连接',
+    disconnected: '未连接',
+    httpsTip: '通过 USB 直连设备；file:// 本地打开在 Chrome / Edge 中受支持，无需服务器部署。',
+    basicSettings: '常用设置',
+    callsign: '呼号',
+    callsignPlaceholder: '最多6位',
+    regCallsignPlaceholder: '最多14位',
+    ssid: 'SSID',
+    ssidPlaceholder: '3位数字 000-255',
+    server: '服务器地址',
+    selectServer: '选择或输入服务器地址',
+    visitServer: '访问站点',
+    refresh: '重新读取',
+    writeAll: '写入设备',
+    writeConfirm: '确认将呼号 / SSID / 服务器地址写入设备？',
+    regWriteConfirm: '确认将全部配置写入设备寄存器？',
+    confirm: '确定',
+    cancel: '取消',
+    advanced: '高级 AT 指令',
+    noAtList: '连接设备并读取后，显示设备支持的指令列表',
+    customCommand: '自定义指令',
+    execute: '执行',
+    log: '通信日志',
+    clear: '清空',
+    logEmpty: '暂无通信记录',
+    connectSuccess: '串口连接成功',
+    connectFailed: '串口连接失败',
+    connectFirst: '请先连接设备',
+    readSuccess: '设备参数读取完成',
+    readFailed: '读取设备参数失败',
+    writeSuccess: '参数已写入设备',
+    writeFailed: '写入失败',
+    callsignRequired: '请输入呼号',
+    ssidInvalid: 'SSID 必须为 0-255 的数字',
+    valueRequired: '请输入参数值',
+    executeSuccess: '执行成功',
+    executeDone: '指令已发送',
+    executeFailed: '指令执行失败',
+    typeAt: 'AT 指令设备',
+    typeRegister: '寄存器设备',
+    deviceInfo: '设备信息',
+    firmwareVersion: '固件版本',
+    localSn: '本机序列号',
+    networkSettings: '网络设置',
+    dhcp: 'DHCP 自动获取',
+    ipAddress: 'IP 地址',
+    gateway: '网关',
+    mask: '掩码',
+    dns: 'DNS',
+    modeSettings: '模式设置',
+    connectMode: '连接方式',
+    deviceRole: '设备角色',
+    roleHost: '机身 HOST',
+    rolePanel: '机头 PANEL',
+    radioModel: '电台型号',
+    radioUnknown: '未知型号',
+    pttTimeout: 'PTT 超时',
+    seconds: '秒',
+    nrlServer: 'NRL 服务器（呼号/编号）',
+    server202: '202 服务器（序列号）',
+    remoteSn: '远端序列号',
+    remoteSnTip: '14 个十六进制字符（7 字节），留空则不修改',
+    ipInvalid: 'IP 地址格式不正确',
+    serverInvalid: '服务器地址必须为域名或 IPv4 地址',
+    snInvalid: '远端序列号必须为 14 个十六进制字符'
+  },
+  en: {
+    title: 'NRL Serial Tool',
+    website: 'Website',
+    ota: 'OTA Upgrade',
+    dmr: 'DMR',
+    standaloneHint: 'Standalone · open this file directly in Chrome / Edge',
+    unsupported: 'This browser does not support the Web Serial API. Please open this page with Chrome / Edge.',
+    baudRate: 'Baud Rate',
+    connect: 'Connect',
+    disconnect: 'Disconnect',
+    connected: 'Connected',
+    disconnected: 'Disconnected',
+    httpsTip: 'Connects to the device via USB; opening locally as file:// is supported in Chrome / Edge, no server needed.',
+    basicSettings: 'Basic Settings',
+    callsign: 'Callsign',
+    callsignPlaceholder: 'Up to 6 chars',
+    regCallsignPlaceholder: 'Up to 14 chars',
+    ssid: 'SSID',
+    ssidPlaceholder: '3 digits, 000-255',
+    server: 'Server Address',
+    selectServer: 'Select or enter a server address',
+    visitServer: 'Visit Site',
+    refresh: 'Read Again',
+    writeAll: 'Write to Device',
+    writeConfirm: 'Write callsign / SSID / server address to the device?',
+    regWriteConfirm: 'Write all settings to the device registers?',
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+    advanced: 'Advanced AT Commands',
+    noAtList: 'Connect the device and read to show the supported command list',
+    customCommand: 'Custom Command',
+    execute: 'Execute',
+    log: 'Communication Log',
+    clear: 'Clear',
+    logEmpty: 'No communication records',
+    connectSuccess: 'Serial port connected',
+    connectFailed: 'Failed to connect serial port',
+    connectFirst: 'Please connect the device first',
+    readSuccess: 'Device parameters loaded',
+    readFailed: 'Failed to read device parameters',
+    writeSuccess: 'Parameters written to device',
+    writeFailed: 'Write failed',
+    callsignRequired: 'Please enter the callsign',
+    ssidInvalid: 'SSID must be a number between 0 and 255',
+    valueRequired: 'Please enter a value',
+    executeSuccess: 'executed successfully',
+    executeDone: 'Command sent',
+    executeFailed: 'Command execution failed',
+    typeAt: 'AT Command Device',
+    typeRegister: 'Register Device',
+    deviceInfo: 'Device Info',
+    firmwareVersion: 'Firmware',
+    localSn: 'Local S/N',
+    networkSettings: 'Network Settings',
+    dhcp: 'DHCP',
+    ipAddress: 'IP Address',
+    gateway: 'Gateway',
+    mask: 'Netmask',
+    dns: 'DNS',
+    modeSettings: 'Mode Settings',
+    connectMode: 'Connection Mode',
+    deviceRole: 'Device Role',
+    roleHost: 'HOST (Radio Body)',
+    rolePanel: 'PANEL (Head)',
+    radioModel: 'Radio Model',
+    radioUnknown: 'Unknown Model',
+    pttTimeout: 'PTT Timeout',
+    seconds: 's',
+    nrlServer: 'NRL Server (Call/SSID)',
+    server202: '202 Server (Serial No.)',
+    remoteSn: 'Remote S/N',
+    remoteSnTip: '14 hex characters (7 bytes); leave empty to keep unchanged',
+    ipInvalid: 'Invalid IP address format',
+    serverInvalid: 'Server address must be a domain or IPv4 address',
+    snInvalid: 'Remote S/N must be 14 hex characters'
+  }
+};
+
+// 统一使用内存存储：避免 file:// 下访问 localStorage 引发
+// "Unsafe attempt to load URL" 报错，语言选择仅本次会话有效
+const safeStorage = (function() {
+  const memory = {};
+  return {
+    getItem: key => (key in memory ? memory[key] : null),
+    setItem: (key, value) => { memory[key] = String(value); },
+    removeItem: key => { delete memory[key]; }
+  };
+})();
+
+// 首次打开时按浏览器语言自动选择：中文环境显示中文，其余环境默认英文，
+// 避免不懂中文的用户找不到切换入口
+let currentLang = /^zh/i.test(navigator.language || '') ? 'zh' : 'en';
+if (safeStorage.getItem('serialToolLang')) {
+  currentLang = safeStorage.getItem('serialToolLang') === 'en' ? 'en' : 'zh';
+}
+
+function t(key) {
+  const dict = I18N[currentLang] || I18N.zh;
+  return dict[key] !== undefined ? dict[key] : key;
+}
+
+function applyI18n() {
+  document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+  document.title = t('title');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    el.placeholder = t(el.dataset.i18nPh);
+  });
+  // 语言切换按钮高亮当前语言
+  const zhBtn = document.getElementById('langZh');
+  const enBtn = document.getElementById('langEn');
+  if (zhBtn) zhBtn.classList.toggle('active', currentLang === 'zh');
+  if (enBtn) enBtn.classList.toggle('active', currentLang === 'en');
+  // 动态渲染的区域重新应用文案
+  updateConnTag();
+  updateModeTag();
+  renderRadioOptions();
+  renderPttOptions();
+  document.querySelectorAll('#atList .at-exec').forEach(btn => {
+    btn.textContent = t('execute');
+  });
+  const atEmpty = document.querySelector('#atList .at-empty');
+  if (atEmpty && !atKeys.length) atEmpty.textContent = t('noAtList');
+  const logEmpty = document.querySelector('#logBox .log-empty');
+  if (logEmpty) logEmpty.textContent = t('logEmpty');
+}
+
+function setLang(lang) {
+  currentLang = lang === 'en' ? 'en' : 'zh';
+  safeStorage.setItem('serialToolLang', currentLang);
+  applyI18n();
+}
+</script>
+
+<script>
+'use strict';
+/* ---------------- Web Serial AT 客户端（同 src/utils/serial.js） ---------------- */
+function isWebSerialSupported() {
+  return typeof navigator !== 'undefined' && 'serial' in navigator;
+}
+
+// 解析设备返回的一行数据，提取 AT 键值对
+function parseATLine(line) {
+  if (!line) return null;
+  const text = String(line).trim();
+  if (!text) return null;
+
+  let match = text.match(/^AT\+([A-Z0-9_]+)\s*[=:]\s*(.*)$/i);
+  if (match) {
+    return { key: 'AT+' + match[1].toUpperCase(), value: match[2].trim() };
+  }
+
+  match = text.match(/^\+?([A-Z][A-Z0-9_]{1,})\s*[=:]\s*(.*)$/);
+  if (match && !/^(OK|ERROR)$/i.test(match[1])) {
+    return { key: 'AT+' + match[1].toUpperCase(), value: match[2].trim() };
+  }
+
+  return null;
+}
+
+class SerialATClient {
+  constructor() {
+    this.port = null;
+    this.reader = null;
+    this.keepReading = false;
+    this.buffer = '';
+    this.waiter = null;
+    this.onLine = null; // (direction: 'tx' | 'rx' | 'sys', line: string) => void
+    this.onDisconnect = null;
+    this._disconnectHandler = null;
+    this._raw = new Uint8Array(0); // 原始字节缓冲，用于匹配 HELLO + 128 字节寄存器响应
+    this.binaryWaiter = null;
+  }
+
+  get connected() {
+    return !!this.port && this.keepReading;
+  }
+
+  _emit(direction, line) {
+    if (typeof this.onLine === 'function') {
+      this.onLine(direction, line);
+    }
+  }
+
+  async connect(baudRate = 115200) {
+    if (!isWebSerialSupported()) {
+      throw new Error('Web Serial API not supported');
+    }
+    this.port = await navigator.serial.requestPort();
+    await this.port.open({ baudRate });
+
+    this.keepReading = true;
+    this.buffer = '';
+    this._raw = new Uint8Array(0);
+
+    this._disconnectHandler = () => {
+      this._emit('sys', 'device disconnected');
+      this.disconnect();
+      if (typeof this.onDisconnect === 'function') this.onDisconnect();
+    };
+    this.port.addEventListener('disconnect', this._disconnectHandler);
+
+    this._readLoop();
+  }
+
+  async _readLoop() {
+    const decoder = new TextDecoder();
+    while (this.port && this.port.readable && this.keepReading) {
+      this.reader = this.port.readable.getReader();
+      try {
+        for (;;) {
+          const { value, done } = await this.reader.read();
+          if (done) break;
+          if (value) {
+            this._feedRaw(value);
+            this._feed(decoder.decode(value, { stream: true }));
+          }
+        }
+      } catch (error) {
+        this._emit('sys', 'read error: ' + (error && error.message ? error.message : error));
+      } finally {
+        try { this.reader.releaseLock(); } catch (e) { /* ignore */ }
+        this.reader = null;
+      }
+    }
+  }
+
+  _feed(chunk) {
+    this.buffer += chunk;
+    const lines = this.buffer.split(/\r\n|\r|\n/);
+    this.buffer = lines.pop() || '';
+
+    lines.forEach(raw => {
+      const line = raw.trim();
+      if (!line) return;
+      this._emit('rx', line);
+      if (this.waiter) {
+        this.waiter.lines.push(line);
+        if (/^(OK|ERROR)(\b.*)?$/i.test(line)) {
+          this._settleWaiter();
+        }
+      }
+    });
+  }
+
+  _settleWaiter() {
+    const waiter = this.waiter;
+    if (!waiter) return;
+    this.waiter = null;
+    clearTimeout(waiter.timer);
+    const ok = waiter.lines.some(line => /^OK(\b.*)?$/i.test(line));
+    waiter.resolve({ lines: waiter.lines, ok });
+  }
+
+  _feedRaw(chunk) {
+    const merged = new Uint8Array(this._raw.length + chunk.length);
+    merged.set(this._raw, 0);
+    merged.set(chunk, this._raw.length);
+    this._raw = merged;
+    if (this._raw.length > 4096) {
+      this._raw = this._raw.slice(this._raw.length - 1024);
+    }
+    this._checkBinaryWaiter();
+  }
+
+  _checkBinaryWaiter() {
+    if (!this.binaryWaiter) return;
+    const buf = this._raw;
+    const need = HELLO_PREFIX.length + REGISTER_SIZE;
+    outer: for (let i = 0; i + need <= buf.length; i++) {
+      for (let j = 0; j < HELLO_PREFIX.length; j++) {
+        if (buf[i + j] !== HELLO_PREFIX[j]) continue outer;
+      }
+      const bytes = buf.slice(i + HELLO_PREFIX.length, i + need);
+      this._raw = buf.slice(i + need);
+      this._settleBinaryWaiter(bytes);
+      return;
+    }
+  }
+
+  _settleBinaryWaiter(bytes) {
+    const waiter = this.binaryWaiter;
+    if (!waiter) return;
+    this.binaryWaiter = null;
+    clearTimeout(waiter.timer);
+    waiter.resolve(bytes);
+  }
+
+  // 寄存器设备：发送 AT+SET=READ，等待 'HELLO' + 128 字节寄存器数据
+  readRegisters({ timeout = 2000 } = {}) {
+    return new Promise((resolve, reject) => {
+      if (!this.port || !this.port.writable) {
+        reject(new Error('serial port not connected'));
+        return;
+      }
+      if (this.binaryWaiter) {
+        this._settleBinaryWaiter(null);
+      }
+      this._raw = new Uint8Array(0);
+
+      const timer = setTimeout(() => {
+        this._settleBinaryWaiter(null);
+      }, timeout);
+
+      this.binaryWaiter = { resolve, timer };
+
+      const writer = this.port.writable.getWriter();
+      const payload = new TextEncoder().encode('AT+SET=READ\r\n');
+      this._emit('tx', 'AT+SET=READ');
+      writer.write(payload)
+        .catch(error => {
+          if (this.binaryWaiter) {
+            this._settleBinaryWaiter(null);
+          }
+          reject(error);
+        })
+        .finally(() => {
+          try { writer.releaseLock(); } catch (e) { /* ignore */ }
+        });
+    });
+  }
+
+  // 寄存器设备：发送 AT+SET=WRITE + 128 字节寄存器数据
+  async writeRegisters(bytes, { timeout = 1000 } = {}) {
+    if (!this.port || !this.port.writable) {
+      throw new Error('serial port not connected');
+    }
+    if (!(bytes instanceof Uint8Array) || bytes.length !== REGISTER_SIZE) {
+      throw new Error('register payload must be ' + REGISTER_SIZE + ' bytes');
+    }
+
+    const header = new TextEncoder().encode('AT+SET=WRITE');
+    const payload = new Uint8Array(header.length + bytes.length);
+    payload.set(header, 0);
+    payload.set(bytes, header.length);
+
+    this._emit('tx', 'AT+SET=WRITE <' + bytes.length + ' bytes>');
+    const writer = this.port.writable.getWriter();
+    try {
+      await writer.write(payload);
+    } finally {
+      try { writer.releaseLock(); } catch (e) { /* ignore */ }
+    }
+    return this._waitResponse(timeout);
+  }
+
+  _waitResponse(timeout) {
+    return new Promise(resolve => {
+      if (this.waiter) {
+        this._settleWaiter();
+      }
+      const timer = setTimeout(() => {
+        this._settleWaiter();
+      }, timeout);
+      this.waiter = { lines: [], resolve, timer };
+    });
+  }
+
+  // 读取固件版本：AT+VER=?
+  async readVersion(timeout = 1500) {
+    const result = await this.sendCommand('AT+VER=?', { timeout });
+    for (const line of result.lines) {
+      const match = line.match(/AT\+VER\s*[=:]\s*(.+)$/i);
+      if (match) {
+        return match[1].trim();
+      }
+    }
+    const dataLine = result.lines.find(line => {
+      const text = line.trim();
+      return text && !/^(OK|ERROR)(\b.*)?$/i.test(text) && !/AT\+VER=\?/i.test(text);
+    });
+    return dataLine ? dataLine.trim() : '';
+  }
+
+  // 发送一条 AT 指令并等待响应，返回 { lines, ok }
+  sendCommand(command, { timeout = 2000 } = {}) {
+    return new Promise((resolve, reject) => {
+      if (!this.port || !this.port.writable) {
+        reject(new Error('serial port not connected'));
+        return;
+      }
+      if (this.waiter) {
+        this._settleWaiter();
+      }
+      const timer = setTimeout(() => {
+        this._settleWaiter();
+      }, timeout);
+      this.waiter = { lines: [], resolve, timer };
+
+      const writer = this.port.writable.getWriter();
+      const payload = new TextEncoder().encode(command + '\r\n');
+      this._emit('tx', command);
+      writer.write(payload)
+        .catch(error => {
+          if (this.waiter) {
+            this._settleWaiter();
+          }
+          reject(error);
+        })
+        .finally(() => {
+          try { writer.releaseLock(); } catch (e) { /* ignore */ }
+        });
+    });
+  }
+
+  // 读取全部参数：AT+READ=123
+  async readAll(timeout = 4000) {
+    const result = await this.sendCommand('AT+READ=123', { timeout });
+    const map = {};
+    result.lines.forEach(line => {
+      const parsed = parseATLine(line);
+      if (parsed) {
+        map[parsed.key] = parsed.value;
+      }
+    });
+    return { map, lines: result.lines, ok: result.ok };
+  }
+
+  // 读取单个参数：AT+XXX=?
+  async queryParam(key, timeout = 2000) {
+    const result = await this.sendCommand(key + '=?', { timeout });
+    for (const line of result.lines) {
+      const parsed = parseATLine(line);
+      if (parsed && parsed.key === key.toUpperCase()) {
+        return parsed.value;
+      }
+    }
+    const dataLine = result.lines.find(line => {
+      const text = line.trim();
+      return text && !/^(OK|ERROR)(\b.*)?$/i.test(text) && !text.toUpperCase().startsWith(key.toUpperCase());
+    });
+    return dataLine ? dataLine.trim() : '';
+  }
+
+  // 写入单个参数：AT+XXX=VALUE
+  async setParam(key, value, timeout = 2000) {
+    return this.sendCommand(key + '=' + value, { timeout });
+  }
+
+  async disconnect() {
+    this.keepReading = false;
+    if (this.waiter) {
+      this._settleWaiter();
+    }
+    if (this.binaryWaiter) {
+      this._settleBinaryWaiter(null);
+    }
+    if (this.port && this._disconnectHandler) {
+      try {
+        this.port.removeEventListener('disconnect', this._disconnectHandler);
+      } catch (e) { /* ignore */ }
+      this._disconnectHandler = null;
+    }
+    if (this.reader) {
+      try { await this.reader.cancel(); } catch (e) { /* ignore */ }
+    }
+    if (this.port) {
+      try { await this.port.close(); } catch (e) { /* ignore */ }
+      this.port = null;
+    }
+    this._emit('sys', 'port closed');
+  }
+}
+
+/* ---------------- 128 字节寄存器编解码（同 src/utils/register.js） ---------------- */
+const REG_OFFSET = {
+  dhcp: 0x00,
+  mode: 0x01,
+  role: 0x09,
+  radio: 0x0A,
+  pttTimeout: 0x0C,
+  localSn: 0x10,
+  remoteSn: 0x17,
+  ip: 0x20,
+  gateway: 0x24,
+  mask: 0x28,
+  dns: 0x2C,
+  ssid: 0x40,
+  callsign: 0x41,
+  server: 0x50
+};
+const CALLSIGN_REGION = 15; // 0x41-0x4F
+const SERVER_REGION = 48;   // 0x50-0x7F
+
+function isValidIPv4(text) {
+  const parts = (text || '').trim().split('.');
+  if (parts.length !== 4) return false;
+  return parts.every(part => /^\d{1,3}$/.test(part) && Number(part) <= 255);
+}
+
+function isValidDomain(text) {
+  const domain = (text || '').trim().toLowerCase();
+  if (!domain || domain.length > 253) return false;
+  const parts = domain.split('.');
+  if (parts.length < 2) return false;
+  if (parts[parts.length - 1].length < 2) return false;
+  return parts.every(part =>
+    part.length >= 1 && part.length <= 63 &&
+    !part.startsWith('-') && !part.endsWith('-') &&
+    /^[a-z0-9-]+$/.test(part)
+  );
+}
+
+function readCString(bytes, offset, regionSize) {
+  let out = '';
+  const end = Math.min(offset + regionSize, bytes.length);
+  for (let i = offset; i < end; i++) {
+    if (bytes[i] === 0) break;
+    out += String.fromCharCode(bytes[i]);
+  }
+  return out;
+}
+
+function writeCString(target, offset, regionSize, text) {
+  for (let i = 0; i < regionSize; i++) {
+    target[offset + i] = 0;
+  }
+  const max = regionSize - 1;
+  for (let i = 0; i < text.length && i < max; i++) {
+    target[offset + i] = text.charCodeAt(i) & 0x7F;
+  }
+}
+
+function bytesToIp(bytes, offset) {
+  return [0, 1, 2, 3].map(i => bytes[offset + i]).join('.');
+}
+
+function ipToBytes(text) {
+  if (!isValidIPv4(text)) return null;
+  return text.trim().split('.').map(part => Number(part));
+}
+
+function bytesToHex(bytes, offset, len) {
+  let out = '';
+  for (let i = 0; i < len; i++) {
+    out += bytes[offset + i].toString(16).padStart(2, '0').toUpperCase();
+  }
+  return out;
+}
+
+function normalizeServerAddress(text) {
+  const trimmed = (text || '').trim();
+  if (isValidIPv4(trimmed)) {
+    return trimmed.split('.').map(part => String(Number(part))).join('.');
+  }
+  return trimmed;
+}
+
+function formatServerForRegister(text) {
+  const trimmed = (text || '').trim();
+  if (isValidIPv4(trimmed)) {
+    return trimmed.split('.').map(part => part.padStart(3, '0')).join('.');
+  }
+  return trimmed;
+}
+
+function decodeRegisters(bytes) {
+  if (!(bytes instanceof Uint8Array) || bytes.length < REGISTER_SIZE) {
+    throw new Error('register data must be ' + REGISTER_SIZE + ' bytes');
+  }
+  return {
+    dhcp: bytes[REG_OFFSET.dhcp] !== 0,
+    mode: bytes[REG_OFFSET.mode] === 1 ? 'SERVER' : 'CLIENT',
+    role: bytes[REG_OFFSET.role] === 1 ? 'PANEL' : 'HOST',
+    radio: bytes[REG_OFFSET.radio],
+    pttTimeout: bytes[REG_OFFSET.pttTimeout],
+    localSn: bytesToHex(bytes, REG_OFFSET.localSn, 7),
+    remoteSn: bytesToHex(bytes, REG_OFFSET.remoteSn, 7),
+    ip: bytesToIp(bytes, REG_OFFSET.ip),
+    gateway: bytesToIp(bytes, REG_OFFSET.gateway),
+    mask: bytesToIp(bytes, REG_OFFSET.mask),
+    dns: bytesToIp(bytes, REG_OFFSET.dns),
+    ssid: bytes[REG_OFFSET.ssid],
+    callsign: readCString(bytes, REG_OFFSET.callsign, CALLSIGN_REGION),
+    server: normalizeServerAddress(readCString(bytes, REG_OFFSET.server, SERVER_REGION))
+  };
+}
+
+function encodeRegisters(config, base) {
+  const out = new Uint8Array(REGISTER_SIZE);
+  if (base instanceof Uint8Array && base.length >= REGISTER_SIZE) {
+    out.set(base.slice(0, REGISTER_SIZE));
+  }
+
+  out[REG_OFFSET.dhcp] = config.dhcp ? 1 : 0;
+  out[REG_OFFSET.mode] = config.mode === 'SERVER' ? 1 : 0;
+  out[REG_OFFSET.role] = config.role === 'PANEL' ? 1 : 0;
+  out[REG_OFFSET.radio] = Number(config.radio) & 0xFF;
+
+  const ptt = Number(config.pttTimeout);
+  if (Number.isInteger(ptt) && ptt >= 0 && ptt <= 255) {
+    out[REG_OFFSET.pttTimeout] = ptt;
+  }
+
+  ['ip', 'gateway', 'mask', 'dns'].forEach(field => {
+    const parts = ipToBytes(config[field] || '');
+    if (parts) {
+      for (let i = 0; i < 4; i++) {
+        out[REG_OFFSET[field] + i] = parts[i];
+      }
+    }
+  });
+
+  const remoteSn = (config.remoteSn || '').trim().toUpperCase();
+  if (remoteSn) {
+    if (!/^[0-9A-F]{14}$/.test(remoteSn)) {
+      throw new Error('remote serial must be 14 hex characters');
+    }
+    for (let i = 0; i < 7; i++) {
+      out[REG_OFFSET.remoteSn + i] = parseInt(remoteSn.substr(i * 2, 2), 16);
+    }
+  }
+
+  const ssid = Number((config.ssid ?? '') === '' ? NaN : config.ssid);
+  if (Number.isInteger(ssid) && ssid >= 0 && ssid <= 255) {
+    out[REG_OFFSET.ssid] = ssid;
+  }
+
+  const callsign = (config.callsign || '').trim().toUpperCase();
+  if (callsign) {
+    writeCString(out, REG_OFFSET.callsign, CALLSIGN_REGION, callsign);
+  }
+
+  const server = (config.server || '').trim();
+  if (server) {
+    if (!isValidIPv4(server) && !isValidDomain(server)) {
+      throw new Error('server must be a domain or IPv4 address');
+    }
+    writeCString(out, REG_OFFSET.server, SERVER_REGION, formatServerForRegister(server));
+  }
+
+  return out;
+}
+</script>
+
+<script>
+'use strict';
+/* ---------------- 页面状态 ---------------- */
+const $ = id => document.getElementById(id);
+
+const client = new SerialATClient();
+let connected = false;
+let deviceMode = ''; // '' | 'at' | 'register'
+let regBase = null;  // Uint8Array(128)，设备上次读取的原始寄存器数据
+let atKeys = [];
+const atValues = {};
+let executingKey = '';
+let busy = false; // reading / writing 中，避免重复操作
+
+/* ---------------- 消息提示 ---------------- */
+function toast(type, text) {
+  const wrap = $('toastWrap');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = text;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity 0.3s ease';
+    setTimeout(() => el.remove(), 320);
+  }, 2600);
+}
+
+/* ---------------- 通信日志 ---------------- */
+function appendLog(direction, line) {
+  const box = $('logBox');
+  const empty = box.querySelector('.log-empty');
+  if (empty) empty.remove();
+
+  const row = document.createElement('div');
+  row.className = 'log-line log-' + direction;
+  const prefix = document.createElement('span');
+  prefix.className = 'log-prefix';
+  prefix.textContent = direction === 'tx' ? '→' : direction === 'rx' ? '←' : '·';
+  const text = document.createElement('span');
+  text.textContent = line;
+  row.appendChild(prefix);
+  row.appendChild(text);
+  box.appendChild(row);
+
+  while (box.children.length > 500) {
+    box.removeChild(box.firstChild);
+  }
+  box.scrollTop = box.scrollHeight;
+}
+
+/* ---------------- 状态栏 ---------------- */
+function updateConnTag() {
+  const tag = $('connTag');
+  tag.textContent = connected ? t('connected') : t('disconnected');
+  tag.className = 'tag ' + (connected ? 'success' : 'info');
+}
+
+function updateModeTag() {
+  const tag = $('modeTag');
+  if (connected && deviceMode) {
+    tag.textContent = deviceMode === 'register' ? t('typeRegister') : t('typeAt');
+    tag.classList.remove('hidden');
+  } else {
+    tag.classList.add('hidden');
+  }
+}
+
+function setConnectedUI(value) {
+  connected = value;
+  $('btnConnect').classList.toggle('hidden', value);
+  $('btnDisconnect').classList.toggle('hidden', !value);
+  updateConnTag();
+  updateModeTag();
+  updateDeviceModeUI();
+  refreshEnabledState();
+}
+
+function refreshEnabledState() {
+  const c = connected;
+  ['btnReadBasic', 'btnWriteBasic', 'btnReadReg', 'btnWriteReg', 'btnCustom'].forEach(id => {
+    $(id).disabled = !c || busy;
+  });
+  document.querySelectorAll('#atList .at-exec').forEach(btn => {
+    btn.disabled = !c || busy;
+  });
+  $('baudRate').disabled = c;
+  $('btnOpenBasicServer').disabled = !$('basicServer').value.trim();
+  $('btnOpenRegServer').disabled = !$('regServer').value.trim();
+}
+
+/* ---------------- 区域显隐 ---------------- */
+function updateDeviceModeUI() {
+  const isAT = connected && deviceMode !== 'register';
+  const isReg = connected && deviceMode === 'register';
+  const anyConnected = connected;
+
+  $('basicCard').classList.toggle('hidden', !isAT);
+  $('advancedCard').classList.toggle('hidden', !isAT);
+
+  ['regInfoCard', 'regNetCard', 'regModeCard', 'regServerCard', 'regSnCard'].forEach(id => {
+    $(id).classList.toggle('hidden', !isReg);
+  });
+
+  // 未连接时也显示常用设置 + 高级指令区，便于预先查看
+  if (!anyConnected) {
+    $('basicCard').classList.remove('hidden');
+    $('advancedCard').classList.remove('hidden');
+  }
+}
+
+/* ---------------- 寄存器表单 ---------------- */
+function emptyRegisterConfig() {
+  return {
+    dhcp: false, mode: 'CLIENT', role: 'HOST', radio: 0, pttTimeout: 30,
+    localSn: '', remoteSn: '', ip: '', gateway: '', mask: '', dns: '',
+    ssid: '', callsign: '', server: ''
+  };
+}
+let reg = emptyRegisterConfig();
+
+function renderRadioOptions() {
+  const sel = $('regRadio');
+  let models = RADIO_MODELS;
+  if (reg.radio && !RADIO_MODELS.some(m => m.id === reg.radio)) {
+    models = RADIO_MODELS.concat([{ id: reg.radio, name: t('radioUnknown') }]);
+  }
+  sel.innerHTML = models.map(m =>
+    '<option value="' + m.id + '">' + m.name + ' (' + m.id + ')</option>'
+  ).join('');
+  sel.value = String(reg.radio);
+}
+
+function renderPttOptions() {
+  const sel = $('regPtt');
+  let opts = PTT_TIMEOUT_OPTIONS;
+  if (reg.pttTimeout && !PTT_TIMEOUT_OPTIONS.includes(reg.pttTimeout)) {
+    opts = PTT_TIMEOUT_OPTIONS.concat([reg.pttTimeout]).sort((a, b) => a - b);
+  }
+  sel.innerHTML = opts.map(sec =>
+    '<option value="' + sec + '">' + sec + ' ' + t('seconds') + '</option>'
+  ).join('');
+  sel.value = String(reg.pttTimeout);
+}
+
+function renderRegForm() {
+  $('regVersion').textContent = regVersion || '-';
+  $('regLocalSn').textContent = reg.localSn || '-';
+  $('regDhcp').checked = !!reg.dhcp;
+  $('regIp').value = reg.ip;
+  $('regGateway').value = reg.gateway;
+  $('regMask').value = reg.mask;
+  $('regDns').value = reg.dns;
+  $('regMode').value = reg.mode;
+  $('regRole').value = reg.role;
+  renderRadioOptions();
+  renderPttOptions();
+  $('regCallsign').value = reg.callsign;
+  $('regSsid').value = String(reg.ssid);
+  $('regServer').value = reg.server;
+  $('regRemoteSn').value = reg.remoteSn;
+  syncDhcpDisabled();
+  refreshEnabledState();
+}
+
+function collectRegForm() {
+  reg.dhcp = $('regDhcp').checked;
+  reg.ip = $('regIp').value.trim();
+  reg.gateway = $('regGateway').value.trim();
+  reg.mask = $('regMask').value.trim();
+  reg.dns = $('regDns').value.trim();
+  reg.mode = $('regMode').value;
+  reg.role = $('regRole').value;
+  reg.radio = Number($('regRadio').value);
+  reg.pttTimeout = Number($('regPtt').value);
+  reg.callsign = $('regCallsign').value;
+  reg.ssid = $('regSsid').value;
+  reg.server = $('regServer').value;
+  reg.remoteSn = $('regRemoteSn').value;
+}
+
+function syncDhcpDisabled() {
+  const disabled = $('regDhcp').checked;
+  ['regIp', 'regGateway', 'regMask', 'regDns'].forEach(id => {
+    $(id).disabled = disabled;
+  });
+}
+
+let regVersion = '';
+
+function applyRegisterRead(bytes) {
+  regBase = bytes;
+  const config = decodeRegisters(bytes);
+  config.ssid = String(config.ssid);
+  reg = config;
+}
+
+function resetDeviceMode() {
+  deviceMode = '';
+  regVersion = '';
+  regBase = null;
+  reg = emptyRegisterConfig();
+}
+
+/* ---------------- AT 高级指令列表 ---------------- */
+function renderAtList() {
+  const list = $('atList');
+  if (!atKeys.length) {
+    list.innerHTML = '<div class="at-empty" data-i18n="noAtList">' + t('noAtList') + '</div>';
+    return;
+  }
+  list.innerHTML = '';
+  atKeys.forEach(key => {
+    const row = document.createElement('div');
+    row.className = 'at-row';
+
+    const keyEl = document.createElement('span');
+    keyEl.className = 'at-key';
+    keyEl.textContent = key + '=';
+    row.appendChild(keyEl);
+
+    let input;
+    if (ON_OFF_KEYS.includes(key)) {
+      input = document.createElement('select');
+      input.innerHTML = '<option value="ON">ON</option><option value="OFF">OFF</option>';
+    } else if (key === 'AT+DCD') {
+      input = document.createElement('select');
+      input.innerHTML = ['SQL_LO', 'SQL_HI', 'VOX', 'MANUAL', 'DISABLE']
+        .map(v => '<option value="' + v + '">' + v + '</option>').join('');
+    } else if (key === 'AT+PTT_EN') {
+      input = document.createElement('select');
+      input.innerHTML = '<option value="ENABLE">ENABLE</option><option value="DISABLE">DISABLE</option>';
+    } else if (HL_KEYS.includes(key)) {
+      input = document.createElement('select');
+      input.innerHTML = '<option value="H">H</option><option value="L">L</option>';
+    } else {
+      input = document.createElement('input');
+      input.type = 'text';
+      if (key === 'AT+D_IP') input.setAttribute('list', 'serverList');
+    }
+    input.className = 'at-value';
+    input.value = atValues[key] !== undefined ? atValues[key] : '';
+    input.addEventListener('change', () => { atValues[key] = input.value; });
+    if (input.tagName === 'INPUT') {
+      input.addEventListener('input', () => { atValues[key] = input.value; });
+    }
+    row.appendChild(input);
+
+    const btn = document.createElement('button');
+    btn.className = 'small at-exec';
+    btn.textContent = t('execute');
+    btn.disabled = !connected || busy;
+    btn.addEventListener('click', () => executeAT(key));
+    row.appendChild(btn);
+
+    if (ATREADMEOptions[key]) {
+      const desc = document.createElement('span');
+      desc.className = 'at-desc';
+      desc.textContent = ATREADMEOptions[key];
+      row.appendChild(desc);
+    }
+
+    list.appendChild(row);
+  });
+}
+
+/* ---------------- 连接 / 识别 ---------------- */
+async function handleConnect() {
+  const baud = Number($('baudRate').value);
+  try {
+    await client.connect(baud);
+    setConnectedUI(true);
+    resetDeviceMode();
+    updateModeTag();
+    toast('success', t('connectSuccess'));
+    await detectAndRead();
+  } catch (error) {
+    if (error && error.name !== 'NotFoundError') {
+      toast('error', t('connectFailed') + ': ' + (error.message || error));
+    }
+  }
+}
+
+async function handleDisconnect() {
+  await client.disconnect();
+  setConnectedUI(false);
+  resetDeviceMode();
+  updateDeviceModeUI();
+}
+
+// 连接后自动识别设备类型：
+// 发送 AT+SET=READ 返回 HELLO + 128 字节 → 寄存器设备；
+// 否则回退到 AT+READ=123 读取 AT 指令列表
+async function detectAndRead() {
+  busy = true;
+  refreshEnabledState();
+  try {
+    const bytes = await client.readRegisters({ timeout: 2000 });
+    if (bytes) {
+      applyRegisterRead(bytes);
+      deviceMode = 'register';
+      regVersion = await client.readVersion();
+      renderRegForm();
+      updateModeTag();
+      updateDeviceModeUI();
+      toast('success', t('readSuccess'));
+      busy = false;
+      refreshEnabledState();
+      return;
+    }
+  } catch (error) {
+    // 寄存器探测失败，继续按 AT 指令设备处理
+  }
+  deviceMode = 'at';
+  busy = false;
+  updateModeTag();
+  updateDeviceModeUI();
+  await readBasic();
+}
+
+async function readRegisters() {
+  if (!connected) return;
+  busy = true;
+  refreshEnabledState();
+  try {
+    const bytes = await client.readRegisters({ timeout: 2500 });
+    if (!bytes) {
+      toast('error', t('readFailed'));
+      return;
+    }
+    applyRegisterRead(bytes);
+    regVersion = await client.readVersion();
+    renderRegForm();
+    toast('success', t('readSuccess'));
+  } catch (error) {
+    toast('error', t('readFailed') + ': ' + (error.message || error));
+  } finally {
+    busy = false;
+    refreshEnabledState();
+  }
+}
+
+async function writeRegisters() {
+  if (!connected) {
+    toast('warning', t('connectFirst'));
+    return;
+  }
+  collectRegForm();
+
+  const callsign = (reg.callsign || '').trim().toUpperCase();
+  if (!callsign) {
+    toast('warning', t('callsignRequired'));
+    return;
+  }
+  const ssid = (reg.ssid || '').trim();
+  if (ssid && !/^\d{1,3}$/.test(ssid)) {
+    toast('warning', t('ssidInvalid'));
+    return;
+  }
+  if (!reg.dhcp) {
+    for (const field of ['ip', 'gateway', 'mask', 'dns']) {
+      const value = (reg[field] || '').trim();
+      if (value && !isValidIPv4(value)) {
+        toast('warning', t('ipInvalid'));
+        return;
+      }
+    }
+  }
+  const server = (reg.server || '').trim();
+  if (server && !isValidIPv4(server) && !isValidDomain(server)) {
+    toast('warning', t('serverInvalid'));
+    return;
+  }
+  const remoteSn = (reg.remoteSn || '').trim().toUpperCase();
+  if (remoteSn && !/^[0-9A-F]{14}$/.test(remoteSn)) {
+    toast('warning', t('snInvalid'));
+    return;
+  }
+
+  if (!window.confirm(t('regWriteConfirm'))) return;
+
+  busy = true;
+  refreshEnabledState();
+  try {
+    const bytes = encodeRegisters(
+      Object.assign({}, reg, { callsign, ssid, server, remoteSn }),
+      regBase
+    );
+    await client.writeRegisters(bytes);
+    reg.callsign = callsign;
+    reg.ssid = ssid;
+    reg.server = server;
+    reg.remoteSn = remoteSn;
+    toast('success', t('writeSuccess'));
+  } catch (error) {
+    toast('error', t('writeFailed') + ': ' + (error.message || error));
+  } finally {
+    busy = false;
+    refreshEnabledState();
+  }
+}
+
+/* ---------------- AT 设备读写 ---------------- */
+async function readBasic() {
+  if (!connected) return;
+  busy = true;
+  refreshEnabledState();
+  try {
+    const { map } = await client.readAll();
+
+    // 只显示设备实际返回的指令：按 ATREADMEOptions 顺序排列已知指令，其余追加在后
+    const returnedKeys = Object.keys(map);
+    const knownKeys = Object.keys(ATREADMEOptions).filter(key => returnedKeys.includes(key));
+    const extraKeys = returnedKeys.filter(key => !(key in ATREADMEOptions));
+    atKeys = knownKeys.concat(extraKeys);
+
+    returnedKeys.forEach(key => {
+      atValues[key] = map[key];
+    });
+    renderAtList();
+
+    const fields = ['callsign', 'ssid', 'server'];
+    for (const field of fields) {
+      const key = BASIC_KEYS[field];
+      let value = map[key];
+      if (value === undefined || value === '') {
+        try {
+          value = await client.queryParam(key);
+        } catch (e) {
+          value = '';
+        }
+      }
+      if (value) {
+        const inputId = field === 'callsign' ? 'basicCallsign' : field === 'ssid' ? 'basicSsid' : 'basicServer';
+        $(inputId).value = value;
+        atValues[key] = value;
+      }
+    }
+    refreshEnabledState();
+    toast('success', t('readSuccess'));
+  } catch (error) {
+    toast('error', t('readFailed') + ': ' + (error.message || error));
+  } finally {
+    busy = false;
+    refreshEnabledState();
+  }
+}
+
+async function writeBasic() {
+  if (!connected) {
+    toast('warning', t('connectFirst'));
+    return;
+  }
+
+  const callsign = ($('basicCallsign').value || '').trim().toUpperCase();
+  let ssid = ($('basicSsid').value || '').trim();
+  const server = ($('basicServer').value || '').trim();
+
+  if (!callsign) {
+    toast('warning', t('callsignRequired'));
+    return;
+  }
+  if (ssid && !/^\d{1,3}$/.test(ssid)) {
+    toast('warning', t('ssidInvalid'));
+    return;
+  }
+  // 设备要求 SSID 为 3 位数字
+  if (ssid) {
+    ssid = ssid.padStart(3, '0');
+  }
+
+  if (!window.confirm(t('writeConfirm'))) return;
+
+  busy = true;
+  refreshEnabledState();
+  try {
+    await client.setParam(BASIC_KEYS.callsign, callsign);
+    if (ssid) {
+      await client.setParam(BASIC_KEYS.ssid, ssid);
+      $('basicSsid').value = ssid;
+    }
+    if (server) {
+      await client.setParam(BASIC_KEYS.server, server);
+    }
+    atValues[BASIC_KEYS.callsign] = callsign;
+    atValues[BASIC_KEYS.ssid] = ssid;
+    atValues[BASIC_KEYS.server] = server;
+    renderAtList();
+    toast('success', t('writeSuccess'));
+  } catch (error) {
+    toast('error', t('writeFailed') + ': ' + (error.message || error));
+  } finally {
+    busy = false;
+    refreshEnabledState();
+  }
+}
+
+async function executeAT(key) {
+  if (!connected) {
+    toast('warning', t('connectFirst'));
+    return;
+  }
+  const value = atValues[key];
+  if (value === undefined || value === '') {
+    toast('warning', t('valueRequired'));
+    return;
+  }
+  executingKey = key;
+  try {
+    const result = await client.setParam(key, value);
+    if (result.ok) {
+      toast('success', key + ' ' + t('executeSuccess'));
+    } else {
+      toast('info', key + ' ' + t('executeDone'));
+    }
+  } catch (error) {
+    toast('error', t('executeFailed') + ': ' + (error.message || error));
+  } finally {
+    executingKey = '';
+  }
+}
+
+async function executeCustom() {
+  if (!connected) {
+    toast('warning', t('connectFirst'));
+    return;
+  }
+  const command = $('customCommand').value.trim().toUpperCase();
+  if (!command) return;
+  try {
+    await client.setParam(command, $('customData').value.trim());
+    toast('success', t('executeDone'));
+  } catch (error) {
+    toast('error', t('executeFailed') + ': ' + (error.message || error));
+  }
+}
+
+function openSite(host) {
+  const target = (host || '').trim();
+  if (!target) return;
+  const url = /^https?:\/\//i.test(target) ? target : 'https://' + target;
+  window.open(url, '_blank', 'noopener');
+}
+
+/* ---------------- 初始化 ---------------- */
+(function init() {
+  // 波特率下拉
+  $('baudRate').innerHTML = BAUD_RATE_OPTIONS.map(rate =>
+    '<option value="' + rate + '"' + (rate === 115200 ? ' selected' : '') + '>' + rate + '</option>'
+  ).join('');
+
+  // 服务器地址下拉候选（datalist）
+  $('serverList').innerHTML = SERVER_PRESETS.map(item =>
+    '<option value="' + item.host + '">' + item.name + '</option>'
+  ).join('');
+
+  if (!isWebSerialSupported()) {
+    $('unsupported').classList.remove('hidden');
+    $('btnConnect').disabled = true;
+  }
+
+  client.onLine = (direction, line) => appendLog(direction, line);
+  client.onDisconnect = () => {
+    setConnectedUI(false);
+    resetDeviceMode();
+    updateDeviceModeUI();
+  };
+
+  // 事件绑定
+  $('langZh').addEventListener('click', () => setLang('zh'));
+  $('langEn').addEventListener('click', () => setLang('en'));
+  $('btnConnect').addEventListener('click', handleConnect);
+  $('btnDisconnect').addEventListener('click', handleDisconnect);
+  $('btnReadBasic').addEventListener('click', readBasic);
+  $('btnWriteBasic').addEventListener('click', writeBasic);
+  $('btnReadReg').addEventListener('click', readRegisters);
+  $('btnWriteReg').addEventListener('click', writeRegisters);
+  $('btnCustom').addEventListener('click', executeCustom);
+  $('btnClearLog').addEventListener('click', () => {
+    $('logBox').innerHTML = '<div class="log-empty">' + t('logEmpty') + '</div>';
+  });
+  $('btnOpenBasicServer').addEventListener('click', () => openSite($('basicServer').value));
+  $('btnOpenRegServer').addEventListener('click', () => openSite($('regServer').value));
+  $('regDhcp').addEventListener('change', syncDhcpDisabled);
+  $('basicCallsign').addEventListener('input', e => {
+    e.target.value = e.target.value.toUpperCase();
+  });
+  $('regCallsign').addEventListener('input', e => {
+    e.target.value = e.target.value.toUpperCase();
+  });
+  $('regRemoteSn').addEventListener('input', e => {
+    e.target.value = e.target.value.toUpperCase();
+  });
+  ['basicServer', 'regServer'].forEach(id => {
+    $(id).addEventListener('input', refreshEnabledState);
+  });
+  window.addEventListener('beforeunload', () => {
+    if (client.connected) client.disconnect();
+  });
+
+  renderAtList();
+  updateConnTag();
+  updateDeviceModeUI();
+  refreshEnabledState();
+  applyI18n();
+})();
+</script>
+</body>
+</html>

@@ -39,11 +39,15 @@
           {{ connected ? $t('serial.connected') : $t('serial.disconnected') }}
         </el-tag>
 
+        <el-tag v-if="connected && deviceMode" type="warning" class="status-tag">
+          {{ deviceMode === 'register' ? $t('serial.typeRegister') : $t('serial.typeAt') }}
+        </el-tag>
+
         <span class="https-tip">{{ $t('serial.httpsTip') }}</span>
       </div>
 
-      <!-- 常用设置：呼号 / SSID / 服务器地址 -->
-      <div class="section-card basic-card">
+      <!-- 常用设置：呼号 / SSID / 服务器地址（AT 指令设备） -->
+      <div v-if="deviceMode !== 'register'" class="section-card basic-card">
         <div class="section-header">
           <span class="section-title">{{ $t('serial.basicSettings') }}</span>
           <div class="section-actions">
@@ -115,6 +119,176 @@
         </el-form>
       </div>
 
+      <!-- 寄存器设备：设备信息 + 读写操作 -->
+      <template v-if="deviceMode === 'register'">
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title">{{ $t('serial.deviceInfo') }}</span>
+            <div class="section-actions">
+              <el-button size="small" :disabled="!connected" :loading="reading" @click="readRegisters">
+                {{ $t('serial.refresh') }}
+              </el-button>
+              <el-popconfirm
+                :title="$t('serial.regWriteConfirm')"
+                :confirm-button-text="$t('serial.confirm')"
+                :cancel-button-text="$t('serial.cancel')"
+                @confirm="writeRegisters"
+              >
+                <template #reference>
+                  <el-button size="small" type="primary" :disabled="!connected" :loading="writing">
+                    {{ $t('serial.writeAll') }}
+                  </el-button>
+                </template>
+              </el-popconfirm>
+            </div>
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">{{ $t('serial.firmwareVersion') }}</span>
+              <span class="info-value">{{ regVersion || '-' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">{{ $t('serial.localSn') }}</span>
+              <span class="info-value info-mono">{{ reg.localSn || '-' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 网络设置 -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title">{{ $t('serial.networkSettings') }}</span>
+            <el-checkbox v-model="reg.dhcp" class="dhcp-check">{{ $t('serial.dhcp') }}</el-checkbox>
+          </div>
+          <el-form label-position="top" class="basic-form">
+            <div class="reg-grid">
+              <el-form-item :label="$t('serial.ipAddress')">
+                <el-input v-model="reg.ip" :disabled="reg.dhcp" placeholder="192.168.1.100" />
+              </el-form-item>
+              <el-form-item :label="$t('serial.gateway')">
+                <el-input v-model="reg.gateway" :disabled="reg.dhcp" placeholder="192.168.1.1" />
+              </el-form-item>
+              <el-form-item :label="$t('serial.mask')">
+                <el-input v-model="reg.mask" :disabled="reg.dhcp" placeholder="255.255.255.0" />
+              </el-form-item>
+              <el-form-item :label="$t('serial.dns')">
+                <el-input v-model="reg.dns" :disabled="reg.dhcp" placeholder="8.8.8.8" />
+              </el-form-item>
+            </div>
+          </el-form>
+        </div>
+
+        <!-- 模式设置 -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title">{{ $t('serial.modeSettings') }}</span>
+          </div>
+          <el-form label-position="top" class="basic-form">
+            <div class="reg-grid">
+              <el-form-item :label="$t('serial.connectMode')">
+                <el-select v-model="reg.mode" popper-class="platform-theme-select-dropdown">
+                  <el-option label="CLIENT" value="CLIENT" />
+                  <el-option label="SERVER" value="SERVER" />
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="$t('serial.deviceRole')">
+                <el-select v-model="reg.role" popper-class="platform-theme-select-dropdown">
+                  <el-option :label="$t('serial.roleHost')" value="HOST" />
+                  <el-option :label="$t('serial.rolePanel')" value="PANEL" />
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="$t('serial.radioModel')">
+                <el-select v-model="reg.radio" filterable popper-class="platform-theme-select-dropdown">
+                  <el-option
+                    v-for="model in radioOptions"
+                    :key="model.id"
+                    :label="model.name + ' (' + model.id + ')'"
+                    :value="model.id"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="$t('serial.pttTimeout')">
+                <el-select v-model="reg.pttTimeout" popper-class="platform-theme-select-dropdown">
+                  <el-option
+                    v-for="sec in pttOptions"
+                    :key="sec"
+                    :label="sec + ' ' + $t('serial.seconds')"
+                    :value="sec"
+                  />
+                </el-select>
+              </el-form-item>
+            </div>
+          </el-form>
+        </div>
+
+        <!-- NRL 服务器（呼号 / 编号） -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title">{{ $t('serial.nrlServer') }}</span>
+          </div>
+          <el-form label-position="top" class="basic-form">
+            <div class="reg-grid">
+              <el-form-item :label="$t('serial.callsign')">
+                <el-input
+                  v-model="reg.callsign"
+                  maxlength="14"
+                  :placeholder="$t('serial.callsignPlaceholder')"
+                  @input="reg.callsign = reg.callsign.toUpperCase()"
+                />
+              </el-form-item>
+              <el-form-item :label="$t('serial.ssid')">
+                <el-input v-model="reg.ssid" maxlength="3" :placeholder="$t('serial.ssidPlaceholder')" />
+              </el-form-item>
+            </div>
+            <el-form-item :label="$t('serial.server')" class="server-item">
+              <div class="server-row">
+                <el-select
+                  v-model="reg.server"
+                  filterable
+                  allow-create
+                  default-first-option
+                  :disabled="reg.mode === 'SERVER'"
+                  :placeholder="$t('serial.selectServer')"
+                  class="server-select"
+                  popper-class="platform-theme-select-dropdown"
+                >
+                  <el-option
+                    v-for="item in platformOptions"
+                    :key="item.id"
+                    :label="item.name + ' - ' + item.host"
+                    :value="item.host"
+                  />
+                </el-select>
+                <el-button
+                  class="server-jump"
+                  :disabled="!reg.server"
+                  @click="openSite(reg.server)"
+                >{{ $t('serial.visitServer') }}</el-button>
+              </div>
+            </el-form-item>
+          </el-form>
+        </div>
+
+        <!-- 202 服务器（序列号） -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title">{{ $t('serial.server202') }}</span>
+          </div>
+          <el-form label-position="top" class="basic-form">
+            <el-form-item :label="$t('serial.remoteSn')">
+              <el-input
+                v-model="reg.remoteSn"
+                maxlength="14"
+                placeholder="AABBCCDDEEFF00"
+                class="sn-input"
+                @input="reg.remoteSn = reg.remoteSn.toUpperCase()"
+              />
+              <div class="field-tip">{{ $t('serial.remoteSnTip') }}</div>
+            </el-form-item>
+          </el-form>
+        </div>
+      </template>
+
       <!-- 自定义 AT 指令 -->
       <div class="section-card custom-card">
         <div class="section-header">
@@ -133,8 +307,8 @@
         </div>
       </div>
 
-      <!-- 高级 AT 指令 -->
-      <div class="section-card">
+      <!-- 高级 AT 指令（AT 指令设备） -->
+      <div v-if="deviceMode !== 'register'" class="section-card">
         <el-collapse v-model="advancedActive">
           <el-collapse-item :title="$t('serial.advanced')" name="advanced">
             <div class="at-list">
@@ -240,8 +414,35 @@ import { ElMessage } from 'element-plus'
 import { fetchPlatformList } from '@/api/platform'
 import { ATREADMEOptions } from '@/utils/system'
 import { BAUD_RATE_OPTIONS, SerialATClient, isWebSerialSupported } from '@/utils/serial'
+import {
+  RADIO_MODELS,
+  PTT_TIMEOUT_OPTIONS,
+  decodeRegisters,
+  encodeRegisters,
+  isValidIPv4,
+  isValidDomain
+} from '@/utils/register'
 
 const BASIC_KEYS = { callsign: 'AT+CALL', ssid: 'AT+SSID', server: 'AT+D_IP' }
+
+function emptyRegisterConfig() {
+  return {
+    dhcp: false,
+    mode: 'CLIENT',
+    role: 'HOST',
+    radio: 0,
+    pttTimeout: 30,
+    localSn: '',
+    remoteSn: '',
+    ip: '',
+    gateway: '',
+    mask: '',
+    dns: '',
+    ssid: '',
+    callsign: '',
+    server: ''
+  }
+}
 
 export default {
   name: 'SerialConfigPage',
@@ -269,14 +470,34 @@ export default {
       executingKey: '',
       customCommand: '',
       customData: '',
+      deviceMode: '', // '' | 'at' | 'register'
+      regVersion: '',
+      reg: emptyRegisterConfig(),
       logs: []
+    }
+  },
+  computed: {
+    // 设备返回的型号 / PTT 超时若不在已知列表中，追加为可选项以免显示为空
+    radioOptions() {
+      if (this.reg.radio && !RADIO_MODELS.some(model => model.id === this.reg.radio)) {
+        return RADIO_MODELS.concat([{ id: this.reg.radio, name: this.$t('serial.radioUnknown') }])
+      }
+      return RADIO_MODELS
+    },
+    pttOptions() {
+      if (this.reg.pttTimeout && !PTT_TIMEOUT_OPTIONS.includes(this.reg.pttTimeout)) {
+        return PTT_TIMEOUT_OPTIONS.concat([this.reg.pttTimeout]).sort((a, b) => a - b)
+      }
+      return PTT_TIMEOUT_OPTIONS
     }
   },
   created() {
     this.client = new SerialATClient()
+    this.regBase = null // Uint8Array(128)，设备上次读取的原始寄存器数据
     this.client.onLine = (direction, line) => this.appendLog(direction, line)
     this.client.onDisconnect = () => {
       this.connected = false
+      this.resetDeviceMode()
     }
     this.atKeys.forEach(key => {
       this.atValues[key] = ''
@@ -295,12 +516,21 @@ export default {
         this.platformOptions = response.data.items || []
       }).catch(() => {})
     },
-    // 在新标签页打开所选服务器的站点（其首页提供登录 / 注册入口）
-    openServerSite() {
-      const host = (this.basic.server || '').trim()
-      if (!host) return
-      const url = /^https?:\/\//i.test(host) ? host : `https://${host}`
+    // 在新标签页打开指定服务器的站点（其首页提供登录 / 注册入口）
+    openSite(host) {
+      const target = (host || '').trim()
+      if (!target) return
+      const url = /^https?:\/\//i.test(target) ? target : `https://${target}`
       window.open(url, '_blank', 'noopener')
+    },
+    openServerSite() {
+      this.openSite(this.basic.server)
+    },
+    resetDeviceMode() {
+      this.deviceMode = ''
+      this.regVersion = ''
+      this.regBase = null
+      this.reg = emptyRegisterConfig()
     },
     appendLog(direction, line) {
       this.logs.push({ direction, line })
@@ -319,8 +549,9 @@ export default {
       try {
         await this.client.connect(this.baudRate)
         this.connected = true
+        this.resetDeviceMode()
         ElMessage.success(this.$t('serial.connectSuccess'))
-        await this.readBasic()
+        await this.detectAndRead()
       } catch (error) {
         if (error && error.name !== 'NotFoundError') {
           ElMessage.error(this.$t('serial.connectFailed') + ': ' + (error.message || error))
@@ -332,6 +563,112 @@ export default {
     async handleDisconnect() {
       await this.client.disconnect()
       this.connected = false
+      this.resetDeviceMode()
+    },
+    // 连接后自动识别设备类型：
+    // 发送 AT+SET=READ 返回 HELLO + 128 字节 → 寄存器设备；
+    // 否则回退到 AT+READ=123 读取 AT 指令列表
+    async detectAndRead() {
+      this.reading = true
+      try {
+        const bytes = await this.client.readRegisters({ timeout: 2000 })
+        if (bytes) {
+          this.applyRegisterRead(bytes)
+          this.deviceMode = 'register'
+          this.regVersion = await this.client.readVersion()
+          ElMessage.success(this.$t('serial.readSuccess'))
+          return
+        }
+      } catch (error) {
+        // 寄存器探测失败，继续按 AT 指令设备处理
+      }
+      this.deviceMode = 'at'
+      this.reading = false
+      await this.readBasic()
+    },
+    // 寄存器设备：重新读取（AT+SET=READ），成功后读取固件版本（AT+VER=?）
+    async readRegisters() {
+      if (!this.connected) return
+      this.reading = true
+      try {
+        const bytes = await this.client.readRegisters({ timeout: 2500 })
+        if (!bytes) {
+          ElMessage.error(this.$t('serial.readFailed'))
+          return
+        }
+        this.applyRegisterRead(bytes)
+        this.regVersion = await this.client.readVersion()
+        ElMessage.success(this.$t('serial.readSuccess'))
+      } catch (error) {
+        ElMessage.error(this.$t('serial.readFailed') + ': ' + (error.message || error))
+      } finally {
+        this.reading = false
+      }
+    },
+    applyRegisterRead(bytes) {
+      this.regBase = bytes
+      const config = decodeRegisters(bytes)
+      config.ssid = String(config.ssid)
+      this.reg = config
+    },
+    // 寄存器设备：校验并写入（AT+SET=WRITE + 128 字节）
+    async writeRegisters() {
+      if (!this.connected) {
+        ElMessage.warning(this.$t('serial.connectFirst'))
+        return
+      }
+
+      const callsign = (this.reg.callsign || '').trim().toUpperCase()
+      if (!callsign) {
+        ElMessage.warning(this.$t('serial.callsignRequired'))
+        return
+      }
+
+      const ssid = (this.reg.ssid || '').trim()
+      if (ssid && !/^\d{1,3}$/.test(ssid)) {
+        ElMessage.warning(this.$t('serial.ssidInvalid'))
+        return
+      }
+
+      if (!this.reg.dhcp) {
+        for (const field of ['ip', 'gateway', 'mask', 'dns']) {
+          const value = (this.reg[field] || '').trim()
+          if (value && !isValidIPv4(value)) {
+            ElMessage.warning(this.$t('serial.ipInvalid'))
+            return
+          }
+        }
+      }
+
+      const server = (this.reg.server || '').trim()
+      if (server && !isValidIPv4(server) && !isValidDomain(server)) {
+        ElMessage.warning(this.$t('serial.serverInvalid'))
+        return
+      }
+
+      const remoteSn = (this.reg.remoteSn || '').trim().toUpperCase()
+      if (remoteSn && !/^[0-9A-F]{14}$/.test(remoteSn)) {
+        ElMessage.warning(this.$t('serial.snInvalid'))
+        return
+      }
+
+      this.writing = true
+      try {
+        const bytes = encodeRegisters(
+          { ...this.reg, callsign, ssid, server, remoteSn },
+          this.regBase
+        )
+        await this.client.writeRegisters(bytes)
+        this.reg.callsign = callsign
+        this.reg.ssid = ssid
+        this.reg.server = server
+        this.reg.remoteSn = remoteSn
+        ElMessage.success(this.$t('serial.writeSuccess'))
+      } catch (error) {
+        ElMessage.error(this.$t('serial.writeFailed') + ': ' + (error.message || error))
+      } finally {
+        this.writing = false
+      }
     },
     // 连接后自动读取：优先 AT+READ 全量读取，缺失的字段再单独查询
     async readBasic() {
@@ -750,6 +1087,69 @@ export default {
   }
 }
 
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 28px;
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .info-label {
+    flex-shrink: 0;
+    font-size: 13px;
+    color: var(--platform-ink-dim);
+  }
+
+  .info-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--platform-ink);
+    word-break: break-all;
+  }
+
+  .info-mono {
+    font-family: monospace;
+    letter-spacing: 1px;
+  }
+}
+
+.reg-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 28px;
+
+  :deep(.el-select) {
+    width: 100%;
+  }
+}
+
+.dhcp-check {
+  :deep(.el-checkbox__label) {
+    color: var(--platform-ink-dim);
+  }
+}
+
+.sn-input {
+  max-width: 320px;
+
+  :deep(.el-input__inner) {
+    font-family: monospace;
+    letter-spacing: 1px;
+  }
+}
+
+.field-tip {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--platform-ink-dim);
+  opacity: 0.8;
+}
+
 .at-list {
   display: flex;
   flex-direction: column;
@@ -861,6 +1261,11 @@ export default {
       gap: 14px;
       margin-bottom: 14px;
     }
+  }
+
+  .reg-grid,
+  .info-grid {
+    grid-template-columns: 1fr;
   }
 
   .at-row {

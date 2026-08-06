@@ -4,6 +4,10 @@
 
 export const BAUD_RATE_OPTIONS = [9600, 19200, 38400, 57600, 115200]
 
+// 寄存器设备读取响应前缀：'HELLO' + 128 字节寄存器数据
+export const REGISTER_SIZE = 128
+const HELLO_PREFIX = [0x48, 0x45, 0x4c, 0x4c, 0x4f] // 'HELLO'
+
 export function isWebSerialSupported() {
   return typeof navigator !== 'undefined' && 'serial' in navigator
 }
@@ -38,6 +42,8 @@ export class SerialATClient {
     this.onLine = null // (direction: 'tx' | 'rx' | 'sys', line: string) => void
     this.onDisconnect = null
     this._disconnectHandler = null
+    this._raw = new Uint8Array(0) // 原始字节缓冲，用于匹配 HELLO + 128 字节寄存器响应
+    this.binaryWaiter = null
   }
 
   get connected() {
@@ -60,6 +66,7 @@ export class SerialATClient {
 
     this.keepReading = true
     this.buffer = ''
+    this._raw = new Uint8Array(0)
 
     this._disconnectHandler = () => {
       this._emit('sys', 'device disconnected')
@@ -79,6 +86,7 @@ export class SerialATClient {
           const { value, done } = await this.reader.read()
           if (done) break
           if (value) {
+            this._feedRaw(value)
             this._feed(decoder.decode(value, { stream: true }))
           }
         }
@@ -118,6 +126,138 @@ export class SerialATClient {
     clearTimeout(waiter.timer)
     const ok = waiter.lines.some(line => /^OK(\b.*)?$/i.test(line))
     waiter.resolve({ lines: waiter.lines, ok })
+  }
+
+  // 原始字节入口：寄存器设备返回的是二进制数据，不能按文本行解析
+  _feedRaw(chunk) {
+    const merged = new Uint8Array(this._raw.length + chunk.length)
+    merged.set(this._raw, 0)
+    merged.set(chunk, this._raw.length)
+    this._raw = merged
+    // 缓冲上限，避免长时间运行无限增长
+    if (this._raw.length > 4096) {
+      this._raw = this._raw.slice(this._raw.length - 1024)
+    }
+    this._checkBinaryWaiter()
+  }
+
+  _checkBinaryWaiter() {
+    if (!this.binaryWaiter) return
+    const buf = this._raw
+    const need = HELLO_PREFIX.length + REGISTER_SIZE
+    outer: for (let i = 0; i + need <= buf.length; i++) {
+      for (let j = 0; j < HELLO_PREFIX.length; j++) {
+        if (buf[i + j] !== HELLO_PREFIX[j]) continue outer
+      }
+      const bytes = buf.slice(i + HELLO_PREFIX.length, i + need)
+      this._raw = buf.slice(i + need)
+      this._settleBinaryWaiter(bytes)
+      return
+    }
+  }
+
+  _settleBinaryWaiter(bytes) {
+    const waiter = this.binaryWaiter
+    if (!waiter) return
+    this.binaryWaiter = null
+    clearTimeout(waiter.timer)
+    waiter.resolve(bytes)
+  }
+
+  // 寄存器设备：发送 AT+SET=READ，等待 'HELLO' + 128 字节寄存器数据
+  // 返回 Uint8Array(128)，超时或未匹配返回 null
+  readRegisters({ timeout = 2000 } = {}) {
+    return new Promise((resolve, reject) => {
+      if (!this.port || !this.port.writable) {
+        reject(new Error('serial port not connected'))
+        return
+      }
+
+      if (this.binaryWaiter) {
+        this._settleBinaryWaiter(null)
+      }
+      // 丢弃旧数据，确保匹配到的是本次响应
+      this._raw = new Uint8Array(0)
+
+      const timer = setTimeout(() => {
+        this._settleBinaryWaiter(null)
+      }, timeout)
+
+      this.binaryWaiter = { resolve, timer }
+
+      const writer = this.port.writable.getWriter()
+      const payload = new TextEncoder().encode('AT+SET=READ\r\n')
+      this._emit('tx', 'AT+SET=READ')
+      writer.write(payload)
+        .catch(error => {
+          if (this.binaryWaiter) {
+            this._settleBinaryWaiter(null)
+          }
+          reject(error)
+        })
+        .finally(() => {
+          try {
+            writer.releaseLock()
+          } catch (e) { /* ignore */ }
+        })
+    })
+  }
+
+  // 寄存器设备：发送 AT+SET=WRITE + 128 字节寄存器数据（指令与数据间无换行）
+  async writeRegisters(bytes, { timeout = 1000 } = {}) {
+    if (!this.port || !this.port.writable) {
+      throw new Error('serial port not connected')
+    }
+    if (!(bytes instanceof Uint8Array) || bytes.length !== REGISTER_SIZE) {
+      throw new Error('register payload must be ' + REGISTER_SIZE + ' bytes')
+    }
+
+    const header = new TextEncoder().encode('AT+SET=WRITE')
+    const payload = new Uint8Array(header.length + bytes.length)
+    payload.set(header, 0)
+    payload.set(bytes, header.length)
+
+    this._emit('tx', 'AT+SET=WRITE <' + bytes.length + ' bytes>')
+    const writer = this.port.writable.getWriter()
+    try {
+      await writer.write(payload)
+    } finally {
+      try {
+        writer.releaseLock()
+      } catch (e) { /* ignore */ }
+    }
+
+    // 设备可能返回 OK / ERROR，也可能静默；等待片刻取结果，超时视为已送达
+    return this._waitResponse(timeout)
+  }
+
+  _waitResponse(timeout) {
+    return new Promise(resolve => {
+      if (this.waiter) {
+        this._settleWaiter()
+      }
+      const timer = setTimeout(() => {
+        this._settleWaiter()
+      }, timeout)
+      this.waiter = { lines: [], resolve, timer }
+    })
+  }
+
+  // 读取固件版本：AT+VER=?，返回版本字符串（无响应时返回空串）
+  async readVersion(timeout = 1500) {
+    const result = await this.sendCommand('AT+VER=?', { timeout })
+    for (const line of result.lines) {
+      const match = line.match(/AT\+VER\s*[=:]\s*(.+)$/i)
+      if (match) {
+        return match[1].trim()
+      }
+    }
+    // 设备可能只返回版本本身，取第一条非 OK/ERROR/回显 的行
+    const dataLine = result.lines.find(line => {
+      const text = line.trim()
+      return text && !/^(OK|ERROR)(\b.*)?$/i.test(text) && !/AT\+VER=\?/i.test(text)
+    })
+    return dataLine ? dataLine.trim() : ''
   }
 
   // 发送一条 AT 指令并等待响应
@@ -199,6 +339,10 @@ export class SerialATClient {
 
     if (this.waiter) {
       this._settleWaiter()
+    }
+
+    if (this.binaryWaiter) {
+      this._settleBinaryWaiter(null)
     }
 
     if (this.port && this._disconnectHandler) {

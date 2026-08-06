@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # hostlist='bh4tdv.nrlptt.com'
-hostlist='182.92.158.141 nrlptt.com ba1gm.nrlptt.com nrlptt.bd4vki.xyz www.bg1vif.com  bd4vki.nrlptt.com ah.nrlptt.com nrl.bd4two.site  bh1osw.nrlptt.com ham.73ham.com js.nrlptt.com www.bg1vif.com usa.nrlptt.com yz.hamuv.com'
+hostlist='182.92.158.141 39.106.62.160 nrlptt.com ba1gm.nrlptt.com nrlptt.bd4vki.xyz www.bg1vif.com  bd4vki.nrlptt.com ah.nrlptt.com nrl.bd4two.site  bh1osw.nrlptt.com ham.73ham.com js.nrlptt.com www.bg1vif.com usa.nrlptt.com yz.hamuv.com'
 
 # 调试单机时可覆盖：
 #hostlist='js.nrlptt.com nrlptt.com'
@@ -14,7 +14,7 @@ hostlist='182.92.158.141 nrlptt.com ba1gm.nrlptt.com nrlptt.bd4vki.xyz www.bg1vi
 #hostlist='nrlptt.bd4vki.xyz'
 #hostlist='nrlptt.com'
 #hostlist='bd4vki.nrlptt.com'
-hostlist='yz.hamuv.com'
+#hostlist='yz.hamuv.com'
 #hostlist='www.bg1vif.com'
 #hostlist='ah.nrlptt.com'
 
