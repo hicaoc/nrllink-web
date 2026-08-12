@@ -47,7 +47,16 @@
 
         <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click" popper-class="platform-theme-user-dropdown">
           <div class="avatar-wrapper">
-            <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+            <img
+              v-if="avatarUrl && !avatarLoadFailed"
+              :src="avatarUrl"
+              class="user-avatar"
+              alt="用户头像"
+              @error="avatarLoadFailed = true"
+            >
+            <span v-else class="user-avatar user-avatar--fallback" aria-label="默认用户头像">
+              <el-icon><UserFilled /></el-icon>
+            </span>
             <el-icon class="el-icon-caret-bottom">
               <CaretBottom />
             </el-icon>
@@ -82,16 +91,17 @@ import { themes } from '@/styles/themes'
 import { setPlatformTheme } from '@/utils/theme'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import Hamburger from '@/components/Hamburger/index.vue'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { setI18nLanguage } from '@/lang'
 import router from '@/router'
-import { Check } from '@element-plus/icons-vue'
+import { Check, UserFilled } from '@element-plus/icons-vue'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    Check
+    Check,
+    UserFilled
   },
   data() {
     return {
@@ -109,6 +119,15 @@ export default {
     const name = computed(() => userStore.name)
     const callsign = computed(() => userStore.callsign)
     const avatar = computed(() => userStore.avatar)
+    const avatarLoadFailed = ref(false)
+    const avatarUrl = computed(() => {
+      if (!avatar.value) return ''
+      const separator = avatar.value.includes('?') ? '&' : '?'
+      return `${avatar.value}${separator}imageView2/1/w/80/h/80`
+    })
+    watch(avatar, () => {
+      avatarLoadFailed.value = false
+    })
     const billingEnabled = computed(() => userStore.billing_enabled)
     const expireText = computed(() => {
       const v = userStore.expire_time
@@ -161,6 +180,8 @@ export default {
       name,
       callsign,
       avatar,
+      avatarUrl,
+      avatarLoadFailed,
       billingEnabled,
       expireText,
       expireLevel,
@@ -389,10 +410,26 @@ export default {
         align-items: center;
 
         .user-avatar {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           cursor: pointer;
           width: 40px;
           height: 40px;
           border-radius: 10px;
+          object-fit: cover;
+          border: 1px solid var(--platform-border-strong);
+          box-shadow: 0 6px 16px rgba(3, 9, 21, 0.28);
+        }
+
+        .user-avatar--fallback {
+          color: var(--platform-on-accent, #fff);
+          background: linear-gradient(135deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%);
+          box-shadow: 0 6px 18px var(--platform-accent-16), 0 0 0 1px var(--platform-border-strong) inset;
+
+          .el-icon {
+            font-size: 23px;
+          }
         }
 
         .el-icon-caret-bottom {
