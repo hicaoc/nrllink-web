@@ -76,31 +76,31 @@
         style="width: 100%"
         @sort-change="sortChange"
       >
-        <el-table-column :label="$t('employee.id')" prop="id" sortable="custom" align="center" width="80">
+        <el-table-column :label="$t('employee.id')" prop="id" fixed="left" sortable="custom" align="center" width="80">
           <template #default="scope">
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.callsign')" width="150" align="center">
+        <el-table-column :label="$t('employee.callsign')" fixed="left" width="90" align="center">
           <template #default="scope">
             <el-tag class="callsign-tag">{{ scope.row.callsign || '--' }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.dmrid')" width="120" align="center">
+        <el-table-column :label="$t('employee.dmrid')" width="135" align="center">
           <template #default="scope">
             <div class="metric-pill">{{ scope.row.dmrid || '--' }}</div>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.mdcid')" width="120" align="center">
+        <el-table-column :label="$t('employee.mdcid')" width="90" align="center">
           <template #default="scope">
             <div class="metric-pill">{{ scope.row.mdcid || '--' }}</div>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.name')" width="140" align="center">
+        <el-table-column :label="$t('employee.name')" width="100" align="center">
           <template #default="scope">
             <div class="primary-cell">{{ scope.row.name || '--' }}</div>
           </template>
@@ -114,7 +114,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.position')" min-width="180" align="center">
+        <el-table-column :label="$t('employee.position')" width="120" align="center">
           <template #default="scope">
             <div class="tag-wrap">
               <el-tag v-for="r in scope.row.roles" :key="r" class="role-tag">{{ RoleValueFilter(r, roles) }}</el-tag>
@@ -123,15 +123,21 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('Account.nickname')" width="160" align="center">
+        <!-- <el-table-column :label="$t('Account.nickname')" width="130" align="center" show-overflow-tooltip>
           <template #default="scope">
             <span>{{ scope.row.nickname && scope.row.nickname.length ? scope.row.nickname : '未绑定' }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column :label="$t('employee.phone')" width="130" align="center">
           <template #default="scope">
             <span>{{ scope.row.phone || '--' }}</span>
+          </template>
+        </el-table-column>
+
+                <el-table-column :label="$t('employee.status')" width="100" align="center">
+          <template #default="scope">
+            <el-tag :class="statusClass(scope.row.status)" class="user-status-tag">{{ statusFilter(scope.row.status) }}</el-tag>
           </template>
         </el-table-column>
 
@@ -141,47 +147,31 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.birthday')" width="130" align="center">
+        <el-table-column :label="$t('employee.birthday')" width="120" align="center">
           <template #default="scope">
             <span>{{ scope.row.birthday || '--' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.address')" min-width="220" align="center">
+        <el-table-column :label="$t('employee.address')" width="120" align="center" show-overflow-tooltip>
           <template #default="scope">
             <div class="note-cell">{{ scope.row.address || '--' }}</div>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.last_login_time')" width="170" align="center">
+        <el-table-column :label="$t('employee.last_login_time')" width="120" align="center">
           <template #default="scope">
             <span>{{ scope.row.last_login_time || '--' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="到期时间" width="170" align="center">
+        <el-table-column label="到期时间" width="120" align="center">
           <template #default="scope">
             <span>{{ scope.row.expire_time || '未设置' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.status')" width="100" align="center">
-          <template #default="scope">
-            <el-tag :class="statusClass(scope.row.status)" class="user-status-tag">{{ statusFilter(scope.row.status) }}</el-tag>
-          </template>
-        </el-table-column>
-
-        <el-table-column :label="$t('employee.msg')" width="150" align="center">
-          <template #default="scope">
-            <div class="tag-wrap">
-              <el-tag v-if="scope.row.recharge_msg" class="msg-tag msg-tag-bas">BAS</el-tag>
-              <el-tag v-if="scope.row.sign_msg" class="msg-tag msg-tag-app">APP</el-tag>
-              <span v-if="!scope.row.recharge_msg && !scope.row.sign_msg" class="table-empty-value">--</span>
-            </div>
-          </template>
-        </el-table-column>
-
-        <el-table-column :label="$t('employee.actions')" align="center" width="210" class-name="small-padding fixed-width">
+       <el-table-column :label="$t('employee.actions')" fixed="right" align="center" width="250" class-name="small-padding fixed-width">
           <template #default="{ row }">
             <el-button type="primary" plain size="small" class="compact-btn user-edit-btn" @click="handleUpdate(row)">
               {{ $t('employee.edit') }}
@@ -250,13 +240,13 @@
           <el-input v-model="temp.name" />
         </el-form-item>
         <el-form-item :label="$t('employee.callsign')" prop="callsign">
-          <el-input v-model="temp.callsign" />
+          <el-input v-model.trim="temp.callsign" maxlength="6" show-word-limit />
         </el-form-item>
         <el-form-item :label="$t('employee.dmrid')" prop="dmrid">
           <el-input v-model="temp.dmrid" />
         </el-form-item>
         <el-form-item :label="$t('employee.mdcid')" prop="mdcid">
-          <el-input v-model="temp.mdcid" />
+          <el-input v-model.trim="temp.mdcid" maxlength="4" placeholder="如 00AF" />
         </el-form-item>
         <el-form-item :label="$t('employee.gird')" prop="gird">
           <el-input v-model="temp.gird" />
@@ -363,6 +353,15 @@ export default {
   directives: { waves },
 
   data() {
+    const validateOptionalMDCID = (_, value, callback) => {
+      if (!value || /^[0-9A-Fa-f]{4}$/.test(value)) {
+        callback()
+        return
+      }
+
+      callback(new Error('MDC-ID 必须是 4 位十六进制，如 00AF'))
+    }
+
     return {
       tableKey: 0,
       list: [],
@@ -407,8 +406,12 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       rules: {
-        callsign: [{ required: true, message: '呼号是必选项', trigger: 'change' }],
+        callsign: [
+          { required: true, message: '呼号是必选项', trigger: 'change' },
+          { max: 6, message: '呼号最多 6 个字符', trigger: ['blur', 'change'] }
+        ],
         name: [{ required: true, message: '姓名是必选项', trigger: 'change' }],
+        mdcid: [{ validator: validateOptionalMDCID, trigger: ['blur', 'change'] }],
         roles: [{ required: true, message: '角色是必选项', trigger: 'change' }],
         phone: [{ required: true, message: '电话号码是必选项', trigger: 'blur' }]
       },
@@ -514,7 +517,8 @@ export default {
     createData() {
       this.$refs.dataForm.validate(valid => {
         if (valid) {
-          createEmployee(this.temp).then(response => {
+          const tempData = this.normalizedTempData()
+          createEmployee(tempData).then(response => {
             this.getList()
             this.dialogFormVisible = false
             ElMessage.success(response?.data?.message || '创建成功')
@@ -533,12 +537,12 @@ export default {
     updateData() {
       this.$refs.dataForm.validate(valid => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp)
+          const tempData = this.normalizedTempData()
           updateEmployee(tempData).then(response => {
             for (const v of this.list) {
               if (v.id === this.temp.id) {
                 const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
+                this.list.splice(index, 1, tempData)
                 break
               }
             }
@@ -547,6 +551,12 @@ export default {
           })
         }
       })
+    },
+    normalizedTempData() {
+      return {
+        ...this.temp,
+        mdcid: this.temp.mdcid ? this.temp.mdcid.trim().toUpperCase() : ''
+      }
     },
     handleDelete(row) {
       ElMessageBox.confirm(`此操作将永久删除用户:${row.name}-${row.callsign}, 是否继续?`, '提示', {
@@ -674,7 +684,7 @@ export default {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 92px;
+    min-width: 0;
     padding: 7px 12px;
     border-radius: 999px;
     border: 1px solid var(--platform-chip-border, rgba(88, 184, 255, 0.22));

@@ -101,7 +101,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('area.actions')" align="center" min-width="180">
+        <el-table-column
+          :label="$t('area.actions')"
+          fixed="right"
+          align="center"
+          width="200"
+          class-name="small-padding fixed-width"
+        >
           <template #default="{ row }">
             <el-button size="small" type="primary" plain class="compact-btn group-edit-btn" @click="handleUpdate(row)">
               {{ $t('device.edit') }}

@@ -66,6 +66,7 @@
         <el-table-column
           :label="$t('Account.id')"
           prop="id"
+          fixed="left"
           sortable="custom"
           align="center"
           width="80"
@@ -77,6 +78,7 @@
 
         <el-table-column
           :label="$t('relay.name')"
+          fixed="left"
           width="150px"
           align="center"
         >
@@ -185,7 +187,9 @@
 
         <el-table-column
           :label="$t('device.active')"
+          fixed="right"
           align="center"
+          width="200px"
           class-name="small-padding fixed-width"
         >
           <template #default="{row}">

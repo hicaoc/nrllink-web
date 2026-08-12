@@ -65,7 +65,6 @@
         style="width: 100%"
         @sort-change="sortChange"
       >
-      >
         <el-table-column fixed :label="$t('Account.id')" prop="id" sortable="custom" align="center" width="110">
           <template #default="scope">
             <span>{{ scope.row.id }}</span>
@@ -153,55 +152,6 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('Account.actions')"
-          align="center"
-          width="320px"
-          class-name="small-padding fixed-width"
-        >
-          <template #default="{ row }">
-            <div class="operation-actions">
-              <el-button
-                v-if="checkPermission(['admin']) || row.callsign === callsign"
-                size="small"
-                type="primary"
-                plain
-                class="compact-btn action-edit-btn"
-                @click="handleUpdate(row)"
-              >{{ $t("device.edit") }}</el-button>
-
-              <el-button
-                v-if="checkPermission(['admin']) || row.callsign === callsign"
-                :disabled="row.is_online === false"
-                size="small"
-                type="warning"
-                plain
-                class="compact-btn action-change-btn"
-                @click="handleChange(row)"
-              >{{ $t("device.change") }}</el-button>
-
-              <el-button
-                v-if="checkPermission(['admin']) || row.callsign === callsign"
-                :disabled="row.is_online === false"
-                size="small"
-                type="success"
-                plain
-                class="compact-btn action-at-btn"
-                @click="handleOpenAT(row)"
-              >{{ $t("device.at") }}</el-button>
-
-              <el-button
-                v-if="checkPermission(['admin']) || row.callsign === callsign"
-                size="small"
-                type="danger"
-                plain
-                class="compact-btn action-delete-btn"
-                @click="handleDelete(row)"
-              >{{ $t('employee.delete') }}</el-button>
-            </div>
-          </template>
-        </el-table-column>
-
         <el-table-column prop="dev_rf_type" :label="$t('device.rfTypeLabel')" width="140px" align="center" :sortable="true">
           <template #default="scope">
             <span>{{ ValueFilter(scope.row.rf_type, DevRFtypeOptions) }}</span>
@@ -255,6 +205,56 @@
         <el-table-column :label="$t('device.lastVoiceTime')" prop="last_voice_end_time" width="160px" align="center" :sortable="true">
           <template #default="scope">
             <span>{{ parseTime(scope.row.last_voice_end_time) }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          :label="$t('Account.actions')"
+          fixed="right"
+          align="center"
+          width="320px"
+          class-name="small-padding fixed-width"
+        >
+          <template #default="{ row }">
+            <div class="operation-actions">
+              <el-button
+                v-if="checkPermission(['admin']) || row.callsign === callsign"
+                size="small"
+                type="primary"
+                plain
+                class="compact-btn action-edit-btn"
+                @click="handleUpdate(row)"
+              >{{ $t("device.edit") }}</el-button>
+
+              <el-button
+                v-if="checkPermission(['admin']) || row.callsign === callsign"
+                :disabled="row.is_online === false"
+                size="small"
+                type="warning"
+                plain
+                class="compact-btn action-change-btn"
+                @click="handleChange(row)"
+              >{{ $t("device.change") }}</el-button>
+
+              <el-button
+                v-if="checkPermission(['admin']) || row.callsign === callsign"
+                :disabled="row.is_online === false"
+                size="small"
+                type="success"
+                plain
+                class="compact-btn action-at-btn"
+                @click="handleOpenAT(row)"
+              >{{ $t("device.at") }}</el-button>
+
+              <el-button
+                v-if="checkPermission(['admin']) || row.callsign === callsign"
+                size="small"
+                type="danger"
+                plain
+                class="compact-btn action-delete-btn"
+                @click="handleDelete(row)"
+              >{{ $t('employee.delete') }}</el-button>
+            </div>
           </template>
         </el-table-column>
 

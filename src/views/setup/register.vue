@@ -59,55 +59,55 @@
         style="width: 100%"
         @sort-change="sortChange"
       >
-        <el-table-column :label="$t('employee.id')" prop="id" sortable="custom" align="center" width="80">
+        <el-table-column :label="$t('employee.id')" prop="id" fixed="left" sortable="custom" align="center" width="80">
           <template #default="scope">
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.callsign')" width="150" align="center">
+        <el-table-column :label="$t('employee.callsign')" fixed="left" width="105" align="center">
           <template #default="scope">
             <el-tag class="callsign-tag">{{ scope.row.callsign || '--' }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.name')" width="140" align="center">
+        <el-table-column :label="$t('employee.name')" width="120" align="center">
           <template #default="scope">
             <div class="primary-cell">{{ scope.row.name || '--' }}</div>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.phone')" width="140" align="center">
+        <el-table-column :label="$t('employee.phone')" width="130" align="center">
           <template #default="scope">
             <span>{{ scope.row.phone || '--' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.address')" min-width="220" align="center">
+        <el-table-column :label="$t('employee.address')" width="180" align="center">
           <template #default="scope">
-            <div class="note-cell">{{ scope.row.address || '--' }}</div>
+            <div class="address-cell">{{ scope.row.address || '--' }}</div>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('register.mail')" min-width="220" align="center">
+        <el-table-column :label="$t('register.mail')" width="200" align="center" show-overflow-tooltip>
           <template #default="scope">
             <div class="mail-cell">{{ scope.row.mail || '--' }}</div>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('register.create_time')" width="180" align="center">
+        <el-table-column :label="$t('register.create_time')" width="165" align="center">
           <template #default="scope">
             <span>{{ scope.row.create_time || '--' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('register.update_time')" width="180" align="center">
+        <el-table-column :label="$t('register.update_time')" width="165" align="center">
           <template #default="scope">
             <span>{{ scope.row.update_time || '--' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.status')" width="130" align="center">
+        <el-table-column :label="$t('employee.status')" width="110" align="center">
           <template #default="scope">
             <el-tag :class="statusClass(scope.row.status)" class="register-status-tag">
               {{ statusFilter(scope.row.status) }}
@@ -115,7 +115,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('register.note')" min-width="220" align="center">
+        <el-table-column :label="$t('register.note')" width="180" align="center" show-overflow-tooltip>
           <template #default="scope">
             <div class="note-cell">{{ scope.row.note || '--' }}</div>
           </template>
@@ -123,8 +123,9 @@
 
         <el-table-column
           :label="$t('employee.actions')"
+          fixed="right"
           align="center"
-          width="220"
+          width="200"
           class-name="small-padding fixed-width"
         >
           <template #default="{ row }">
@@ -195,7 +196,7 @@
         class="setup-register-form"
       >
         <el-form-item :label="$t('employee.callsign')" prop="callsign">
-          <el-input v-model="temp.callsign" />
+          <el-input v-model.trim="temp.callsign" maxlength="6" show-word-limit />
         </el-form-item>
 
         <el-form-item :label="$t('employee.name')" prop="name">
@@ -306,7 +307,10 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       rules: {
-        callsign: [{ required: true, message: '呼号是必选项', trigger: 'change' }],
+        callsign: [
+          { required: true, message: '呼号是必选项', trigger: 'change' },
+          { max: 6, message: '呼号最多 6 个字符', trigger: ['blur', 'change'] }
+        ],
         gird: [{ required: true, message: '网格是必选项', trigger: 'change' }],
         name: [{ required: true, message: '姓名是必选项', trigger: 'change' }],
         sex: [{ required: true, message: '性别是必选项', trigger: 'change' }],
@@ -549,11 +553,17 @@ export default {
   }
 
   .mail-cell,
+  .address-cell,
   .note-cell {
     color: var(--platform-note-text, rgba(228, 239, 255, 0.74));
     line-height: 1.5;
     word-break: break-word;
     padding: 0 4px;
+  }
+
+  .address-cell {
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .register-status-tag {

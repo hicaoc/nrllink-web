@@ -406,6 +406,41 @@ body, html {
   background: transparent !important;
 }
 
+// Fixed columns must be opaque: otherwise the scrolling cells remain visible
+// underneath them and make action buttons difficult to read.
+.platform-theme-page .el-table th.el-table__cell.el-table-fixed-column--left,
+.platform-theme-page .el-table th.el-table__cell.el-table-fixed-column--right {
+  background: color-mix(in srgb, var(--sidebar-bg) 90%, var(--platform-accent-2) 10%) !important;
+}
+
+.platform-theme-page .el-table td.el-table__cell.el-table-fixed-column--left,
+.platform-theme-page .el-table td.el-table__cell.el-table-fixed-column--right {
+  background: var(--sidebar-bg) !important;
+}
+
+.platform-theme-page .el-table tr:hover > td.el-table__cell.el-table-fixed-column--left,
+.platform-theme-page .el-table tr:hover > td.el-table__cell.el-table-fixed-column--right,
+.platform-theme-page .el-table tr.current-row > td.el-table__cell.el-table-fixed-column--left,
+.platform-theme-page .el-table tr.current-row > td.el-table__cell.el-table-fixed-column--right {
+  background: color-mix(in srgb, var(--sidebar-bg) 92%, var(--platform-accent) 8%) !important;
+}
+
+.platform-theme-page .el-table .el-table-fixed-column--left.is-last-column {
+  box-shadow: inset -1px 0 var(--platform-border-light);
+}
+
+.platform-theme-page .el-table .el-table-fixed-column--right.is-first-column {
+  box-shadow: inset 1px 0 var(--platform-border-light);
+}
+
+.platform-theme-page .el-table .el-table-fixed-column--left.is-last-column::before {
+  box-shadow: 8px 0 16px rgba(3, 9, 21, 0.34) !important;
+}
+
+.platform-theme-page .el-table .el-table-fixed-column--right.is-first-column::before {
+  box-shadow: -8px 0 16px rgba(3, 9, 21, 0.34) !important;
+}
+
 .platform-theme-page .el-loading-mask {
   background: var(--platform-deep-90) !important;
   backdrop-filter: blur(4px);
