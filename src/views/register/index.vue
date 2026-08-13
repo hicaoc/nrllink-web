@@ -5,9 +5,10 @@
         <div class="login-form-card register-card">
           <div class="title-container">
             <img v-if="!isEmbedded" src="/images/logo.png" alt="Logo" class="logo">
-            <h3 class="title">注册账号</h3>
-            <p class="subtitle">提交后等待管理员审核</p>
-            <router-link v-if="!isEmbedded" class="back-link" to="/login">返回登录</router-link>
+            <h3 class="title" :class="{ 'server-title': platformName }">{{ platformName || $t('reg.title') }}</h3>
+            <p v-if="platformName" class="register-label">{{ $t('reg.title') }}</p>
+            <p class="subtitle">{{ $t('reg.subtitle') }}</p>
+            <router-link v-if="!isEmbedded" class="back-link" to="/login">{{ $t('reg.backToLogin') }}</router-link>
           </div>
 
           <el-form
@@ -18,47 +19,47 @@
             label-position="top"
           >
             <div class="form-grid">
-              <el-form-item prop="callsign" label="呼号">
+              <el-form-item prop="callsign" :label="$t('register.callsign')">
                 <el-input
                   v-model="registerForm.callsign"
-                  placeholder="例如：BA4XXX"
+                  :placeholder="$t('reg.callsignPlaceholder')"
                   maxlength="6"
                   @input="handleCallsignInput"
                 />
               </el-form-item>
 
-              <el-form-item prop="name" label="姓名">
-                <el-input v-model="registerForm.name" placeholder="请输入姓名" />
+              <el-form-item prop="name" :label="$t('register.name')">
+                <el-input v-model="registerForm.name" :placeholder="$t('reg.namePlaceholder')" />
               </el-form-item>
 
-              <el-form-item prop="phone" label="手机号">
-                <el-input v-model="registerForm.phone" placeholder="11位以上数字" />
+              <el-form-item prop="phone" :label="$t('reg.phone')">
+                <el-input v-model="registerForm.phone" :placeholder="$t('reg.phonePlaceholder')" />
               </el-form-item>
 
-              <el-form-item prop="password" label="密码">
+              <el-form-item prop="password" :label="$t('reg.password')">
                 <el-input
                   v-model="registerForm.password"
-                  placeholder="至少6位"
+                  :placeholder="$t('reg.passwordPlaceholder')"
                   show-password
                   type="password"
                 />
               </el-form-item>
             </div>
 
-            <el-form-item prop="mail" label="邮箱">
-              <el-input v-model="registerForm.mail" placeholder="name@example.com" />
+            <el-form-item prop="mail" :label="$t('register.mail')">
+              <el-input v-model="registerForm.mail" :placeholder="$t('reg.mailPlaceholder')" />
             </el-form-item>
 
-            <el-form-item prop="address" label="地址">
+            <el-form-item prop="address" :label="$t('register.address')">
               <el-input
                 v-model="registerForm.address"
-                placeholder="详细地址"
+                :placeholder="$t('reg.addressPlaceholder')"
                 type="textarea"
                 :rows="2"
               />
             </el-form-item>
 
-            <el-form-item prop="license" label="操作证和电台执照合影">
+            <el-form-item prop="license" :label="$t('reg.license')">
               <el-upload
                 class="upload-box"
                 action="#"
@@ -69,11 +70,11 @@
                 accept="image/*"
               >
                 <div class="upload-inner">
-                  <div class="upload-title">上传证件照片</div>
+                  <div class="upload-title">{{ $t('reg.uploadTitle') }}</div>
                   <div class="upload-meta">
-                    {{ licenseName ? `已选择：${licenseName}` : '支持 JPG/PNG，需清晰可读' }}
+                    {{ licenseName ? $t('reg.selectedPrefix') + licenseName : $t('reg.uploadHint') }}
                   </div>
-                  <el-button class="upload-button" plain>选择文件</el-button>
+                  <el-button class="upload-button" plain>{{ $t('reg.chooseFile') }}</el-button>
                 </div>
               </el-upload>
             </el-form-item>
@@ -84,7 +85,7 @@
               class="login-button register-button"
               @click.prevent="handleSubmit"
             >
-              提交注册
+              {{ $t('reg.submit') }}
             </el-button>
           </el-form>
         </div>
@@ -96,6 +97,7 @@
 <script>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { createRegUpload } from '@/api/register'
+import { getplatforminfo } from '@/api/platform'
 
 const MAX_LICENSE_BYTES = 800 * 1024
 
@@ -125,28 +127,28 @@ export default {
   data() {
     const validateCallsign = (rule, value, callback) => {
       if (!value || !/^[A-Z0-9]{5,6}$/.test(value)) {
-        callback(new Error('呼号需为5-6位大写字母或数字'))
+        callback(new Error(this.$t('reg.callsignRule')))
         return
       }
       callback()
     }
     const validatePhone = (rule, value, callback) => {
       if (!value || !/^\d{11,}$/.test(value)) {
-        callback(new Error('请输入11位以上数字手机号'))
+        callback(new Error(this.$t('reg.phoneRule')))
         return
       }
       callback()
     }
     const validateMail = (rule, value, callback) => {
       if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-        callback(new Error('请输入有效邮箱地址'))
+        callback(new Error(this.$t('reg.mailRule')))
         return
       }
       callback()
     }
     const validateLicense = (rule, value, callback) => {
       if (!this.licenseFile) {
-        callback(new Error('请上传操作证和电台执照'))
+        callback(new Error(this.$t('reg.licenseRule')))
         return
       }
       callback()
@@ -164,20 +166,29 @@ export default {
       },
       registerRules: {
         callsign: [{ required: true, trigger: 'blur', validator: validateCallsign }],
-        name: [{ required: true, trigger: 'blur', message: '请输入姓名' }],
+        name: [{ required: true, trigger: 'blur', message: this.$t('reg.nameRequired') }],
         phone: [{ required: true, trigger: 'blur', validator: validatePhone }],
         mail: [{ required: true, trigger: 'blur', validator: validateMail }],
-        password: [{ required: true, trigger: 'blur', message: '请输入密码' }],
-        address: [{ required: true, trigger: 'blur', message: '请输入地址' }],
+        password: [{ required: true, trigger: 'blur', message: this.$t('reg.passwordRequired') }],
+        address: [{ required: true, trigger: 'blur', message: this.$t('reg.addressRequired') }],
         license: [{ required: true, trigger: 'change', validator: validateLicense }]
       },
       licenseFile: null,
       licenseName: '',
       loading: false,
-      fileProcessing: false
+      fileProcessing: false,
+      platformName: ''
     }
   },
+  created() {
+    this.fetchPlatformInfo()
+  },
   methods: {
+    fetchPlatformInfo() {
+      getplatforminfo().then(response => {
+        this.platformName = response?.data?.items?.name || ''
+      }).catch(() => {})
+    },
     handleCallsignInput(value) {
       this.registerForm.callsign = String(value || '')
         .toUpperCase()
@@ -205,7 +216,7 @@ export default {
       return new Promise((resolve, reject) => {
         const reader = new FileReader()
         reader.onload = () => resolve(reader.result)
-        reader.onerror = () => reject(new Error('读取图片失败'))
+        reader.onerror = () => reject(new Error(this.$t('reg.readImageFail')))
         reader.readAsDataURL(file)
       })
     },
@@ -213,7 +224,7 @@ export default {
       return new Promise((resolve, reject) => {
         const img = new Image()
         img.onload = () => resolve(img)
-        img.onerror = () => reject(new Error('加载图片失败'))
+        img.onerror = () => reject(new Error(this.$t('reg.loadImageFail')))
         img.src = src
       })
     },
@@ -221,7 +232,7 @@ export default {
       return new Promise((resolve, reject) => {
         canvas.toBlob(blob => {
           if (blob) resolve(blob)
-          else reject(new Error('图片压缩失败'))
+          else reject(new Error(this.$t('reg.compressFail')))
         }, type, quality)
       })
     },
@@ -230,7 +241,7 @@ export default {
       const img = await this.loadImage(dataUrl)
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
-      if (!ctx) throw new Error('无法创建画布')
+      if (!ctx) throw new Error(this.$t('reg.canvasFail'))
 
       let width = img.naturalWidth || img.width
       let height = img.naturalHeight || img.height
@@ -263,9 +274,9 @@ export default {
         }
       }
 
-      if (!blob) throw new Error('图片压缩失败')
+      if (!blob) throw new Error(this.$t('reg.compressFail'))
       if (blob.size > maxBytes) {
-        throw new Error('图片压缩后仍超过800KB，请更换清晰但更小的图片')
+        throw new Error(this.$t('reg.tooLarge'))
       }
 
       const ext = type === 'image/png' ? 'png' : 'jpg'
@@ -275,7 +286,7 @@ export default {
     async handleFileChange(file) {
       const rawFile = file.raw || file
       if (!rawFile || !String(rawFile.type || '').startsWith('image/')) {
-        ElMessage.error('请上传图片格式文件')
+        ElMessage.error(this.$t('reg.notImage'))
         return
       }
 
@@ -287,17 +298,17 @@ export default {
         if (rawFile.size > MAX_LICENSE_BYTES) {
           finalFile = await this.compressImageToLimit(rawFile, MAX_LICENSE_BYTES)
           compressed = true
-          ElMessage.success(`图片已压缩：${this.formatSize(rawFile.size)} -> ${this.formatSize(finalFile.size)}`)
+          ElMessage.success(this.$t('reg.compressed', { from: this.formatSize(rawFile.size), to: this.formatSize(finalFile.size) }))
         }
 
         this.licenseFile = finalFile
-        this.licenseName = `${finalFile.name} (${this.formatSize(finalFile.size)})${compressed ? '，已压缩' : ''}`
+        this.licenseName = `${finalFile.name} (${this.formatSize(finalFile.size)})${compressed ? this.$t('reg.compressedTag') : ''}`
         this.registerForm.license = this.licenseName
       } catch (error) {
         this.licenseFile = null
         this.licenseName = ''
         this.registerForm.license = ''
-        ElMessage.error(error?.message || '图片处理失败，请更换图片后重试')
+        ElMessage.error(error?.message || this.$t('reg.processFail'))
       } finally {
         this.fileProcessing = false
         this.$nextTick(() => {
@@ -310,7 +321,7 @@ export default {
     handleSubmit() {
       if (!this.$refs.registerForm) return
       if (this.fileProcessing) {
-        ElMessage.warning('图片处理中，请稍后再提交')
+        ElMessage.warning(this.$t('reg.processing'))
         return
       }
       this.$refs.registerForm.validate(valid => {
@@ -332,14 +343,14 @@ export default {
         createRegUpload(formData)
           .then(response => {
             if (!response || response.code !== 20000) {
-              ElMessage.error(response?.message || response?.data?.message || '注册失败，请稍后重试')
+              ElMessage.error(response?.message || response?.data?.message || this.$t('reg.submitFail'))
               return
             }
 
             return ElMessageBox.alert(
-              '注册成功，请等待管理员审核，一般48小时内完成。',
-              '注册成功',
-              { confirmButtonText: '返回登录' }
+              this.$t('reg.successMsg', { server: this.platformName || window.location.host }),
+              this.$t('reg.successTitle'),
+              { confirmButtonText: this.$t('reg.backToLogin') }
             ).then(() => {
               this.$router.push('/login')
             })
@@ -549,6 +560,10 @@ body,
         display: none;
       }
 
+      .register-label {
+        display: none;
+      }
+
       .subtitle {
         display: none;
       }
@@ -647,6 +662,17 @@ body,
       margin-bottom: 6px;
       color: var(--platform-ink);
       font-weight: 600;
+    }
+
+    .server-title {
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+
+    .register-label {
+      font-size: 13px;
+      color: var(--platform-ink-dim);
+      margin: 0 0 6px;
     }
 
     .subtitle {

@@ -275,7 +275,7 @@
 
     <el-dialog
       v-model="registerDialogVisible"
-      :title="$t('login.register')"
+      :title="registerDialogTitle"
       width="1320px"
       append-to-body
       align-center
@@ -284,7 +284,6 @@
     >
       <div class="register-dialog-inner">
         <div class="register-dialog-copy">
-          <strong>{{ $t('login.newUserRegister') }}</strong>
           <span>{{ $t('login.registerDesc') }}</span>
         </div>
         <div class="register-panel">
@@ -403,6 +402,10 @@ export default {
   },
   computed: {
     ...mapState(useAppStore, ['device']),
+    registerDialogTitle() {
+      // 标题栏带上当前服务器名称，避免用户注册/登录错服务器
+      return this.title ? `${this.title} - ${this.$t('login.register')}` : this.$t('login.register')
+    },
     sortedServerList() {
       const currentHost = typeof window !== 'undefined' ? window.location.host : ''
       const currentHostname = typeof window !== 'undefined' ? window.location.hostname : ''

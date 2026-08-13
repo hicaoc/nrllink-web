@@ -223,7 +223,7 @@ export const asyncRoutes = [
   {
     path: '/setup',
     component: Layout,
-    redirect: '/setup/users',
+    redirect: 'noRedirect',
     alwaysShow: true, // will always show the root menu
     name: 'Setup',
     meta: {
@@ -283,7 +283,7 @@ export const asyncRoutes = [
         name: 'regMgr',
         meta: {
           title: 'register',
-          roles: ['admin'] // or you can only set roles in sub nav
+          roles: ['admin', 'master'] // or you can only set roles in sub nav
         }
       },
       {

@@ -216,21 +216,21 @@
         </el-form-item>
 
         <div class="license-preview-panel">
-          <div class="license-preview-title">操作证和电台执照</div>
+          <div class="license-preview-title">{{ $t('reg.license') }}</div>
           <div v-if="license" class="license-preview-shell">
             <img
               :src="license"
-              alt="操作证和电台执照"
+              :alt="$t('reg.license')"
               class="license-preview-image"
               @click="showlicenseFullScreenImage"
             >
           </div>
-          <div v-else class="image-empty-state">暂无证照图片</div>
+          <div v-else class="image-empty-state">{{ $t('register.noLicense') }}</div>
         </div>
 
         <div v-if="showlicenseFullScreen" class="fullscreen-overlay" @click.self="closelicenseFullScreen">
-          <img :src="originallicenseImage" alt="原图" class="fullscreen-image">
-          <button class="close-button" @click="closelicenseFullScreen">关闭</button>
+          <img :src="originallicenseImage" :alt="$t('reg.license')" class="fullscreen-image">
+          <button class="close-button" @click="closelicenseFullScreen">{{ $t('register.close') }}</button>
         </div>
       </el-form>
 
@@ -284,7 +284,6 @@ export default {
       originalcertificateImage: null,
       originallicenseImage: null,
       importanceOptions: [1, 2, 3],
-      statusOptions: ['未审核', '未通过', '审核通过'],
       showReviewer: false,
       temp: {
         id: undefined,
@@ -301,24 +300,18 @@ export default {
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        update: 'Edit',
-        create: 'Create'
+        update: this.$t('register.editTitle'),
+        create: this.$t('register.editTitle')
       },
       dialogPvVisible: false,
       pvData: [],
       rules: {
         callsign: [
-          { required: true, message: '呼号是必选项', trigger: 'change' },
-          { max: 6, message: '呼号最多 6 个字符', trigger: ['blur', 'change'] }
+          { required: true, message: this.$t('register.callsignRequired'), trigger: 'change' },
+          { max: 6, message: this.$t('register.callsignMax'), trigger: ['blur', 'change'] }
         ],
-        gird: [{ required: true, message: '网格是必选项', trigger: 'change' }],
-        name: [{ required: true, message: '姓名是必选项', trigger: 'change' }],
-        sex: [{ required: true, message: '性别是必选项', trigger: 'change' }],
-        roles: [{ required: true, message: '角色是必选项', trigger: 'change' }],
-        birthday: [{ required: true, message: '生日是必选项', trigger: 'change' }],
-        job_time: [{ required: true, message: '入职时间是必选项', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: '入职时间是必选项', trigger: 'change' }],
-        phone: [{ required: true, message: '电话号码是必选项', trigger: 'blur' }]
+        name: [{ required: true, message: this.$t('register.nameRequired'), trigger: 'change' }],
+        phone: [{ required: true, message: this.$t('register.phoneRequired'), trigger: 'blur' }]
       },
       downloadLoading: false,
       showtable: true
@@ -335,10 +328,10 @@ export default {
   methods: {
     statusFilter(status) {
       const statusMap = {
-        1: '未审核',
-        2: '审核通过'
+        1: this.$t('register.pending'),
+        2: this.$t('register.audited')
       }
-      return statusMap[status] || '未知'
+      return statusMap[status] || this.$t('register.unknown')
     },
     statusClass(status) {
       if (status === 2) return 'status-approved'
@@ -408,7 +401,7 @@ export default {
         }).catch(() => {
           this.license = ''
           this.originallicenseImage = ''
-          ElMessage.warning('证书图片加载失败')
+          ElMessage.warning(this.$t('register.licenseLoadFail'))
         })
       } else {
         this.license = ''
@@ -434,7 +427,7 @@ export default {
               }
             }
             this.dialogFormVisible = false
-            ElMessage.success(response?.data?.message || '更新成功')
+            ElMessage.success(response?.message || response?.data?.message || this.$t('register.updateSuccess'))
           })
         }
       })
@@ -450,7 +443,7 @@ export default {
 
             this.dialogFormVisible = false
             ElMessage({
-              message: response?.data?.message || '操作完成',
+              message: response?.message || response?.data?.message || this.$t('register.opDone'),
               type: response?.code === 20000 ? 'success' : 'warning',
               duration: 2000
             })
@@ -459,40 +452,52 @@ export default {
       })
     },
     handleDelete(row) {
-      ElMessageBox.confirm(`此操作将删除:${row.name}-${row.callsign}, 是否继续?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
+      ElMessageBox.confirm(
+        this.$t('register.deleteConfirm', { name: row.name, callsign: row.callsign }),
+        this.$t('register.tip'),
+        {
+          confirmButtonText: this.$t('employee.confirm'),
+          cancelButtonText: this.$t('employee.cancel'),
+          type: 'warning'
+        }
+      )
         .then(() => {
+          // 删除成功后再刷新列表，避免竞态导致已删除记录仍显示
           deleteReg(row).then(response => {
-            const message = response?.data?.message || '操作完成'
+            const message = response?.data?.message || response?.message || this.$t('register.opDone')
             ElMessage.success(message)
-            this.listLoading = false
+            this.getList()
           })
-
-          this.getList()
         })
         .catch(() => {
-          ElMessage.info('已取消删除')
+          ElMessage.info(this.$t('register.canceled'))
         })
     },
     async handleDownload() {
       this.downloadLoading = true
       const excel = await import('@/vendor/Export2Excel')
-      const tHeader = ['更新时间', '电话', '角色', '工号', '角色']
-      const filterVal = ['update_time', 'phone', 'zhiwu', 'employee_id', 'roles']
+      const tHeader = [
+        this.$t('register.callsign'),
+        this.$t('register.name'),
+        this.$t('employee.phone'),
+        this.$t('register.mail'),
+        this.$t('employee.address'),
+        this.$t('employee.status'),
+        this.$t('register.create_time'),
+        this.$t('register.update_time')
+      ]
+      const filterVal = ['callsign', 'name', 'phone', 'mail', 'address', 'status', 'create_time', 'update_time']
       const data = this.formatJson(filterVal, this.list)
       await excel.export_json_to_excel({
         header: tHeader,
         data,
-        filename: 'table-list'
+        filename: 'register-list'
       })
       this.downloadLoading = false
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v =>
-        filterVal.map(j => v[j])
+        filterVal.map(j => (j === 'status' ? this.statusFilter(v[j]) : v[j]))
       )
     }
   }
