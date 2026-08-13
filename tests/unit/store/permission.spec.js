@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vite-plus/test'
 import { setActivePinia, createPinia } from 'pinia'
 
 vi.mock('@/router', () => ({
@@ -6,8 +6,8 @@ vi.mock('@/router', () => ({
   asyncRoutes: [
     { path: '/admin', meta: { roles: ['admin'] } },
     { path: '/user', meta: { roles: ['user'] } },
-    { path: '/public' }
-  ]
+    { path: '/public' },
+  ],
 }))
 
 import { usePermissionStore, filterAsyncRoutes } from '@/store/modules/permission'
@@ -21,9 +21,9 @@ describe('store/permission', () => {
     const routes = [
       { path: '/admin', meta: { roles: ['admin'] } },
       { path: '/user', meta: { roles: ['user'] } },
-      { path: '/public' }
+      { path: '/public' },
     ]
-    expect(filterAsyncRoutes(routes, ['user']).map(r => r.path)).toEqual(['/user', '/public'])
+    expect(filterAsyncRoutes(routes, ['user']).map((r) => r.path)).toEqual(['/user', '/public'])
   })
 
   it('generateRoutes returns all routes for admin', () => {
@@ -36,7 +36,7 @@ describe('store/permission', () => {
   it('generateRoutes filters for non-admin', () => {
     const store = usePermissionStore()
     const added = store.generateRoutes(['user'])
-    expect(added.map(r => r.path)).toEqual(['/user', '/public'])
+    expect(added.map((r) => r.path)).toEqual(['/user', '/public'])
     expect(store.routes.length).toBe(3)
   })
 })

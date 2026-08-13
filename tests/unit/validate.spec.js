@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vite-plus/test'
 import {
   isExternal,
   validURL,
@@ -7,7 +7,7 @@ import {
   validAlphabets,
   validEmail,
   isString,
-  isArray
+  isArray,
 } from '@/utils/validate'
 
 describe('utils/validate', () => {

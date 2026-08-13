@@ -7,8 +7,6 @@
       "Bash(npx vue-cli-service *)",
       "Bash(timeout 300 npx vite build)"
     ],
-    "additionalDirectories": [
-      "/home/caocheng/ham/nrllink"
-    ]
+    "additionalDirectories": ["/home/caocheng/ham/nrllink"]
   }
 }

@@ -12,26 +12,32 @@
           ref="tag"
           :data-path="tag.path"
           :data-full-path="tag.fullPath"
-          :class="isActive(tag)?'active':''"
+          :class="isActive(tag) ? 'active' : ''"
           class="tags-view-item"
           @click="navigate"
           @click.middle="closeSelectedTag(tag)"
-          @contextmenu.prevent="openMenu(tag,$event)"
+          @contextmenu.prevent="openMenu(tag, $event)"
         >
           {{ generateTitle(tag.title) }}
-          <el-icon v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)">
+          <el-icon
+            v-if="!tag.meta.affix"
+            class="el-icon-close"
+            @click.prevent.stop="closeSelectedTag(tag)"
+          >
             <Close />
           </el-icon>
         </span>
       </router-link>
     </scroll-pane>
-    <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
+    <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">
         {{ $t('tagsView.refresh') }}
       </li>
-      <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">
-        {{
-          $t('tagsView.close') }}
+      <li
+        v-if="!(selectedTag.meta && selectedTag.meta.affix)"
+        @click="closeSelectedTag(selectedTag)"
+      >
+        {{ $t('tagsView.close') }}
       </li>
       <li @click="closeOthersTags">
         {{ $t('tagsView.closeOthers') }}
@@ -67,12 +73,12 @@ export default {
       top: 0,
       left: 0,
       selectedTag: {},
-      affixTags: []
+      affixTags: [],
     }
   },
   computed: {
     ...mapState(useTagsViewStore, ['visitedViews']),
-    ...mapState(usePermissionStore, ['routes'])
+    ...mapState(usePermissionStore, ['routes']),
   },
   watch: {
     $route() {
@@ -85,7 +91,7 @@ export default {
       } else {
         document.body.removeEventListener('click', this.closeMenu)
       }
-    }
+    },
   },
   mounted() {
     this.initTags()
@@ -98,14 +104,14 @@ export default {
     },
     filterAffixTags(routes, basePath = '/') {
       let tags = []
-      routes.forEach(route => {
+      routes.forEach((route) => {
         if (route.meta && route.meta.affix) {
           const tagPath = resolvePath(basePath, route.path)
           tags.push({
             fullPath: tagPath,
             path: tagPath,
             name: route.name,
-            meta: { ...route.meta }
+            meta: { ...route.meta },
           })
         }
         if (route.children) {
@@ -118,7 +124,7 @@ export default {
       return tags
     },
     initTags() {
-      const affixTags = this.affixTags = this.filterAffixTags(this.routes)
+      const affixTags = (this.affixTags = this.filterAffixTags(this.routes))
       for (const tag of affixTags) {
         // Must have tag name
         if (tag.name) {
@@ -160,7 +166,7 @@ export default {
       this.$nextTick(() => {
         const { fullPath } = view
         this.$router.replace({
-          path: '/redirect' + fullPath
+          path: '/redirect' + fullPath,
         })
       })
     },
@@ -180,7 +186,7 @@ export default {
     closeAllTags(view) {
       const tagsViewStore = useTagsViewStore()
       const { visitedViews } = tagsViewStore.delAllViews()
-      if (this.affixTags.some(tag => tag.path === view.path)) {
+      if (this.affixTags.some((tag) => tag.path === view.path)) {
         return
       }
       this.toLastView(visitedViews, view)
@@ -219,8 +225,8 @@ export default {
     },
     closeMenu() {
       this.visible = false
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -230,7 +236,9 @@ export default {
   width: 100%;
   background: var(--platform-shell);
   border-bottom: 1px solid var(--platform-border);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 24px rgba(0, 0, 0, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 8px 24px rgba(0, 0, 0, 0.18);
   .tags-view-wrapper {
     height: 100%;
     display: flex;
@@ -252,7 +260,12 @@ export default {
       border-radius: 10px;
       margin-left: 8px;
       margin-top: 0;
-      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+      transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
 
       &:first-of-type {
         margin-left: 15px;
@@ -270,7 +283,11 @@ export default {
       }
 
       &.active {
-        background: linear-gradient(135deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%);
+        background: linear-gradient(
+          135deg,
+          var(--platform-accent) 0%,
+          var(--platform-accent-2) 100%
+        );
         color: var(--platform-on-accent, #ffffff);
         border-color: var(--platform-border-strong);
         box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
@@ -306,7 +323,9 @@ export default {
       margin: 0;
       padding: 7px 16px;
       cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease;
+      transition:
+        background 0.2s ease,
+        color 0.2s ease;
 
       &:hover {
         background: var(--platform-accent);
@@ -329,12 +348,12 @@ export default {
       vertical-align: middle;
       border-radius: 50%;
       text-align: center;
-      transition: all .3s cubic-bezier(.645, .045, .355, 1);
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       transform-origin: 100% 50%;
       color: inherit;
 
       &:before {
-        transform: scale(.6);
+        transform: scale(0.6);
         display: inline-block;
         vertical-align: -3px;
       }

@@ -37,6 +37,5 @@ export const ctcssOptions = [
   { id: '35', name: '225.7' },
   { id: '36', name: '233.6' },
   { id: '37', name: '241.8' },
-  { id: '38', name: '250.3' }
-
+  { id: '38', name: '250.3' },
 ]

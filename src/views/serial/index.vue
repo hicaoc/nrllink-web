@@ -2,7 +2,9 @@
   <div class="serial-page">
     <div class="serial-page-topbar">
       <span class="serial-page-title">{{ $t('serial.title') }}</span>
-      <router-link to="/login" class="serial-page-back">‹ {{ $t('serial.backToHome') }}</router-link>
+      <router-link to="/login" class="serial-page-back"
+        >‹ {{ $t('serial.backToHome') }}</router-link
+      >
     </div>
 
     <div class="serial-page-body">
@@ -23,7 +25,12 @@
           :disabled="connected"
           popper-class="platform-theme-select-dropdown"
         >
-          <el-option v-for="rate in baudRateOptions" :key="rate" :label="String(rate)" :value="rate" />
+          <el-option
+            v-for="rate in baudRateOptions"
+            :key="rate"
+            :label="String(rate)"
+            :value="rate"
+          />
         </el-select>
 
         <el-button
@@ -32,8 +39,11 @@
           :loading="connecting"
           :disabled="!serialSupported"
           @click="handleConnect"
-        >{{ $t('serial.connect') }}</el-button>
-        <el-button v-else type="danger" plain @click="handleDisconnect">{{ $t('serial.disconnect') }}</el-button>
+          >{{ $t('serial.connect') }}</el-button
+        >
+        <el-button v-else type="danger" plain @click="handleDisconnect">{{
+          $t('serial.disconnect')
+        }}</el-button>
 
         <el-tag :type="connected ? 'success' : 'info'" class="status-tag">
           {{ connected ? $t('serial.connected') : $t('serial.disconnected') }}
@@ -109,11 +119,9 @@
                   :value="item.host"
                 />
               </el-select>
-              <el-button
-                class="server-jump"
-                :disabled="!basic.server"
-                @click="openServerSite"
-              >{{ $t('serial.visitServer') }}</el-button>
+              <el-button class="server-jump" :disabled="!basic.server" @click="openServerSite">{{
+                $t('serial.visitServer')
+              }}</el-button>
             </div>
           </el-form-item>
         </el-form>
@@ -125,7 +133,12 @@
           <div class="section-header">
             <span class="section-title">{{ $t('serial.deviceInfo') }}</span>
             <div class="section-actions">
-              <el-button size="small" :disabled="!connected" :loading="reading" @click="readRegisters">
+              <el-button
+                size="small"
+                :disabled="!connected"
+                :loading="reading"
+                @click="readRegisters"
+              >
                 {{ $t('serial.refresh') }}
               </el-button>
               <el-popconfirm
@@ -198,7 +211,11 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('serial.radioModel')">
-                <el-select v-model="reg.radio" filterable popper-class="platform-theme-select-dropdown">
+                <el-select
+                  v-model="reg.radio"
+                  filterable
+                  popper-class="platform-theme-select-dropdown"
+                >
                   <el-option
                     v-for="model in radioOptions"
                     :key="model.id"
@@ -237,7 +254,11 @@
                 />
               </el-form-item>
               <el-form-item :label="$t('serial.ssid')">
-                <el-input v-model="reg.ssid" maxlength="3" :placeholder="$t('serial.ssidPlaceholder')" />
+                <el-input
+                  v-model="reg.ssid"
+                  maxlength="3"
+                  :placeholder="$t('serial.ssidPlaceholder')"
+                />
               </el-form-item>
             </div>
             <el-form-item :label="$t('serial.server')" class="server-item">
@@ -263,7 +284,8 @@
                   class="server-jump"
                   :disabled="!reg.server"
                   @click="openSite(reg.server)"
-                >{{ $t('serial.visitServer') }}</el-button>
+                  >{{ $t('serial.visitServer') }}</el-button
+                >
               </div>
             </el-form-item>
           </el-form>
@@ -303,7 +325,8 @@
             :disabled="!connected || !customCommand"
             :loading="executingKey === '__custom__'"
             @click="executeCustom"
-          >{{ $t('serial.execute') }}</el-button>
+            >{{ $t('serial.execute') }}</el-button
+          >
         </div>
       </div>
 
@@ -340,7 +363,12 @@
                   class="at-value"
                   popper-class="platform-theme-select-dropdown"
                 >
-                  <el-option v-for="item in ['ON', 'OFF']" :key="item" :label="item" :value="item" />
+                  <el-option
+                    v-for="item in ['ON', 'OFF']"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
                 </el-select>
 
                 <el-select
@@ -363,7 +391,12 @@
                   class="at-value"
                   popper-class="platform-theme-select-dropdown"
                 >
-                  <el-option v-for="item in ['ENABLE', 'DISABLE']" :key="item" :label="item" :value="item" />
+                  <el-option
+                    v-for="item in ['ENABLE', 'DISABLE']"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
                 </el-select>
 
                 <el-select
@@ -382,7 +415,8 @@
                   :disabled="!connected"
                   :loading="executingKey === key"
                   @click="executeAT(key)"
-                >{{ $t('serial.execute') }}</el-button>
+                  >{{ $t('serial.execute') }}</el-button
+                >
 
                 <span class="at-desc">{{ ATREADMEOptions[key] }}</span>
               </div>
@@ -398,8 +432,15 @@
           <el-button size="small" text @click="logs = []">{{ $t('serial.clear') }}</el-button>
         </div>
         <div ref="logBox" class="log-box">
-          <div v-for="(entry, index) in logs" :key="index" class="log-line" :class="'log-' + entry.direction">
-            <span class="log-prefix">{{ entry.direction === 'tx' ? '→' : entry.direction === 'rx' ? '←' : '·' }}</span>
+          <div
+            v-for="(entry, index) in logs"
+            :key="index"
+            class="log-line"
+            :class="'log-' + entry.direction"
+          >
+            <span class="log-prefix">{{
+              entry.direction === 'tx' ? '→' : entry.direction === 'rx' ? '←' : '·'
+            }}</span>
             <span>{{ entry.line }}</span>
           </div>
           <div v-if="logs.length === 0" class="log-empty">{{ $t('serial.logEmpty') }}</div>
@@ -420,7 +461,7 @@ import {
   decodeRegisters,
   encodeRegisters,
   isValidIPv4,
-  isValidDomain
+  isValidDomain,
 } from '@/utils/register'
 
 const BASIC_KEYS = { callsign: 'AT+CALL', ssid: 'AT+SSID', server: 'AT+D_IP' }
@@ -440,7 +481,7 @@ function emptyRegisterConfig() {
     dns: '',
     ssid: '',
     callsign: '',
-    server: ''
+    server: '',
   }
 }
 
@@ -460,7 +501,7 @@ export default {
       basic: {
         callsign: '',
         ssid: '',
-        server: ''
+        server: '',
       },
       atKeys: [],
       onOffKeys: ['AT+APRS', 'AT+DHCP', 'AT+DUPLEX', 'AT+LOOP', 'AT+PTT_RES'],
@@ -473,13 +514,13 @@ export default {
       deviceMode: '', // '' | 'at' | 'register'
       regVersion: '',
       reg: emptyRegisterConfig(),
-      logs: []
+      logs: [],
     }
   },
   computed: {
     // 设备返回的型号 / PTT 超时若不在已知列表中，追加为可选项以免显示为空
     radioOptions() {
-      if (this.reg.radio && !RADIO_MODELS.some(model => model.id === this.reg.radio)) {
+      if (this.reg.radio && !RADIO_MODELS.some((model) => model.id === this.reg.radio)) {
         return RADIO_MODELS.concat([{ id: this.reg.radio, name: this.$t('serial.radioUnknown') }])
       }
       return RADIO_MODELS
@@ -489,7 +530,7 @@ export default {
         return PTT_TIMEOUT_OPTIONS.concat([this.reg.pttTimeout]).sort((a, b) => a - b)
       }
       return PTT_TIMEOUT_OPTIONS
-    }
+    },
   },
   created() {
     this.client = new SerialATClient()
@@ -499,7 +540,7 @@ export default {
       this.connected = false
       this.resetDeviceMode()
     }
-    this.atKeys.forEach(key => {
+    this.atKeys.forEach((key) => {
       this.atValues[key] = ''
     })
     this.fetchServers()
@@ -512,9 +553,11 @@ export default {
   methods: {
     fetchServers() {
       if (this.platformOptions.length) return
-      fetchPlatformList({}).then(response => {
-        this.platformOptions = response.data.items || []
-      }).catch(() => {})
+      fetchPlatformList({})
+        .then((response) => {
+          this.platformOptions = response.data.items || []
+        })
+        .catch(() => {})
     },
     // 在新标签页打开指定服务器的站点（其首页提供登录 / 注册入口）
     openSite(host) {
@@ -679,11 +722,11 @@ export default {
 
         // 只显示设备实际返回的指令：按 ATREADMEOptions 顺序排列已知指令，其余追加在后
         const returnedKeys = Object.keys(map)
-        const knownKeys = Object.keys(ATREADMEOptions).filter(key => returnedKeys.includes(key))
-        const extraKeys = returnedKeys.filter(key => !(key in ATREADMEOptions))
+        const knownKeys = Object.keys(ATREADMEOptions).filter((key) => returnedKeys.includes(key))
+        const extraKeys = returnedKeys.filter((key) => !(key in ATREADMEOptions))
         this.atKeys = knownKeys.concat(extraKeys)
 
-        returnedKeys.forEach(key => {
+        returnedKeys.forEach((key) => {
           this.atValues[key] = map[key]
         })
 
@@ -793,8 +836,8 @@ export default {
       } finally {
         this.executingKey = ''
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -803,8 +846,12 @@ export default {
   min-height: 100vh;
   box-sizing: border-box;
   padding: 24px;
-  background:
-    radial-gradient(980px 460px at 18% -14%, var(--platform-accent-2) 0%, var(--platform-surface) 56%, var(--platform-surface-soft) 100%);
+  background: radial-gradient(
+    980px 460px at 18% -14%,
+    var(--platform-accent-2) 0%,
+    var(--platform-surface) 56%,
+    var(--platform-surface-soft) 100%
+  );
   color: var(--platform-ink);
 }
 
@@ -831,7 +878,10 @@ export default {
     background: var(--platform-surface-68);
     color: var(--platform-ink-dim);
     font-size: 14px;
-    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease,
+      background 0.2s ease;
 
     &:hover {
       color: var(--platform-ink);
@@ -855,10 +905,12 @@ export default {
     min-height: 36px;
     height: 36px;
     box-sizing: border-box;
-    background: rgba(148, 190, 255, 0.10) !important;
+    background: rgba(148, 190, 255, 0.1) !important;
     box-shadow: 0 0 0 1px rgba(148, 190, 255, 0.45) inset !important;
     border-radius: 10px;
-    transition: box-shadow 0.2s ease, background 0.2s ease;
+    transition:
+      box-shadow 0.2s ease,
+      background 0.2s ease;
   }
 
   :deep(.el-input__wrapper:hover),
@@ -912,7 +964,11 @@ export default {
   }
 
   :deep(.el-button--primary) {
-    background: linear-gradient(90deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%) !important;
+    background: linear-gradient(
+      90deg,
+      var(--platform-accent) 0%,
+      var(--platform-accent-2) 100%
+    ) !important;
     box-shadow: 0 12px 28px var(--platform-accent-22);
     color: var(--platform-deep) !important;
   }
@@ -946,13 +1002,19 @@ export default {
     font-size: 15px;
     font-weight: 600;
     background: var(--platform-surface-xlight) !important;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease;
   }
 
   :deep(.el-collapse-item__header.is-active),
   :deep(.el-collapse-item__header:hover) {
     border-color: var(--platform-border-strong) !important;
-    background: linear-gradient(90deg, var(--platform-accent-08) 0%, var(--platform-accent-14) 100%) !important;
+    background: linear-gradient(
+      90deg,
+      var(--platform-accent-08) 0%,
+      var(--platform-accent-14) 100%
+    ) !important;
   }
 
   :deep(.el-collapse-item__content) {

@@ -47,7 +47,7 @@ import RealtimeMonitorPanel from '@/components/platform/RealtimeMonitorPanel.vue
 export default {
   name: 'DashboardAdmin',
   components: {
-    RealtimeMonitorPanel
+    RealtimeMonitorPanel,
   },
   data() {
     return {
@@ -56,14 +56,14 @@ export default {
       liveStats: {
         totalSubs: 0,
         connectedClients: 0,
-        onlineDevices: 0
-      }
+        onlineDevices: 0,
+      },
     }
   },
   computed: {
     totalDeviceCount() {
       return Number(this.list.platform_dev_total || this.list.dev_number) || 0
-    }
+    },
   },
   created() {
     this.initializeDashboard()
@@ -72,7 +72,10 @@ export default {
     async initializeDashboard() {
       try {
         const statsResponse = await fetchTotalStats(this.listQuery)
-        const totalStats = statsResponse && statsResponse.data && statsResponse.data.items ? statsResponse.data.items : {}
+        const totalStats =
+          statsResponse && statsResponse.data && statsResponse.data.items
+            ? statsResponse.data.items
+            : {}
 
         this.list = totalStats
       } catch (error) {
@@ -83,41 +86,56 @@ export default {
       this.liveStats = {
         totalSubs: Number(stats && stats.totalSubs) || 0,
         connectedClients: Number(stats && stats.connectedClients) || 0,
-        onlineDevices: Number(stats && stats.onlineDevices) || 0
+        onlineDevices: Number(stats && stats.onlineDevices) || 0,
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
 .dashboard-home {
   min-height: 100%;
-  background: radial-gradient(980px 460px at 18% -14%, var(--platform-accent-2) 0%, var(--platform-surface) 56%, var(--platform-surface-soft) 100%);
+  background: radial-gradient(
+    980px 460px at 18% -14%,
+    var(--platform-accent-2) 0%,
+    var(--platform-surface) 56%,
+    var(--platform-surface-soft) 100%
+  );
   position: relative;
   overflow: hidden;
   color: var(--platform-ink);
 }
 
 .dashboard-home::before {
-  content: "";
+  content: '';
   position: fixed;
   inset: -40% auto auto -20%;
   width: 640px;
   height: 640px;
-  background: radial-gradient(circle, var(--platform-accent) 0%, var(--platform-accent) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    var(--platform-accent) 0%,
+    var(--platform-accent) 0%,
+    transparent 70%
+  );
   filter: blur(3px);
   pointer-events: none;
 }
 
 .dashboard-home::after {
-  content: "";
+  content: '';
   position: fixed;
   right: -20%;
   bottom: -30%;
   width: 720px;
   height: 720px;
-  background: radial-gradient(circle, var(--platform-accent-2) 0%, var(--platform-accent-2) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    var(--platform-accent-2) 0%,
+    var(--platform-accent-2) 0%,
+    transparent 70%
+  );
   filter: blur(5px);
   pointer-events: none;
 }

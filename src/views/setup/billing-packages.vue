@@ -16,7 +16,9 @@
       </el-table-column>
       <el-table-column label="状态" width="100" align="center">
         <template #default="{ row }">
-          <el-tag :type="row.status === 1 ? 'success' : 'info'">{{ row.status === 1 ? '启用' : '停用' }}</el-tag>
+          <el-tag :type="row.status === 1 ? 'success' : 'info'">{{
+            row.status === 1 ? '启用' : '停用'
+          }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="备注" prop="note" min-width="180" />
@@ -28,7 +30,11 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog v-model="dialogVisible" :title="dialogStatus === 'create' ? '新增套餐' : '编辑套餐'" class="platform-theme-dialog">
+    <el-dialog
+      v-model="dialogVisible"
+      :title="dialogStatus === 'create' ? '新增套餐' : '编辑套餐'"
+      class="platform-theme-dialog"
+    >
       <el-form ref="dataForm" :model="temp" :rules="rules" label-width="120px">
         <el-form-item label="套餐名称" prop="name">
           <el-input v-model="temp.name" />
@@ -66,7 +72,7 @@ import {
   fetchBillingPackages,
   createBillingPackage,
   updateBillingPackage,
-  deleteBillingPackage
+  deleteBillingPackage,
 } from '@/api/billing'
 
 export default {
@@ -81,14 +87,14 @@ export default {
       rules: {
         name: [{ required: true, message: '请输入套餐名称', trigger: 'blur' }],
         months: [{ required: true, message: '请输入月份', trigger: 'change' }],
-        unit_price_cents: [{ required: true, message: '请输入月单价', trigger: 'change' }]
-      }
+        unit_price_cents: [{ required: true, message: '请输入月单价', trigger: 'change' }],
+      },
     }
   },
   computed: {
     packagePrice() {
       return (Number(this.temp.months) || 0) * (Number(this.temp.unit_price_cents) || 0)
-    }
+    },
   },
   created() {
     this.getList()
@@ -102,7 +108,7 @@ export default {
         unit_price_cents: 1000,
         price_cents: 3000,
         status: 1,
-        note: ''
+        note: '',
       }
     },
     async getList() {
@@ -130,7 +136,7 @@ export default {
       this.$nextTick(() => this.$refs.dataForm.clearValidate())
     },
     submit() {
-      this.$refs.dataForm.validate(async valid => {
+      this.$refs.dataForm.validate(async (valid) => {
         if (!valid) return
         const payload = Object.assign({}, this.temp, { price_cents: this.packagePrice })
         if (this.dialogStatus === 'create') {
@@ -145,14 +151,14 @@ export default {
     },
     handleDelete(row) {
       ElMessageBox.confirm(`确认停用套餐：${row.name}？`, '提示', {
-        type: 'warning'
+        type: 'warning',
       }).then(async () => {
         await deleteBillingPackage(row)
         ElMessage.success('已停用')
         this.getList()
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

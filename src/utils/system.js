@@ -3,12 +3,12 @@ export const DevTypeOptions = [
   { id: 1, name: '中继' },
   { id: 2, name: '热点' },
   { id: 3, name: 'APP' },
-  { id: 4, name: 'WEB' }
+  { id: 4, name: 'WEB' },
 ]
 
 //1-99为硬件设备，100-199为软件 APP，200-299为服务器端
 export const DevModelOptions = [
-//1-99为硬件设备，100-199为软件 APP，200-299为服务器端
+  //1-99为硬件设备，100-199为软件 APP，200-299为服务器端
   { id: 0, name: '未知' },
   { id: 1, name: 'NRL-2100' },
   { id: 2, name: 'NRL-2200' },
@@ -48,34 +48,30 @@ export const DevModelOptions = [
   { id: 50, name: '海能达中继' },
   { id: 55, name: 'NRL-ESP32' },
 
+  //BG4SF作品
+  { id: 86, name: 'BG4SF-Cottell' }, //开拓者
+  { id: 68, name: 'BG4SF-Zeenow' }, //指南者
+  { id: 88, name: 'BG4SF-Leapower' }, //领跑者
 
-
-//BG4SF作品
-  { id: 86, name: 'BG4SF-Cottell' },//开拓者
-  { id: 68, name: 'BG4SF-Zeenow' },//指南者
-  { id: 88, name: 'BG4SF-Leapower' },//领跑者
-
-
-
-//BA4QAO作品
+  //BA4QAO作品
   { id: 60, name: 'BA4QAO-ESP32' },
 
-//BD4VKI作品
+  //BD4VKI作品
   { id: 66, name: 'BD4VKI-ESP32' },
 
-//BI4UMD作品
+  //BI4UMD作品
   { id: 70, name: 'BI4UMD-ESP32' },
 
-//BG4QG作品
+  //BG4QG作品
   { id: 80, name: 'BG4QG-ESP32' },
 
-//BH6BBH作品
+  //BH6BBH作品
   { id: 90, name: 'BH6BBH-ESP32' },
 
-//BH4TIH公网对讲
+  //BH4TIH公网对讲
   { id: 99, name: 'BH4TIH-ESP32' },
 
-//软件端
+  //软件端
   { id: 100, name: 'NRL-微信小程序' },
   { id: 101, name: 'NRL-73HAM安卓' },
   { id: 102, name: 'NR工具集-IOS' },
@@ -87,18 +83,16 @@ export const DevModelOptions = [
   { id: 109, name: 'NRL-win-BG5FOX' },
   { id: 111, name: 'NRL-BH6BBH' },
   { id: 119, name: 'NRL-73HAM Pro 安卓' },
- 
 
-//服务器端
+  //服务器端
 
   { id: 200, name: 'NRL-Server' },
   { id: 201, name: 'NRL-会议' },
   { id: 202, name: 'NRL-BM' },
- // { id: 221, name: 'BG4SF-FormatConversion-1' },//221和222的数据包长度互转160-500
- // { id: 222, name: 'BG4SF-FormatConversion-2' },//221和222的数据包长度互转160-500
+  // { id: 221, name: 'BG4SF-FormatConversion-1' },//221和222的数据包长度互转160-500
+  // { id: 222, name: 'BG4SF-FormatConversion-2' },//221和222的数据包长度互转160-500
   { id: 250, name: 'NRL-保姆' },
-  { id: 255, name: 'NRL-全网互连' }
-
+  { id: 255, name: 'NRL-全网互连' },
 ]
 
 // 连接的射频设备类型：  0:无连接， 1,内置1W模块，2，内置2W模块，3，外接moto3188，4,moto3688, 5，外接yaesu，6，外接，icom，7，外接其它
@@ -109,8 +103,7 @@ export const DevRFtypeOptions = [
   { id: 3, name: 'Moto3188/3688' },
   { id: 5, name: 'Yaesu' },
   { id: 6, name: 'ICOM' },
-  { id: 7, name: '其它' }
-
+  { id: 7, name: '其它' },
 ]
 
 export const groupTypeOptions = [
@@ -123,13 +116,13 @@ export const groupTypeOptions = [
   { id: 6, name: '车友会' },
   { id: 7, name: '会议组' },
   { id: 8, name: '私密房间' },
-  { id: 100, name: '其他' }
+  { id: 100, name: '其他' },
 ]
 
 export const DevStatusOptions = [
   // { id: 0, name: '正常' },
   { id: 1, name: '禁收' },
-  { id: 2, name: '禁发' }
+  { id: 2, name: '禁发' },
   // { id: 3, name: '双禁' },
   // { id: 4, name: '透明' }
 ]
@@ -141,12 +134,11 @@ export const WeekOptions = [
   { id: 4, name: '星期四' },
   { id: 5, name: '星期五' },
   { id: 6, name: '星期六' },
-  { id: 0, name: '星期日' }
+  { id: 0, name: '星期日' },
 ]
 
 // 物理机，虚拟机，树莓派等
 export const ServerTypeOptions = [
-
   { id: 1, name: '专用服务器' },
   { id: 2, name: '普通PC' },
   { id: 3, name: '小主机' },
@@ -154,8 +146,7 @@ export const ServerTypeOptions = [
   { id: 5, name: '自建虚拟机' },
   { id: 6, name: '阿里云' },
   { id: 7, name: '腾讯云' },
-  { id: 8, name: '华为云' }
-
+  { id: 8, name: '华为云' },
 ]
 
 export const ATREADMEOptions = {
@@ -203,6 +194,5 @@ export const ATREADMEOptions = {
   'AT+PLAY': '播放',
   'AT+STOP': '停止',
   'AT+REPEAT': '重复',
-  'AT+PLAY_ID': '播放ID'
+  'AT+PLAY_ID': '播放ID',
 }
-

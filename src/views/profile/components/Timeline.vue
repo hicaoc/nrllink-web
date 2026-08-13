@@ -2,7 +2,7 @@
   <div class="profile-timeline">
     <el-timeline>
       <el-timeline-item
-        v-for="(item,index) of list"
+        v-for="(item, index) of list"
         :key="index"
         :timestamp="item.timestamp"
         placement="top"
@@ -31,10 +31,10 @@ export default {
           email: '',
           phone: '',
           callsign: '',
-          password: ''
+          password: '',
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -42,8 +42,8 @@ export default {
       listLoding: false,
       listQuery: {
         page: 1,
-        limit: 5
-      }
+        limit: 5,
+      },
     }
   },
 
@@ -55,13 +55,15 @@ export default {
     getList() {
       //  console.log(this.user)
       this.listLoading = true
-      fetchOperatorLogList({ operator_id: this.user.id, limit: 25, page: 1 }).then(response => {
-        this.list = response?.data?.items || []
-      }).finally(() => {
-        this.listLoading = false
-      })
-    }
-  }
+      fetchOperatorLogList({ operator_id: this.user.id, limit: 25, page: 1 })
+        .then((response) => {
+          this.list = response?.data?.items || []
+        })
+        .finally(() => {
+          this.listLoading = false
+        })
+    },
+  },
 }
 </script>
 

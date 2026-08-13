@@ -20,8 +20,8 @@ export default {
     ...mapState(useTagsViewStore, ['cachedViews']),
     key() {
       return this.$route.fullPath
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -47,14 +47,22 @@ export default {
   }
 
   &::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--platform-accent-62) 0%, var(--platform-accent-72) 100%);
+    background: linear-gradient(
+      180deg,
+      var(--platform-accent-62) 0%,
+      var(--platform-accent-72) 100%
+    );
     border-radius: 999px;
     border: 2px solid var(--platform-surface-0);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, var(--platform-accent-85) 0%, var(--platform-accent-88) 100%);
+    background: linear-gradient(
+      180deg,
+      var(--platform-accent-85) 0%,
+      var(--platform-accent-88) 100%
+    );
   }
 
   &::-webkit-scrollbar-corner {

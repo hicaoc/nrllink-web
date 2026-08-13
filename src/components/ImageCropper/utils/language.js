@@ -10,13 +10,13 @@ export default {
       off: '取消',
       close: '关闭',
       back: '上一步',
-      save: '保存'
+      save: '保存',
     },
     error: {
       onlyImg: '仅限图片格式',
       outOfSize: '单文件大小不能超过 ',
-      lowestPx: '图片最低像素为（宽*高）：'
-    }
+      lowestPx: '图片最低像素为（宽*高）：',
+    },
   },
   'zh-tw': {
     hint: '點擊，或拖動圖片至此處',
@@ -29,13 +29,13 @@ export default {
       off: '取消',
       close: '關閉',
       back: '上一步',
-      save: '保存'
+      save: '保存',
     },
     error: {
       onlyImg: '僅限圖片格式',
       outOfSize: '單文件大小不能超過 ',
-      lowestPx: '圖片最低像素為（寬*高）：'
-    }
+      lowestPx: '圖片最低像素為（寬*高）：',
+    },
   },
   en: {
     hint: 'Click or drag the file here to upload',
@@ -48,13 +48,13 @@ export default {
       off: 'Cancel',
       close: 'Close',
       back: 'Back',
-      save: 'Save'
+      save: 'Save',
     },
     error: {
       onlyImg: 'Image only',
       outOfSize: 'Image exceeds size limit: ',
-      lowestPx: 'Image\'s size is too low. Expected at least: '
-    }
+      lowestPx: "Image's size is too low. Expected at least: ",
+    },
   },
   ro: {
     hint: 'Atinge sau trage fișierul aici',
@@ -68,19 +68,20 @@ export default {
       off: 'Anulează',
       close: 'Închide',
       back: 'Înapoi',
-      save: 'Salvează'
+      save: 'Salvează',
     },
 
     error: {
       onlyImg: 'Doar imagini',
       outOfSize: 'Imaginea depășește limita de: ',
-      loewstPx: 'Imaginea este prea mică; Minim: '
-    }
+      loewstPx: 'Imaginea este prea mică; Minim: ',
+    },
   },
   ru: {
     hint: 'Нажмите, или перетащите файл в это окно',
     loading: 'Загружаю……',
-    noSupported: 'Ваш браузер не поддерживается, пожалуйста, используйте IE10 + или другие браузеры',
+    noSupported:
+      'Ваш браузер не поддерживается, пожалуйста, используйте IE10 + или другие браузеры',
     success: 'Загрузка выполнена успешно',
     fail: 'Ошибка загрузки',
     preview: 'Предпросмотр',
@@ -88,13 +89,13 @@ export default {
       off: 'Отменить',
       close: 'Закрыть',
       back: 'Назад',
-      save: 'Сохранить'
+      save: 'Сохранить',
     },
     error: {
       onlyImg: 'Только изображения',
       outOfSize: 'Изображение превышает предельный размер: ',
-      lowestPx: 'Минимальный размер изображения: '
-    }
+      lowestPx: 'Минимальный размер изображения: ',
+    },
   },
   'pt-br': {
     hint: 'Clique ou arraste o arquivo aqui para carregar',
@@ -107,18 +108,19 @@ export default {
       off: 'Cancelar',
       close: 'Fechar',
       back: 'Voltar',
-      save: 'Salvar'
+      save: 'Salvar',
     },
     error: {
       onlyImg: 'Apenas imagens',
       outOfSize: 'A imagem excede o limite de tamanho: ',
-      lowestPx: 'O tamanho da imagem é muito pequeno. Tamanho mínimo: '
-    }
+      lowestPx: 'O tamanho da imagem é muito pequeno. Tamanho mínimo: ',
+    },
   },
   fr: {
     hint: 'Cliquez ou glissez le fichier ici.',
     loading: 'Téléchargement…',
-    noSupported: 'Votre navigateur n\'est pas supporté. Utilisez IE10 + ou un autre navigateur s\'il vous plaît.',
+    noSupported:
+      "Votre navigateur n'est pas supporté. Utilisez IE10 + ou un autre navigateur s'il vous plaît.",
     success: 'Téléchargement réussit',
     fail: 'Téléchargement echoué',
     preview: 'Aperçu',
@@ -126,13 +128,13 @@ export default {
       off: 'Annuler',
       close: 'Fermer',
       back: 'Retour',
-      save: 'Enregistrer'
+      save: 'Enregistrer',
     },
     error: {
       onlyImg: 'Image uniquement',
-      outOfSize: 'L\'image sélectionnée dépasse la taille maximum: ',
-      lowestPx: 'L\'image sélectionnée est trop petite. Dimensions attendues: '
-    }
+      outOfSize: "L'image sélectionnée dépasse la taille maximum: ",
+      lowestPx: "L'image sélectionnée est trop petite. Dimensions attendues: ",
+    },
   },
   nl: {
     hint: 'Klik hier of sleep een afbeelding in dit vlak',
@@ -145,13 +147,13 @@ export default {
       off: 'Annuleren',
       close: 'Sluiten',
       back: 'Terug',
-      save: 'Opslaan'
+      save: 'Opslaan',
     },
     error: {
       onlyImg: 'Alleen afbeeldingen',
       outOfSize: 'De afbeelding is groter dan: ',
-      lowestPx: 'De afbeelding is te klein! Minimale afmetingen: '
-    }
+      lowestPx: 'De afbeelding is te klein! Minimale afmetingen: ',
+    },
   },
   tr: {
     hint: 'Tıkla veya yüklemek istediğini buraya sürükle',
@@ -164,18 +166,19 @@ export default {
       off: 'İptal',
       close: 'Kapat',
       back: 'Geri',
-      save: 'Kaydet'
+      save: 'Kaydet',
     },
     error: {
       onlyImg: 'Sadece resim',
       outOfSize: 'Resim yükleme limitini aşıyor: ',
-      lowestPx: 'Resmin boyutu çok küçük. En az olması gereken: '
-    }
+      lowestPx: 'Resmin boyutu çok küçük. En az olması gereken: ',
+    },
   },
   'es-MX': {
     hint: 'Selecciona o arrastra una imagen',
     loading: 'Subiendo...',
-    noSupported: 'Tu navegador no es soportado, porfavor usa IE10+ u otros navegadores mas recientes',
+    noSupported:
+      'Tu navegador no es soportado, porfavor usa IE10+ u otros navegadores mas recientes',
     success: 'Subido exitosamente',
     fail: 'Sucedió un error',
     preview: 'Vista previa',
@@ -183,13 +186,13 @@ export default {
       off: 'Cancelar',
       close: 'Cerrar',
       back: 'Atras',
-      save: 'Guardar'
+      save: 'Guardar',
     },
     error: {
       onlyImg: 'Unicamente imagenes',
       outOfSize: 'La imagen excede el tamaño maximo:',
-      lowestPx: 'La imagen es demasiado pequeño. Se espera por lo menos:'
-    }
+      lowestPx: 'La imagen es demasiado pequeño. Se espera por lo menos:',
+    },
   },
   de: {
     hint: 'Klick hier oder zieh eine Datei hier rein zum Hochladen',
@@ -202,13 +205,13 @@ export default {
       off: 'Abbrechen',
       close: 'Schließen',
       back: 'Zurück',
-      save: 'Speichern'
+      save: 'Speichern',
     },
     error: {
       onlyImg: 'Nur Bilder',
       outOfSize: 'Das Bild ist zu groß: ',
-      lowestPx: 'Das Bild ist zu klein. Mindestens: '
-    }
+      lowestPx: 'Das Bild ist zu klein. Mindestens: ',
+    },
   },
   ja: {
     hint: 'クリック・ドラッグしてファイルをアップロード',
@@ -221,12 +224,12 @@ export default {
       off: 'キャンセル',
       close: '閉じる',
       back: '戻る',
-      save: '保存'
+      save: '保存',
     },
     error: {
       onlyImg: '画像のみ',
       outOfSize: '画像サイズが上限を超えています。上限: ',
-      lowestPx: '画像が小さすぎます。最小サイズ: '
-    }
-  }
+      lowestPx: '画像が小さすぎます。最小サイズ: ',
+    },
+  },
 }

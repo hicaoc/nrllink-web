@@ -4,7 +4,7 @@ export function fetchCommunicationStats(data) {
   return request({
     url: '/report/commstats',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -12,7 +12,7 @@ export function fetchTeacherSignStats(data) {
   return request({
     url: '/report/teachersignstats',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -20,7 +20,7 @@ export function fetchConsultantSignStats(data) {
   return request({
     url: '/report/consultantsignstats',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -28,7 +28,7 @@ export function fetchTeacherTimesStats(data) {
   return request({
     url: '/report/teachertimesstats',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -36,7 +36,7 @@ export function fetchTeacherTimesByCount(data) {
   return request({
     url: '/report/teachertimeItemsbycount',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -44,7 +44,7 @@ export function fetchCustomerStats(data) {
   return request({
     url: '/report/customerstats',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -52,14 +52,13 @@ export function fetchAccountStats(data) {
   return request({
     url: '/report/Accountstats',
     method: 'post',
-    data
+    data,
   })
 }
 
 export function fetchToday() {
   return request({
     url: '/report/today',
-    method: 'get'
+    method: 'get',
   })
 }
-

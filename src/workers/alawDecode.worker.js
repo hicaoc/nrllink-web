@@ -12,7 +12,7 @@ function buildAlawTable() {
 
     let sample = (mantissa << 4) + 8
     if (exponent > 1) {
-      sample <<= (exponent - 1)
+      sample <<= exponent - 1
     }
 
     alawDecodeTable[i] = (code & 0x80) !== 0 ? sample : -sample
@@ -21,7 +21,7 @@ function buildAlawTable() {
 
 buildAlawTable()
 
-self.onmessage = function(e) {
+self.onmessage = function (e) {
   const { g711Bytes } = e.data
   const pcm = new Float32Array(g711Bytes.length)
 

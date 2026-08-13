@@ -14,7 +14,7 @@ $universe-border-strong: var(--platform-border-strong, rgba(54, 240, 203, 0.28))
   inset: 0;
   overflow: hidden;
   background: #050b16;
-  font-family: Manrope, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: Manrope, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   color: $universe-ink;
 }
 
@@ -78,8 +78,13 @@ $universe-border-strong: var(--platform-border-strong, rgba(54, 240, 203, 0.28))
 }
 
 @keyframes universe-pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.45; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
 }
 
 .universe-topbar-actions {
@@ -200,13 +205,22 @@ $universe-border-strong: var(--platform-border-strong, rgba(54, 240, 203, 0.28))
 }
 
 @keyframes universe-scanlines {
-  from { background-position: 0 0; }
-  to { background-position: 0 120px; }
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 120px;
+  }
 }
 
 @keyframes universe-sweep {
-  0% { top: -30%; }
-  60%, 100% { top: 110%; }
+  0% {
+    top: -30%;
+  }
+  60%,
+  100% {
+    top: 110%;
+  }
 }
 
 .console-header {
@@ -246,7 +260,7 @@ $universe-border-strong: var(--platform-border-strong, rgba(54, 240, 203, 0.28))
   background: rgba(4, 12, 24, 0.85);
   border: 1px solid rgba(54, 240, 203, 0.22);
   box-shadow: 0 0 18px rgba(54, 240, 203, 0.12) inset;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
 
   .display-label {
     font-size: 10px;
@@ -294,7 +308,11 @@ $universe-border-strong: var(--platform-border-strong, rgba(54, 240, 203, 0.28))
   height: 40px;
   border-radius: 50%;
   border: 1px solid rgba(54, 240, 203, 0.4);
-  background: radial-gradient(circle at 32% 30%, rgba(54, 240, 203, 0.28) 0%, rgba(10, 23, 41, 0.9) 70%);
+  background: radial-gradient(
+    circle at 32% 30%,
+    rgba(54, 240, 203, 0.28) 0%,
+    rgba(10, 23, 41, 0.9) 70%
+  );
   color: $universe-accent;
   font-size: 18px;
   line-height: 1;
@@ -347,11 +365,13 @@ $universe-border-strong: var(--platform-border-strong, rgba(54, 240, 203, 0.28))
   border: 1px solid rgba(104, 176, 255, 0.18);
   background: rgba(4, 12, 24, 0.75);
   color: $universe-ink;
-  font-family: "SFMono-Regular", Consolas, monospace;
+  font-family: 'SFMono-Regular', Consolas, monospace;
   font-size: 15px;
   letter-spacing: 0.18em;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 
   &::placeholder {
     color: rgba(228, 239, 255, 0.35);
@@ -415,7 +435,9 @@ $universe-border-strong: var(--platform-border-strong, rgba(54, 240, 203, 0.28))
   border-radius: 12px;
   background: rgba(8, 20, 38, 0.9);
   border: 1px solid rgba(54, 240, 203, 0.3);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 16px rgba(54, 240, 203, 0.12);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.45),
+    0 0 16px rgba(54, 240, 203, 0.12);
   backdrop-filter: blur(8px);
   pointer-events: none;
 
@@ -446,7 +468,11 @@ $universe-border-strong: var(--platform-border-strong, rgba(54, 240, 203, 0.28))
 // ---------- 设备抽屉 ----------
 .universe-device-drawer {
   --el-drawer-bg-color: rgba(10, 23, 41, 0.98);
-  background: linear-gradient(160deg, rgba(10, 23, 41, 0.98) 0%, rgba(12, 29, 50, 0.96) 100%) !important;
+  background: linear-gradient(
+    160deg,
+    rgba(10, 23, 41, 0.98) 0%,
+    rgba(12, 29, 50, 0.96) 100%
+  ) !important;
   border-left: 1px solid rgba(54, 240, 203, 0.25);
   box-shadow: -18px 0 48px rgba(0, 0, 0, 0.5);
   color: $universe-ink;
@@ -669,4 +695,3 @@ $universe-border-strong: var(--platform-border-strong, rgba(54, 240, 203, 0.28))
   color: var(--platform-ink-dim, rgba(228, 239, 255, 0.4));
   font-size: 12px;
 }
-

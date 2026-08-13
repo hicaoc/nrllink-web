@@ -1,5 +1,5 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div :class="className" :style="{ height: height, width: width }" />
 </template>
 
 <script>
@@ -11,24 +11,24 @@ export default {
   props: {
     className: {
       type: String,
-      default: 'chart'
+      default: 'chart',
     },
     width: {
       type: String,
-      default: '100%'
+      default: '100%',
     },
     height: {
       type: String,
-      default: '300px'
+      default: '300px',
     },
     appcount: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      chart: null
+      chart: null,
     }
   },
   watch: {
@@ -36,8 +36,8 @@ export default {
       deep: true,
       handler(val) {
         this.setOptions(val)
-      }
-    }
+      },
+    },
   },
   mounted() {
     this.initChart()
@@ -72,24 +72,22 @@ export default {
       status7,
       status8,
       status9,
-      status10
+      status10,
     } = {}) {
       this.chart.setOption({
         title: {
           text: '账号/IP统计图',
           subtext: '',
-          left: 'center'
+          left: 'center',
         },
         tooltip: {
           trigger: 'item',
-          formatter: '{b} : {c} ({d}%)'
+          formatter: '{b} : {c} ({d}%)',
         },
         legend: {
           left: 'center',
           bottom: '10',
-          data: [
-
-          ]
+          data: [],
         },
 
         calculable: true,
@@ -100,18 +98,17 @@ export default {
             roseType: 'radius',
             radius: [15, 65],
             center: ['50%', '38%'],
-            data: [
-            ],
+            data: [],
             animationEasing: 'cubicInOut',
-            animationDuration: 2600
+            animationDuration: 2600,
             // animationEasingUpdate: 2600,
             // animationDelayUpdate: function(idx) {
             //   return idx * 100
             // }
-          }
-        ]
+          },
+        ],
       })
-    }
-  }
+    },
+  },
 }
 </script>

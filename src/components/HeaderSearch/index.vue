@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'show':show}" class="header-search">
+  <div :class="{ show: show }" class="header-search">
     <svg-icon class-name="search-icon" icon-class="search" @click.stop="click" />
     <el-select
       ref="headerSearchSelect"
@@ -12,7 +12,12 @@
       class="header-search-select"
       @change="change"
     >
-      <el-option v-for="item in options" :key="item.path" :value="item" :label="item.title.join(' > ')" />
+      <el-option
+        v-for="item in options"
+        :key="item.path"
+        :value="item"
+        :label="item.title.join(' > ')"
+      />
     </el-select>
   </div>
 </template>
@@ -44,12 +49,12 @@ export default {
       options: [],
       searchPool: [],
       show: false,
-      fuse: undefined
+      fuse: undefined,
     }
   },
   computed: {
     ...mapState(usePermissionStore, { routes: 'routes' }),
-    ...mapState(useAppStore, { lang: 'language' })
+    ...mapState(useAppStore, { lang: 'language' }),
   },
   watch: {
     lang() {
@@ -67,7 +72,7 @@ export default {
       } else {
         document.body.removeEventListener('click', this.close)
       }
-    }
+    },
   },
   mounted() {
     this.searchPool = this.generateRoutes(this.routes)
@@ -100,13 +105,16 @@ export default {
         distance: 100,
         maxPatternLength: 32,
         minMatchCharLength: 1,
-        keys: [{
-          name: 'title',
-          weight: 0.7
-        }, {
-          name: 'path',
-          weight: 0.3
-        }]
+        keys: [
+          {
+            name: 'title',
+            weight: 0.7,
+          },
+          {
+            name: 'path',
+            weight: 0.3,
+          },
+        ],
       })
     },
     // Filter out the routes that can be displayed in the sidebar
@@ -116,11 +124,13 @@ export default {
 
       for (const router of routes) {
         // skip hidden router
-        if (router.hidden) { continue }
+        if (router.hidden) {
+          continue
+        }
 
         const data = {
           path: resolvePath(basePath, router.path),
-          title: [...prefixTitle]
+          title: [...prefixTitle],
         }
 
         if (router.meta && router.meta.title) {
@@ -152,8 +162,8 @@ export default {
       } else {
         this.options = []
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

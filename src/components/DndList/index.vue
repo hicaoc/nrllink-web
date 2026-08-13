@@ -1,15 +1,18 @@
 <template>
   <div class="dndList">
-    <div :style="{width:width1}" class="dndList-list">
+    <div :style="{ width: width1 }" class="dndList-list">
       <h3>{{ list1Title }}</h3>
       <draggable :set-data="setData" :list="list1" item-key="id" group="article" class="dragArea">
         <div v-for="element in list1" :key="element.id" class="list-complete-item">
           <div class="list-complete-item-handle">
             {{ element.id }}[{{ element.author }}] {{ element.title }}
           </div>
-          <div style="position:absolute;right:0px;">
-            <span style="float: right ;margin-top: -20px;margin-right:5px;" @click="deleteEle(element)">
-              <el-icon class="el-icon-delete" style="color:#ff4949">
+          <div style="position: absolute; right: 0px">
+            <span
+              style="float: right; margin-top: -20px; margin-right: 5px"
+              @click="deleteEle(element)"
+            >
+              <el-icon class="el-icon-delete" style="color: #ff4949">
                 <Delete />
               </el-icon>
             </span>
@@ -17,7 +20,7 @@
         </div>
       </draggable>
     </div>
-    <div :style="{width:width2}" class="dndList-list">
+    <div :style="{ width: width2 }" class="dndList-list">
       <h3>{{ list2Title }}</h3>
       <draggable :list="list2" item-key="id" group="article" class="dragArea">
         <div v-for="element in list2" :key="element.id" class="list-complete-item">
@@ -41,37 +44,37 @@ export default {
       type: Array,
       default() {
         return []
-      }
+      },
     },
     list2: {
       type: Array,
       default() {
         return []
-      }
+      },
     },
     list1Title: {
       type: String,
-      default: 'list1'
+      default: 'list1',
     },
     list2Title: {
       type: String,
-      default: 'list2'
+      default: 'list2',
     },
     width1: {
       type: String,
-      default: '48%'
+      default: '48%',
     },
     width2: {
       type: String,
-      default: '48%'
-    }
+      default: '48%',
+    },
   },
   methods: {
     isNotInList1(v) {
-      return this.list1.every(k => v.id !== k.id)
+      return this.list1.every((k) => v.id !== k.id)
     },
     isNotInList2(v) {
-      return this.list2.every(k => v.id !== k.id)
+      return this.list2.every((k) => v.id !== k.id)
     },
     deleteEle(ele) {
       for (const item of this.list1) {
@@ -101,8 +104,8 @@ export default {
       // to avoid Firefox bug
       // Detail see : https://github.com/RubaXa/Sortable/issues/1012
       dataTransfer.setData('Text', '')
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -111,7 +114,7 @@ export default {
   background: #fff;
   padding-bottom: 40px;
   &:after {
-    content: "";
+    content: '';
     display: table;
     clear: both;
   }
@@ -154,11 +157,11 @@ export default {
 }
 
 .list-complete-item.sortable-chosen {
-  background: #4AB7BD;
+  background: #4ab7bd;
 }
 
 .list-complete-item.sortable-ghost {
-  background: #30B08F;
+  background: #30b08f;
 }
 
 .list-complete-enter,

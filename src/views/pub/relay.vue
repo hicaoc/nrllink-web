@@ -1,7 +1,6 @@
 <template>
   <div class="app-container platform-theme-page relay-page">
     <div class="filter-container platform-theme-toolbar">
-
       <el-input
         v-model="listQuery.name"
         :placeholder="$t('relay.name')"
@@ -17,12 +16,7 @@
         @keyup.enter="handleFilter"
       />
 
-      <el-button
-        v-waves
-        class="filter-item action-btn"
-        type="primary"
-        @click="handleFilter"
-      >
+      <el-button v-waves class="filter-item action-btn" type="primary" @click="handleFilter">
         <el-icon>
           <Search />
         </el-icon>
@@ -49,7 +43,6 @@
         <span class="capsule-indicator" />
         <span>{{ $t('device.showtable') }}</span>
       </button>
-
     </div>
 
     <div v-if="showtable" class="table-shell">
@@ -60,7 +53,7 @@
         border
         fit
         highlight-current-row
-        style="width: 100%;"
+        style="width: 100%"
         @sort-change="sortChange"
       >
         <el-table-column
@@ -76,12 +69,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('relay.name')"
-          fixed="left"
-          width="150px"
-          align="center"
-        >
+        <el-table-column :label="$t('relay.name')" fixed="left" width="150px" align="center">
           <template #default="scope">
             <div class="relay-name-cell">
               <span>{{ scope.row.name || '--' }}</span>
@@ -89,11 +77,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('relay.up_freq')"
-          width="110px"
-          align="center"
-        >
+        <el-table-column :label="$t('relay.up_freq')" width="110px" align="center">
           <template #default="scope">
             <div class="freq-pill">
               <span>{{ scope.row.up_freq || '--' }}</span>
@@ -101,11 +85,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('relay.down_freq')"
-          width="110px"
-          align="center"
-        >
+        <el-table-column :label="$t('relay.down_freq')" width="110px" align="center">
           <template #default="scope">
             <div class="freq-pill">
               <span>{{ scope.row.down_freq || '--' }}</span>
@@ -113,41 +93,29 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="发射哑音"
-          width="110px"
-          align="center"
-        >
+        <el-table-column label="发射哑音" width="110px" align="center">
           <template #default="scope">
-            <el-tag class="tone-tag">{{ ValueFilter(scope.row.send_ctss, ctcssOptions) || '--' }}</el-tag>
+            <el-tag class="tone-tag">{{
+              ValueFilter(scope.row.send_ctss, ctcssOptions) || '--'
+            }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="接收哑音"
-          width="110px"
-          align="center"
-        >
+        <el-table-column label="接收哑音" width="110px" align="center">
           <template #default="scope">
-            <el-tag class="tone-tag">{{ ValueFilter(scope.row.recive_ctss, ctcssOptions) || '--' }}</el-tag>
+            <el-tag class="tone-tag">{{
+              ValueFilter(scope.row.recive_ctss, ctcssOptions) || '--'
+            }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('relay.ower_callsign')"
-          width="150px"
-          align="center"
-        >
+        <el-table-column :label="$t('relay.ower_callsign')" width="150px" align="center">
           <template #default="scope">
             <el-tag class="owner-tag">{{ scope.row.ower_callsign || '--' }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('device.status')"
-          width="110px"
-          align="center"
-        >
+        <el-table-column :label="$t('device.status')" width="110px" align="center">
           <template #default="scope">
             <el-tag :class="relayStatusClass(scope.row.status)" class="relay-status-tag">
               {{ relayStatusLabel(scope.row.status) }}
@@ -155,31 +123,19 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('device.createTime')"
-          width="160px"
-          align="center"
-        >
+        <el-table-column :label="$t('device.createTime')" width="160px" align="center">
           <template #default="scope">
             <span>{{ parseTime(scope.row.create_time) || '--' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('device.updateTime')"
-          width="160px"
-          align="center"
-        >
+        <el-table-column :label="$t('device.updateTime')" width="160px" align="center">
           <template #default="scope">
             <span>{{ parseTime(scope.row.update_time) || '--' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('relay.note')"
-          min-width="180px"
-          align="center"
-        >
+        <el-table-column :label="$t('relay.note')" min-width="180px" align="center">
           <template #default="scope">
             <div class="note-cell">{{ scope.row.note || '--' }}</div>
           </template>
@@ -192,37 +148,33 @@
           width="200px"
           class-name="small-padding fixed-width"
         >
-          <template #default="{row}">
+          <template #default="{ row }">
             <el-button
-              v-if="checkPermission(['admin']) || row.ower_callsign === callsign "
+              v-if="checkPermission(['admin']) || row.ower_callsign === callsign"
               size="small"
               type="primary"
               plain
               class="compact-btn relay-edit-btn"
               @click="handleUpdate(row)"
-            >{{ $t('device.edit') }}</el-button>
+              >{{ $t('device.edit') }}</el-button
+            >
 
             <el-button
-              v-if="checkPermission(['admin']) || row.ower_callsign === callsign "
+              v-if="checkPermission(['admin']) || row.ower_callsign === callsign"
               size="small"
               type="danger"
               plain
               class="compact-btn relay-delete-btn"
               @click="handleDelete(row)"
-            >{{ $t('device.delete') }}</el-button>
-
+              >{{ $t('device.delete') }}</el-button
+            >
           </template>
         </el-table-column>
-
       </el-table>
     </div>
 
     <div v-else class="relay-card-grid">
-      <article
-        v-for="item in list"
-        :key="item.id"
-        class="relay-card"
-      >
+      <article v-for="item in list" :key="item.id" class="relay-card">
         <div class="relay-card__header">
           <div class="relay-card__headline">
             <el-tag size="small" effect="dark" class="relay-id-tag">#{{ item.id }}</el-tag>
@@ -247,11 +199,15 @@
         <div class="relay-card__body">
           <div class="relay-card__row">
             <span class="relay-card__label">发射哑音</span>
-            <el-tag class="tone-tag">{{ ValueFilter(item.send_ctss, ctcssOptions) || '--' }}</el-tag>
+            <el-tag class="tone-tag">{{
+              ValueFilter(item.send_ctss, ctcssOptions) || '--'
+            }}</el-tag>
           </div>
           <div class="relay-card__row">
             <span class="relay-card__label">接收哑音</span>
-            <el-tag class="tone-tag">{{ ValueFilter(item.recive_ctss, ctcssOptions) || '--' }}</el-tag>
+            <el-tag class="tone-tag">{{
+              ValueFilter(item.recive_ctss, ctcssOptions) || '--'
+            }}</el-tag>
           </div>
           <div class="relay-card__row">
             <span class="relay-card__label">{{ $t('relay.ower_callsign') }}</span>
@@ -271,14 +227,18 @@
           </div>
         </div>
 
-        <div v-if="checkPermission(['admin']) || item.ower_callsign === callsign" class="relay-card__actions">
+        <div
+          v-if="checkPermission(['admin']) || item.ower_callsign === callsign"
+          class="relay-card__actions"
+        >
           <el-button
             size="small"
             type="primary"
             plain
             class="compact-btn relay-edit-btn"
             @click="handleUpdate(item)"
-          >{{ $t('device.edit') }}</el-button>
+            >{{ $t('device.edit') }}</el-button
+          >
 
           <el-button
             size="small"
@@ -286,7 +246,8 @@
             plain
             class="compact-btn relay-delete-btn"
             @click="handleDelete(item)"
-          >{{ $t('device.delete') }}</el-button>
+            >{{ $t('device.delete') }}</el-button
+          >
         </div>
       </article>
     </div>
@@ -304,25 +265,15 @@
         label-width="140px"
         class="relay-form"
       >
-
-        <el-form-item
-          :label="$t('relay.name')"
-          prop="name"
-        >
+        <el-form-item :label="$t('relay.name')" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
 
-        <el-form-item
-          :label="$t('relay.up_freq')"
-          prop="up_freq"
-        >
+        <el-form-item :label="$t('relay.up_freq')" prop="up_freq">
           <el-input v-model="temp.up_freq" />
         </el-form-item>
 
-        <el-form-item
-          :label="$t('relay.down_freq')"
-          prop="down_freq"
-        >
+        <el-form-item :label="$t('relay.down_freq')" prop="down_freq">
           <el-input v-model="temp.down_freq" />
         </el-form-item>
 
@@ -359,7 +310,6 @@
         <el-form-item :label="$t('group.note')" prop="name">
           <el-input v-model="temp.note" />
         </el-form-item>
-
       </el-form>
 
       <template #footer>
@@ -367,22 +317,17 @@
           <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
           <el-button
             type="primary"
-            @click="dialogStatus==='create'?createData():updateData()"
-          >{{ $t('employee.confirm') }}</el-button>
+            @click="dialogStatus === 'create' ? createData() : updateData()"
+            >{{ $t('employee.confirm') }}</el-button
+          >
         </div>
       </template>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
-import {
-  fetchRelayList,
-  createRelay,
-  updateRelay,
-  deleteRelay
-} from '@/api/relay'
+import { fetchRelayList, createRelay, updateRelay, deleteRelay } from '@/api/relay'
 import { ctcssOptions } from '@/utils/ctcss'
 // import { fetchDeviceList } from '@/api/device'
 // import permission from '@/directive/permission/index.js' // 权限判断指令
@@ -416,12 +361,12 @@ export default {
       listQuery: {
         name: '',
         ower_callsign: '',
-        page: 1
+        page: 1,
       },
       showReviewer: false,
       temp: {
         id: undefined,
-        name: ''
+        name: '',
       },
       showtable: true,
 
@@ -432,17 +377,16 @@ export default {
       dialogStatus: '',
       textMap: {
         update: 'Edit',
-        create: 'Create'
+        create: 'Create',
       },
 
       rules: {},
-      downloadLoading: false,
-      uploadLoading: false
+      uploadLoading: false,
     }
   },
   computed: {
     ...mapState(useAppStore, ['device']),
-    ...mapState(useUserStore, ['callsign'])
+    ...mapState(useUserStore, ['callsign']),
   },
 
   created() {
@@ -466,18 +410,22 @@ export default {
       return status ?? '--'
     },
     relayStatusClass(status) {
-      if (status === 1 || status === '1' || status === true || status === 'online') return 'status-online'
-      if (status === 0 || status === '0' || status === false || status === 'offline') return 'status-offline'
+      if (status === 1 || status === '1' || status === true || status === 'online')
+        return 'status-online'
+      if (status === 0 || status === '0' || status === false || status === 'offline')
+        return 'status-offline'
       return 'status-neutral'
     },
     getList() {
       this.listLoading = true
-      this.fetchRelayList(this.listQuery).then(response => {
-        this.list = response?.data?.items || []
-        this.total = response?.data?.total || this.list.length
-      }).finally(() => {
-        this.listLoading = false
-      })
+      this.fetchRelayList(this.listQuery)
+        .then((response) => {
+          this.list = response?.data?.items || []
+          this.total = response?.data?.total || this.list.length
+        })
+        .finally(() => {
+          this.listLoading = false
+        })
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -504,7 +452,7 @@ export default {
         name: '',
         name_pref: '',
         type: 0,
-        status: 1
+        status: 1,
       }
     },
     handleCreate() {
@@ -516,10 +464,10 @@ export default {
       })
     },
     createData() {
-      this.$refs['dataForm'].validate(valid => {
+      this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           // this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          createRelay(this.temp).then(response => {
+          createRelay(this.temp).then((response) => {
             this.getList()
             this.dialogFormVisible = false
             ElMessage.success(response?.data?.message || '创建成功')
@@ -547,11 +495,11 @@ export default {
       })
     },
     updateData() {
-      this.$refs['dataForm'].validate(valid => {
+      this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateRelay(tempData).then(response => {
+          updateRelay(tempData).then((response) => {
             for (const v of this.list) {
               if (v.id === this.temp.id) {
                 const index = this.list.indexOf(v)
@@ -569,10 +517,10 @@ export default {
       ElMessageBox.confirm('此操作将永久删除该频点, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
-          deleteRelay(row).then(response => {
+          deleteRelay(row).then((response) => {
             const message = response?.data?.message || '操作完成'
             ElMessage.success(message)
             this.listLoading = false
@@ -585,39 +533,6 @@ export default {
         .catch(() => {
           ElMessage.info('已取消删除')
         })
-    },
-    async handleDownload() {
-      this.downloadLoading = true
-      // console.log(this.list)
-      if (this.list === null) {
-        this.downloadLoading = false
-        return
-      }
-      const excel = await import('@/vendor/Export2Excel')
-      const tHeader = ['姓名', '电话', '性别', '出生年月日']
-      const filterVal = ['name', 'phone', 'sex']
-      const data = this.formatJson(filterVal, this.list)
-      await excel.export_json_to_excel({
-        header: tHeader,
-        data,
-        filename: 'device-list'
-      })
-      this.downloadLoading = false
-    },
-
-    handleUpload() {
-    },
-
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v =>
-        filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
-        })
-      )
     },
 
     returnIndex(id, array) {
@@ -639,8 +554,8 @@ export default {
         }
       }
       return false
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -687,7 +602,11 @@ export default {
 
     &.is-checked .el-switch__core {
       border-color: rgba(54, 240, 203, 0.34);
-      background: linear-gradient(90deg, rgba(38, 239, 199, 0.88) 0%, rgba(63, 141, 255, 0.82) 100%);
+      background: linear-gradient(
+        90deg,
+        rgba(38, 239, 199, 0.88) 0%,
+        rgba(63, 141, 255, 0.82) 100%
+      );
     }
 
     .el-switch__action {
@@ -734,13 +653,19 @@ export default {
   .tone-tag {
     color: var(--platform-chip-text, #c3f0ff) !important;
     border-color: var(--platform-chip-border, rgba(104, 176, 255, 0.24)) !important;
-    background: var(--platform-chip-bg, linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)) !important;
+    background: var(
+      --platform-chip-bg,
+      linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)
+    ) !important;
   }
 
   .owner-tag {
     color: var(--action-at-text, #9effea) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.28)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(14, 77, 78, 0.32) 0%, rgba(12, 42, 67, 0.28) 100%)) !important;
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(14, 77, 78, 0.32) 0%, rgba(12, 42, 67, 0.28) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.08) inset;
   }
 
@@ -753,14 +678,20 @@ export default {
   .status-online {
     color: var(--action-at-text, #9effea) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.34)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(17, 89, 80, 0.42) 0%, rgba(12, 48, 71, 0.32) 100%)) !important;
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(17, 89, 80, 0.42) 0%, rgba(12, 48, 71, 0.32) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.08) inset;
   }
 
   .status-offline {
     color: var(--action-delete-text, #ffb7c8) !important;
     border-color: var(--action-delete-border, rgba(255, 116, 145, 0.32)) !important;
-    background: var(--action-delete-bg, linear-gradient(135deg, rgba(89, 28, 45, 0.34) 0%, rgba(57, 20, 35, 0.26) 100%)) !important;
+    background: var(
+      --action-delete-bg,
+      linear-gradient(135deg, rgba(89, 28, 45, 0.34) 0%, rgba(57, 20, 35, 0.26) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px rgba(255, 116, 145, 0.08) inset;
   }
 
@@ -798,14 +729,20 @@ export default {
   .relay-edit-btn {
     color: var(--action-edit-text, #9feaff) !important;
     border-color: var(--action-edit-border, rgba(88, 184, 255, 0.44)) !important;
-    background: var(--action-edit-bg, linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)) !important;
+    background: var(
+      --action-edit-bg,
+      linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px var(--action-edit-shadow, rgba(88, 184, 255, 0.08)) inset;
   }
 
   .relay-delete-btn {
     color: var(--action-delete-text, #ffb3bf) !important;
     border-color: var(--action-delete-border, rgba(255, 116, 145, 0.4)) !important;
-    background: var(--action-delete-bg, linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)) !important;
+    background: var(
+      --action-delete-bg,
+      linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px var(--action-delete-shadow, rgba(255, 116, 145, 0.08)) inset;
   }
 
@@ -953,7 +890,7 @@ export default {
 }
 
 @media (max-width: 768px) {
-.filter-container {
+  .filter-container {
     .filter-item {
       &.search-input,
       &.owner-input,

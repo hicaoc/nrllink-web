@@ -6,7 +6,7 @@ export default {
     dragDom.style.cssText += ';top:0px;'
 
     // 获取原有属性 ie dom元素.currentStyle 火狐谷歌 window.getComputedStyle(dom元素, null);
-    const getStyle = (function() {
+    const getStyle = (function () {
       if (window.document.currentStyle) {
         return (dom, attr) => dom.currentStyle[attr]
       } else {
@@ -36,26 +36,26 @@ export default {
       let styT = getStyle(dragDom, 'top')
 
       if (styL.includes('%')) {
-        styL = +document.body.clientWidth * (+styL.replace(/\%/g, '') / 100)
-        styT = +document.body.clientHeight * (+styT.replace(/\%/g, '') / 100)
+        styL = +document.body.clientWidth * (+styL.replace(/%/g, '') / 100)
+        styT = +document.body.clientHeight * (+styT.replace(/%/g, '') / 100)
       } else {
         styL = +styL.replace(/\px/g, '')
         styT = +styT.replace(/\px/g, '')
       }
 
-      document.onmousemove = function(e) {
+      document.onmousemove = function (e) {
         // 通过事件委托，计算移动的距离
         let left = e.clientX - disX
         let top = e.clientY - disY
 
         // 边界处理
-        if (-(left) > minDragDomLeft) {
+        if (-left > minDragDomLeft) {
           left = -minDragDomLeft
         } else if (left > maxDragDomLeft) {
           left = maxDragDomLeft
         }
 
-        if (-(top) > minDragDomTop) {
+        if (-top > minDragDomTop) {
           top = -minDragDomTop
         } else if (top > maxDragDomTop) {
           top = maxDragDomTop
@@ -70,10 +70,10 @@ export default {
         }
       }
 
-      document.onmouseup = function(e) {
+      document.onmouseup = function (e) {
         document.onmousemove = null
         document.onmouseup = null
       }
     }
-  }
+  },
 }

@@ -10,12 +10,23 @@
       <div class="display-label">SERVER</div>
       <div class="display-value">{{ currentPlatform ? currentPlatform.name : '--------' }}</div>
       <div class="display-sub">
-        {{ currentPlatform ? `${currentPlatform.host} · 在线 ${currentPlatform.online}/${currentPlatform.total}` : '等待平台列表' }}
+        {{
+          currentPlatform
+            ? `${currentPlatform.host} · 在线 ${currentPlatform.online}/${currentPlatform.total}`
+            : '等待平台列表'
+        }}
       </div>
     </div>
 
     <div class="console-server-row">
-      <button type="button" class="knob-button" :disabled="!platforms.length" @click="stepServer(-1)">‹</button>
+      <button
+        type="button"
+        class="knob-button"
+        :disabled="!platforms.length"
+        @click="stepServer(-1)"
+      >
+        ‹
+      </button>
       <el-select
         v-model="selectedIndex"
         class="server-select"
@@ -23,9 +34,21 @@
         placeholder="选择服务器"
         popper-class="platform-theme-select-dropdown"
       >
-        <el-option v-for="(platform, index) in platforms" :key="platform.id" :label="platform.name" :value="index" />
+        <el-option
+          v-for="(platform, index) in platforms"
+          :key="platform.id"
+          :label="platform.name"
+          :value="index"
+        />
       </el-select>
-      <button type="button" class="knob-button" :disabled="!platforms.length" @click="stepServer(1)">›</button>
+      <button
+        type="button"
+        class="knob-button"
+        :disabled="!platforms.length"
+        @click="stepServer(1)"
+      >
+        ›
+      </button>
     </div>
 
     <div class="console-field">
@@ -37,7 +60,7 @@
         placeholder="BH4XXX"
         autocomplete="username"
         @keyup.enter="handleLogin"
-      >
+      />
     </div>
 
     <div class="console-field">
@@ -50,7 +73,7 @@
           placeholder="••••••"
           autocomplete="current-password"
           @keyup.enter="handleLogin"
-        >
+        />
         <button type="button" class="password-toggle" @click="showPassword = !showPassword">
           {{ showPassword ? '隐藏' : '显示' }}
         </button>
@@ -72,8 +95,8 @@ export default {
   props: {
     platforms: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -81,7 +104,7 @@ export default {
       callsign: '',
       password: '',
       showPassword: false,
-      loading: false
+      loading: false,
     }
   },
   computed: {
@@ -89,15 +112,15 @@ export default {
       if (!this.platforms.length) return null
       const index = Math.min(this.selectedIndex, this.platforms.length - 1)
       return this.platforms[index] || null
-    }
+    },
   },
   watch: {
     currentPlatform: {
       handler(platform) {
         this.$emit('preview', platform)
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
     stepServer(step) {
@@ -117,16 +140,17 @@ export default {
       }
       this.loading = true
       const userStore = useUserStore()
-      userStore.login({ username: this.callsign, password: this.password })
+      userStore
+        .login({ username: this.callsign, password: this.password })
         .then(() => {
           this.loading = false
           this.$emit('success')
         })
-        .catch(error => {
+        .catch((error) => {
           this.loading = false
           ElMessage.error((error && error.message) || '登录失败,请检查呼号与密码')
         })
-    }
-  }
+    },
+  },
 }
 </script>

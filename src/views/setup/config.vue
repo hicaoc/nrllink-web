@@ -16,7 +16,13 @@
 
     <el-tabs v-if="loaded" v-model="activeTab" class="config-tabs">
       <el-tab-pane :label="$t('config.tabSystem')" name="system">
-        <el-form :model="conf.system" label-position="right" label-width="180px" class="config-form" autocomplete="off">
+        <el-form
+          :model="conf.system"
+          label-position="right"
+          label-width="180px"
+          class="config-form"
+          autocomplete="off"
+        >
           <el-form-item :label="$t('config.system.port')">
             <el-input-number v-model="conf.system.port" :min="0" :max="65535" :controls="false" />
           </el-form-item>
@@ -39,7 +45,13 @@
       </el-tab-pane>
 
       <el-tab-pane :label="$t('config.tabWeb')" name="web">
-        <el-form :model="conf.web" label-position="right" label-width="180px" class="config-form" autocomplete="off">
+        <el-form
+          :model="conf.web"
+          label-position="right"
+          label-width="180px"
+          class="config-form"
+          autocomplete="off"
+        >
           <el-form-item :label="$t('config.web.path')">
             <el-input autocomplete="new-password" v-model="conf.web.path" />
           </el-form-item>
@@ -59,7 +71,13 @@
       </el-tab-pane>
 
       <el-tab-pane :label="$t('config.tabSysteminfo')" name="systeminfo">
-        <el-form :model="conf.systeminfo" label-position="right" label-width="180px" class="config-form" autocomplete="off">
+        <el-form
+          :model="conf.systeminfo"
+          label-position="right"
+          label-width="180px"
+          class="config-form"
+          autocomplete="off"
+        >
           <el-form-item :label="$t('config.systeminfo.name')">
             <el-input autocomplete="new-password" v-model="conf.systeminfo.name" />
           </el-form-item>
@@ -76,7 +94,13 @@
       </el-tab-pane>
 
       <el-tab-pane :label="$t('config.tabOpenai')" name="openai">
-        <el-form :model="conf.openai" label-position="right" label-width="180px" class="config-form" autocomplete="off">
+        <el-form
+          :model="conf.openai"
+          label-position="right"
+          label-width="180px"
+          class="config-form"
+          autocomplete="off"
+        >
           <el-form-item :label="$t('config.openai.base_url')">
             <el-input autocomplete="new-password" v-model="conf.openai.base_url" />
           </el-form-item>
@@ -90,18 +114,34 @@
       </el-tab-pane>
 
       <el-tab-pane :label="$t('config.tabAprs')" name="aprs">
-        <el-form :model="conf.aprs" label-position="right" label-width="180px" class="config-form" autocomplete="off">
+        <el-form
+          :model="conf.aprs"
+          label-position="right"
+          label-width="180px"
+          class="config-form"
+          autocomplete="off"
+        >
           <el-form-item :label="$t('config.aprs.aprs_server_host')">
             <el-input autocomplete="new-password" v-model="conf.aprs.aprs_server_host" />
           </el-form-item>
           <el-form-item :label="$t('config.aprs.aprs_server_port')">
-            <el-input-number v-model="conf.aprs.aprs_server_port" :min="0" :max="65535" :controls="false" />
+            <el-input-number
+              v-model="conf.aprs.aprs_server_port"
+              :min="0"
+              :max="65535"
+              :controls="false"
+            />
           </el-form-item>
           <el-form-item :label="$t('config.aprs.self_address')">
             <el-input autocomplete="new-password" v-model="conf.aprs.self_address" />
           </el-form-item>
           <el-form-item :label="$t('config.aprs.self_port')">
-            <el-input-number v-model="conf.aprs.self_port" :min="0" :max="65535" :controls="false" />
+            <el-input-number
+              v-model="conf.aprs.self_port"
+              :min="0"
+              :max="65535"
+              :controls="false"
+            />
           </el-form-item>
           <el-form-item :label="$t('config.aprs.callsign')">
             <el-input autocomplete="new-password" v-model="conf.aprs.callsign" />
@@ -125,12 +165,22 @@
       </el-tab-pane>
 
       <el-tab-pane :label="$t('config.tabWeixin')" name="weixin">
-        <el-form :model="conf.weixin" label-position="right" label-width="180px" class="config-form" autocomplete="off">
+        <el-form
+          :model="conf.weixin"
+          label-position="right"
+          label-width="180px"
+          class="config-form"
+          autocomplete="off"
+        >
           <el-form-item :label="$t('config.weixin.mp_appid')">
             <el-input autocomplete="new-password" v-model="conf.weixin.mp_appid" />
           </el-form-item>
           <el-form-item :label="$t('config.weixin.mp_appsecret')">
-            <el-input autocomplete="new-password" v-model="conf.weixin.mp_appsecret" show-password />
+            <el-input
+              autocomplete="new-password"
+              v-model="conf.weixin.mp_appsecret"
+              show-password
+            />
           </el-form-item>
           <el-form-item :label="$t('config.weixin.phone_code_url')">
             <el-input autocomplete="new-password" v-model="conf.weixin.phone_code_url" />
@@ -145,10 +195,19 @@
             <el-input autocomplete="new-password" v-model="conf.weixin.appsecret" show-password />
           </el-form-item>
           <el-form-item :label="$t('config.weixin.encodingaeskey')">
-            <el-input autocomplete="new-password" v-model="conf.weixin.encodingaeskey" show-password />
+            <el-input
+              autocomplete="new-password"
+              v-model="conf.weixin.encodingaeskey"
+              show-password
+            />
           </el-form-item>
           <el-form-item :label="$t('config.weixin.weixin_welcome')">
-            <el-input autocomplete="new-password" v-model="conf.weixin.weixin_welcome" type="textarea" :rows="2" />
+            <el-input
+              autocomplete="new-password"
+              v-model="conf.weixin.weixin_welcome"
+              type="textarea"
+              :rows="2"
+            />
           </el-form-item>
           <el-form-item :label="$t('config.weixin.default_keywords')">
             <el-input autocomplete="new-password" v-model="conf.weixin.default_keywords" />
@@ -169,15 +228,29 @@
       </el-tab-pane>
 
       <el-tab-pane :label="$t('config.tabBilling')" name="billing">
-        <el-form :model="conf.billing" label-position="right" label-width="180px" class="config-form" autocomplete="off">
+        <el-form
+          :model="conf.billing"
+          label-position="right"
+          label-width="180px"
+          class="config-form"
+          autocomplete="off"
+        >
           <el-form-item :label="$t('config.billing.enabled')">
             <el-switch v-model="conf.billing.enabled" />
           </el-form-item>
           <el-form-item :label="$t('config.billing.account_expire_recheck_secs')">
-            <el-input-number v-model="conf.billing.account_expire_recheck_secs" :min="0" :controls="false" />
+            <el-input-number
+              v-model="conf.billing.account_expire_recheck_secs"
+              :min="0"
+              :controls="false"
+            />
           </el-form-item>
           <el-form-item :label="$t('config.billing.package_unit_price_cents')">
-            <el-input-number v-model="conf.billing.package_unit_price_cents" :min="0" :controls="false" />
+            <el-input-number
+              v-model="conf.billing.package_unit_price_cents"
+              :min="0"
+              :controls="false"
+            />
           </el-form-item>
           <el-form-item :label="$t('config.billing.notify_url')">
             <el-input autocomplete="new-password" v-model="conf.billing.notify_url" />
@@ -186,7 +259,13 @@
 
         <el-divider content-position="left">{{ $t('config.billing.wechatPay') }}</el-divider>
 
-        <el-form :model="conf.billing.wechat_pay" label-position="right" label-width="180px" class="config-form" autocomplete="off">
+        <el-form
+          :model="conf.billing.wechat_pay"
+          label-position="right"
+          label-width="180px"
+          class="config-form"
+          autocomplete="off"
+        >
           <el-form-item :label="$t('config.billing.appid')">
             <el-input autocomplete="new-password" v-model="conf.billing.wechat_pay.appid" />
           </el-form-item>
@@ -194,13 +273,20 @@
             <el-input autocomplete="new-password" v-model="conf.billing.wechat_pay.mch_id" />
           </el-form-item>
           <el-form-item :label="$t('config.billing.api_v3_key')">
-            <el-input autocomplete="new-password" v-model="conf.billing.wechat_pay.api_v3_key" show-password />
+            <el-input
+              autocomplete="new-password"
+              v-model="conf.billing.wechat_pay.api_v3_key"
+              show-password
+            />
           </el-form-item>
           <el-form-item :label="$t('config.billing.serial_no')">
             <el-input autocomplete="new-password" v-model="conf.billing.wechat_pay.serial_no" />
           </el-form-item>
           <el-form-item :label="$t('config.billing.private_key_path')">
-            <el-input autocomplete="new-password" v-model="conf.billing.wechat_pay.private_key_path" />
+            <el-input
+              autocomplete="new-password"
+              v-model="conf.billing.wechat_pay.private_key_path"
+            />
           </el-form-item>
           <el-form-item :label="$t('config.billing.wechat_notify_url')">
             <el-input autocomplete="new-password" v-model="conf.billing.wechat_pay.notify_url" />
@@ -245,7 +331,12 @@
           </el-table-column>
           <el-table-column :label="$t('config.platforms.actions')" width="120" align="center">
             <template #default="scope">
-              <el-button size="small" type="danger" plain @click="handleDeletePlatform(scope.$index)">
+              <el-button
+                size="small"
+                type="danger"
+                plain
+                @click="handleDeletePlatform(scope.$index)"
+              >
                 {{ $t('config.deletePlatform') }}
               </el-button>
             </template>
@@ -283,9 +374,9 @@ export default {
         openai: {},
         aprs: {},
         weixin: {},
-        billing: { wechat_pay: {}},
-        platforms: []
-      }
+        billing: { wechat_pay: {} },
+        platforms: [],
+      },
     }
   },
   created() {
@@ -294,42 +385,47 @@ export default {
   methods: {
     fetchConfig() {
       this.loading = true
-      getConfig().then(response => {
-        const data = response.data || {}
-        // 整体保存返回的配置，未在表单展示的字段（map、运行时字段等）原样保留回传
-        this.conf = data
-        const sections = ['system', 'web', 'systeminfo', 'openai', 'aprs', 'weixin', 'billing']
-        sections.forEach(key => {
-          if (!this.conf[key] || typeof this.conf[key] !== 'object') {
-            this.conf[key] = {}
+      getConfig()
+        .then((response) => {
+          const data = response.data || {}
+          // 整体保存返回的配置，未在表单展示的字段（map、运行时字段等）原样保留回传
+          this.conf = data
+          const sections = ['system', 'web', 'systeminfo', 'openai', 'aprs', 'weixin', 'billing']
+          sections.forEach((key) => {
+            if (!this.conf[key] || typeof this.conf[key] !== 'object') {
+              this.conf[key] = {}
+            }
+          })
+          if (!this.conf.billing.wechat_pay || typeof this.conf.billing.wechat_pay !== 'object') {
+            this.conf.billing.wechat_pay = {}
           }
+          if (!Array.isArray(this.conf.platforms)) {
+            this.conf.platforms = []
+          }
+          this.loaded = true
         })
-        if (!this.conf.billing.wechat_pay || typeof this.conf.billing.wechat_pay !== 'object') {
-          this.conf.billing.wechat_pay = {}
-        }
-        if (!Array.isArray(this.conf.platforms)) {
-          this.conf.platforms = []
-        }
-        this.loaded = true
-      }).catch(() => {
-        this.$message({
-          type: 'error',
-          message: this.$t('config.loadFailed')
+        .catch(() => {
+          this.$message({
+            type: 'error',
+            message: this.$t('config.loadFailed'),
+          })
         })
-      }).finally(() => {
-        this.loading = false
-      })
+        .finally(() => {
+          this.loading = false
+        })
     },
     handleSave() {
       this.saving = true
-      updateConfig(this.conf).then(response => {
-        this.$message({
-          type: 'success',
-          message: response.message || this.$t('config.saveSuccess')
+      updateConfig(this.conf)
+        .then((response) => {
+          this.$message({
+            type: 'success',
+            message: response.message || this.$t('config.saveSuccess'),
+          })
         })
-      }).finally(() => {
-        this.saving = false
-      })
+        .finally(() => {
+          this.saving = false
+        })
     },
     handleAddPlatform() {
       this.conf.platforms.push({
@@ -337,24 +433,26 @@ export default {
         host: '',
         port: 0,
         online: 0,
-        total: 0
+        total: 0,
       })
     },
     handleDeletePlatform(index) {
       ElMessageBox.confirm(this.$t('config.deleteConfirm'), this.$t('config.tip'), {
         confirmButtonText: this.$t('config.confirm'),
         cancelButtonText: this.$t('config.cancel'),
-        type: 'warning'
-      }).then(() => {
-        this.conf.platforms.splice(index, 1)
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: this.$t('config.canceled')
-        })
+        type: 'warning',
       })
-    }
-  }
+        .then(() => {
+          this.conf.platforms.splice(index, 1)
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: this.$t('config.canceled'),
+          })
+        })
+    },
+  },
 }
 </script>
 

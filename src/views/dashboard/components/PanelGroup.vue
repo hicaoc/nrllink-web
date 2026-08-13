@@ -6,7 +6,8 @@
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">设备</div>总
+          <div class="card-panel-text">设备</div>
+          总
           <count-to
             :start-val="0"
             :end-val="list.dev_number"
@@ -18,8 +19,7 @@
             :end-val="list.platform_dev_total"
             :duration="2600"
             class="card-panel-num"
-          />个
-          <br>在线
+          />个 <br />在线
           <count-to
             :start-val="0"
             :end-val="list.online_dev_number"
@@ -41,7 +41,8 @@
           <svg-icon icon-class="tcp_delay" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">语音</div> <div style="font-size: 20px;">{{ formatVoiceTime(list.voice_time) }} </div>
+          <div class="card-panel-text">语音</div>
+          <div style="font-size: 20px">{{ formatVoiceTime(list.voice_time) }}</div>
           <!-- <count-to
             :start-val="0"
             :end-val="formatVoiceTime(list.voice_time)"
@@ -49,7 +50,6 @@
              :decimals="2"
             class="card-panel-num"
           />  -->
-
         </div>
       </div>
     </el-col>
@@ -60,19 +60,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">消息</div>
-          <count-to
-            :start-val="0"
-            :end-val="400"
-            :duration="3200"
-            class="card-panel-num"
-          />条
-          <br>总
-          <count-to
-            :start-val="0"
-            :end-val="0"
-            :duration="3200"
-            class="card-panel-num"
-          />条
+          <count-to :start-val="0" :end-val="400" :duration="3200" class="card-panel-num" />条
+          <br />总
+          <count-to :start-val="0" :end-val="0" :duration="3200" class="card-panel-num" />条
         </div>
       </div>
     </el-col>
@@ -82,7 +72,8 @@
           <svg-icon icon-class="star" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">流量</div>总
+          <div class="card-panel-text">流量</div>
+          总
           <count-to
             :start-val="0"
             :end-val="list.packet_number"
@@ -90,7 +81,7 @@
             :decimals="0"
             class="card-panel-num"
           />个包
-          <br>
+          <br />
           <count-to
             :start-val="0"
             :end-val="list.traffic"
@@ -98,7 +89,6 @@
             :decimals="0"
             class="card-panel-num"
           />字节
-
         </div>
       </div>
     </el-col>
@@ -111,13 +101,13 @@ import { formatVoiceTime } from '@/utils'
 
 export default {
   components: {
-    CountTo
+    CountTo,
   },
   props: {
     list: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {}
@@ -127,8 +117,8 @@ export default {
     formatVoiceTime,
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
-    }
-  }
+    },
+  },
 }
 </script>
 

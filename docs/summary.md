@@ -9,11 +9,11 @@
 ## 测试
 - 使用 Vitest + jsdom（Node16 需固定 jsdom@22.1.0）
 - 运行：
-  - `npm run test:unit`
+  - `vp test`
 
 ## 发布
-- 构建：`npm run build:prod`
-- 部署：`rsync -a --delete dist/ /root/PgarlicPTT/www/`
+- 构建：`vp build`
+- 部署：`./deploy.sh`（或 `rsync -a --delete dist/ /root/PgarlicPTT/www/`）
 
 ## 待办
 - 扩展测试：store/权限/关键组件更多用例

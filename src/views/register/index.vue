@@ -4,11 +4,15 @@
       <div class="column form-column">
         <div class="login-form-card register-card">
           <div class="title-container">
-            <img v-if="!isEmbedded" src="/images/logo.png" alt="Logo" class="logo">
-            <h3 class="title" :class="{ 'server-title': platformName }">{{ platformName || $t('reg.title') }}</h3>
+            <img v-if="!isEmbedded" src="/images/logo.png" alt="Logo" class="logo" />
+            <h3 class="title" :class="{ 'server-title': platformName }">
+              {{ platformName || $t('reg.title') }}
+            </h3>
             <p v-if="platformName" class="register-label">{{ $t('reg.title') }}</p>
             <p class="subtitle">{{ $t('reg.subtitle') }}</p>
-            <router-link v-if="!isEmbedded" class="back-link" to="/login">{{ $t('reg.backToLogin') }}</router-link>
+            <router-link v-if="!isEmbedded" class="back-link" to="/login">{{
+              $t('reg.backToLogin')
+            }}</router-link>
           </div>
 
           <el-form
@@ -72,7 +76,9 @@
                 <div class="upload-inner">
                   <div class="upload-title">{{ $t('reg.uploadTitle') }}</div>
                   <div class="upload-meta">
-                    {{ licenseName ? $t('reg.selectedPrefix') + licenseName : $t('reg.uploadHint') }}
+                    {{
+                      licenseName ? $t('reg.selectedPrefix') + licenseName : $t('reg.uploadHint')
+                    }}
                   </div>
                   <el-button class="upload-button" plain>{{ $t('reg.chooseFile') }}</el-button>
                 </div>
@@ -106,8 +112,8 @@ export default {
   props: {
     embedded: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     isEmbedded() {
@@ -122,7 +128,7 @@ export default {
         return false
       }
       return window.self !== window.top
-    }
+    },
   },
   data() {
     const validateCallsign = (rule, value, callback) => {
@@ -162,7 +168,7 @@ export default {
         password: '',
         address: '',
         mail: '',
-        license: ''
+        license: '',
       },
       registerRules: {
         callsign: [{ required: true, trigger: 'blur', validator: validateCallsign }],
@@ -171,13 +177,13 @@ export default {
         mail: [{ required: true, trigger: 'blur', validator: validateMail }],
         password: [{ required: true, trigger: 'blur', message: this.$t('reg.passwordRequired') }],
         address: [{ required: true, trigger: 'blur', message: this.$t('reg.addressRequired') }],
-        license: [{ required: true, trigger: 'change', validator: validateLicense }]
+        license: [{ required: true, trigger: 'change', validator: validateLicense }],
       },
       licenseFile: null,
       licenseName: '',
       loading: false,
       fileProcessing: false,
-      platformName: ''
+      platformName: '',
     }
   },
   created() {
@@ -185,9 +191,11 @@ export default {
   },
   methods: {
     fetchPlatformInfo() {
-      getplatforminfo().then(response => {
-        this.platformName = response?.data?.items?.name || ''
-      }).catch(() => {})
+      getplatforminfo()
+        .then((response) => {
+          this.platformName = response?.data?.items?.name || ''
+        })
+        .catch(() => {})
     },
     handleCallsignInput(value) {
       this.registerForm.callsign = String(value || '')
@@ -230,10 +238,14 @@ export default {
     },
     canvasToBlob(canvas, type, quality) {
       return new Promise((resolve, reject) => {
-        canvas.toBlob(blob => {
-          if (blob) resolve(blob)
-          else reject(new Error(this.$t('reg.compressFail')))
-        }, type, quality)
+        canvas.toBlob(
+          (blob) => {
+            if (blob) resolve(blob)
+            else reject(new Error(this.$t('reg.compressFail')))
+          },
+          type,
+          quality
+        )
       })
     },
     async compressImageToLimit(file, maxBytes) {
@@ -255,7 +267,7 @@ export default {
       let quality = 0.9
       let scale = 1
       let blob = null
-      const type = file.type === 'image/png' ? 'image/jpeg' : (file.type || 'image/jpeg')
+      const type = file.type === 'image/png' ? 'image/jpeg' : file.type || 'image/jpeg'
 
       for (let i = 0; i < 8; i += 1) {
         canvas.width = Math.max(1, Math.round(width * scale))
@@ -298,7 +310,12 @@ export default {
         if (rawFile.size > MAX_LICENSE_BYTES) {
           finalFile = await this.compressImageToLimit(rawFile, MAX_LICENSE_BYTES)
           compressed = true
-          ElMessage.success(this.$t('reg.compressed', { from: this.formatSize(rawFile.size), to: this.formatSize(finalFile.size) }))
+          ElMessage.success(
+            this.$t('reg.compressed', {
+              from: this.formatSize(rawFile.size),
+              to: this.formatSize(finalFile.size),
+            })
+          )
         }
 
         this.licenseFile = finalFile
@@ -324,7 +341,7 @@ export default {
         ElMessage.warning(this.$t('reg.processing'))
         return
       }
-      this.$refs.registerForm.validate(valid => {
+      this.$refs.registerForm.validate((valid) => {
         if (!valid) return
         if (!this.licenseFile) {
           this.$refs.registerForm.validateField('license')
@@ -341,9 +358,11 @@ export default {
 
         this.loading = true
         createRegUpload(formData)
-          .then(response => {
+          .then((response) => {
             if (!response || response.code !== 20000) {
-              ElMessage.error(response?.message || response?.data?.message || this.$t('reg.submitFail'))
+              ElMessage.error(
+                response?.message || response?.data?.message || this.$t('reg.submitFail')
+              )
               return
             }
 
@@ -360,8 +379,8 @@ export default {
             this.loading = false
           })
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -433,7 +452,9 @@ body,
     border: 1px solid var(--platform-border) !important;
     border-radius: 12px !important;
     padding: 10px 12px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
   }
 
   .el-form-item:hover {
@@ -466,7 +487,12 @@ body,
 .register-container {
   min-height: 100vh;
   width: 100%;
-  background: radial-gradient(980px 460px at 18% -14%, var(--platform-accent-2) 0%, var(--platform-surface) 56%, var(--platform-surface-soft) 100%);
+  background: radial-gradient(
+    980px 460px at 18% -14%,
+    var(--platform-accent-2) 0%,
+    var(--platform-surface) 56%,
+    var(--platform-surface-soft) 100%
+  );
   position: relative;
   overflow: hidden;
   display: flex;
@@ -476,24 +502,34 @@ body,
   font-family: inherit;
 
   &::before {
-    content: "";
+    content: '';
     position: fixed;
     inset: -40% auto auto -20%;
     width: 640px;
     height: 640px;
-    background: radial-gradient(circle, var(--platform-accent) 0%, var(--platform-accent) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      var(--platform-accent) 0%,
+      var(--platform-accent) 0%,
+      transparent 70%
+    );
     filter: blur(4px);
     pointer-events: none;
   }
 
   &::after {
-    content: "";
+    content: '';
     position: fixed;
     right: -20%;
     bottom: -30%;
     width: 720px;
     height: 720px;
-    background: radial-gradient(circle, var(--platform-accent-2) 0%, var(--platform-accent-2) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      var(--platform-accent-2) 0%,
+      var(--platform-accent-2) 0%,
+      transparent 70%
+    );
     filter: blur(6px);
     pointer-events: none;
   }
@@ -767,7 +803,11 @@ body,
     height: 44px;
     font-size: 15px;
     border-radius: 14px !important;
-    background: linear-gradient(90deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%) !important;
+    background: linear-gradient(
+      90deg,
+      var(--platform-accent) 0%,
+      var(--platform-accent-2) 100%
+    ) !important;
     border: none !important;
     box-shadow: 0 12px 30px var(--platform-accent-22);
     transition: all 0.3s ease;

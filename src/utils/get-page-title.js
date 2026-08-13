@@ -24,13 +24,15 @@ export default function getPageTitle(key) {
 
   if (!loaded) {
     loaded = true
-    getplatforminfo().then(response => {
-      platformName = response?.data?.items?.name || ''
-      if (platformName) {
-        // 名称到达后按当前页面重刷一次标题栏
-        document.title = compose(lastKey)
-      }
-    }).catch(() => {})
+    getplatforminfo()
+      .then((response) => {
+        platformName = response?.data?.items?.name || ''
+        if (platformName) {
+          // 名称到达后按当前页面重刷一次标题栏
+          document.title = compose(lastKey)
+        }
+      })
+      .catch(() => {})
   }
 
   return compose(key)

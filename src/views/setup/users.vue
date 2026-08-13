@@ -34,24 +34,15 @@
         {{ $t('employee.search') }}
       </el-button>
 
-      <el-button class="filter-item action-btn action-btn-secondary" type="primary" @click="handleCreate">
+      <el-button
+        class="filter-item action-btn action-btn-secondary"
+        type="primary"
+        @click="handleCreate"
+      >
         <el-icon>
           <Edit />
         </el-icon>
         {{ $t('employee.add') }}
-      </el-button>
-
-      <el-button
-        v-waves
-        :loading="downloadLoading"
-        class="filter-item action-btn action-btn-secondary"
-        type="primary"
-        @click="handleDownload"
-      >
-        <el-icon>
-          <Download />
-        </el-icon>
-        {{ $t('employee.export') }}
       </el-button>
 
       <button
@@ -76,7 +67,14 @@
         style="width: 100%"
         @sort-change="sortChange"
       >
-        <el-table-column :label="$t('employee.id')" prop="id" fixed="left" sortable="custom" align="center" width="80">
+        <el-table-column
+          :label="$t('employee.id')"
+          prop="id"
+          fixed="left"
+          sortable="custom"
+          align="center"
+          width="80"
+        >
           <template #default="scope">
             <span>{{ scope.row.id }}</span>
           </template>
@@ -109,7 +107,12 @@
         <el-table-column :label="$t('Account.avatar')" width="90" align="center">
           <template #default="scope">
             <div v-if="shouldShowAvatar(scope.row.avatar)" class="avatar-shell">
-              <img class="user-avatar" :src="scope.row.avatar" alt="avatar" @error="handleAvatarError(scope.row.avatar)">
+              <img
+                class="user-avatar"
+                :src="scope.row.avatar"
+                alt="avatar"
+                @error="handleAvatarError(scope.row.avatar)"
+              />
             </div>
           </template>
         </el-table-column>
@@ -117,8 +120,12 @@
         <el-table-column :label="$t('employee.position')" width="120" align="center">
           <template #default="scope">
             <div class="tag-wrap">
-              <el-tag v-for="r in scope.row.roles" :key="r" class="role-tag">{{ RoleValueFilter(r, roles) }}</el-tag>
-              <span v-if="!scope.row.roles || !scope.row.roles.length" class="table-empty-value">--</span>
+              <el-tag v-for="r in scope.row.roles" :key="r" class="role-tag">{{
+                RoleValueFilter(r, roles)
+              }}</el-tag>
+              <span v-if="!scope.row.roles || !scope.row.roles.length" class="table-empty-value"
+                >--</span
+              >
             </div>
           </template>
         </el-table-column>
@@ -135,9 +142,11 @@
           </template>
         </el-table-column>
 
-                <el-table-column :label="$t('employee.status')" width="100" align="center">
+        <el-table-column :label="$t('employee.status')" width="100" align="center">
           <template #default="scope">
-            <el-tag :class="statusClass(scope.row.status)" class="user-status-tag">{{ statusFilter(scope.row.status) }}</el-tag>
+            <el-tag :class="statusClass(scope.row.status)" class="user-status-tag">{{
+              statusFilter(scope.row.status)
+            }}</el-tag>
           </template>
         </el-table-column>
 
@@ -153,7 +162,12 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('employee.address')" width="120" align="center" show-overflow-tooltip>
+        <el-table-column
+          :label="$t('employee.address')"
+          width="120"
+          align="center"
+          show-overflow-tooltip
+        >
           <template #default="scope">
             <div class="note-cell">{{ scope.row.address || '--' }}</div>
           </template>
@@ -171,12 +185,30 @@
           </template>
         </el-table-column>
 
-       <el-table-column :label="$t('employee.actions')" fixed="right" align="center" width="250" class-name="small-padding fixed-width">
+        <el-table-column
+          :label="$t('employee.actions')"
+          fixed="right"
+          align="center"
+          width="250"
+          class-name="small-padding fixed-width"
+        >
           <template #default="{ row }">
-            <el-button type="primary" plain size="small" class="compact-btn user-edit-btn" @click="handleUpdate(row)">
+            <el-button
+              type="primary"
+              plain
+              size="small"
+              class="compact-btn user-edit-btn"
+              @click="handleUpdate(row)"
+            >
               {{ $t('employee.edit') }}
             </el-button>
-            <el-button size="small" type="danger" plain class="compact-btn user-delete-btn" @click="handleDelete(row)">
+            <el-button
+              size="small"
+              type="danger"
+              plain
+              class="compact-btn user-delete-btn"
+              @click="handleDelete(row)"
+            >
               {{ $t('employee.delete') }}
             </el-button>
           </template>
@@ -189,33 +221,96 @@
         <div class="users-card__header">
           <div class="users-card__headline">
             <div v-if="shouldShowAvatar(item.avatar)" class="avatar-shell">
-              <img class="user-avatar" :src="item.avatar" alt="avatar" @error="handleAvatarError(item.avatar)">
+              <img
+                class="user-avatar"
+                :src="item.avatar"
+                alt="avatar"
+                @error="handleAvatarError(item.avatar)"
+              />
             </div>
             <div>
               <h3>{{ item.name || '--' }}</h3>
               <el-tag class="callsign-tag">{{ item.callsign || '--' }}</el-tag>
             </div>
           </div>
-          <el-tag :class="statusClass(item.status)" class="user-status-tag">{{ statusFilter(item.status) }}</el-tag>
+          <el-tag :class="statusClass(item.status)" class="user-status-tag">{{
+            statusFilter(item.status)
+          }}</el-tag>
         </div>
         <div class="users-card__meta">
-          <div class="users-meta-pill"><span class="users-card__label">DMR-ID</span><strong>{{ item.dmrid || '--' }}</strong></div>
-          <div class="users-meta-pill"><span class="users-card__label">MDC-ID</span><strong>{{ item.mdcid || '--' }}</strong></div>
+          <div class="users-meta-pill">
+            <span class="users-card__label">DMR-ID</span><strong>{{ item.dmrid || '--' }}</strong>
+          </div>
+          <div class="users-meta-pill">
+            <span class="users-card__label">MDC-ID</span><strong>{{ item.mdcid || '--' }}</strong>
+          </div>
         </div>
         <div class="users-card__body">
-          <div class="users-card__row users-card__row--stack"><span class="users-card__label">{{ $t('employee.position') }}</span><div class="tag-wrap"><el-tag v-for="r in item.roles" :key="r" class="role-tag">{{ RoleValueFilter(r, roles) }}</el-tag><span v-if="!item.roles || !item.roles.length" class="table-empty-value">--</span></div></div>
-          <div class="users-card__row"><span class="users-card__label">{{ $t('Account.nickname') }}</span><span class="users-card__value">{{ item.nickname && item.nickname.length ? item.nickname : '未绑定' }}</span></div>
-          <div class="users-card__row"><span class="users-card__label">{{ $t('employee.phone') }}</span><span class="users-card__value">{{ item.phone || '--' }}</span></div>
-          <div class="users-card__row"><span class="users-card__label">{{ $t('Account.sex') }}</span><el-tag class="sex-tag">{{ SexFilter(item.sex) }}</el-tag></div>
-          <div class="users-card__row"><span class="users-card__label">{{ $t('employee.birthday') }}</span><span class="users-card__value">{{ item.birthday || '--' }}</span></div>
-          <div class="users-card__row users-card__row--stack"><span class="users-card__label">{{ $t('employee.address') }}</span><p class="users-card__note">{{ item.address || '--' }}</p></div>
-          <div class="users-card__row"><span class="users-card__label">{{ $t('employee.last_login_time') }}</span><span class="users-card__value">{{ item.last_login_time || '--' }}</span></div>
-          <div class="users-card__row"><span class="users-card__label">到期时间</span><span class="users-card__value">{{ item.expire_time || '未设置' }}</span></div>
-          <div class="users-card__row users-card__row--stack"><span class="users-card__label">{{ $t('employee.msg') }}</span><div class="tag-wrap"><el-tag v-if="item.recharge_msg" class="msg-tag msg-tag-bas">BAS</el-tag><el-tag v-if="item.sign_msg" class="msg-tag msg-tag-app">APP</el-tag><span v-if="!item.recharge_msg && !item.sign_msg" class="table-empty-value">--</span></div></div>
+          <div class="users-card__row users-card__row--stack">
+            <span class="users-card__label">{{ $t('employee.position') }}</span>
+            <div class="tag-wrap">
+              <el-tag v-for="r in item.roles" :key="r" class="role-tag">{{
+                RoleValueFilter(r, roles)
+              }}</el-tag
+              ><span v-if="!item.roles || !item.roles.length" class="table-empty-value">--</span>
+            </div>
+          </div>
+          <div class="users-card__row">
+            <span class="users-card__label">{{ $t('Account.nickname') }}</span
+            ><span class="users-card__value">{{
+              item.nickname && item.nickname.length ? item.nickname : '未绑定'
+            }}</span>
+          </div>
+          <div class="users-card__row">
+            <span class="users-card__label">{{ $t('employee.phone') }}</span
+            ><span class="users-card__value">{{ item.phone || '--' }}</span>
+          </div>
+          <div class="users-card__row">
+            <span class="users-card__label">{{ $t('Account.sex') }}</span
+            ><el-tag class="sex-tag">{{ SexFilter(item.sex) }}</el-tag>
+          </div>
+          <div class="users-card__row">
+            <span class="users-card__label">{{ $t('employee.birthday') }}</span
+            ><span class="users-card__value">{{ item.birthday || '--' }}</span>
+          </div>
+          <div class="users-card__row users-card__row--stack">
+            <span class="users-card__label">{{ $t('employee.address') }}</span>
+            <p class="users-card__note">{{ item.address || '--' }}</p>
+          </div>
+          <div class="users-card__row">
+            <span class="users-card__label">{{ $t('employee.last_login_time') }}</span
+            ><span class="users-card__value">{{ item.last_login_time || '--' }}</span>
+          </div>
+          <div class="users-card__row">
+            <span class="users-card__label">到期时间</span
+            ><span class="users-card__value">{{ item.expire_time || '未设置' }}</span>
+          </div>
+          <div class="users-card__row users-card__row--stack">
+            <span class="users-card__label">{{ $t('employee.msg') }}</span>
+            <div class="tag-wrap">
+              <el-tag v-if="item.recharge_msg" class="msg-tag msg-tag-bas">BAS</el-tag
+              ><el-tag v-if="item.sign_msg" class="msg-tag msg-tag-app">APP</el-tag
+              ><span v-if="!item.recharge_msg && !item.sign_msg" class="table-empty-value">--</span>
+            </div>
+          </div>
         </div>
         <div class="users-card__actions">
-          <el-button type="primary" plain size="small" class="compact-btn user-edit-btn" @click="handleUpdate(item)">{{ $t('employee.edit') }}</el-button>
-          <el-button size="small" type="danger" plain class="compact-btn user-delete-btn" @click="handleDelete(item)">{{ $t('employee.delete') }}</el-button>
+          <el-button
+            type="primary"
+            plain
+            size="small"
+            class="compact-btn user-edit-btn"
+            @click="handleUpdate(item)"
+            >{{ $t('employee.edit') }}</el-button
+          >
+          <el-button
+            size="small"
+            type="danger"
+            plain
+            class="compact-btn user-delete-btn"
+            @click="handleDelete(item)"
+            >{{ $t('employee.delete') }}</el-button
+          >
         </div>
       </article>
     </div>
@@ -229,7 +324,11 @@
       @pagination="getList"
     />
 
-    <el-dialog v-model="dialogFormVisible" :title="textMap[dialogStatus]" class="platform-theme-dialog setup-users-dialog">
+    <el-dialog
+      v-model="dialogFormVisible"
+      :title="textMap[dialogStatus]"
+      class="platform-theme-dialog setup-users-dialog"
+    >
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -328,7 +427,11 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
-          <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{ $t('employee.confirm') }}</el-button>
+          <el-button
+            type="primary"
+            @click="dialogStatus === 'create' ? createData() : updateData()"
+            >{{ $t('employee.confirm') }}</el-button
+          >
         </div>
       </template>
     </el-dialog>
@@ -341,7 +444,7 @@ import {
   fetchEmployeeAllList,
   createEmployee,
   updateEmployee,
-  deleteEmployee
+  deleteEmployee,
 } from '@/api/employee'
 import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination/index.vue'
@@ -375,7 +478,7 @@ export default {
         sort: '-id',
         callsign: '',
         namephone: '',
-        role: ''
+        role: '',
       },
       importanceOptions: [1, 2, 3],
       statusOptions: ['在职', '休假', '删除'],
@@ -396,39 +499,38 @@ export default {
         mdcid: '',
         gird: '',
         expire_time: '',
-        alarm_msg: false
+        alarm_msg: false,
       },
       roles: [],
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
         update: 'Edit',
-        create: 'Create'
+        create: 'Create',
       },
       dialogPvVisible: false,
       pvData: [],
       rules: {
         callsign: [
           { required: true, message: '呼号是必选项', trigger: 'change' },
-          { max: 6, message: '呼号最多 6 个字符', trigger: ['blur', 'change'] }
+          { max: 6, message: '呼号最多 6 个字符', trigger: ['blur', 'change'] },
         ],
         name: [{ required: true, message: '姓名是必选项', trigger: 'change' }],
         mdcid: [{ validator: validateOptionalMDCID, trigger: ['blur', 'change'] }],
         roles: [{ required: true, message: '角色是必选项', trigger: 'change' }],
-        phone: [{ required: true, message: '电话号码是必选项', trigger: 'blur' }]
+        phone: [{ required: true, message: '电话号码是必选项', trigger: 'blur' }],
       },
-      downloadLoading: false,
       failedAvatarUrls: {},
-      showtable: true
+      showtable: true,
     }
   },
   computed: {
-    ...mapState(useAppStore, ['device'])
+    ...mapState(useAppStore, ['device']),
   },
   created() {
     this.showtable = this.device !== 'mobile'
     this.getList()
-    getRoles({}).then(response => {
+    getRoles({}).then((response) => {
       this.roles = response.data
     })
   },
@@ -439,14 +541,14 @@ export default {
     handleAvatarError(avatar) {
       this.failedAvatarUrls = {
         ...this.failedAvatarUrls,
-        [avatar]: true
+        [avatar]: true,
       }
     },
     SexFilter(type) {
       const sexMap = {
-        '0': '女',
-        '1': '男',
-        '2': '未知'
+        0: '女',
+        1: '男',
+        2: '未知',
       }
       return sexMap[type] || '未知'
     },
@@ -454,7 +556,7 @@ export default {
       const statusMap = {
         1: '正常',
         0: '禁用',
-        2: '离职'
+        2: '离职',
       }
       return statusMap[status] || '未知'
     },
@@ -473,12 +575,14 @@ export default {
     },
     getList() {
       this.listLoading = true
-      fetchEmployeeAllList(this.listQuery).then(response => {
-        this.list = response?.data?.items || []
-        this.total = response?.data?.total || 0
-      }).finally(() => {
-        this.listLoading = false
-      })
+      fetchEmployeeAllList(this.listQuery)
+        .then((response) => {
+          this.list = response?.data?.items || []
+          this.total = response?.data?.total || 0
+        })
+        .finally(() => {
+          this.listLoading = false
+        })
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -515,7 +619,7 @@ export default {
         mdcid: '',
         gird: '',
         expire_time: '',
-        alarm_msg: false
+        alarm_msg: false,
       }
     },
     handleCreate() {
@@ -527,10 +631,10 @@ export default {
       })
     },
     createData() {
-      this.$refs.dataForm.validate(valid => {
+      this.$refs.dataForm.validate((valid) => {
         if (valid) {
           const tempData = this.normalizedTempData()
-          createEmployee(tempData).then(response => {
+          createEmployee(tempData).then((response) => {
             this.getList()
             this.dialogFormVisible = false
             ElMessage.success(response?.data?.message || '创建成功')
@@ -547,10 +651,10 @@ export default {
       })
     },
     updateData() {
-      this.$refs.dataForm.validate(valid => {
+      this.$refs.dataForm.validate((valid) => {
         if (valid) {
           const tempData = this.normalizedTempData()
-          updateEmployee(tempData).then(response => {
+          updateEmployee(tempData).then((response) => {
             for (const v of this.list) {
               if (v.id === this.temp.id) {
                 const index = this.list.indexOf(v)
@@ -567,17 +671,17 @@ export default {
     normalizedTempData() {
       return {
         ...this.temp,
-        mdcid: this.temp.mdcid ? this.temp.mdcid.trim().toUpperCase() : ''
+        mdcid: this.temp.mdcid ? this.temp.mdcid.trim().toUpperCase() : '',
       }
     },
     handleDelete(row) {
       ElMessageBox.confirm(`此操作将永久删除用户:${row.name}-${row.callsign}, 是否继续?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
-          deleteEmployee(row).then(response => {
+          deleteEmployee(row).then((response) => {
             const message = response?.data?.message || '操作完成'
             ElMessage.success(message)
             this.listLoading = false
@@ -591,25 +695,7 @@ export default {
           ElMessage.info('已取消删除')
         })
     },
-    async handleDownload() {
-      this.downloadLoading = true
-      const excel = await import('@/vendor/Export2Excel')
-      const tHeader = ['更新时间', '电话', '角色', '工号', '角色']
-      const filterVal = ['update_time', 'phone', 'zhiwu', 'employee_id', 'roles']
-      const data = this.formatJson(filterVal, this.list)
-      await excel.export_json_to_excel({
-        header: tHeader,
-        data,
-        filename: 'table-list'
-      })
-      this.downloadLoading = false
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v =>
-        filterVal.map(j => v[j])
-      )
-    }
-  }
+  },
 }
 </script>
 
@@ -646,11 +732,33 @@ export default {
   :deep(.view-switch) {
     --el-switch-on-color: linear-gradient(90deg, #26efc7 0%, #3f8dff 100%);
     --el-switch-off-color: rgba(104, 176, 255, 0.22);
-    .el-switch__core { border-color: rgba(104, 176, 255, 0.24); background: rgba(12, 31, 58, 0.72); min-width: 46px; height: 24px; }
-    &.is-checked .el-switch__core { border-color: rgba(54, 240, 203, 0.34); background: linear-gradient(90deg, rgba(38, 239, 199, 0.88) 0%, rgba(63, 141, 255, 0.82) 100%); }
-    .el-switch__action { width: 18px; height: 18px; top: 2px; }
-    .el-switch__label, .el-switch__label * { color: var(--platform-ink-dim) !important; }
-    .el-switch__label.is-active, .el-switch__label.is-active * { color: var(--platform-ink) !important; }
+    .el-switch__core {
+      border-color: rgba(104, 176, 255, 0.24);
+      background: rgba(12, 31, 58, 0.72);
+      min-width: 46px;
+      height: 24px;
+    }
+    &.is-checked .el-switch__core {
+      border-color: rgba(54, 240, 203, 0.34);
+      background: linear-gradient(
+        90deg,
+        rgba(38, 239, 199, 0.88) 0%,
+        rgba(63, 141, 255, 0.82) 100%
+      );
+    }
+    .el-switch__action {
+      width: 18px;
+      height: 18px;
+      top: 2px;
+    }
+    .el-switch__label,
+    .el-switch__label * {
+      color: var(--platform-ink-dim) !important;
+    }
+    .el-switch__label.is-active,
+    .el-switch__label.is-active * {
+      color: var(--platform-ink) !important;
+    }
   }
 }
 
@@ -667,14 +775,20 @@ export default {
   .callsign-tag {
     color: var(--action-at-text, #9effea) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.28)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)) !important;
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)
+    ) !important;
   }
 
   .role-tag {
     margin: 4px;
     color: var(--platform-chip-text, #bdf4ff) !important;
     border-color: var(--platform-chip-border, rgba(104, 176, 255, 0.26)) !important;
-    background: var(--platform-chip-bg, linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)) !important;
+    background: var(
+      --platform-chip-bg,
+      linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)
+    ) !important;
   }
 
   .sex-tag,
@@ -741,13 +855,19 @@ export default {
   .status-active {
     color: var(--action-at-text, #9effea) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.34)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(17, 89, 80, 0.42) 0%, rgba(12, 48, 71, 0.32) 100%)) !important;
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(17, 89, 80, 0.42) 0%, rgba(12, 48, 71, 0.32) 100%)
+    ) !important;
   }
 
   .status-disabled {
     color: var(--action-delete-text, #ffb7c8) !important;
     border-color: var(--action-delete-border, rgba(255, 116, 145, 0.32)) !important;
-    background: var(--action-delete-bg, linear-gradient(135deg, rgba(89, 28, 45, 0.34) 0%, rgba(57, 20, 35, 0.26) 100%)) !important;
+    background: var(
+      --action-delete-bg,
+      linear-gradient(135deg, rgba(89, 28, 45, 0.34) 0%, rgba(57, 20, 35, 0.26) 100%)
+    ) !important;
   }
 
   .status-neutral {
@@ -773,14 +893,20 @@ export default {
   .user-edit-btn {
     color: var(--action-edit-text, #9feaff) !important;
     border-color: var(--action-edit-border, rgba(88, 184, 255, 0.44)) !important;
-    background: var(--action-edit-bg, linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)) !important;
+    background: var(
+      --action-edit-bg,
+      linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px var(--action-edit-shadow, rgba(88, 184, 255, 0.08)) inset;
   }
 
   .user-delete-btn {
     color: var(--action-delete-text, #ffb3bf) !important;
     border-color: var(--action-delete-border, rgba(255, 116, 145, 0.4)) !important;
-    background: var(--action-delete-bg, linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)) !important;
+    background: var(
+      --action-delete-bg,
+      linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px var(--action-delete-shadow, rgba(255, 116, 145, 0.08)) inset;
   }
 
@@ -809,21 +935,104 @@ export default {
   margin: 0 auto;
 }
 
-.users-card-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:18px; padding:10px; }
-.users-card { border-radius:24px; border:1px solid var(--platform-border-light); background:var(--platform-shell); box-shadow:0 18px 44px rgba(15,23,42,.08); padding:18px; display:flex; flex-direction:column; gap:16px; }
-.users-card__header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
-.users-card__headline { min-width:0; display:flex; align-items:center; gap:12px; }
-.users-card__headline h3 { margin:0 0 6px; font-size:18px; line-height:1.35; color:var(--platform-ink); word-break:break-word; }
-.users-card__meta { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; }
-.users-meta-pill { padding:12px 14px; border-radius:16px; border:1px solid var(--platform-border-light); background:var(--platform-surface-light); display:flex; flex-direction:column; gap:6px; }
-.users-meta-pill strong { color:var(--platform-ink); font-size:16px; font-weight:700; }
-.users-card__label { color:var(--platform-note-text, rgba(228,239,255,.54)); font-size:12px; letter-spacing:.02em; }
-.users-card__body { display:flex; flex-direction:column; gap:12px; }
-.users-card__row { display:grid; grid-template-columns:minmax(84px, 96px) minmax(0, 1fr); align-items:center; gap:12px; padding:12px 14px; border-radius:16px; background:var(--platform-surface-xlight); border:1px solid var(--platform-border-light); }
-.users-card__row--stack { align-items:flex-start; flex-direction:column; }
-.users-card__value, .users-card__note { color:var(--platform-ink); line-height:1.55; text-align:left; word-break:break-word; min-width:0; }
-.users-card__note { width:100%; margin:0; text-align:left; color:var(--platform-note-text, rgba(228,239,255,.78)); }
-.users-card__actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:10px; }
+.users-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+  padding: 10px;
+}
+.users-card {
+  border-radius: 24px;
+  border: 1px solid var(--platform-border-light);
+  background: var(--platform-shell);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.users-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.users-card__headline {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.users-card__headline h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  line-height: 1.35;
+  color: var(--platform-ink);
+  word-break: break-word;
+}
+.users-card__meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.users-meta-pill {
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--platform-border-light);
+  background: var(--platform-surface-light);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.users-meta-pill strong {
+  color: var(--platform-ink);
+  font-size: 16px;
+  font-weight: 700;
+}
+.users-card__label {
+  color: var(--platform-note-text, rgba(228, 239, 255, 0.54));
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+.users-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.users-card__row {
+  display: grid;
+  grid-template-columns: minmax(84px, 96px) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--platform-surface-xlight);
+  border: 1px solid var(--platform-border-light);
+}
+.users-card__row--stack {
+  align-items: flex-start;
+  flex-direction: column;
+}
+.users-card__value,
+.users-card__note {
+  color: var(--platform-ink);
+  line-height: 1.55;
+  text-align: left;
+  word-break: break-word;
+  min-width: 0;
+}
+.users-card__note {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  color: var(--platform-note-text, rgba(228, 239, 255, 0.78));
+}
+.users-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
 
 @media (max-width: 768px) {
   .filter-container {

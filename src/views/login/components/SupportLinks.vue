@@ -1,14 +1,13 @@
 <template>
   <div class="support-links-component">
     <ul>
-
       <li class="special-server">
         <a :href="'https://www.nrlptt.com/'" target="_blank" class="server-link special-link">
           <div class="special-text">NRL技术交流官网</div>
         </a>
       </li>
 
-            <li class="special-server">
+      <li class="special-server">
         <a :href="'https://ota.nrlptt.com/'" target="_blank" class="server-link special-link">
           <div class="special-text">NRL OTA固件升级管理站</div>
         </a>
@@ -33,31 +32,44 @@
       </li>
 
       <li class="special-server">
-        <a :href="'https://apps.apple.com/cn/app/nrl%E4%BA%92%E8%81%94/id6758810758'" target="_blank" class="server-link special-link">
+        <a
+          :href="'https://apps.apple.com/cn/app/nrl%E4%BA%92%E8%81%94/id6758810758'"
+          target="_blank"
+          class="server-link special-link"
+        >
           <div class="special-text">NRL互联 苹果iOS APP BG4QG</div>
         </a>
       </li>
 
       <li class="special-server">
-        <a :href="'https://apps.apple.com/cn/app/nrl工具集/id6756867499'" target="_blank" class="server-link special-link">
+        <a
+          :href="'https://apps.apple.com/cn/app/nrl工具集/id6756867499'"
+          target="_blank"
+          class="server-link special-link"
+        >
           <div class="special-text">NRL工具集 苹果iOS APP BD1BHO</div>
         </a>
       </li>
 
-            <li class="special-server">
-        <a :href="'https://github.com/hicaoc/nrl-pulse/releases'" target="_blank" class="server-link special-link">
+      <li class="special-server">
+        <a
+          :href="'https://github.com/hicaoc/nrl-pulse/releases'"
+          target="_blank"
+          class="server-link special-link"
+        >
           <div class="special-text">NRL桌面版(MacOS,Windows,Linux)</div>
         </a>
       </li>
 
       <li class="special-server">
-        <a :href="'https://github.com/hicaoc/nrlnanny'" target="_blank" class="server-link special-link">
-          <div class="special-text">NRL保姆(录音，信标播放) </div>
+        <a
+          :href="'https://github.com/hicaoc/nrlnanny'"
+          target="_blank"
+          class="server-link special-link"
+        >
+          <div class="special-text">NRL保姆(录音，信标播放)</div>
         </a>
       </li>
-
-      
-
 
       <li class="special-server">
         <a href="#" class="server-link special-link" @click.prevent="$emit('toggle-image', true)">
@@ -71,17 +83,22 @@
         </router-link>
       </li>
 
-            <li class="special-server">
-        <a :href="'https://qnyunk-wiki.feishu.cn/wiki/WpB0wgTdEipD5nk2j1ucn1eanAe'" target="_blank" class="server-link special-link">
+      <li class="special-server">
+        <a
+          :href="'https://qnyunk-wiki.feishu.cn/wiki/WpB0wgTdEipD5nk2j1ucn1eanAe'"
+          target="_blank"
+          class="server-link special-link"
+        >
           <div class="special-text">BG4SF 开拓者固件(适配盒子伴侣)</div>
         </a>
       </li>
 
-
- 
-
       <li class="special-server">
-        <a :href="'https://qm.qq.com/q/wu5lgyM5hK'" target="_blank" class="server-link special-link">
+        <a
+          :href="'https://qm.qq.com/q/wu5lgyM5hK'"
+          target="_blank"
+          class="server-link special-link"
+        >
           <div class="special-text">NRL技术交流QQ群：1039950103</div>
         </a>
       </li>
@@ -89,13 +106,10 @@
   </div>
 </template>
 
-
-
-
 <script>
 export default {
   name: 'SupportLinks',
-  emits: ['toggle-image']
+  emits: ['toggle-image'],
 }
 </script>
 
@@ -132,7 +146,10 @@ export default {
     background: var(--platform-surface-68);
     border: 1px solid var(--platform-border);
     text-decoration: none;
-    transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease,
+      background 0.2s ease;
     margin: 0 !important;
   }
 

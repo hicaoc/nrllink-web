@@ -1,8 +1,8 @@
 import { themes } from '@/styles/themes'
 
-const platformThemeVarKeys = Array.from(new Set(
-  Object.values(themes).flatMap(theme => Object.keys(theme.vars || {}))
-))
+const platformThemeVarKeys = Array.from(
+  new Set(Object.values(themes).flatMap((theme) => Object.keys(theme.vars || {})))
+)
 
 function toHex(value) {
   const hex = value.toString(16)

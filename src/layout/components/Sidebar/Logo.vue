@@ -1,13 +1,13 @@
 <template>
-  <div class="sidebar-logo-container" :class="{'collapse':collapse}">
+  <div class="sidebar-logo-container" :class="{ collapse: collapse }">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/dashboard">
-        <img v-if="logo" :src="logourl" class="sidebar-logo">
-        <h1 v-else class="sidebar-title">{{ title }} </h1>
+        <img v-if="logo" :src="logourl" class="sidebar-logo" />
+        <h1 v-else class="sidebar-title">{{ title }}</h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/dashboard">
-        <img v-if="logo" :src="logourl" class="sidebar-logo">
-        <h1 class="sidebar-title">{{ title }} </h1>
+        <img v-if="logo" :src="logourl" class="sidebar-logo" />
+        <h1 class="sidebar-title">{{ title }}</h1>
       </router-link>
     </transition>
   </div>
@@ -22,29 +22,29 @@ export default {
   props: {
     collapse: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       title: '',
       logo: false,
-      logourl: ''
+      logourl: '',
     }
   },
 
   created() {
-    getplatforminfo().then(response => {
+    getplatforminfo().then((response) => {
       this.title = response.data.items.name + response.data.items.version
       this.logourl = response.data.items.logourl
 
       const settingsStore = useSettingsStore()
       settingsStore.changeSetting({
         key: 'title',
-        value: this.title
+        value: this.title,
       })
     })
-  }
+  },
 }
 </script>
 
@@ -86,7 +86,12 @@ export default {
       font-weight: 600;
       line-height: 50px;
       font-size: 14px;
-      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+      font-family:
+        Avenir,
+        Helvetica Neue,
+        Arial,
+        Helvetica,
+        sans-serif;
       vertical-align: middle;
     }
   }

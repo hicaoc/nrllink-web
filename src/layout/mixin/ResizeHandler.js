@@ -11,7 +11,7 @@ export default {
         const appStore = useAppStore(pinia)
         appStore.closeSideBar({ withoutAnimation: false })
       }
-    }
+    },
   },
   beforeMount() {
     window.addEventListener('resize', this.$_resizeHandler)
@@ -44,6 +44,6 @@ export default {
           appStore.closeSideBar({ withoutAnimation: true })
         }
       }
-    }
-  }
+    },
+  },
 }

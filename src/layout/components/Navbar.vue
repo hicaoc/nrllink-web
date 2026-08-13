@@ -10,7 +10,7 @@
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
-      <template v-if="device!=='mobile'">
+      <template v-if="device !== 'mobile'">
         <div class="right-menu-item">{{ name }}</div>
         <div class="right-menu-item">{{ callsign }}</div>
         <button
@@ -27,7 +27,11 @@
           {{ language === 'zh' ? 'EN' : '中' }}
         </button>
 
-        <el-dropdown class="theme-picker-container right-menu-item hover-effect" trigger="click" popper-class="platform-theme-user-dropdown">
+        <el-dropdown
+          class="theme-picker-container right-menu-item hover-effect"
+          trigger="click"
+          popper-class="platform-theme-user-dropdown"
+        >
           <div class="theme-trigger">
             <span class="theme-icon">{{ currentTheme.icon }}</span>
             <span class="theme-name">{{ currentTheme.name }}</span>
@@ -45,7 +49,11 @@
           </template>
         </el-dropdown>
 
-        <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click" popper-class="platform-theme-user-dropdown">
+        <el-dropdown
+          class="avatar-container right-menu-item hover-effect"
+          trigger="click"
+          popper-class="platform-theme-user-dropdown"
+        >
           <div class="avatar-wrapper">
             <img
               v-if="avatarUrl && !avatarLoadFailed"
@@ -53,7 +61,7 @@
               class="user-avatar"
               alt="用户头像"
               @error="avatarLoadFailed = true"
-            >
+            />
             <span v-else class="user-avatar user-avatar--fallback" aria-label="默认用户头像">
               <el-icon><UserFilled /></el-icon>
             </span>
@@ -71,7 +79,7 @@
               </router-link>
 
               <el-dropdown-item divided>
-                <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+                <span style="display: block" @click="logout">{{ $t('navbar.logOut') }}</span>
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -101,11 +109,11 @@ export default {
     Breadcrumb,
     Hamburger,
     Check,
-    UserFilled
+    UserFilled,
   },
   data() {
     return {
-      themes
+      themes,
     }
   },
   setup() {
@@ -191,9 +199,9 @@ export default {
       toggleLanguage,
       switchTheme,
       logout,
-      goRenew
+      goRenew,
     }
-  }
+  },
 }
 </script>
 
@@ -202,7 +210,9 @@ export default {
   border: 1px solid var(--platform-border) !important;
   border-radius: 18px !important;
   background: var(--platform-shell) !important;
-  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.42), 0 0 0 1px var(--platform-border-strong) inset !important;
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.42),
+    0 0 0 1px var(--platform-border-strong) inset !important;
   overflow: hidden;
 
   .el-dropdown-menu {
@@ -216,12 +226,19 @@ export default {
     border-radius: 12px;
     color: var(--platform-ink-dim) !important;
     font-weight: 600;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
   }
 
   .el-dropdown-menu__item:not(.is-disabled):hover,
   .el-dropdown-menu__item:not(.is-disabled):focus {
-    background: linear-gradient(90deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%) !important;
+    background: linear-gradient(
+      90deg,
+      var(--platform-accent) 0%,
+      var(--platform-accent-2) 100%
+    ) !important;
     color: var(--platform-ink) !important;
     transform: translateX(2px);
   }
@@ -424,8 +441,14 @@ export default {
 
         .user-avatar--fallback {
           color: var(--platform-on-accent, #fff);
-          background: linear-gradient(135deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%);
-          box-shadow: 0 6px 18px var(--platform-accent-16), 0 0 0 1px var(--platform-border-strong) inset;
+          background: linear-gradient(
+            135deg,
+            var(--platform-accent) 0%,
+            var(--platform-accent-2) 100%
+          );
+          box-shadow:
+            0 6px 18px var(--platform-accent-16),
+            0 0 0 1px var(--platform-border-strong) inset;
 
           .el-icon {
             font-size: 23px;

@@ -3,7 +3,7 @@ import { useAppStore } from '@/store/modules/app'
 
 export default {
   computed: {
-    ...mapState(useAppStore, ['device'])
+    ...mapState(useAppStore, ['device']),
   },
   mounted() {
     // In order to fix the click on menu on the ios device will trigger the mouseleave bug
@@ -22,6 +22,6 @@ export default {
           handleMouseleave(e)
         }
       }
-    }
-  }
+    },
+  },
 }

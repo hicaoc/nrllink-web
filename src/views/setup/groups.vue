@@ -16,7 +16,11 @@
         {{ $t('Account.search') }}
       </el-button>
 
-      <el-button class="filter-item action-btn action-btn-secondary" type="primary" @click="handleCreate">
+      <el-button
+        class="filter-item action-btn action-btn-secondary"
+        type="primary"
+        @click="handleCreate"
+      >
         <el-icon>
           <Edit />
         </el-icon>
@@ -46,7 +50,13 @@
         style="width: 100%"
         @sort-change="sortChange"
       >
-        <el-table-column :label="$t('Account.id')" prop="id" sortable="custom" align="center" width="80">
+        <el-table-column
+          :label="$t('Account.id')"
+          prop="id"
+          sortable="custom"
+          align="center"
+          width="80"
+        >
           <template #default="scope">
             <span>{{ scope.row.id }}</span>
           </template>
@@ -60,7 +70,9 @@
 
         <el-table-column :label="$t('group.type')" width="120" align="center">
           <template #default="scope">
-            <el-tag class="group-type-tag">{{ ValueFilter(scope.row.type, groupTypeOptions) || '--' }}</el-tag>
+            <el-tag class="group-type-tag">{{
+              ValueFilter(scope.row.type, groupTypeOptions) || '--'
+            }}</el-tag>
           </template>
         </el-table-column>
 
@@ -71,8 +83,13 @@
                 v-for="(item, idx) in normalizeAllowDevices(scope.row.allow_callsign_ssid)"
                 :key="idx"
                 class="allow-device-tag"
-              >{{ item }}</el-tag>
-              <span v-if="!normalizeAllowDevices(scope.row.allow_callsign_ssid).length" class="table-empty-value">--</span>
+                >{{ item }}</el-tag
+              >
+              <span
+                v-if="!normalizeAllowDevices(scope.row.allow_callsign_ssid).length"
+                class="table-empty-value"
+                >--</span
+              >
             </div>
           </template>
         </el-table-column>
@@ -82,7 +99,7 @@
             <el-tag class="owner-callsign-tag">{{ scope.row.callsign || '--' }}</el-tag>
           </template>
         </el-table-column>
- 
+
         <el-table-column :label="$t('device.createTime')" width="140" align="center">
           <template #default="scope">
             <span>{{ parseTime(scope.row.create_time) || '--' }}</span>
@@ -109,11 +126,23 @@
           class-name="small-padding fixed-width"
         >
           <template #default="{ row }">
-            <el-button size="small" type="primary" plain class="compact-btn group-edit-btn" @click="handleUpdate(row)">
+            <el-button
+              size="small"
+              type="primary"
+              plain
+              class="compact-btn group-edit-btn"
+              @click="handleUpdate(row)"
+            >
               {{ $t('device.edit') }}
             </el-button>
 
-            <el-button size="small" type="danger" plain class="compact-btn group-delete-btn" @click="handleDelete(row)">
+            <el-button
+              size="small"
+              type="danger"
+              plain
+              class="compact-btn group-delete-btn"
+              @click="handleDelete(row)"
+            >
               {{ $t('device.delete') }}
             </el-button>
           </template>
@@ -122,17 +151,15 @@
     </div>
 
     <div v-else class="groups-card-grid">
-      <article
-        v-for="item in list"
-        :key="item.id"
-        class="groups-card"
-      >
+      <article v-for="item in list" :key="item.id" class="groups-card">
         <div class="groups-card__header">
           <div class="groups-card__headline">
             <el-tag size="small" effect="dark" class="group-id-tag">#{{ item.id }}</el-tag>
             <h3>{{ item.name || '--' }}</h3>
           </div>
-          <el-tag class="group-type-tag">{{ ValueFilter(item.type, groupTypeOptions) || '--' }}</el-tag>
+          <el-tag class="group-type-tag">{{
+            ValueFilter(item.type, groupTypeOptions) || '--'
+          }}</el-tag>
         </div>
 
         <div class="groups-card__body">
@@ -163,8 +190,13 @@
                 v-for="(allowItem, idx) in normalizeAllowDevices(item.allow_callsign_ssid)"
                 :key="idx"
                 class="allow-device-tag"
-              >{{ allowItem }}</el-tag>
-              <span v-if="!normalizeAllowDevices(item.allow_callsign_ssid).length" class="table-empty-value">--</span>
+                >{{ allowItem }}</el-tag
+              >
+              <span
+                v-if="!normalizeAllowDevices(item.allow_callsign_ssid).length"
+                class="table-empty-value"
+                >--</span
+              >
             </div>
           </div>
 
@@ -175,18 +207,34 @@
         </div>
 
         <div class="groups-card__actions">
-          <el-button size="small" type="primary" plain class="compact-btn group-edit-btn" @click="handleUpdate(item)">
+          <el-button
+            size="small"
+            type="primary"
+            plain
+            class="compact-btn group-edit-btn"
+            @click="handleUpdate(item)"
+          >
             {{ $t('device.edit') }}
           </el-button>
 
-          <el-button size="small" type="danger" plain class="compact-btn group-delete-btn" @click="handleDelete(item)">
+          <el-button
+            size="small"
+            type="danger"
+            plain
+            class="compact-btn group-delete-btn"
+            @click="handleDelete(item)"
+          >
             {{ $t('device.delete') }}
           </el-button>
         </div>
       </article>
     </div>
 
-    <el-dialog v-model="dialogFormVisible" :title="textMap[dialogStatus]" class="platform-theme-dialog setup-groups-dialog">
+    <el-dialog
+      v-model="dialogFormVisible"
+      :title="textMap[dialogStatus]"
+      class="platform-theme-dialog setup-groups-dialog"
+    >
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -204,7 +252,9 @@
             <span id="group-type-label">{{ $t('group.type') }}</span>
           </template>
           <el-radio-group v-model="temp.type" aria-labelledby="group-type-label">
-            <el-radio v-for="item in groupTypeOptions" :key="item.id" :value="item.id">{{ item.name }}</el-radio>
+            <el-radio v-for="item in groupTypeOptions" :key="item.id" :value="item.id">{{
+              item.name
+            }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -242,7 +292,10 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
-          <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">
+          <el-button
+            type="primary"
+            @click="dialogStatus === 'create' ? createData() : updateData()"
+          >
             {{ $t('employee.confirm') }}
           </el-button>
         </div>
@@ -252,12 +305,7 @@
 </template>
 
 <script>
-import {
-  fetchGroupList,
-  createGroup,
-  updateGroup,
-  deleteGroup
-} from '@/api/groups'
+import { fetchGroupList, createGroup, updateGroup, deleteGroup } from '@/api/groups'
 import checkPermission from '@/utils/permission'
 import waves from '@/directive/waves'
 import { parseTime, ValueFilter } from '@/utils'
@@ -277,7 +325,7 @@ export default {
       total: 0,
       listLoading: false,
       listQuery: {
-        name: ''
+        name: '',
       },
       temp: {
         id: undefined,
@@ -288,22 +336,21 @@ export default {
         type: 0,
         status: 1,
         master_server: '',
-        slave_server: ''
+        slave_server: '',
       },
       showtable: true,
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
         update: 'Edit',
-        create: 'Create'
+        create: 'Create',
       },
       rules: {},
-      downloadLoading: false,
-      uploadLoading: false
+      uploadLoading: false,
     }
   },
   computed: {
-    ...mapState(useAppStore, ['device'])
+    ...mapState(useAppStore, ['device']),
   },
 
   created() {
@@ -329,7 +376,7 @@ export default {
       if (typeof value === 'string') {
         return value
           .split(',')
-          .map(item => item.trim())
+          .map((item) => item.trim())
           .filter(Boolean)
       }
       return []
@@ -337,7 +384,10 @@ export default {
     handleTagInput(e) {
       if (['Enter', 'Comma', 'Space'].includes(e.code)) {
         e.preventDefault()
-        const value = this.temp.tagInput.trim().replace(/[,，\s]+$/, '').toUpperCase()
+        const value = this.temp.tagInput
+          .trim()
+          .replace(/[,，\s]+$/, '')
+          .toUpperCase()
         if (!value) return
         const parts = value.split('-')
         if (parts.length !== 2) {
@@ -373,12 +423,14 @@ export default {
     },
     getList() {
       this.listLoading = true
-      this.fetchGroupList(this.listQuery).then(response => {
-        this.list = Object.values(response?.data?.items || {})
-        this.total = this.list.length
-      }).finally(() => {
-        this.listLoading = false
-      })
+      this.fetchGroupList(this.listQuery)
+        .then((response) => {
+          this.list = Object.values(response?.data?.items || {})
+          this.total = this.list.length
+        })
+        .finally(() => {
+          this.listLoading = false
+        })
     },
     handleFilter() {
       this.getList()
@@ -407,7 +459,7 @@ export default {
         tagInput: '',
         note: '',
         type: 0,
-        status: 1
+        status: 1,
       }
     },
     handleCreate() {
@@ -419,9 +471,9 @@ export default {
       })
     },
     createData() {
-      this.$refs.dataForm.validate(valid => {
+      this.$refs.dataForm.validate((valid) => {
         if (valid) {
-          createGroup(this.temp).then(response => {
+          createGroup(this.temp).then((response) => {
             this.getList()
             this.dialogFormVisible = false
             ElMessage.success(response?.data?.message || '创建成功')
@@ -434,7 +486,7 @@ export default {
       this.temp = {
         ...row,
         allow_callsign_ssid: normalized,
-        tagInput: ''
+        tagInput: '',
       }
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
@@ -443,12 +495,12 @@ export default {
       })
     },
     updateData() {
-      this.$refs.dataForm.validate(valid => {
+      this.$refs.dataForm.validate((valid) => {
         if (valid) {
           const tempData = {
-            ...this.temp
+            ...this.temp,
           }
-          updateGroup(tempData).then(response => {
+          updateGroup(tempData).then((response) => {
             for (const item of this.list) {
               if (item.id === this.temp.id) {
                 const index = this.list.indexOf(item)
@@ -472,10 +524,10 @@ export default {
       ElMessageBox.confirm('此操作将永久删除该群组, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
-          deleteGroup(row).then(response => {
+          deleteGroup(row).then((response) => {
             const message = response?.data?.message || '操作完成'
             ElMessage.success(message)
             this.listLoading = false
@@ -488,8 +540,8 @@ export default {
         .catch(() => {
           ElMessage.info('已取消删除')
         })
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -532,7 +584,11 @@ export default {
 
     &.is-checked .el-switch__core {
       border-color: rgba(54, 240, 203, 0.34);
-      background: linear-gradient(90deg, rgba(38, 239, 199, 0.88) 0%, rgba(63, 141, 255, 0.82) 100%);
+      background: linear-gradient(
+        90deg,
+        rgba(38, 239, 199, 0.88) 0%,
+        rgba(63, 141, 255, 0.82) 100%
+      );
     }
 
     .el-switch__action {
@@ -566,20 +622,29 @@ export default {
   .group-type-tag {
     color: var(--platform-chip-text, #bdf4ff) !important;
     border-color: var(--platform-chip-border, rgba(104, 176, 255, 0.26)) !important;
-    background: var(--platform-chip-bg, linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)) !important;
+    background: var(
+      --platform-chip-bg,
+      linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)
+    ) !important;
   }
 
   .allow-device-tag {
     margin: 2px;
     color: var(--action-at-text, #9effea) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.26)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)) !important;
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)
+    ) !important;
   }
 
   .owner-callsign-tag {
     color: var(--platform-id-text, #a8e8ff) !important;
     border-color: var(--platform-id-border, rgba(88, 184, 255, 0.24)) !important;
-    background: var(--platform-id-bg, linear-gradient(135deg, rgba(18, 55, 99, 0.36) 0%, rgba(13, 33, 60, 0.3) 100%)) !important;
+    background: var(
+      --platform-id-bg,
+      linear-gradient(135deg, rgba(18, 55, 99, 0.36) 0%, rgba(13, 33, 60, 0.3) 100%)
+    ) !important;
   }
 
   .table-empty-value {
@@ -610,14 +675,20 @@ export default {
   .group-edit-btn {
     color: var(--action-edit-text, #9feaff) !important;
     border-color: var(--action-edit-border, rgba(88, 184, 255, 0.44)) !important;
-    background: var(--action-edit-bg, linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)) !important;
+    background: var(
+      --action-edit-bg,
+      linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px var(--action-edit-shadow, rgba(88, 184, 255, 0.08)) inset;
   }
 
   .group-delete-btn {
     color: var(--action-delete-text, #ffb3bf) !important;
     border-color: var(--action-delete-border, rgba(255, 116, 145, 0.4)) !important;
-    background: var(--action-delete-bg, linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)) !important;
+    background: var(
+      --action-delete-bg,
+      linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px var(--action-delete-shadow, rgba(255, 116, 145, 0.08)) inset;
   }
 

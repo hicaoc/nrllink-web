@@ -1,16 +1,12 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vite-plus/test'
 import {
   UNIVERSE_CONFIG,
   deviceKind,
   deviceMeshPreset,
   isCurrentPlatform,
-  isDmrPlatform
+  isDmrPlatform,
 } from '@/config/universe'
-import {
-  computeVillaLayout,
-  mapPlatform,
-  sortPlatforms
-} from '@/composables/universeMapping'
+import { computeVillaLayout, mapPlatform, sortPlatforms } from '@/composables/universeMapping'
 
 describe('config/universe isDmrPlatform', () => {
   it('matches dmr keywords in name (case-insensitive)', () => {
@@ -59,7 +55,7 @@ describe('config/universe deviceKind', () => {
 
 describe('config/universe deviceMeshPreset', () => {
   it('specializes ESP32 small boxes', () => {
-    ;[22, 60, 66, 70, 80, 90, 99].forEach(model => {
+    ;[22, 60, 66, 70, 80, 90, 99].forEach((model) => {
       const preset = deviceMeshPreset(model)
       expect(preset.kind).toBe('hardware')
       expect(preset.shape).toBe('box')
@@ -99,14 +95,20 @@ describe('config/universe isCurrentPlatform', () => {
 
 describe('useUniverseData mapPlatform', () => {
   it('maps raw platform to scene model', () => {
-    const p = mapPlatform({ id: 3, name: 'NRL-DMR', host: 'DMR.example.com', online: '12', total: '30' })
+    const p = mapPlatform({
+      id: 3,
+      name: 'NRL-DMR',
+      host: 'DMR.example.com',
+      online: '12',
+      total: '30',
+    })
     expect(p).toEqual({
       id: 3,
       name: 'NRL-DMR',
       host: 'DMR.example.com',
       online: 12,
       total: 30,
-      isDmr: true
+      isDmr: true,
     })
   })
 
@@ -132,18 +134,18 @@ describe('useUniverseData sortPlatforms', () => {
       { name: 'b', online: 5, isDmr: false },
       { name: 'dmr', online: 1, isDmr: true },
       { name: 'a', online: 5, isDmr: false },
-      { name: 'c', online: 9, isDmr: false }
+      { name: 'c', online: 9, isDmr: false },
     ])
-    expect(sorted.map(p => p.name)).toEqual(['dmr', 'c', 'a', 'b'])
+    expect(sorted.map((p) => p.name)).toEqual(['dmr', 'c', 'a', 'b'])
   })
 
   it('does not mutate the input array', () => {
     const input = [
       { name: 'b', online: 1, isDmr: false },
-      { name: 'a', online: 2, isDmr: false }
+      { name: 'a', online: 2, isDmr: false },
     ]
     sortPlatforms(input)
-    expect(input.map(p => p.name)).toEqual(['b', 'a'])
+    expect(input.map((p) => p.name)).toEqual(['b', 'a'])
   })
 })
 
@@ -152,9 +154,9 @@ describe('useUniverseData computeVillaLayout', () => {
     const list = computeVillaLayout([
       { name: 'a', isDmr: false },
       { name: 'dmr', isDmr: true },
-      { name: 'b', isDmr: false }
+      { name: 'b', isDmr: false },
     ])
-    const dmr = list.find(p => p.isDmr)
+    const dmr = list.find((p) => p.isDmr)
     expect(dmr.position).toEqual({ x: 0, z: -56 })
   })
 
@@ -162,7 +164,7 @@ describe('useUniverseData computeVillaLayout', () => {
     const list = computeVillaLayout(
       Array.from({ length: 6 }, (_, i) => ({ name: `p${i}`, isDmr: false }))
     )
-    list.forEach(p => {
+    list.forEach((p) => {
       expect(p.position).toBeDefined()
       // 3 排: z 分别接近 -30 / 0 / 30（允许抖动 ±2.5）
       const nearest = [-30, 0, 30].reduce((best, level) => {
@@ -182,7 +184,7 @@ describe('useUniverseData computeVillaLayout', () => {
       Array.from({ length: 40 }, (_, i) => ({ name: `p${i}`, isDmr: false }))
     )
     const s = UNIVERSE_CONFIG.stream
-    list.forEach(p => {
+    list.forEach((p) => {
       // 河道中心(随 z 蜿蜒) ± (半河宽 + 安全边距) 内不允许有别墅
       const centerX = s.centerX + Math.sin(p.position.z * s.freq) * s.bend
       expect(Math.abs(p.position.x - centerX)).toBeGreaterThan(s.width / 2 + 10)
@@ -190,7 +192,10 @@ describe('useUniverseData computeVillaLayout', () => {
   })
 
   it('is deterministic (pure function, repeatable)', () => {
-    const make = () => [{ name: 'a', isDmr: false }, { name: 'b', isDmr: false }]
+    const make = () => [
+      { name: 'a', isDmr: false },
+      { name: 'b', isDmr: false },
+    ]
     expect(computeVillaLayout(make())).toEqual(computeVillaLayout(make()))
   })
 

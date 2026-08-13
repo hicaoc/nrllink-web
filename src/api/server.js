@@ -4,7 +4,7 @@ export function fetchServerList(data) {
   return request({
     url: '/server/list',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -12,7 +12,7 @@ export function fetchServerStats(data) {
   return request({
     url: '/server/stats',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -20,7 +20,7 @@ export function createServer(data) {
   return request({
     url: '/server/create',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -28,7 +28,7 @@ export function updateServer(data) {
   return request({
     url: '/server/update',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -36,7 +36,6 @@ export function deleteServer(data) {
   return request({
     url: '/server/delete',
     method: 'post',
-    data
+    data,
   })
 }
-

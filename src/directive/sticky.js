@@ -84,7 +84,7 @@ export default {
 
       unmounted() {
         window.removeEventListener('scroll', listenAction)
-      }
+      },
     })
-  }
+  },
 }

@@ -12,7 +12,7 @@ export function mapPlatform(raw) {
     host: String(item.host || ''),
     online: Number(item.online) || 0,
     total: Number(item.total) || 0,
-    isDmr: false
+    isDmr: false,
   }
   platform.isDmr = isDmrPlatform(platform)
   return platform
@@ -38,7 +38,7 @@ function jitter(index, range) {
 const STREAM_CFG = UNIVERSE_CONFIG.stream
 const STREAM_BAND = {
   min: STREAM_CFG.centerX - STREAM_CFG.bend - STREAM_CFG.width / 2 - 12,
-  max: STREAM_CFG.centerX + STREAM_CFG.bend + STREAM_CFG.width / 2 + 12
+  max: STREAM_CFG.centerX + STREAM_CFG.bend + STREAM_CFG.width / 2 + 12,
 }
 
 // 给每个 platform 计算 position {x, z}：
@@ -46,7 +46,7 @@ const STREAM_BAND = {
 // 列位置跳过河道带，保证任何数量的别墅都不会建在溪上
 export function computeVillaLayout(platforms) {
   const list = Array.isArray(platforms) ? platforms : []
-  const normal = list.filter(p => !p.isDmr)
+  const normal = list.filter((p) => !p.isDmr)
   const colCount = Math.max(1, Math.ceil(normal.length / 3))
   // 逐列生成 x：落入河道带就跳到河对岸，列距保持 26 不变（院落宽 21，互不遮挡）
   const columnXs = []
@@ -64,10 +64,10 @@ export function computeVillaLayout(platforms) {
     p.position = {
       x: columnXs[col],
       // 3 排,排距 30(院落纵深 21,院门朝向空旷处,不被前排挡住)
-      z: (row - 1) * 30 + jitter(i, 5)
+      z: (row - 1) * 30 + jitter(i, 5),
     }
   })
-  list.forEach(p => {
+  list.forEach((p) => {
     // DMR 在山谷尽头,离最近一排(z=-30)留出院落纵深,互不重叠
     if (p.isDmr) p.position = { x: 0, z: -56 }
   })

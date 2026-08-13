@@ -18,26 +18,15 @@
       </el-form-item>
 
       <el-form-item label="头像" prop="avatar">
-        <el-input
-          v-model.trim="form.avatar"
-          placeholder="请输入头像图片 URL"
-        />
+        <el-input v-model.trim="form.avatar" placeholder="请输入头像图片 URL" />
       </el-form-item>
 
       <el-form-item label="DMR ID" prop="dmrid">
-        <el-input
-          v-model.trim="form.dmrid"
-          maxlength="32"
-          placeholder="请输入 DMR ID"
-        />
+        <el-input v-model.trim="form.dmrid" maxlength="32" placeholder="请输入 DMR ID" />
       </el-form-item>
 
       <el-form-item label="MDC ID" prop="mdcid">
-        <el-input
-          v-model.trim="form.mdcid"
-          maxlength="32"
-          placeholder="请输入 MDC ID"
-        />
+        <el-input v-model.trim="form.mdcid" maxlength="32" placeholder="请输入 MDC ID" />
       </el-form-item>
 
       <el-form-item label="密码" prop="password">
@@ -50,12 +39,9 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button
-          type="primary"
-          class="profile-submit-btn"
-          :loading="submitting"
-          @click="submit"
-        >更新</el-button>
+        <el-button type="primary" class="profile-submit-btn" :loading="submitting" @click="submit"
+          >更新</el-button
+        >
       </el-form-item>
     </el-form>
   </div>
@@ -82,10 +68,10 @@ export default {
           avatar: '',
           dmrid: '',
           mdcid: '',
-          password: ''
+          password: '',
         }
-      }
-    }
+      },
+    },
   },
   data() {
     const validateOptionalNumber = (_, value, callback) => {
@@ -131,21 +117,17 @@ export default {
         avatar: '',
         dmrid: '',
         mdcid: '',
-        password: ''
+        password: '',
       },
       submitting: false,
       rules: {
-        dmrid: [
-          { validator: validateOptionalNumber, trigger: 'blur' }
-        ],
-        mdcid: [
-          { validator: validateOptionalMDCID, trigger: 'blur' }
-        ]
-      }
+        dmrid: [{ validator: validateOptionalNumber, trigger: 'blur' }],
+        mdcid: [{ validator: validateOptionalMDCID, trigger: 'blur' }],
+      },
     }
   },
   computed: {
-    ...mapState(useAppStore, ['device'])
+    ...mapState(useAppStore, ['device']),
   },
   created() {
     this.syncForm()
@@ -156,8 +138,8 @@ export default {
         this.syncForm()
       },
       deep: true,
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
     ...mapActions(useUserStore, ['getInfo']),
@@ -171,7 +153,7 @@ export default {
         avatar: this.user.avatar || '',
         dmrid: this.user.dmrid || '',
         mdcid: this.user.mdcid || '',
-        password: ''
+        password: '',
       }
     },
     submit() {
@@ -188,7 +170,7 @@ export default {
             avatar: this.form.avatar || '',
             dmrid: this.form.dmrid || '',
             mdcid: this.form.mdcid ? this.form.mdcid.toUpperCase() : '',
-            password: this.form.password || ''
+            password: this.form.password || '',
           }
 
           const profileResponse = await this.updateProfile(profilePayload)
@@ -200,13 +182,15 @@ export default {
           await this.getInfo()
           this.$emit('updated')
           this.syncForm()
-          ElMessage.success(this.form.password ? '资料和密码已更新' : (profileResponse?.data?.message || '修改成功'))
+          ElMessage.success(
+            this.form.password ? '资料和密码已更新' : profileResponse?.data?.message || '修改成功'
+          )
         } finally {
           this.submitting = false
         }
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

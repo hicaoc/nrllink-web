@@ -8,7 +8,7 @@ const styleVariables = {
   menuHover: '#1a3050',
   subMenuBg: '#0b1625',
   subMenuHover: '#1a3050',
-  sideBarWidth: '210px'
+  sideBarWidth: '210px',
 }
 
 export default styleVariables

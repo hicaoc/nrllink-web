@@ -1,5 +1,5 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div :class="className" :style="{ height: height, width: width }" />
 </template>
 
 <script>
@@ -11,29 +11,29 @@ export default {
   props: {
     className: {
       type: String,
-      default: 'chart'
+      default: 'chart',
     },
     width: {
       type: String,
-      default: '100%'
+      default: '100%',
     },
     height: {
       type: String,
-      default: '450px'
+      default: '450px',
     },
     autoResize: {
       type: Boolean,
-      default: true
+      default: true,
     },
     chartData: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       chart: null,
-      sidebarElm: null
+      sidebarElm: null,
     }
   },
   watch: {
@@ -41,8 +41,8 @@ export default {
       deep: true,
       handler(val) {
         this.setOptions(val)
-      }
-    }
+      },
+    },
   },
   mounted() {
     this.initChart()
@@ -57,11 +57,7 @@ export default {
 
     // 监听侧边栏的变化
     this.sidebarElm = document.getElementsByClassName('sidebar-container')[0]
-    this.sidebarElm &&
-      this.sidebarElm.addEventListener(
-        'transitionend',
-        this.sidebarResizeHandler
-      )
+    this.sidebarElm && this.sidebarElm.addEventListener('transitionend', this.sidebarResizeHandler)
   },
   beforeUnmount() {
     if (!this.chart) {
@@ -72,10 +68,7 @@ export default {
     }
 
     this.sidebarElm &&
-      this.sidebarElm.removeEventListener(
-        'transitionend',
-        this.sidebarResizeHandler
-      )
+      this.sidebarElm.removeEventListener('transitionend', this.sidebarResizeHandler)
 
     this.chart.dispose()
     this.chart = null
@@ -106,14 +99,14 @@ export default {
           position: 'bottom',
           // boundaryGap: false,
           axisTick: {
-            show: true
-          }
+            show: true,
+          },
         },
         grid: {
           left: '3%',
           right: '4%',
           bottom: '3%',
-          containLabel: true
+          containLabel: true,
         },
         // tooltip: {
         //   trigger: 'axis',
@@ -124,11 +117,11 @@ export default {
         // },
         yAxis: {
           axisTick: {
-            show: true
-          }
+            show: true,
+          },
         },
         legend: {
-          data: legend
+          data: legend,
         },
         series: [
           {
@@ -140,23 +133,23 @@ export default {
               rotate: 45,
               verticalAlign: 'middle',
               align: 'left',
-              position: 'top'
+              position: 'top',
             },
             itemStyle: {
               normal: {
                 color: '#36A3F7',
                 lineStyle: {
                   color: '#36A3F7',
-                  width: 2
+                  width: 2,
                 },
                 areaStyle: {
-                  color: '#e3f81f'
-                }
-              }
+                  color: '#e3f81f',
+                },
+              },
             },
             data: count1,
             animationDuration: 2800,
-            animationEasing: 'quadraticOut'
+            animationEasing: 'quadraticOut',
           },
           {
             name: legend[1],
@@ -167,23 +160,23 @@ export default {
               rotate: 45,
               verticalAlign: 'middle',
               align: 'left',
-              position: 'top'
+              position: 'top',
             },
             itemStyle: {
               normal: {
                 color: '#34bfa3',
                 lineStyle: {
                   color: '#34bfa3',
-                  width: 2
+                  width: 2,
                 },
                 areaStyle: {
-                  color: '#e3f81f'
-                }
-              }
+                  color: '#e3f81f',
+                },
+              },
             },
             data: count2,
             animationDuration: 2800,
-            animationEasing: 'quadraticOut'
+            animationEasing: 'quadraticOut',
           },
           {
             name: legend[2],
@@ -194,23 +187,23 @@ export default {
               rotate: 45,
               align: 'left',
               verticalAlign: 'middle',
-              position: 'top'
+              position: 'top',
             },
             itemStyle: {
               normal: {
                 color: '#FF005A',
                 lineStyle: {
                   color: '#FF005A',
-                  width: 2
+                  width: 2,
                 },
                 areaStyle: {
-                  color: '#e3f81f'
-                }
-              }
+                  color: '#e3f81f',
+                },
+              },
             },
             data: count3,
             animationDuration: 2800,
-            animationEasing: 'quadraticOut'
+            animationEasing: 'quadraticOut',
           },
           {
             name: legend[3],
@@ -221,32 +214,32 @@ export default {
               rotate: 45,
               align: 'left',
               verticalAlign: 'middle',
-              position: 'top'
+              position: 'top',
             },
             itemStyle: {
               normal: {
                 color: '#9CB8A7',
                 lineStyle: {
                   color: '#9CB8A7',
-                  width: 2
+                  width: 2,
                 },
                 areaStyle: {
-                  color: '#e3f81f'
-                }
-              }
+                  color: '#e3f81f',
+                },
+              },
             },
             data: count4,
             animationDuration: 2800,
-            animationEasing: 'quadraticOut'
-          }
-        ]
+            animationEasing: 'quadraticOut',
+          },
+        ],
       })
     },
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
       // console.log(this.chartData)
-    }
-  }
+    },
+  },
 }
 </script>

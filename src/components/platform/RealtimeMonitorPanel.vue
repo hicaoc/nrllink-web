@@ -16,7 +16,11 @@
             <el-icon><Bell /></el-icon>
             <strong>{{ subscribedRoomKeys.length }}</strong>
           </span>
-          <span class="stat-item" :class="{ online: wsConnected }" :title="wsConnected ? $t('login.connected') : $t('login.connecting')">
+          <span
+            class="stat-item"
+            :class="{ online: wsConnected }"
+            :title="wsConnected ? $t('login.connected') : $t('login.connecting')"
+          >
             <el-icon><Connection /></el-icon>
           </span>
         </div>
@@ -31,7 +35,7 @@
           :class="{
             active: subscribedRoomKeys.includes(room.room_key),
             speaking: room.active,
-            'multi-speakers': roomSpeakerCount(room) > 1
+            'multi-speakers': roomSpeakerCount(room) > 1,
           }"
           @click="toggleRoomSubscription(room.room_key)"
         >
@@ -76,14 +80,14 @@ export default {
     Grid,
     Microphone,
     Bell,
-    Connection
+    Connection,
   },
   emits: ['stats-change'],
   props: {
     pulsePhaseMs: {
       type: Number,
-      default: () => (typeof window !== 'undefined' ? Date.now() % 800 : 0)
-    }
+      default: () => (typeof window !== 'undefined' ? Date.now() % 800 : 0),
+    },
   },
   data() {
     return {
@@ -101,25 +105,27 @@ export default {
       nextPlayTime: 0,
       totalSubs: 0,
       connectedClients: 0,
-      onlineDevices: 0
+      onlineDevices: 0,
     }
   },
   computed: {
     pulseStyle() {
       return {
-        '--speaking-pulse-delay': `${-this.pulsePhaseMs}ms`
+        '--speaking-pulse-delay': `${-this.pulsePhaseMs}ms`,
       }
     },
     sortedMonitorRooms() {
-      const recentRoomKeys = new Set(this.recentCalls.map(item => item.room_key))
+      const recentRoomKeys = new Set(this.recentCalls.map((item) => item.room_key))
       const subscribedRoomKeys = new Set(this.subscribedRoomKeys)
-      const visibleRooms = this.rooms.filter(item => recentRoomKeys.has(item.room_key) || subscribedRoomKeys.has(item.room_key))
+      const visibleRooms = this.rooms.filter(
+        (item) => recentRoomKeys.has(item.room_key) || subscribedRoomKeys.has(item.room_key)
+      )
 
       return [...visibleRooms].sort((a, b) => Number(a.room_id || 0) - Number(b.room_id || 0))
     },
     activeRoomCount() {
-      return this.rooms.filter(item => item.active).length
-    }
+      return this.rooms.filter((item) => item.active).length
+    },
   },
   created() {
     this.initCallMonitor()
@@ -139,13 +145,28 @@ export default {
       this.$emit('stats-change', {
         totalSubs: this.totalSubs,
         connectedClients: this.connectedClients,
-        onlineDevices: this.onlineDevices
+        onlineDevices: this.onlineDevices,
       })
     },
     applyLiveStats(payload, fallbackZero = false) {
-      this.totalSubs = typeof payload.total_subs === 'number' ? payload.total_subs : (fallbackZero ? 0 : this.totalSubs)
-      this.connectedClients = typeof payload.connected_clients === 'number' ? payload.connected_clients : (fallbackZero ? 0 : this.connectedClients)
-      this.onlineDevices = typeof payload.online_devices === 'number' ? payload.online_devices : (fallbackZero ? 0 : this.onlineDevices)
+      this.totalSubs =
+        typeof payload.total_subs === 'number'
+          ? payload.total_subs
+          : fallbackZero
+            ? 0
+            : this.totalSubs
+      this.connectedClients =
+        typeof payload.connected_clients === 'number'
+          ? payload.connected_clients
+          : fallbackZero
+            ? 0
+            : this.connectedClients
+      this.onlineDevices =
+        typeof payload.online_devices === 'number'
+          ? payload.online_devices
+          : fallbackZero
+            ? 0
+            : this.onlineDevices
       this.emitStatsChange()
     },
     initCallMonitor() {
@@ -189,7 +210,11 @@ export default {
       return token ? `${url}?token=${encodeURIComponent(token)}` : url
     },
     connectMonitorWebSocket() {
-      if (this.websock && (this.websock.readyState === WebSocket.OPEN || this.websock.readyState === WebSocket.CONNECTING)) {
+      if (
+        this.websock &&
+        (this.websock.readyState === WebSocket.OPEN ||
+          this.websock.readyState === WebSocket.CONNECTING)
+      ) {
         return
       }
       if (this.wsPingTimer) {
@@ -263,32 +288,36 @@ export default {
     },
     handleMonitorJSON(payload) {
       switch (payload.type) {
-      case 'snapshot':
-        this.rooms = Array.isArray(payload.rooms) ? payload.rooms : []
-        this.recentCalls = Array.isArray(payload.recent_calls) ? payload.recent_calls : []
-        this.subscribedRoomKeys = Array.isArray(payload.subscriptions) ? payload.subscriptions : []
-        this.applyLiveStats(payload)
-        break
-      case 'stats':
-        this.applyLiveStats(payload, true)
-        break
-      case 'room_state':
-        if (payload.room) {
-          this.mergeRoomState(payload.room)
-        }
-        break
-      case 'recent_calls':
-        this.recentCalls = Array.isArray(payload.recent_calls) ? payload.recent_calls : []
-        break
-      case 'subscriptions':
-        this.subscribedRoomKeys = Array.isArray(payload.subscriptions) ? payload.subscriptions : []
-        break
-      default:
-        break
+        case 'snapshot':
+          this.rooms = Array.isArray(payload.rooms) ? payload.rooms : []
+          this.recentCalls = Array.isArray(payload.recent_calls) ? payload.recent_calls : []
+          this.subscribedRoomKeys = Array.isArray(payload.subscriptions)
+            ? payload.subscriptions
+            : []
+          this.applyLiveStats(payload)
+          break
+        case 'stats':
+          this.applyLiveStats(payload, true)
+          break
+        case 'room_state':
+          if (payload.room) {
+            this.mergeRoomState(payload.room)
+          }
+          break
+        case 'recent_calls':
+          this.recentCalls = Array.isArray(payload.recent_calls) ? payload.recent_calls : []
+          break
+        case 'subscriptions':
+          this.subscribedRoomKeys = Array.isArray(payload.subscriptions)
+            ? payload.subscriptions
+            : []
+          break
+        default:
+          break
       }
     },
     mergeRoomState(roomState) {
-      const index = this.rooms.findIndex(item => item.room_key === roomState.room_key)
+      const index = this.rooms.findIndex((item) => item.room_key === roomState.room_key)
       if (index === -1) {
         this.rooms = [...this.rooms, roomState]
         return
@@ -312,7 +341,7 @@ export default {
     },
     roomSpeakerText(room) {
       return this.roomSpeakers(room)
-        .map(item => `${item.callsign}-${item.ssid}`)
+        .map((item) => `${item.callsign}-${item.ssid}`)
         .join(' / ')
     },
     async ensureAudioReady() {
@@ -335,7 +364,7 @@ export default {
     initAudioWorker() {
       if (this.audioWorker) return
       this.audioWorker = new Worker(new URL('@/workers/alawDecode.worker.js', import.meta.url), {
-        type: 'module'
+        type: 'module',
       })
       this.audioWorker.onmessage = (e) => {
         this.playPcmBuffer(e.data.pcm)
@@ -383,12 +412,14 @@ export default {
         }
       }
 
-      this.websock.send(JSON.stringify({
-        action: subscribed ? 'unsubscribe' : 'subscribe',
-        room_keys: [roomKey]
-      }))
-    }
-  }
+      this.websock.send(
+        JSON.stringify({
+          action: subscribed ? 'unsubscribe' : 'subscribe',
+          room_keys: [roomKey],
+        })
+      )
+    },
+  },
 }
 </script>
 
@@ -490,12 +521,16 @@ export default {
 .monitor-room-button.active {
   border-color: var(--platform-accent);
   background: linear-gradient(140deg, rgba(6, 214, 160, 0.2) 0%, rgba(17, 138, 178, 0.2) 100%);
-  box-shadow: 0 0 0 1px var(--platform-accent) inset, 0 12px 32px var(--platform-accent);
+  box-shadow:
+    0 0 0 1px var(--platform-accent) inset,
+    0 12px 32px var(--platform-accent);
 }
 
 .monitor-room-button.speaking {
   border-color: var(--platform-accent-2);
-  box-shadow: 0 0 0 1px var(--platform-accent-2) inset, 0 0 20px var(--platform-accent-2);
+  box-shadow:
+    0 0 0 1px var(--platform-accent-2) inset,
+    0 0 20px var(--platform-accent-2);
   animation: speakingPulse 0.8s ease-in-out infinite;
   animation-delay: var(--speaking-pulse-delay);
 }
@@ -574,7 +609,9 @@ export default {
   border-radius: 999px;
   border: 1px solid transparent;
   box-shadow: none;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .realtime-monitor-panel:hover .recent-call-list,
@@ -604,12 +641,18 @@ export default {
   background: var(--platform-surface);
   border: 1px solid var(--platform-border);
   font-size: 12px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .recent-call-item.active {
   border-color: var(--platform-accent-2);
-  box-shadow: 0 0 0 1px var(--platform-accent-2) inset, 0 0 20px var(--platform-accent-2);
+  box-shadow:
+    0 0 0 1px var(--platform-accent-2) inset,
+    0 0 20px var(--platform-accent-2);
   animation: speakingPulse 0.8s ease-in-out infinite;
   animation-delay: var(--speaking-pulse-delay);
 }
@@ -688,8 +731,8 @@ export default {
   .recent-call-item {
     grid-template-columns: minmax(0, 1fr) auto auto;
     grid-template-areas:
-      "room room room"
-      "caller duration time";
+      'room room room'
+      'caller duration time';
     gap: 6px 10px;
   }
 

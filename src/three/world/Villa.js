@@ -28,7 +28,7 @@ function standardMaterial(color, extra = {}) {
     flatShading: true,
     roughness: 0.85,
     metalness: 0.05,
-    ...extra
+    ...extra,
   })
   material.userData.origEmissive = material.emissive.getHex()
   material.userData.origEmissiveIntensity = material.emissiveIntensity
@@ -46,7 +46,9 @@ export function buildVilla(platform) {
   const baseMaterial = standardMaterial(0xcfc6b2)
   const bodyMaterial = standardMaterial(platform.isDmr ? 0xe3f2f4 : 0xf2e8d5)
   const upperMaterial = standardMaterial(platform.isDmr ? 0xd2eaee : 0xe9dcc3)
-  const roofMaterial = standardMaterial(platform.isCurrent ? 0xd9a441 : platform.isDmr ? 0x2fa8b8 : 0x2e8f84)
+  const roofMaterial = standardMaterial(
+    platform.isCurrent ? 0xd9a441 : platform.isDmr ? 0x2fa8b8 : 0x2e8f84
+  )
   highlightables.push(baseMaterial, bodyMaterial, upperMaterial, roofMaterial)
 
   // 低矮台基(收进院墙内,不外露)
@@ -80,7 +82,7 @@ export function buildVilla(platform) {
   // 院门:双柱 + 青瓦门楼
   const gatePillarMaterial = standardMaterial(0xe9e2d2)
   highlightables.push(gatePillarMaterial)
-  ;[-1.8, 1.8].forEach(x => {
+  ;[-1.8, 1.8].forEach((x) => {
     const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.7, 3.4, 0.7), gatePillarMaterial)
     pillar.position.set(x, 1.7, YARD.zFront)
     group.add(pillar)
@@ -99,7 +101,12 @@ export function buildVilla(platform) {
   // 墙角立柱(装饰线条)
   const pilasterMaterial = standardMaterial(0xfaf5ea)
   highlightables.push(pilasterMaterial)
-  ;[[-6.05, -5.05], [-6.05, 5.05], [6.05, -5.05], [6.05, 5.05]].forEach(([x, z]) => {
+  ;[
+    [-6.05, -5.05],
+    [-6.05, 5.05],
+    [6.05, -5.05],
+    [6.05, 5.05],
+  ].forEach(([x, z]) => {
     const pilaster = new THREE.Mesh(new THREE.BoxGeometry(0.5, 4.2, 0.5), pilasterMaterial)
     pilaster.position.set(x, 3.3, z)
     group.add(pilaster)
@@ -137,7 +144,7 @@ export function buildVilla(platform) {
     const beaconMaterial = new THREE.MeshStandardMaterial({
       color: 0x36f0cb,
       emissive: 0x36f0cb,
-      emissiveIntensity: 1.8
+      emissiveIntensity: 1.8,
     })
     const beacon = new THREE.Mesh(new THREE.IcosahedronGeometry(0.65, 0), beaconMaterial)
     beacon.position.set(2.0, 17.8, -1.4)
@@ -159,7 +166,7 @@ export function buildVilla(platform) {
   // 门廊:双圆柱 + 雨棚 + 三级台阶
   const porchMaterial = standardMaterial(0xf5f1e6)
   highlightables.push(porchMaterial)
-  ;[-1.5, 1.5].forEach(x => {
+  ;[-1.5, 1.5].forEach((x) => {
     const column = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, 2.9, 8), porchMaterial)
     column.position.set(x, 2.65, 6.5)
     group.add(column)
@@ -167,7 +174,11 @@ export function buildVilla(platform) {
   const canopy = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.22, 1.8), roofMaterial)
   canopy.position.set(0, 4.25, 6.2)
   group.add(canopy)
-  ;[[1.05, 5.9, 0.3], [0.72, 6.45, 0.36], [0.38, 7.0, 0.45]].forEach(([y, z, h]) => {
+  ;[
+    [1.05, 5.9, 0.3],
+    [0.72, 6.45, 0.36],
+    [0.38, 7.0, 0.45],
+  ].forEach(([y, z, h]) => {
     const step = new THREE.Mesh(new THREE.BoxGeometry(3.0, h, 0.7), porchMaterial)
     step.position.set(0, y, z)
     group.add(step)
@@ -177,11 +188,11 @@ export function buildVilla(platform) {
   const lanternMaterial = new THREE.MeshStandardMaterial({
     color: 0xff4d42,
     emissive: 0xff2d20,
-    emissiveIntensity: 1.5
+    emissiveIntensity: 1.5,
   })
   lanternMaterial.userData.origEmissive = lanternMaterial.emissive.getHex()
   lanternMaterial.userData.origEmissiveIntensity = lanternMaterial.emissiveIntensity
-  ;[-1.7, 1.7].forEach(x => {
+  ;[-1.7, 1.7].forEach((x) => {
     const lantern = new THREE.Mesh(new THREE.SphereGeometry(0.42, 10, 8), lanternMaterial)
     lantern.scale.set(1, 1.2, 1)
     lantern.position.set(x, 3.5, 5.65)
@@ -194,7 +205,7 @@ export function buildVilla(platform) {
 
   // 门前石板路(从院门直通屋门)
   const pathMaterial = standardMaterial(0xd8d0bd)
-  ;[6.8, 9.1, 11.4].forEach(z => {
+  ;[6.8, 9.1, 11.4].forEach((z) => {
     const slab = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.24, 1.9), pathMaterial)
     slab.position.set(0, 0.2, z)
     group.add(slab)
@@ -204,12 +215,20 @@ export function buildVilla(platform) {
   const bushMaterial = standardMaterial(0x4c8f4a)
   const rockeryMaterial = standardMaterial(0x9aa5a0)
   highlightables.push(bushMaterial, rockeryMaterial)
-  ;[[-7.2, 8.5], [7.2, 8.5], [-7.2, -3.5], [7.2, -3.5]].forEach(([x, z]) => {
+  ;[
+    [-7.2, 8.5],
+    [7.2, 8.5],
+    [-7.2, -3.5],
+    [7.2, -3.5],
+  ].forEach(([x, z]) => {
     const bush = new THREE.Mesh(new THREE.IcosahedronGeometry(0.9, 0), bushMaterial)
     bush.position.set(x, 0.7, z)
     group.add(bush)
   })
-  ;[[6.8, 1.5, 1.2], [7.8, 2.2, 0.8]].forEach(([x, z, s]) => {
+  ;[
+    [6.8, 1.5, 1.2],
+    [7.8, 2.2, 0.8],
+  ].forEach(([x, z, s]) => {
     const rockery = new THREE.Mesh(new THREE.IcosahedronGeometry(s, 0), rockeryMaterial)
     rockery.position.set(x, s * 0.5, z)
     group.add(rockery)
@@ -225,7 +244,12 @@ export function buildVilla(platform) {
   group.add(deck)
   // 护栏:四角立柱 + 四面扶手
   const railH = 0.7
-  ;[[-1.5, -2.4], [-1.5, 1.6], [3.1, -2.4], [3.1, 1.6]].forEach(([x, z]) => {
+  ;[
+    [-1.5, -2.4],
+    [-1.5, 1.6],
+    [3.1, -2.4],
+    [3.1, 1.6],
+  ].forEach(([x, z]) => {
     const post = new THREE.Mesh(new THREE.BoxGeometry(0.1, railH, 0.1), railMaterial)
     post.position.set(x, 12.87 + railH / 2, z)
     group.add(post)
@@ -234,7 +258,7 @@ export function buildVilla(platform) {
     [4.6, 0.08, 0.08, 0.8, 12.87 + railH, -2.4],
     [4.6, 0.08, 0.08, 0.8, 12.87 + railH, 1.6],
     [0.08, 0.08, 4, -1.5, 12.87 + railH, -0.4],
-    [0.08, 0.08, 4, 3.1, 12.87 + railH, -0.4]
+    [0.08, 0.08, 4, 3.1, 12.87 + railH, -0.4],
   ].forEach(([w, h, d, x, y, z]) => {
     const rail = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), railMaterial)
     rail.position.set(x, y, z)
@@ -255,7 +279,10 @@ export function buildVilla(platform) {
   boom.position.set(2.2, 15.27, 0.6)
   group.add(boom)
   for (let i = 0; i < 5; i++) {
-    const element = new THREE.Mesh(new THREE.BoxGeometry(1.15 - i * 0.12, 0.05, 0.05), antennaMaterial)
+    const element = new THREE.Mesh(
+      new THREE.BoxGeometry(1.15 - i * 0.12, 0.05, 0.05),
+      antennaMaterial
+    )
     element.position.set(2.2, 15.27, 0.6 - 1.4 + i * 0.7)
     group.add(element)
   }
@@ -272,9 +299,15 @@ export function buildVilla(platform) {
   const frameMaterial = standardMaterial(0xfaf5ea)
   highlightables.push(frameMaterial)
   const windowSpots = [
-    [-4.4, 3.4, 5.34], [-1.6, 3.4, 5.34], [2.6, 3.4, 5.34], [4.8, 3.4, 5.34],
-    [-6.34, 3.4, -2.5, Math.PI / 2], [-6.34, 3.4, 2.5, Math.PI / 2],
-    [-1.8, 7.3, 3.96], [1.2, 7.3, 3.96], [3.8, 7.3, 3.96]
+    [-4.4, 3.4, 5.34],
+    [-1.6, 3.4, 5.34],
+    [2.6, 3.4, 5.34],
+    [4.8, 3.4, 5.34],
+    [-6.34, 3.4, -2.5, Math.PI / 2],
+    [-6.34, 3.4, 2.5, Math.PI / 2],
+    [-1.8, 7.3, 3.96],
+    [1.2, 7.3, 3.96],
+    [3.8, 7.3, 3.96],
   ]
   const frames = new THREE.InstancedMesh(frameGeometry, frameMaterial, windowSpots.length)
   const windows = new THREE.InstancedMesh(windowGeometry, windowMaterial, windowSpots.length)
@@ -289,11 +322,7 @@ export function buildVilla(platform) {
     windows.setMatrixAt(index, dummy.matrix)
     windows.setColorAt(index, index % 3 === 2 ? dimColor : windowColor)
     // 窗框略靠后,避免与窗玻璃重叠
-    dummy.position.set(
-      spot[0] - Math.sin(rotY) * 0.05,
-      spot[1],
-      spot[2] - Math.cos(rotY) * 0.05
-    )
+    dummy.position.set(spot[0] - Math.sin(rotY) * 0.05, spot[1], spot[2] - Math.cos(rotY) * 0.05)
     dummy.updateMatrix()
     frames.setMatrixAt(index, dummy.matrix)
   })
@@ -313,7 +342,7 @@ export function buildVilla(platform) {
   const frenchDoor = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.3, 0.16), doorMaterial)
   frenchDoor.position.set(0.8, 6.75, 3.9)
   group.add(frenchDoor)
-  ;[-1.9, -0.95, 0, 0.95, 1.9].forEach(dx => {
+  ;[-1.9, -0.95, 0, 0.95, 1.9].forEach((dx) => {
     const post = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.8, 0.09), porchMaterial)
     post.position.set(0.8 + dx, 5.95, 5.25)
     group.add(post)
@@ -321,17 +350,23 @@ export function buildVilla(platform) {
   const balconyRail = new THREE.Mesh(new THREE.BoxGeometry(5.6, 0.08, 0.08), porchMaterial)
   balconyRail.position.set(0.8, 6.37, 5.25)
   group.add(balconyRail)
-  ;[-2.0, 3.6].forEach(x => {
+  ;[-2.0, 3.6].forEach((x) => {
     const sideRail = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 1.6), porchMaterial)
     sideRail.position.set(x, 6.37, 4.5)
     group.add(sideRail)
   })
 
   // 门口名牌
-  const nameplate = makeLabelSprite([
-    { text: `${platform.isCurrent ? '★当前·' : ''}${platform.isDmr ? '◆ ' : ''}${platform.name}`, color: platform.isCurrent ? '#ffd166' : platform.isDmr ? '#36f0cb' : '#8ff9de' },
-    { text: `在线 ${platform.online}/${platform.total}`, size: 22, bold: false }
-  ], { scale: 0.055 })
+  const nameplate = makeLabelSprite(
+    [
+      {
+        text: `${platform.isCurrent ? '★当前·' : ''}${platform.isDmr ? '◆ ' : ''}${platform.name}`,
+        color: platform.isCurrent ? '#ffd166' : platform.isDmr ? '#36f0cb' : '#8ff9de',
+      },
+      { text: `在线 ${platform.online}/${platform.total}`, size: 22, bold: false },
+    ],
+    { scale: 0.055 }
+  )
   nameplate.position.set(0, 13.8, 6.2)
   group.add(nameplate)
 
@@ -344,7 +379,7 @@ export function buildVilla(platform) {
         emissive: 0xffb84d,
         emissiveIntensity: 1.4,
         transparent: true,
-        opacity: 0.9
+        opacity: 0.9,
       })
     )
     ring.rotation.x = Math.PI / 2
@@ -358,7 +393,7 @@ export function buildVilla(platform) {
         opacity: 0.1,
         blending: THREE.AdditiveBlending,
         side: THREE.DoubleSide,
-        depthWrite: false
+        depthWrite: false,
       })
     )
     pillar.position.y = 15
@@ -368,7 +403,7 @@ export function buildVilla(platform) {
   group.userData = {
     kind: 'villa',
     platform,
-    highlightables
+    highlightables,
   }
   return group
 }
@@ -382,7 +417,7 @@ const TYPE_SHAPES = {
   5: 'pyramid', // 俱乐部:尖顶帐篷
   6: 'arch', // 车友会:拱门
   7: 'table', // 会议组:圆桌会议台
-  100: 'poly' // 其他:多面体
+  100: 'poly', // 其他:多面体
 }
 
 // 固定私人房间:id 1/2/3(平台约定),或类型为私人房间
@@ -398,7 +433,7 @@ function structureMaterial(style, extra = {}) {
     transparent: true,
     opacity: 0.92,
     roughness: 0.4,
-    ...extra
+    ...extra,
   })
 }
 
@@ -411,7 +446,10 @@ function buildRoomStructure(group, style) {
   // 圆形展台
   const pad = new THREE.Mesh(
     new THREE.CylinderGeometry(3.4, 3.7, 0.3, 28),
-    structureMaterial({ color: '#16233a', emissive: style.emissive || style.color }, { emissiveIntensity: 0.35, opacity: 0.95 })
+    structureMaterial(
+      { color: '#16233a', emissive: style.emissive || style.color },
+      { emissiveIntensity: 0.35, opacity: 0.95 }
+    )
   )
   pad.position.y = 0.15
   structure.add(pad)
@@ -421,13 +459,21 @@ function buildRoomStructure(group, style) {
       const base = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 1.2, 20), mat)
       base.position.y = 0.9
       structure.add(base)
-      const dome = new THREE.Mesh(new THREE.SphereGeometry(2.2, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2), mat)
+      const dome = new THREE.Mesh(
+        new THREE.SphereGeometry(2.2, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2),
+        mat
+      )
       dome.position.y = 1.5
       structure.add(dome)
       break
     }
     case 'tower': {
-      for (const [dx, dz] of [[-1.1, -1.1], [1.1, -1.1], [-1.1, 1.1], [1.1, 1.1]]) {
+      for (const [dx, dz] of [
+        [-1.1, -1.1],
+        [1.1, -1.1],
+        [-1.1, 1.1],
+        [1.1, 1.1],
+      ]) {
         const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.14, 5.2, 6), mat)
         leg.position.set(dx * 0.6, 2.9, dz * 0.6)
         leg.rotation.z = dx * 0.12
@@ -446,7 +492,11 @@ function buildRoomStructure(group, style) {
       const box = new THREE.BoxGeometry(3, 3, 3)
       const edges = new THREE.LineSegments(
         new THREE.EdgesGeometry(box),
-        new THREE.LineBasicMaterial({ color: new THREE.Color(style.emissive || style.color), transparent: true, opacity: 0.95 })
+        new THREE.LineBasicMaterial({
+          color: new THREE.Color(style.emissive || style.color),
+          transparent: true,
+          opacity: 0.95,
+        })
       )
       edges.position.y = 2.2
       structure.add(edges)
@@ -523,13 +573,19 @@ function buildPrivateBooth(group, style) {
   roof.position.y = 3.9
   roof.rotation.y = Math.PI / 4
   booth.add(roof)
-  const doorMat = structureMaterial({ color: '#3a2f28', emissive: style.emissive || style.color }, { emissiveIntensity: 0.4 })
+  const doorMat = structureMaterial(
+    { color: '#3a2f28', emissive: style.emissive || style.color },
+    { emissiveIntensity: 0.4 }
+  )
   const door = new THREE.Mesh(new THREE.BoxGeometry(1.1, 2.0, 0.16), doorMat)
   door.position.set(0, 1.3, 1.34)
   booth.add(door)
   const pad = new THREE.Mesh(
     new THREE.CylinderGeometry(2.6, 2.9, 0.3, 24),
-    structureMaterial({ color: '#16233a', emissive: style.emissive || style.color }, { emissiveIntensity: 0.35, opacity: 0.95 })
+    structureMaterial(
+      { color: '#16233a', emissive: style.emissive || style.color },
+      { emissiveIntensity: 0.35, opacity: 0.95 }
+    )
   )
   pad.position.y = 0.15
   booth.add(pad)
@@ -543,12 +599,10 @@ export function buildInterior(groups) {
   const styles = (UNIVERSE_CONFIG && UNIVERSE_CONFIG.groupTypeStyles) || {}
   const list = Array.isArray(groups) ? groups : []
 
-  const publicGroups = list.filter(g => !isPrivateRoomGroup(g))
-  const hallGroup = publicGroups.find(g => g.id === 0)
-  const ringGroups = publicGroups.filter(g => g.id !== 0)
-  const privateGroups = [1, 2, 3]
-    .map(id => list.find(g => g.id === id))
-    .filter(Boolean)
+  const publicGroups = list.filter((g) => !isPrivateRoomGroup(g))
+  const hallGroup = publicGroups.find((g) => g.id === 0)
+  const ringGroups = publicGroups.filter((g) => g.id !== 0)
+  const privateGroups = [1, 2, 3].map((id) => list.find((g) => g.id === id)).filter(Boolean)
 
   // 固定穹顶尺寸:房间多少,穹顶造型不变,只是上面分布的房间数量不同
   const DOME_RADIUS = 60
@@ -574,14 +628,17 @@ export function buildInterior(groups) {
   }
   const starGeometry = new THREE.BufferGeometry()
   starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3))
-  const stars = new THREE.Points(starGeometry, new THREE.PointsMaterial({
-    color: 0x9fd8ff,
-    size: 0.35,
-    transparent: true,
-    opacity: 0.85,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false
-  }))
+  const stars = new THREE.Points(
+    starGeometry,
+    new THREE.PointsMaterial({
+      color: 0x9fd8ff,
+      size: 0.35,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    })
+  )
   root.add(stars)
 
   // 发光地板 + 网格
@@ -605,7 +662,12 @@ export function buildInterior(groups) {
   )
   dais.position.y = 0.25
   if (hallGroup) {
-    dais.userData = { kind: 'room', group: hallGroup, deviceRadius: 4.5, camOffset: new THREE.Vector3(0, 5.5, 11) }
+    dais.userData = {
+      kind: 'room',
+      group: hallGroup,
+      deviceRadius: 4.5,
+      camOffset: new THREE.Vector3(0, 5.5, 11),
+    }
   }
   root.add(dais)
   const daisRim = new THREE.Mesh(
@@ -616,18 +678,33 @@ export function buildInterior(groups) {
   daisRim.position.y = 0.52
   daisRim.userData = { kind: 'decor' }
   root.add(daisRim)
-  const hallLabel = makeLabelSprite([
-    { text: (hallGroup && hallGroup.name) || '大厅', color: '#8ff9de', size: 26 },
-    { text: hallGroup ? `${hallGroup.online_dev_number ?? 0}/${hallGroup.total_dev_number ?? 0} 在线` : '', size: 20, bold: false }
-  ], { scale: 0.045 })
+  const hallLabel = makeLabelSprite(
+    [
+      { text: (hallGroup && hallGroup.name) || '大厅', color: '#8ff9de', size: 26 },
+      {
+        text: hallGroup
+          ? `${hallGroup.online_dev_number ?? 0}/${hallGroup.total_dev_number ?? 0} 在线`
+          : '',
+        size: 20,
+        bold: false,
+      },
+    ],
+    { scale: 0.045 }
+  )
   hallLabel.position.set(0, 6.2, 0)
   hallLabel.userData = { kind: 'decor' }
   root.add(hallLabel)
 
   // 大厅内圈:能量柱环,撑起空间感
   const pillarCount = 10
-  const pillarMat = structureMaterial({ color: '#1b2b47', emissive: '#36f0cb' }, { emissiveIntensity: 0.6, opacity: 0.95 })
-  const pillarCapMat = structureMaterial({ color: '#36f0cb', emissive: '#36f0cb' }, { emissiveIntensity: 1.4 })
+  const pillarMat = structureMaterial(
+    { color: '#1b2b47', emissive: '#36f0cb' },
+    { emissiveIntensity: 0.6, opacity: 0.95 }
+  )
+  const pillarCapMat = structureMaterial(
+    { color: '#36f0cb', emissive: '#36f0cb' },
+    { emissiveIntensity: 1.4 }
+  )
   for (let i = 0; i < pillarCount; i++) {
     const a = (i / pillarCount) * Math.PI * 2 + Math.PI / pillarCount
     const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.5, 7, 10), pillarMat)
@@ -643,7 +720,10 @@ export function buildInterior(groups) {
     const a = (i / 3) * Math.PI * 2
     const panel = new THREE.Mesh(
       new THREE.PlaneGeometry(4.5, 2.6),
-      structureMaterial({ color: '#0f2038', emissive: '#36f0cb' }, { emissiveIntensity: 0.5, opacity: 0.7, side: THREE.DoubleSide })
+      structureMaterial(
+        { color: '#0f2038', emissive: '#36f0cb' },
+        { emissiveIntensity: 0.5, opacity: 0.7, side: THREE.DoubleSide }
+      )
     )
     panel.position.set(Math.cos(a) * 5, 4.6, Math.sin(a) * 5)
     panel.lookAt(0, 4.6, 0)
@@ -653,7 +733,10 @@ export function buildInterior(groups) {
   // ---- 专门的入口(南侧发光拱门,点击返回上一级) ----
   const entrance = new THREE.Group()
   entrance.userData = { kind: 'entrance' }
-  const gateMat = structureMaterial({ color: '#12324a', emissive: '#36f0cb' }, { emissiveIntensity: 0.9 })
+  const gateMat = structureMaterial(
+    { color: '#12324a', emissive: '#36f0cb' },
+    { emissiveIntensity: 0.9 }
+  )
   const gateArch = new THREE.Mesh(new THREE.TorusGeometry(4.2, 0.35, 10, 32, Math.PI), gateMat)
   gateArch.position.y = 0.8
   entrance.add(gateArch)
@@ -678,14 +761,10 @@ export function buildInterior(groups) {
     const structure = buildRoomStructure(group, style)
     const n = Math.max(ringGroups.length, 1)
     const t = (index + 0.5) / n
-    const elev = (10 + t * 52) * Math.PI / 180
+    const elev = ((10 + t * 52) * Math.PI) / 180
     const theta = index * golden
     const horiz = Math.cos(elev)
-    const dir = new THREE.Vector3(
-      Math.cos(theta) * horiz,
-      Math.sin(elev),
-      Math.sin(theta) * horiz
-    )
+    const dir = new THREE.Vector3(Math.cos(theta) * horiz, Math.sin(elev), Math.sin(theta) * horiz)
     structure.position.copy(dir).multiplyScalar(DOME_RADIUS - inset)
     structure.position.y += 6
     structure.lookAt(0, 6, 0)
@@ -694,17 +773,30 @@ export function buildInterior(groups) {
       group,
       deviceRadius: 2.4,
       // 相机架在房间与球心之间,看向房间
-      camOffset: dir.clone().multiplyScalar(-10).add(new THREE.Vector3(0, 2, 0))
+      camOffset: dir
+        .clone()
+        .multiplyScalar(-10)
+        .add(new THREE.Vector3(0, 2, 0)),
     }
-    const label = makeLabelSprite([
-      { text: group.name || `房间 ${group.id}`, color: '#8ff9de', size: 24 },
-      { text: `${style.label || ''} · ${group.online_dev_number ?? 0}/${group.total_dev_number ?? 0}`, size: 20, bold: false }
-    ], { scale: 0.04 })
+    const label = makeLabelSprite(
+      [
+        { text: group.name || `房间 ${group.id}`, color: '#8ff9de', size: 24 },
+        {
+          text: `${style.label || ''} · ${group.online_dev_number ?? 0}/${group.total_dev_number ?? 0}`,
+          size: 20,
+          bold: false,
+        },
+      ],
+      { scale: 0.04 }
+    )
     label.position.set(0, 7.2, 0)
     structure.add(label)
 
     // 房间围合:U 形矮墙 + 墙顶发光压线(开口朝向球心),贴合穹顶内壁
-    const alcoveMat = structureMaterial({ color: '#1b2b47', emissive: style.emissive || style.color }, { emissiveIntensity: 0.5, opacity: 0.9 })
+    const alcoveMat = structureMaterial(
+      { color: '#1b2b47', emissive: style.emissive || style.color },
+      { emissiveIntensity: 0.5, opacity: 0.9 }
+    )
     const wallH = 3.2
     const back = new THREE.Mesh(new THREE.BoxGeometry(8.6, wallH, 0.28), alcoveMat)
     back.position.set(0, wallH / 2, -4.2)
@@ -714,16 +806,23 @@ export function buildInterior(groups) {
       side.position.set(sx, wallH / 2, 0)
       structure.add(side)
     }
-    const trim = new THREE.Mesh(new THREE.BoxGeometry(8.6, 0.12, 0.34), structureMaterial(style, { emissiveIntensity: 1.2 }))
+    const trim = new THREE.Mesh(
+      new THREE.BoxGeometry(8.6, 0.12, 0.34),
+      structureMaterial(style, { emissiveIntensity: 1.2 })
+    )
     trim.position.set(0, wallH + 0.06, -4.2)
     structure.add(trim)
     root.add(structure)
 
     // 发光步道:只给低层房间(靠近地面)铺设
-    if (elev < 22 * Math.PI / 180) {
+    if (elev < (22 * Math.PI) / 180) {
       const walkway = new THREE.Mesh(
         new THREE.BoxGeometry(1.6, 0.06, Math.max(DOME_RADIUS - inset - 12, 4)),
-        new THREE.MeshBasicMaterial({ color: new THREE.Color(style.emissive || style.color), transparent: true, opacity: 0.35 })
+        new THREE.MeshBasicMaterial({
+          color: new THREE.Color(style.emissive || style.color),
+          transparent: true,
+          opacity: 0.35,
+        })
       )
       const groundAngle = Math.atan2(dir.z, dir.x)
       const midR = (7.5 + DOME_RADIUS - inset) / 2
@@ -739,18 +838,33 @@ export function buildInterior(groups) {
     const booth = buildPrivateBooth(group, privateStyle)
     booth.position.set((index - 1) * 11, 0, -(DOME_RADIUS - 16))
     booth.lookAt(0, 0, 0)
-    booth.userData = { kind: 'room', group, deviceRadius: 1.6, camOffset: new THREE.Vector3(0, 3.2, 6) }
+    booth.userData = {
+      kind: 'room',
+      group,
+      deviceRadius: 1.6,
+      camOffset: new THREE.Vector3(0, 3.2, 6),
+    }
     // 包厢矮院栏(中间留门)
-    const fenceMat = structureMaterial({ color: '#2b1a24', emissive: privateStyle.emissive || privateStyle.color }, { emissiveIntensity: 0.5, opacity: 0.9 })
+    const fenceMat = structureMaterial(
+      { color: '#2b1a24', emissive: privateStyle.emissive || privateStyle.color },
+      { emissiveIntensity: 0.5, opacity: 0.9 }
+    )
     for (const sx of [-2.2, 2.2]) {
       const fence = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.8, 0.18), fenceMat)
       fence.position.set(sx, 0.55, 2.8)
       booth.add(fence)
     }
-    const label = makeLabelSprite([
-      { text: group.name || `私人房间 ${group.id}`, color: '#ffb3c2', size: 24 },
-      { text: `私人 · ${group.online_dev_number ?? 0}/${group.total_dev_number ?? 0}`, size: 20, bold: false }
-    ], { scale: 0.035 })
+    const label = makeLabelSprite(
+      [
+        { text: group.name || `私人房间 ${group.id}`, color: '#ffb3c2', size: 24 },
+        {
+          text: `私人 · ${group.online_dev_number ?? 0}/${group.total_dev_number ?? 0}`,
+          size: 20,
+          bold: false,
+        },
+      ],
+      { scale: 0.035 }
+    )
     label.position.set(0, 5.4, 0)
     booth.add(label)
     root.add(booth)
@@ -794,7 +908,7 @@ function addStatusLed(parent, y, device) {
     new THREE.MeshStandardMaterial({
       color: online ? 0x2bd47e : 0x6b7280,
       emissive: online ? 0x2bd47e : 0x4b5563,
-      emissiveIntensity: online ? 1.4 : 0.2
+      emissiveIntensity: online ? 1.4 : 0.2,
     })
   )
   led.position.set(0, y, 0)
@@ -818,7 +932,7 @@ export function buildDeviceNiche(device) {
       emissiveIntensity: online ? 0.9 : 0.2,
       transparent: true,
       opacity: 0.9,
-      roughness: 0.5
+      roughness: 0.5,
     })
   )
   group.add(frame)
@@ -832,10 +946,17 @@ export function buildDeviceNiche(device) {
   group.add(box)
 
   // 正面铭牌(印在盒面上,不是悬浮 Sprite)
-  const { texture, width, height } = makeTextTexture([
-    { text: `${device.callsign}-${device.ssid}`, size: 30, color: online ? '#8ff9de' : '#9aa4b2' },
-    { text: device.name || (device.dmrid ? `DMR ${device.dmrid}` : ''), size: 22, bold: false }
-  ], { background: 'rgba(8, 20, 38, 0)', borderColor: 'rgba(0, 0, 0, 0)' })
+  const { texture, width, height } = makeTextTexture(
+    [
+      {
+        text: `${device.callsign}-${device.ssid}`,
+        size: 30,
+        color: online ? '#8ff9de' : '#9aa4b2',
+      },
+      { text: device.name || (device.dmrid ? `DMR ${device.dmrid}` : ''), size: 22, bold: false },
+    ],
+    { background: 'rgba(8, 20, 38, 0)', borderColor: 'rgba(0, 0, 0, 0)' }
+  )
   const plate = new THREE.Mesh(
     new THREE.PlaneGeometry(1.55, 1.55 * (height / width)),
     new THREE.MeshBasicMaterial({ map: texture, transparent: true })
@@ -847,7 +968,7 @@ export function buildDeviceNiche(device) {
     kind: 'device',
     device,
     led: frame,
-    ledPhase: Math.random() * Math.PI * 2
+    ledPhase: Math.random() * Math.PI * 2,
   }
   return group
 }
@@ -866,12 +987,20 @@ export function buildDeviceMesh(device) {
 
   const group = new THREE.Group()
   group.name = `device-${device.id}`
-  const bodyMaterial = new THREE.MeshStandardMaterial({ color: bodyColor, roughness: 0.55, metalness: 0.35 })
-  const darkMaterial = new THREE.MeshStandardMaterial({ color: 0x1c2531, roughness: 0.5, metalness: 0.3 })
+  const bodyMaterial = new THREE.MeshStandardMaterial({
+    color: bodyColor,
+    roughness: 0.55,
+    metalness: 0.35,
+  })
+  const darkMaterial = new THREE.MeshStandardMaterial({
+    color: 0x1c2531,
+    roughness: 0.5,
+    metalness: 0.3,
+  })
   const accentMaterial = new THREE.MeshStandardMaterial({
     color: accentColor,
     emissive: accentColor,
-    emissiveIntensity: 0.9
+    emissiveIntensity: 0.9,
   })
 
   let ledY = 2
@@ -918,7 +1047,7 @@ export function buildDeviceMesh(device) {
           emissive: accentColor,
           emissiveIntensity: 1.2,
           transparent: true,
-          opacity: 0.75
+          opacity: 0.75,
         })
       )
       ring.rotation.x = Math.PI / 2
@@ -977,10 +1106,13 @@ export function buildDeviceMesh(device) {
   const led = addStatusLed(group, ledY, device)
 
   // 名牌:呼号-SSID(默认隐藏,悬停设备时才显示,避免一堆名牌挤在一起)
-  const label = makeLabelSprite([
-    { text: `${device.callsign}-${device.ssid}`, size: 26 },
-    { text: device.name || (device.dmrid ? `DMR ${device.dmrid}` : ''), size: 20, bold: false }
-  ], { scale: 0.016 })
+  const label = makeLabelSprite(
+    [
+      { text: `${device.callsign}-${device.ssid}`, size: 26 },
+      { text: device.name || (device.dmrid ? `DMR ${device.dmrid}` : ''), size: 20, bold: false },
+    ],
+    { scale: 0.016 }
+  )
   label.position.set(0, ledY + 1.4, 0)
   label.visible = false
   group.add(label)
@@ -990,7 +1122,7 @@ export function buildDeviceMesh(device) {
     device,
     led,
     label,
-    ledPhase: Math.random() * Math.PI * 2
+    ledPhase: Math.random() * Math.PI * 2,
   }
   return group
 }

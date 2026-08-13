@@ -9,12 +9,12 @@ import zhLocale from './zh'
 const messages = {
   en: {
     ...enLocale,
-    ...elementEnLocale
+    ...elementEnLocale,
   },
   zh: {
     ...zhLocale,
-    ...elementZhLocale
-  }
+    ...elementZhLocale,
+  },
 }
 export function getLanguage() {
   const chooseLanguage = Cookies.get('language')
@@ -34,11 +34,16 @@ const i18n = createI18n({
   legacy: false,
   globalInjection: true,
   locale: getLanguage(),
-  messages
+  messages,
 })
 
 export function setI18nLanguage(locale) {
-  if (i18n.global && i18n.global.locale && typeof i18n.global.locale === 'object' && 'value' in i18n.global.locale) {
+  if (
+    i18n.global &&
+    i18n.global.locale &&
+    typeof i18n.global.locale === 'object' &&
+    'value' in i18n.global.locale
+  ) {
     i18n.global.locale.value = locale
   } else {
     i18n.global.locale = locale

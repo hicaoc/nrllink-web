@@ -12,7 +12,15 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/register', '/signtimes', '/getcustomer', '/auth-redirect', '/universe', '/serial'] // no redirect whitelist
+const whiteList = [
+  '/login',
+  '/register',
+  '/signtimes',
+  '/getcustomer',
+  '/auth-redirect',
+  '/universe',
+  '/serial',
+] // no redirect whitelist
 const catchAllRoute = { path: '/:pathMatch(.*)*', name: 'CatchAll', redirect: '/404', hidden: true }
 
 function ensureCatchAllRoute() {
@@ -21,7 +29,7 @@ function ensureCatchAllRoute() {
   }
 }
 
-router.beforeEach(async(to, from) => {
+router.beforeEach(async (to, from) => {
   const userStore = useUserStore(pinia)
   const permissionStore = usePermissionStore(pinia)
   // start progress bar

@@ -1,5 +1,10 @@
 <template>
-  <el-scrollbar ref="scrollContainer" :vertical="false" class="scroll-container" @wheel.prevent="handleScroll">
+  <el-scrollbar
+    ref="scrollContainer"
+    :vertical="false"
+    class="scroll-container"
+    @wheel.prevent="handleScroll"
+  >
     <slot />
   </el-scrollbar>
 </template>
@@ -11,17 +16,19 @@ export default {
   name: 'ScrollPane',
   data() {
     return {
-      left: 0
+      left: 0,
     }
   },
   computed: {
     scrollWrapper() {
       const scrollContainer = this.$refs.scrollContainer
-      return scrollContainer?.wrapRef ||
+      return (
+        scrollContainer?.wrapRef ||
         scrollContainer?.$refs?.wrap ||
         scrollContainer?.$el?.querySelector?.('.el-scrollbar__wrap') ||
         null
-    }
+      )
+    },
   },
   methods: {
     handleScroll(e) {
@@ -54,14 +61,15 @@ export default {
         $scrollWrapper.scrollLeft = $scrollWrapper.scrollWidth - $containerWidth
       } else {
         // find preTag and nextTag
-        const currentIndex = tagList.findIndex(item => item === currentTag)
+        const currentIndex = tagList.findIndex((item) => item === currentTag)
         if (currentIndex < 0) return
         const prevTag = tagList[currentIndex - 1]
         const nextTag = tagList[currentIndex + 1]
         if (!prevTag || !nextTag || !prevTag.$el || !nextTag.$el) return
 
         // the tag's offsetLeft after of nextTag
-        const afterNextTagOffsetLeft = nextTag.$el.offsetLeft + nextTag.$el.offsetWidth + tagAndTagSpacing
+        const afterNextTagOffsetLeft =
+          nextTag.$el.offsetLeft + nextTag.$el.offsetWidth + tagAndTagSpacing
 
         // the tag's offsetLeft before of prevTag
         const beforePrevTagOffsetLeft = prevTag.$el.offsetLeft - tagAndTagSpacing
@@ -72,8 +80,8 @@ export default {
           $scrollWrapper.scrollLeft = beforePrevTagOffsetLeft
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

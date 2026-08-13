@@ -4,7 +4,7 @@ export function fetchGroupList(data) {
   return request({
     url: '/group/list',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -12,7 +12,7 @@ export function fetchGroupDevicesList(data) {
   return request({
     url: '/group/device/list',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -20,7 +20,7 @@ export function fetchGroupListMini(data) {
   return request({
     url: '/group/list/mini',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -28,7 +28,7 @@ export function fetchMyGroupList(data) {
   return request({
     url: '/room/list',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -36,7 +36,7 @@ export function joinGroup(data) {
   return request({
     url: '/group/joinGroup',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -44,7 +44,7 @@ export function fetchGroupStats(data) {
   return request({
     url: '/group/stats',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -52,7 +52,7 @@ export function createGroup(data) {
   return request({
     url: '/group/create',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -60,7 +60,7 @@ export function updateGroup(data) {
   return request({
     url: '/group/update',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -68,7 +68,6 @@ export function deleteGroup(data) {
   return request({
     url: '/group/delete',
     method: 'post',
-    data
+    data,
   })
 }
-

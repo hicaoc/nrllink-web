@@ -11,7 +11,7 @@ const MODE = {
   OVERVIEW: 'OVERVIEW',
   VILLA: 'VILLA',
   INTERIOR: 'INTERIOR',
-  ROOM: 'ROOM'
+  ROOM: 'ROOM',
 }
 
 const OVERVIEW_POSITION = new THREE.Vector3(0, 180, 140)
@@ -105,15 +105,15 @@ export default class UniverseApp {
     this.pointer = new THREE.Vector2()
 
     // 事件监听
-    this._boundPointerMove = event => this._handlePointerMove(event)
-    this._boundPointerDown = event => this._handlePointerDown(event)
-    this._boundPointerUp = event => this._handlePointerUp(event)
-    this._boundWheel = event => this._handleWheel(event)
-    this._boundClick = event => this._handleClick(event)
-    this._boundContextMenu = event => this._handleContextMenu(event)
-    this._boundDblClick = event => this._handleDblClick(event)
-    this._boundKeyDown = event => this._handleKeyDown(event)
-    this._boundKeyUp = event => this._handleKeyUp(event)
+    this._boundPointerMove = (event) => this._handlePointerMove(event)
+    this._boundPointerDown = (event) => this._handlePointerDown(event)
+    this._boundPointerUp = (event) => this._handlePointerUp(event)
+    this._boundWheel = (event) => this._handleWheel(event)
+    this._boundClick = (event) => this._handleClick(event)
+    this._boundContextMenu = (event) => this._handleContextMenu(event)
+    this._boundDblClick = (event) => this._handleDblClick(event)
+    this._boundKeyDown = (event) => this._handleKeyDown(event)
+    this._boundKeyUp = (event) => this._handleKeyUp(event)
     this._boundResize = () => this._handleResize()
     const canvas = this.renderer.domElement
     canvas.addEventListener('pointermove', this._boundPointerMove)
@@ -142,13 +142,13 @@ export default class UniverseApp {
   off(event, callback) {
     const list = this.events[event]
     if (!list) return
-    this.events[event] = list.filter(cb => cb !== callback)
+    this.events[event] = list.filter((cb) => cb !== callback)
   }
 
   emit(event, payload) {
     const list = this.events[event]
     if (!list) return
-    list.forEach(cb => cb(payload))
+    list.forEach((cb) => cb(payload))
   }
 
   // ---------- 数据驱动 ----------
@@ -169,8 +169,8 @@ export default class UniverseApp {
     // 清除别墅院落周边的树木,避免挡住院门
     if (this.terrain && typeof this.terrain.clearVegetationNear === 'function') {
       const points = this.platforms
-        .map(p => p.position)
-        .filter(pos => pos && isFinite(pos.x) && isFinite(pos.z))
+        .map((p) => p.position)
+        .filter((pos) => pos && isFinite(pos.x) && isFinite(pos.z))
       this.terrain.clearVegetationNear(points, 17)
     }
 
@@ -180,9 +180,11 @@ export default class UniverseApp {
         this._applyVillaFocusVisuals()
         this._buildRooms()
         if (this.mode === MODE.ROOM) {
-          const roomExists = this.roomRoot && this.roomRoot.children.some(child => {
-            return child.userData.group && child.userData.group.id === this.currentRoomId
-          })
+          const roomExists =
+            this.roomRoot &&
+            this.roomRoot.children.some((child) => {
+              return child.userData.group && child.userData.group.id === this.currentRoomId
+            })
           if (roomExists) {
             this._applyRoomFocusVisuals()
             this._buildDevices()
@@ -207,9 +209,11 @@ export default class UniverseApp {
     if (this.mode === MODE.OVERVIEW) return
     this._buildRooms()
     if (this.mode === MODE.ROOM) {
-      const roomExists = this.roomRoot && this.roomRoot.children.some(child => {
-        return child.userData.group && child.userData.group.id === this.currentRoomId
-      })
+      const roomExists =
+        this.roomRoot &&
+        this.roomRoot.children.some((child) => {
+          return child.userData.group && child.userData.group.id === this.currentRoomId
+        })
       if (roomExists) {
         this._applyRoomFocusVisuals()
         this._buildDevices()
@@ -231,7 +235,7 @@ export default class UniverseApp {
     this.villas.forEach((entry, villaId) => {
       const active = id != null && villaId === id
       const materials = entry.group.userData.highlightables || []
-      materials.forEach(material => {
+      materials.forEach((material) => {
         if (!material.emissive) return
         if (active) {
           material.emissive.setHex(0x36f0cb)
@@ -262,16 +266,14 @@ export default class UniverseApp {
       this._buildRooms()
     } else {
       this._clearRooms()
-      this.emit('notice', { message: `${entry.platform.name || '远程服务器'}：只能参观院落，房间仅当前登录服务器可查看` })
+      this.emit('notice', {
+        message: `${entry.platform.name || '远程服务器'}：只能参观院落，房间仅当前登录服务器可查看`,
+      })
     }
     // 直接到达别墅院内门口(门在别墅局部 +z 面 (0, 2.6, 5.4), 见 buildVilla;
     // 落点在院墙内且避开院门门楼(z>=12.1),防止相机被门楼挡住)
     const door = entry.group.position.clone().add(new THREE.Vector3(0, 2.6, 5.4))
-    this._tweenCamera(
-      door.clone().add(new THREE.Vector3(0, 1.4, 5)),
-      door.clone(),
-      1.8
-    )
+    this._tweenCamera(door.clone().add(new THREE.Vector3(0, 1.4, 5)), door.clone(), 1.8)
     this.emit('modechange', this.mode)
   }
 
@@ -280,7 +282,7 @@ export default class UniverseApp {
     const r = this.hyperspaceRadius || 60
     return {
       position: HYPERSPACE_CENTER.clone().add(new THREE.Vector3(0, 7, r - 16)),
-      target: HYPERSPACE_CENTER.clone().add(new THREE.Vector3(0, 12, 0))
+      target: HYPERSPACE_CENTER.clone().add(new THREE.Vector3(0, 12, 0)),
     }
   }
 
@@ -309,7 +311,7 @@ export default class UniverseApp {
 
   enterRoom(groupId) {
     if (this.mode === MODE.OVERVIEW || !this.roomRoot) return
-    const room = this.roomRoot.children.find(child => {
+    const room = this.roomRoot.children.find((child) => {
       return child.userData.group && child.userData.group.id === groupId
     })
     if (!room) return
@@ -354,11 +356,7 @@ export default class UniverseApp {
       if (entry) {
         // 回到该别墅院内门口(落点避开院门门楼)
         const door = entry.group.position.clone().add(new THREE.Vector3(0, 2.6, 5.4))
-        this._tweenCamera(
-          door.clone().add(new THREE.Vector3(0, 1.4, 5)),
-          door.clone(),
-          1.4
-        )
+        this._tweenCamera(door.clone().add(new THREE.Vector3(0, 1.4, 5)), door.clone(), 1.4)
       }
       this.emit('modechange', this.mode)
     } else if (this.mode === MODE.VILLA) {
@@ -385,8 +383,8 @@ export default class UniverseApp {
     this.terrain = new Terrain(this.scene, quality)
     // 重建地形后重新清除院落周边的树
     const points = this.platforms
-      .map(p => p.position)
-      .filter(pos => pos && isFinite(pos.x) && isFinite(pos.z))
+      .map((p) => p.position)
+      .filter((pos) => pos && isFinite(pos.x) && isFinite(pos.z))
     this.terrain.clearVegetationNear(points, 17)
     this.fiberNetwork.setQuality(quality)
     this._applyWorldVisibility()
@@ -460,7 +458,7 @@ export default class UniverseApp {
       this.tower = null
     }
     const entries = [...this.villas.values()]
-    const dmrEntry = entries.find(entry => this._isDmr(entry.platform))
+    const dmrEntry = entries.find((entry) => this._isDmr(entry.platform))
 
     let towerPos
     if (dmrEntry) {
@@ -473,11 +471,11 @@ export default class UniverseApp {
 
     if (dmrEntry) {
       const targets = entries
-        .filter(entry => entry !== dmrEntry)
-        .map(entry => {
+        .filter((entry) => entry !== dmrEntry)
+        .map((entry) => {
           return {
             position: entry.group.position.clone(),
-            speed: 0.4 + onlineRatio(entry.platform) * 1.2
+            speed: 0.4 + onlineRatio(entry.platform) * 1.2,
           }
         })
       this.fiberNetwork.build(dmrEntry.group.position.clone(), targets)
@@ -492,10 +490,10 @@ export default class UniverseApp {
     this.villas.forEach((entry, villaId) => {
       const focused = villaId === this.focusedVillaId && this.mode !== MODE.OVERVIEW
       // 进入超空间(INTERIOR/ROOM)后,别墅本身也隐藏——人已"在别墅里面"
-      entry.group.visible = immersive ? false : (focused || this.mode === MODE.OVERVIEW)
+      entry.group.visible = immersive ? false : focused || this.mode === MODE.OVERVIEW
       // 聚焦不再剖切透明,别墅保持实体(房间已移入超空间,无需剖开)
       const materials = entry.group.userData.highlightables || []
-      materials.forEach(material => {
+      materials.forEach((material) => {
         if (material.userData.cutawaySaved) {
           material.opacity = material.userData.cutawaySaved.opacity
           material.transparent = material.userData.cutawaySaved.transparent
@@ -522,7 +520,7 @@ export default class UniverseApp {
 
   _applyRoomFocusVisuals() {
     if (!this.roomRoot) return
-    this.roomRoot.children.forEach(child => {
+    this.roomRoot.children.forEach((child) => {
       const kind = child.userData && child.userData.kind
       // 大厅装饰与入口:进入具体房间后隐藏
       if (kind === 'decor' || kind === 'entrance') {
@@ -530,11 +528,14 @@ export default class UniverseApp {
         return
       }
       if (kind !== 'room') return
-      const focused = this.mode === MODE.ROOM && child.userData.group && child.userData.group.id === this.currentRoomId
+      const focused =
+        this.mode === MODE.ROOM &&
+        child.userData.group &&
+        child.userData.group.id === this.currentRoomId
       // 进入房间后,其他房间建筑整体隐藏,不再看到房间外部的东西
       child.visible = this.mode !== MODE.ROOM || focused
       const opacity = this.mode === MODE.ROOM ? (focused ? 0.95 : 0.25) : 0.92
-      child.traverse(obj => {
+      child.traverse((obj) => {
         // 进入房间后隐藏该房间自己的悬浮名牌(页码牌已展示信息,避免重叠)
         if (obj.isSprite) {
           obj.visible = !(this.mode === MODE.ROOM && focused)
@@ -572,7 +573,7 @@ export default class UniverseApp {
   _buildDevices() {
     this._clearDevices()
     if (this.mode !== MODE.ROOM || !this.roomRoot) return
-    const room = this.roomRoot.children.find(child => {
+    const room = this.roomRoot.children.find((child) => {
       return child.userData.group && child.userData.group.id === this.currentRoomId
     })
     if (!room) return
@@ -612,7 +613,7 @@ export default class UniverseApp {
         transparent: true,
         opacity: 0.85,
         roughness: 0.8,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
       })
     )
     core.position.y = 0.6 + wallHeight / 2 - 0.4
@@ -624,7 +625,7 @@ export default class UniverseApp {
       emissive: 0x36f0cb,
       emissiveIntensity: 0.5,
       transparent: true,
-      opacity: 0.7
+      opacity: 0.7,
     })
     for (let l = 0; l <= levels; l++) {
       const ring = new THREE.Mesh(new THREE.TorusGeometry(radius, 0.05, 6, 64), railMat)
@@ -658,18 +659,24 @@ export default class UniverseApp {
 
     // 房间名称固定在设备塔顶部(不随塔旋转,远离龛盒不重叠)
     const roomName = (room.userData.group && room.userData.group.name) || '房间'
-    const topLabel = makeLabelSprite([
-      { text: roomName, color: '#8ff9de', size: 28 },
-      { text: `共 ${sorted.length} 台设备`, size: 20, bold: false }
-    ], { scale: 0.045 })
+    const topLabel = makeLabelSprite(
+      [
+        { text: roomName, color: '#8ff9de', size: 28 },
+        { text: `共 ${sorted.length} 台设备`, size: 20, bold: false },
+      ],
+      { scale: 0.045 }
+    )
     topLabel.position.set(center.x, center.y + 0.6 + wallHeight + 1.6, center.z)
     this.deviceRoot.add(topLabel)
 
     // 页码名牌:放在设备塔侧面,与塔身保持距离,避免重叠
-    const pageLabel = makeLabelSprite([
-      { text: `第 ${this.devicePage + 1}/${pageCount} 页`, color: '#8ff9de', size: 24 },
-      { text: `共 ${sorted.length} 台设备`, size: 20, bold: false }
-    ], { scale: 0.045 })
+    const pageLabel = makeLabelSprite(
+      [
+        { text: `第 ${this.devicePage + 1}/${pageCount} 页`, color: '#8ff9de', size: 24 },
+        { text: `共 ${sorted.length} 台设备`, size: 20, bold: false },
+      ],
+      { scale: 0.045 }
+    )
     pageLabel.position.set(center.x + radius + 4.5, center.y + 0.6 + wallHeight * 0.55, center.z)
     this.deviceRoot.add(pageLabel)
 
@@ -680,9 +687,9 @@ export default class UniverseApp {
         emissive: 0x36f0cb,
         emissiveIntensity: 1.1,
         transparent: true,
-        opacity: 0.95
+        opacity: 0.95,
       })
-      const makeArrow = dir => {
+      const makeArrow = (dir) => {
         const arrow = new THREE.Mesh(new THREE.ConeGeometry(0.7, 1.8, 4), arrowMat)
         arrow.position.set(center.x + dir * (radius + 2.6), center.y + 2.6, center.z)
         arrow.rotation.z = dir > 0 ? -Math.PI / 2 : Math.PI / 2
@@ -709,7 +716,7 @@ export default class UniverseApp {
       fromTarget: this.cameraTarget.clone(),
       toTarget: toTarget.clone(),
       elapsed: 0,
-      duration
+      duration,
     }
   }
 
@@ -766,7 +773,9 @@ export default class UniverseApp {
     const el = event.target
     if (!el || !el.tagName) return false
     const tag = el.tagName.toUpperCase()
-    return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable === true
+    return (
+      tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable === true
+    )
   }
 
   _panBy(dx, dy) {
@@ -792,7 +801,9 @@ export default class UniverseApp {
     if (drag.moved) {
       // 拖拽后的 click 不触发选中
       this._suppressClick = true
-      setTimeout(() => { this._suppressClick = false }, 0)
+      setTimeout(() => {
+        this._suppressClick = false
+      }, 0)
     } else if (drag.button === 2) {
       // 右键单击:返回上一级
       this.backToOverview()
@@ -878,7 +889,12 @@ export default class UniverseApp {
         if (obj.userData && obj.userData.kind) {
           const kind = obj.userData.kind
           if (kind === 'decor') break // 装饰物不响应点击,穿透到后方对象
-          const data = kind === 'villa' ? obj.userData.platform : kind === 'room' ? obj.userData.group : obj.userData.device
+          const data =
+            kind === 'villa'
+              ? obj.userData.platform
+              : kind === 'room'
+                ? obj.userData.group
+                : obj.userData.device
           found = { kind, data, object: obj }
           break
         }
@@ -927,14 +943,17 @@ export default class UniverseApp {
       }
     }
     this.renderer.domElement.style.cursor = picked ? 'pointer' : ''
-    this.emit('hover', picked ? { ...picked, screen: { x: event.clientX, y: event.clientY }} : null)
+    this.emit(
+      'hover',
+      picked ? { ...picked, screen: { x: event.clientX, y: event.clientY } } : null
+    )
   }
 
   // 设备展架翻页
   _changeDevicePage(delta) {
     const total = (this.devicesMap[this.currentRoomId] || []).length
     const pageCount = Math.max(1, Math.ceil(total / DEVICES_PER_PAGE))
-    this.devicePage = (((this.devicePage || 0) + delta) % pageCount + pageCount) % pageCount
+    this.devicePage = ((((this.devicePage || 0) + delta) % pageCount) + pageCount) % pageCount
     this._buildDevices()
   }
 
@@ -955,7 +974,7 @@ export default class UniverseApp {
       return
     }
     if (picked) {
-      this.emit('select', { ...picked, screen: { x: event.clientX, y: event.clientY }})
+      this.emit('select', { ...picked, screen: { x: event.clientX, y: event.clientY } })
     }
   }
 
@@ -979,8 +998,22 @@ export default class UniverseApp {
       return
     }
     if (this._isTypingTarget(event)) return
-    const handled = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyQ', 'KeyE', 'KeyZ', 'KeyX',
-      'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'PageUp', 'PageDown']
+    const handled = [
+      'KeyW',
+      'KeyA',
+      'KeyS',
+      'KeyD',
+      'KeyQ',
+      'KeyE',
+      'KeyZ',
+      'KeyX',
+      'ArrowUp',
+      'ArrowDown',
+      'ArrowLeft',
+      'ArrowRight',
+      'PageUp',
+      'PageDown',
+    ]
     if (handled.includes(event.code)) {
       event.preventDefault()
       this._keys.add(event.code)
@@ -1018,11 +1051,13 @@ export default class UniverseApp {
     }
 
     // 设备状态灯呼吸(设备在展架组内,遍历查找)
-    this.deviceRoot.traverse(obj => {
+    this.deviceRoot.traverse((obj) => {
       const led = obj.userData && obj.userData.led
       if (!led) return
       const online = !!(obj.userData.device && obj.userData.device.is_online)
-      led.material.emissiveIntensity = online ? 1.1 + Math.sin(t * 3 + obj.userData.ledPhase) * 0.7 : 0.15
+      led.material.emissiveIntensity = online
+        ? 1.1 + Math.sin(t * 3 + obj.userData.ledPhase) * 0.7
+        : 0.15
     })
 
     // 设备展架缓慢旋转,悬停设备/翻页箭头时暂停

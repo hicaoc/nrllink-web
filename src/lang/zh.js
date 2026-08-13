@@ -70,7 +70,7 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: '国际化',
     externalLink: '外链',
-    profile: '个人中心'
+    profile: '个人中心',
   },
   server: {
     server_name: '服务器名称',
@@ -90,7 +90,7 @@ export default {
     create: '创建',
     edit: '编辑',
     delete: '删除',
-    active: '动作'
+    active: '动作',
 
     // master_server: '主服务器',
     // slave_server: '从服务器'
@@ -122,25 +122,25 @@ export default {
       license_path: 'License路径',
       dbfile: '数据库文件',
       ipfile: 'IP库文件',
-      calllog_path: '通话日志路径'
+      calllog_path: '通话日志路径',
     },
     web: {
       path: 'Web路径',
       port: 'Web端口',
       icp: 'ICP备案号',
       ssl_crt: 'SSL证书',
-      ssl_key: 'SSL私钥'
+      ssl_key: 'SSL私钥',
     },
     systeminfo: {
       name: '系统名称',
       nameshorthand: '系统简称',
       logo_url: 'Logo地址',
-      language: '默认语言'
+      language: '默认语言',
     },
     openai: {
       base_url: 'Base URL',
       api_key: 'API Key',
-      engine: '模型引擎'
+      engine: '模型引擎',
     },
     aprs: {
       aprs_server_host: 'APRS服务器',
@@ -152,7 +152,7 @@ export default {
       passcode: '验证码',
       latitude: '纬度',
       longitude: '经度',
-      altitude: '海拔'
+      altitude: '海拔',
     },
     weixin: {
       mp_appid: '公众号AppID',
@@ -167,7 +167,7 @@ export default {
       server_url: '服务器URL',
       weixin_api_url: '微信API URL',
       wx_msg_url: '消息推送URL',
-      alarm_mode_id: '告警模式ID'
+      alarm_mode_id: '告警模式ID',
     },
     billing: {
       enabled: '启用计费',
@@ -181,7 +181,7 @@ export default {
       serial_no: '证书序列号',
       private_key_path: '私钥路径',
       wechat_notify_url: '微信支付回调URL',
-      description: '商品描述'
+      description: '商品描述',
     },
     platforms: {
       name: '平台名称',
@@ -189,8 +189,8 @@ export default {
       port: '端口',
       online: '在线数',
       total: '总数',
-      actions: '操作'
-    }
+      actions: '操作',
+    },
   },
   device: {
     grouproom: '群组房间',
@@ -314,14 +314,13 @@ export default {
     basicInfo: '基本信息',
     groupAndOwner: '分组和所有者',
     statistics: '统计信息',
-    statusControl: '状态控制'
+    statusControl: '状态控制',
   },
   group: {
     name: '名称',
     type: '类型',
     allow_callsign_ssid: '允许设备',
-    note: '备注'
-
+    note: '备注',
   },
   relay: {
     name: '名称',
@@ -330,17 +329,15 @@ export default {
     ower_callsign: '创建者',
     note: '备注',
     enabled: '启用',
-    disabled: '停用'
-
+    disabled: '停用',
   },
   navbar: {
-
     dashboard: '首页',
     logOut: '退出登录',
     profile: '个人中心',
     theme: '换肤',
     size: '布局大小',
-    renew: '点击续费'
+    renew: '点击续费',
   },
   login: {
     title: 'HAM互联',
@@ -377,7 +374,7 @@ export default {
     serverListPanel: '服务器列表',
     showAllPanels: '全部显示',
     switchToChinese: '切换到中文',
-    switchToEnglish: '切换到英文'
+    switchToEnglish: '切换到英文',
   },
   serial: {
     entry: 'USB串口设备配置(本机直连)',
@@ -389,7 +386,8 @@ export default {
     disconnect: '断开连接',
     connected: '已连接',
     disconnected: '未连接',
-    unsupported: '当前浏览器不支持 Web Serial API，请使用 Chrome / Edge 并通过 HTTPS 或 localhost 访问。',
+    unsupported:
+      '当前浏览器不支持 Web Serial API，请使用 Chrome / Edge 并通过 HTTPS 或 localhost 访问。',
     httpsTip: '需要 HTTPS 或 localhost 环境，通过 USB 直连设备',
     basicSettings: '常用设置',
     callsign: '呼号',
@@ -451,7 +449,7 @@ export default {
     regWriteConfirm: '确认将全部配置写入设备寄存器？',
     ipInvalid: 'IP 地址格式不正确',
     serverInvalid: '服务器地址必须为域名或 IPv4 地址',
-    snInvalid: '远端序列号必须为 14 个十六进制字符'
+    snInvalid: '远端序列号必须为 14 个十六进制字符',
   },
   dashboardHome: {
     heroBadge: '控制中心',
@@ -469,10 +467,10 @@ export default {
     liveAccessDesc: '当前音频订阅 {subs} 路',
     platformName: '平台名称',
     platformIcp: '备案信息',
-    platformLanguage: '当前语言'
+    platformLanguage: '当前语言',
   },
   documentation: {
-    documentation: 'HAM互联'
+    documentation: 'HAM互联',
   },
   permission: {
     addRole: '新增职位',
@@ -482,21 +480,25 @@ export default {
     tips: '在某些情况下，不适合使用 v-permission。例如：Element-UI 的 el-tab 或 el-table-column 以及其它动态渲染 dom 的场景。你只能通过手动设置 v-if 来实现。',
     delete: '删除',
     confirm: '确定',
-    cancel: '取消'
-
+    cancel: '取消',
   },
   guide: {
-    description: '引导页对于一些第一次进入项目的人很有用，你可以简单介绍下项目的功能。本 Demo 是基于',
-    button: '打开引导'
+    description:
+      '引导页对于一些第一次进入项目的人很有用，你可以简单介绍下项目的功能。本 Demo 是基于',
+    button: '打开引导',
   },
   components: {
     documentation: '文档',
-    tinymceTips: '富文本是管理后台一个核心的功能，但同时又是一个有很多坑的地方。在选择富文本的过程中我也走了不少的弯路，市面上常见的富文本都基本用过了，最终权衡了一下选择了Tinymce。更详细的富文本比较和介绍见',
-    dropzoneTips: "由于我司业务有特殊需求，而且要传七牛 所以没用第三方，选择了自己封装。代码非常的简单，具体代码你可以在这里看到 {'@'}/components/Dropzone",
+    tinymceTips:
+      '富文本是管理后台一个核心的功能，但同时又是一个有很多坑的地方。在选择富文本的过程中我也走了不少的弯路，市面上常见的富文本都基本用过了，最终权衡了一下选择了Tinymce。更详细的富文本比较和介绍见',
+    dropzoneTips:
+      "由于我司业务有特殊需求，而且要传七牛 所以没用第三方，选择了自己封装。代码非常的简单，具体代码你可以在这里看到 {'@'}/components/Dropzone",
     stickyTips: '当页面滚动到预设的位置会吸附在顶部',
     backToTopTips1: '页面滚动到指定位置会在右下角出现返回顶部按钮',
-    backToTopTips2: '可自定义按钮的样式、show/hide、出现的高度、返回的位置 如需文字提示，可在外部使用Element的el-tooltip元素',
-    imageUploadTips: "由于我在使用时它只有vue{'@'}1版本，而且和mockjs不兼容，所以自己改造了一下，如果大家要使用的话，优先还是使用官方版本。"
+    backToTopTips2:
+      '可自定义按钮的样式、show/hide、出现的高度、返回的位置 如需文字提示，可在外部使用Element的el-tooltip元素',
+    imageUploadTips:
+      "由于我在使用时它只有vue{'@'}1版本，而且和mockjs不兼容，所以自己改造了一下，如果大家要使用的话，优先还是使用官方版本。",
   },
   user: {
     id: '序号',
@@ -516,7 +518,7 @@ export default {
     is_Account: '身份',
     subscribe_scene: '关注场景',
     subscribe_time: '关注时间',
-    subscribe: '关注状态'
+    subscribe: '关注状态',
   },
   register: {
     name: '姓名',
@@ -544,8 +546,7 @@ export default {
     callsignRequired: '呼号是必选项',
     callsignMax: '呼号最多 6 个字符',
     nameRequired: '姓名是必选项',
-    phoneRequired: '电话号码是必选项'
-
+    phoneRequired: '电话号码是必选项',
   },
 
   reg: {
@@ -585,8 +586,9 @@ export default {
     processFail: '图片处理失败，请更换图片后重试',
     processing: '图片处理中，请稍后再提交',
     submitFail: '注册失败，请稍后重试',
-    successMsg: '注册成功，请等待管理员审核，一般48小时内完成。您注册的服务器是【{server}】，登录时请确认选择的是该服务器，避免登录错误。',
-    successTitle: '注册成功'
+    successMsg:
+      '注册成功，请等待管理员审核，一般48小时内完成。您注册的服务器是【{server}】，登录时请确认选择的是该服务器，避免登录错误。',
+    successTitle: '注册成功',
   },
 
   operator_log: {
@@ -594,7 +596,7 @@ export default {
     timestamp: '发生时间',
     content: '内容',
     event_type: '类别',
-    operator: '操作员'
+    operator: '操作员',
   },
   area: {
     name: '地区名称',
@@ -612,8 +614,7 @@ export default {
     create_time: '创建时间',
     update_time: '修改时间',
     note: '备注',
-    actions: '动作'
-
+    actions: '动作',
   },
 
   Account: {
@@ -651,7 +652,6 @@ export default {
     note: '备注',
     search: '搜索',
     add: '添加',
-    export: '导出',
     reviewer: '审核人',
     id: '序号',
 
@@ -675,7 +675,7 @@ export default {
     delete: '删除',
     realdelete: '彻底删除',
     cancel: '取 消',
-    confirm: '确 定'
+    confirm: '确 定',
   },
   userquery: {
     dynamicTips1: '固定表头, 按照表头顺序排序',
@@ -698,7 +698,6 @@ export default {
     note: '备注',
     search: '搜索',
     add: '添加',
-    export: '导出',
     reviewer: '审核人',
     id: '序号',
     password: '登陆密码',
@@ -709,7 +708,7 @@ export default {
     draft: '休假',
     delete: '删除',
     cancel: '取 消',
-    confirm: '确 定'
+    confirm: '确 定',
   },
   employee: {
     dmrid: 'DMR-ID',
@@ -724,7 +723,6 @@ export default {
     remark: '点评',
     search: '搜索',
     add: '添加',
-    export: '导出',
     reviewer: '审核人',
     id: '序号',
     pid: '身份证号',
@@ -750,44 +748,34 @@ export default {
     draft: '休假',
     delete: '删除',
     cancel: '取 消',
-    confirm: '确 定'
+    confirm: '确 定',
   },
   example: {
-    warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'
+    warning:
+      '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见',
   },
   errorLog: {
     tips: '请点击右上角bug小图标',
-    description: '现在的管理后台基本都是spa的形式了，它增强了用户体验，但同时也会增加页面出问题的可能性，可能一个小小的疏忽就导致整个页面的死锁。好在 Vue 官网提供了一个方法来捕获处理异常，你可以在其中进行错误处理或者异常上报。',
-    documentation: '文档介绍'
-  },
-  excel: {
-    export: '导出',
-    selectedExport: '导出已选择项',
-    placeholder: '请输入文件名(默认excel-list)'
-  },
-  zip: {
-    export: '导出',
-    placeholder: '请输入文件名(默认file)'
-  },
-  pdf: {
-    tips: '这里使用   window.print() 来实现下载pdf的功能'
+    description:
+      '现在的管理后台基本都是spa的形式了，它增强了用户体验，但同时也会增加页面出问题的可能性，可能一个小小的疏忽就导致整个页面的死锁。好在 Vue 官网提供了一个方法来捕获处理异常，你可以在其中进行错误处理或者异常上报。',
+    documentation: '文档介绍',
   },
   theme: {
     change: '换肤',
     documentation: '换肤文档',
-    tips: 'Tips: 它区别于 navbar 上的 theme-pick, 是两种不同的换肤方法，各自有不同的应用场景，具体请参考文档。'
+    tips: 'Tips: 它区别于 navbar 上的 theme-pick, 是两种不同的换肤方法，各自有不同的应用场景，具体请参考文档。',
   },
   tagsView: {
     refresh: '刷新',
     close: '关闭',
     closeOthers: '关闭其它',
-    closeAll: '关闭所有'
+    closeAll: '关闭所有',
   },
   settings: {
     title: '系统布局配置',
     theme: '主题色',
     tagsView: '开启 Tags-View',
     fixedHeader: '固定 Header',
-    sidebarLogo: '侧边栏 Logo'
-  }
+    sidebarLogo: '侧边栏 Logo',
+  },
 }

@@ -3,7 +3,7 @@ import * as THREE from 'three'
 // 用 Canvas 生成文字纹理(供 Sprite 或贴到盒面上)
 // lines: [{ text, color, size }] 或字符串数组
 export function makeTextTexture(lines, options = {}) {
-  const normalized = (Array.isArray(lines) ? lines : [lines]).map(line => {
+  const normalized = (Array.isArray(lines) ? lines : [lines]).map((line) => {
     return typeof line === 'string' ? { text: line } : line
   })
   const padding = options.padding || 18
@@ -14,7 +14,7 @@ export function makeTextTexture(lines, options = {}) {
   const ctx = canvas.getContext('2d')
   ctx.font = `600 ${options.fontSize || 26}px ${fontFamily}`
   let maxWidth = 0
-  normalized.forEach(line => {
+  normalized.forEach((line) => {
     ctx.font = `${line.bold === false ? 400 : 600} ${line.size || options.fontSize || 26}px ${fontFamily}`
     maxWidth = Math.max(maxWidth, ctx.measureText(line.text || '').width)
   })
@@ -55,7 +55,7 @@ export function makeLabelSprite(lines, options = {}) {
   const material = new THREE.SpriteMaterial({
     map: texture,
     transparent: true,
-    depthWrite: false
+    depthWrite: false,
   })
   const sprite = new THREE.Sprite(material)
   const scale = options.scale || 0.05

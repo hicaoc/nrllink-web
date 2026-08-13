@@ -5,9 +5,13 @@
     </div>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item v-for="item of sizeOptions" :key="item.value" :disabled="size===item.value" :command="item.value">
-          {{
-            item.label }}
+        <el-dropdown-item
+          v-for="item of sizeOptions"
+          :key="item.value"
+          :disabled="size === item.value"
+          :command="item.value"
+        >
+          {{ item.label }}
         </el-dropdown-item>
       </el-dropdown-menu>
     </template>
@@ -27,12 +31,12 @@ export default {
         { label: 'Default', value: 'default' },
         { label: 'Medium', value: 'medium' },
         { label: 'Small', value: 'small' },
-        { label: 'Mini', value: 'mini' }
-      ]
+        { label: 'Mini', value: 'mini' },
+      ],
     }
   },
   computed: {
-    ...mapState(useAppStore, ['size'])
+    ...mapState(useAppStore, ['size']),
   },
   methods: {
     handleSetSize(size) {
@@ -41,7 +45,7 @@ export default {
       this.refreshView()
       ElMessage({
         message: 'Switch Size Success',
-        type: 'success'
+        type: 'success',
       })
     },
     refreshView() {
@@ -53,11 +57,10 @@ export default {
 
       this.$nextTick(() => {
         this.$router.replace({
-          path: '/redirect' + fullPath
+          path: '/redirect' + fullPath,
         })
       })
-    }
-  }
-
+    },
+  },
 }
 </script>

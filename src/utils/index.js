@@ -17,10 +17,10 @@ export function parseTime(time, cFormat) {
   if (typeof time === 'object') {
     date = time
   } else {
-    if ((typeof time === 'string') && (/^[0-9]+$/.test(time))) {
+    if (typeof time === 'string' && /^[0-9]+$/.test(time)) {
       time = parseInt(time)
     }
-    if ((typeof time === 'number') && (time.toString().length === 10)) {
+    if (typeof time === 'number' && time.toString().length === 10) {
       time = time * 1000
     }
     date = new Date(time)
@@ -32,12 +32,14 @@ export function parseTime(time, cFormat) {
     h: date.getHours(),
     i: date.getMinutes(),
     s: date.getSeconds(),
-    a: date.getDay()
+    a: date.getDay(),
   }
   const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
     let value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value] }
+    if (key === 'a') {
+      return ['日', '一', '二', '三', '四', '五', '六'][value]
+    }
     if (result.length > 0 && value < 10) {
       value = '0' + value
     }
@@ -76,15 +78,7 @@ export function formatTime(time, option) {
     return parseTime(time, option)
   } else {
     return (
-      d.getMonth() +
-            1 +
-            '月' +
-            d.getDate() +
-            '日' +
-            d.getHours() +
-            '时' +
-            d.getMinutes() +
-            '分'
+      d.getMonth() + 1 + '月' + d.getDate() + '日' + d.getHours() + '时' + d.getMinutes() + '分'
     )
   }
 }
@@ -119,7 +113,7 @@ export function byteLength(str) {
     const code = str.charCodeAt(i)
     if (code > 0x7f && code <= 0x7ff) s++
     else if (code > 0x7ff && code <= 0xffff) s += 2
-    if (code >= 0xDC00 && code <= 0xDFFF) i--
+    if (code >= 0xdc00 && code <= 0xdfff) i--
   }
   return s
 }
@@ -145,7 +139,7 @@ export function cleanArray(actual) {
 export function param(json) {
   if (!json) return ''
   return cleanArray(
-    Object.keys(json).map(key => {
+    Object.keys(json).map((key) => {
       if (json[key] === undefined) return ''
       return encodeURIComponent(key) + '=' + encodeURIComponent(json[key])
     })
@@ -163,12 +157,12 @@ export function param2Obj(url) {
   }
   return JSON.parse(
     '{"' +
-        decodeURIComponent(search)
-          .replace(/"/g, '\\"')
-          .replace(/&/g, '","')
-          .replace(/=/g, '":"')
-          .replace(/\+/g, ' ') +
-        '"}'
+      decodeURIComponent(search)
+        .replace(/"/g, '\\"')
+        .replace(/&/g, '","')
+        .replace(/=/g, '":"')
+        .replace(/\+/g, ' ') +
+      '"}'
   )
 }
 
@@ -195,7 +189,7 @@ export function objectMerge(target, source) {
   if (Array.isArray(source)) {
     return source.slice()
   }
-  Object.keys(source).forEach(property => {
+  Object.keys(source).forEach((property) => {
     const sourceProperty = source[property]
     if (typeof sourceProperty === 'object') {
       target[property] = objectMerge(target[property], sourceProperty)
@@ -220,8 +214,7 @@ export function toggleClass(element, className) {
     classString += '' + className
   } else {
     classString =
-            classString.substr(0, nameIndex) +
-            classString.substr(nameIndex + className.length)
+      classString.substr(0, nameIndex) + classString.substr(nameIndex + className.length)
   }
   element.className = classString
 }
@@ -247,7 +240,7 @@ export function getTime(type) {
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
-  const later = function() {
+  const later = function () {
     // 据上一次触发时间间隔
     const last = +new Date() - timestamp
 
@@ -264,7 +257,7 @@ export function debounce(func, wait, immediate) {
     }
   }
 
-  return function(...args) {
+  return function (...args) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
@@ -291,7 +284,7 @@ export function deepClone(source) {
     throw new Error('error arguments', 'deepClone')
   }
   const targetObj = source.constructor === Array ? [] : {}
-  Object.keys(source).forEach(keys => {
+  Object.keys(source).forEach((keys) => {
     if (source[keys] && typeof source[keys] === 'object') {
       targetObj[keys] = deepClone(source[keys])
     } else {
@@ -379,25 +372,19 @@ export function GetTimeDiff(startTime, endTime) {
 
 export function formatDate(date, fmt) {
   if (/(y+)/.test(fmt)) {
-    fmt = fmt.replace(
-      RegExp.$1,
-      (date.getFullYear() + '').substr(4 - RegExp.$1.length)
-    )
+    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
   }
   const o = {
     'M+': date.getMonth() + 1,
     'd+': date.getDate(),
     'h+': date.getHours(),
     'm+': date.getMinutes(),
-    's+': date.getSeconds()
+    's+': date.getSeconds(),
   }
   for (const k in o) {
     if (new RegExp(`(${k})`).test(fmt)) {
       const str = o[k] + ''
-      fmt = fmt.replace(
-        RegExp.$1,
-        RegExp.$1.length === 1 ? str : padLeftZero(str)
-      )
+      fmt = fmt.replace(RegExp.$1, RegExp.$1.length === 1 ? str : padLeftZero(str))
     }
   }
   return fmt
@@ -448,11 +435,11 @@ export function jsGetAge(strBirthday) {
 export function formatFileSize(fileSize) {
   if (fileSize < 1024) {
     return fileSize + 'B'
-  } else if (fileSize < (1024 * 1024)) {
+  } else if (fileSize < 1024 * 1024) {
     let temp = fileSize / 1024
     temp = temp.toFixed(2)
     return temp + 'KB'
-  } else if (fileSize < (1024 * 1024 * 1024)) {
+  } else if (fileSize < 1024 * 1024 * 1024) {
     let temp = fileSize / (1024 * 1024)
     temp = temp.toFixed(2)
     return temp + 'MB'
@@ -466,11 +453,11 @@ export function formatFileSize(fileSize) {
 export function formatVoiceTime(voicetime) {
   if (voicetime < 1000) {
     return voicetime + '毫秒'
-  } else if (voicetime < (1000 * 60)) {
+  } else if (voicetime < 1000 * 60) {
     let temp = voicetime / 1000
     temp = temp.toFixed(2)
     return temp + '秒'
-  } else if (voicetime < (1000 * 60 * 60)) {
+  } else if (voicetime < 1000 * 60 * 60) {
     let temp = voicetime / (1000 * 60)
     temp = temp.toFixed(2)
     return temp + '分钟'

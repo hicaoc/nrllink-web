@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 export const useTagsViewStore = defineStore('tagsView', {
   state: () => ({
     visitedViews: [],
-    cachedViews: []
+    cachedViews: [],
   }),
   actions: {
     addView(view) {
@@ -11,10 +11,10 @@ export const useTagsViewStore = defineStore('tagsView', {
       this.addCachedView(view)
     },
     addVisitedView(view) {
-      if (this.visitedViews.some(v => v.path === view.path)) return
+      if (this.visitedViews.some((v) => v.path === view.path)) return
       this.visitedViews.push(
         Object.assign({}, view, {
-          title: view.meta.title || 'no-name'
+          title: view.meta.title || 'no-name',
         })
       )
     },
@@ -29,7 +29,7 @@ export const useTagsViewStore = defineStore('tagsView', {
       this.delCachedView(view)
       return {
         visitedViews: [...this.visitedViews],
-        cachedViews: [...this.cachedViews]
+        cachedViews: [...this.cachedViews],
       }
     },
     delVisitedView(view) {
@@ -56,11 +56,11 @@ export const useTagsViewStore = defineStore('tagsView', {
       this.delOthersCachedViews(view)
       return {
         visitedViews: [...this.visitedViews],
-        cachedViews: [...this.cachedViews]
+        cachedViews: [...this.cachedViews],
       }
     },
     delOthersVisitedViews(view) {
-      this.visitedViews = this.visitedViews.filter(v => v.meta.affix || v.path === view.path)
+      this.visitedViews = this.visitedViews.filter((v) => v.meta.affix || v.path === view.path)
       return [...this.visitedViews]
     },
     delOthersCachedViews(view) {
@@ -78,11 +78,11 @@ export const useTagsViewStore = defineStore('tagsView', {
       this.delAllCachedViews()
       return {
         visitedViews: [...this.visitedViews],
-        cachedViews: [...this.cachedViews]
+        cachedViews: [...this.cachedViews],
       }
     },
     delAllVisitedViews() {
-      const affixTags = this.visitedViews.filter(tag => tag.meta.affix)
+      const affixTags = this.visitedViews.filter((tag) => tag.meta.affix)
       this.visitedViews = affixTags
       return [...this.visitedViews]
     },
@@ -97,6 +97,6 @@ export const useTagsViewStore = defineStore('tagsView', {
           break
         }
       }
-    }
-  }
+    },
+  },
 })

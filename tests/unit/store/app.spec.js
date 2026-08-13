@@ -1,15 +1,15 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 import { setActivePinia, createPinia } from 'pinia'
 
 vi.mock('js-cookie', () => ({
   default: {
     get: vi.fn(() => undefined),
-    set: vi.fn()
-  }
+    set: vi.fn(),
+  },
 }))
 
 vi.mock('@/lang/index', () => ({
-  getLanguage: vi.fn(() => 'zh-cn')
+  getLanguage: vi.fn(() => 'zh-cn'),
 }))
 
 import Cookies from 'js-cookie'

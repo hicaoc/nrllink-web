@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 import { setActivePinia, createPinia } from 'pinia'
 import { useUserStore } from '@/store/modules/user'
 
@@ -16,19 +16,19 @@ vi.mock('@/api/user', () => ({
       status: 1,
       package_type: 2,
       avatar: 'avatar.png',
-      introduction: 'hi'
-    }
-  }))
+      introduction: 'hi',
+    },
+  })),
 }))
 
 vi.mock('@/utils/auth', () => ({
   getToken: vi.fn(() => 'init-token'),
   setToken: vi.fn(),
-  removeToken: vi.fn()
+  removeToken: vi.fn(),
 }))
 
 vi.mock('@/router', () => ({
-  resetRouter: vi.fn()
+  resetRouter: vi.fn(),
 }))
 
 const { login, logout, getInfo } = await import('@/api/user')

@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'hidden':hidden}" class="pagination-container">
+  <div :class="{ hidden: hidden }" class="pagination-container">
     <el-pagination
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
@@ -23,42 +23,42 @@ export default {
   props: {
     total: {
       required: true,
-      type: Number
+      type: Number,
     },
     page: {
       type: Number,
-      default: 1
+      default: 1,
     },
     limit: {
       type: Number,
-      default: 20
+      default: 20,
     },
     pageSizes: {
       type: Array,
       default() {
         return [10, 20, 30, 50]
-      }
+      },
     },
     layout: {
       type: String,
-      default: 'total, sizes, prev, pager, next, jumper'
+      default: 'total, sizes, prev, pager, next, jumper',
     },
     background: {
       type: Boolean,
-      default: true
+      default: true,
     },
     autoScroll: {
       type: Boolean,
-      default: true
+      default: true,
     },
     hidden: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      isMobile: false
+      isMobile: false,
     }
   },
   computed: {
@@ -71,7 +71,7 @@ export default {
       },
       set(val) {
         this.$emit('update:page', val)
-      }
+      },
     },
     pageSize: {
       get() {
@@ -79,8 +79,8 @@ export default {
       },
       set(val) {
         this.$emit('update:limit', val)
-      }
-    }
+      },
+    },
   },
   mounted() {
     this.syncMobileState()
@@ -105,8 +105,8 @@ export default {
       if (this.autoScroll) {
         scrollTo(0, 800)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -29,9 +29,9 @@ export default {
   props: {
     list: {
       type: Array,
-      default: () => []
-    }
-  }
+      default: () => [],
+    },
+  },
 }
 </script>
 
@@ -93,7 +93,9 @@ export default {
     border-radius: 12px;
     background: var(--platform-surface-68);
     border: 1px solid var(--platform-border-lighter);
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease;
     margin-right: 0;
 
     &:hover {

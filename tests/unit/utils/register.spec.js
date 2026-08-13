@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vite-plus/test'
 import {
   REGISTER_SIZE,
   decodeRegisters,
@@ -6,7 +6,7 @@ import {
   normalizeServerAddress,
   formatServerForRegister,
   isValidIPv4,
-  isValidDomain
+  isValidDomain,
 } from '@/utils/register'
 
 // 构造一份模拟设备寄存器数据
@@ -15,24 +15,32 @@ function buildSample() {
   bytes[0x00] = 1 // DHCP ON
   bytes[0x01] = 0 // CLIENT
   bytes[0x09] = 1 // PANEL
-  bytes[0x0A] = 14 // IC-2730
-  bytes[0x0C] = 60 // PTT 超时
+  bytes[0x0a] = 14 // IC-2730
+  bytes[0x0c] = 60 // PTT 超时
   // 本机序列号 0x10-0x16
   const localSn = [0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77]
-  localSn.forEach((b, i) => { bytes[0x10 + i] = b })
+  localSn.forEach((b, i) => {
+    bytes[0x10 + i] = b
+  })
   // 远端序列号 0x17-0x1D
-  const remoteSn = [0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x00]
-  remoteSn.forEach((b, i) => { bytes[0x17 + i] = b })
+  const remoteSn = [0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff, 0x00]
+  remoteSn.forEach((b, i) => {
+    bytes[0x17 + i] = b
+  })
   // IP / 网关 / 掩码 / DNS
   bytes.set([192, 168, 1, 100], 0x20)
   bytes.set([192, 168, 1, 1], 0x24)
   bytes.set([255, 255, 255, 0], 0x28)
-  bytes.set([8, 8, 8, 8], 0x2C)
+  bytes.set([8, 8, 8, 8], 0x2c)
   bytes[0x40] = 2 // SSID
   // 呼号 BG4XXX
-  'BG4XXX'.split('').forEach((ch, i) => { bytes[0x41 + i] = ch.charCodeAt(0) })
+  'BG4XXX'.split('').forEach((ch, i) => {
+    bytes[0x41 + i] = ch.charCodeAt(0)
+  })
   // 服务器：3 位补零 IPv4 文本
-  '202.141.176.002'.split('').forEach((ch, i) => { bytes[0x50 + i] = ch.charCodeAt(0) })
+  '202.141.176.002'.split('').forEach((ch, i) => {
+    bytes[0x50 + i] = ch.charCodeAt(0)
+  })
   return bytes
 }
 
@@ -126,9 +134,9 @@ describe('utils/register', () => {
 
   it('keeps unknown bytes from base when encoding', () => {
     const base = buildSample()
-    base[0x30] = 0x5A // 未知区域字节
+    base[0x30] = 0x5a // 未知区域字节
     const encoded = encodeRegisters(decodeRegisters(base), base)
-    expect(encoded[0x30]).toBe(0x5A)
+    expect(encoded[0x30]).toBe(0x5a)
   })
 
   it('keeps base remote serial when config leaves it empty', () => {

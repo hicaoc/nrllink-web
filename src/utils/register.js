@@ -29,7 +29,7 @@ export const RADIO_MODELS = [
   { id: 27, name: 'IC-706' },
   { id: 28, name: 'D-9000' },
   { id: 30, name: 'M-802' },
-  { id: 31, name: 'ICOM F8101' }
+  { id: 31, name: 'ICOM F8101' },
 ]
 
 export const PTT_TIMEOUT_OPTIONS = [30, 60, 90, 120, 150, 180, 210, 240]
@@ -38,17 +38,17 @@ const OFFSET = {
   dhcp: 0x00,
   mode: 0x01,
   role: 0x09,
-  radio: 0x0A,
-  pttTimeout: 0x0C,
+  radio: 0x0a,
+  pttTimeout: 0x0c,
   localSn: 0x10,
   remoteSn: 0x17,
   ip: 0x20,
   gateway: 0x24,
   mask: 0x28,
-  dns: 0x2C,
+  dns: 0x2c,
   ssid: 0x40,
   callsign: 0x41,
-  server: 0x50
+  server: 0x50,
 }
 
 const CALLSIGN_REGION = 15 // 0x41-0x4F
@@ -57,7 +57,7 @@ const SERVER_REGION = 48 // 0x50-0x7F
 export function isValidIPv4(text) {
   const parts = (text || '').trim().split('.')
   if (parts.length !== 4) return false
-  return parts.every(part => /^\d{1,3}$/.test(part) && Number(part) <= 255)
+  return parts.every((part) => /^\d{1,3}$/.test(part) && Number(part) <= 255)
 }
 
 export function isValidDomain(text) {
@@ -66,10 +66,13 @@ export function isValidDomain(text) {
   const parts = domain.split('.')
   if (parts.length < 2) return false
   if (parts[parts.length - 1].length < 2) return false
-  return parts.every(part =>
-    part.length >= 1 && part.length <= 63 &&
-    !part.startsWith('-') && !part.endsWith('-') &&
-    /^[a-z0-9-]+$/.test(part)
+  return parts.every(
+    (part) =>
+      part.length >= 1 &&
+      part.length <= 63 &&
+      !part.startsWith('-') &&
+      !part.endsWith('-') &&
+      /^[a-z0-9-]+$/.test(part)
   )
 }
 
@@ -91,17 +94,20 @@ function writeCString(target, offset, regionSize, text) {
   }
   const max = regionSize - 1
   for (let i = 0; i < text.length && i < max; i++) {
-    target[offset + i] = text.charCodeAt(i) & 0x7F
+    target[offset + i] = text.charCodeAt(i) & 0x7f
   }
 }
 
 function bytesToIp(bytes, offset) {
-  return [0, 1, 2, 3].map(i => bytes[offset + i]).join('.')
+  return [0, 1, 2, 3].map((i) => bytes[offset + i]).join('.')
 }
 
 function ipToBytes(text) {
   if (!isValidIPv4(text)) return null
-  return text.trim().split('.').map(part => Number(part))
+  return text
+    .trim()
+    .split('.')
+    .map((part) => Number(part))
 }
 
 function bytesToHex(bytes, offset, len) {
@@ -116,7 +122,10 @@ function bytesToHex(bytes, offset, len) {
 export function normalizeServerAddress(text) {
   const trimmed = (text || '').trim()
   if (isValidIPv4(trimmed)) {
-    return trimmed.split('.').map(part => String(Number(part))).join('.')
+    return trimmed
+      .split('.')
+      .map((part) => String(Number(part)))
+      .join('.')
   }
   return trimmed
 }
@@ -125,7 +134,10 @@ export function normalizeServerAddress(text) {
 export function formatServerForRegister(text) {
   const trimmed = (text || '').trim()
   if (isValidIPv4(trimmed)) {
-    return trimmed.split('.').map(part => part.padStart(3, '0')).join('.')
+    return trimmed
+      .split('.')
+      .map((part) => part.padStart(3, '0'))
+      .join('.')
   }
   return trimmed
 }
@@ -149,7 +161,7 @@ export function decodeRegisters(bytes) {
     dns: bytesToIp(bytes, OFFSET.dns),
     ssid: bytes[OFFSET.ssid],
     callsign: readCString(bytes, OFFSET.callsign, CALLSIGN_REGION),
-    server: normalizeServerAddress(readCString(bytes, OFFSET.server, SERVER_REGION))
+    server: normalizeServerAddress(readCString(bytes, OFFSET.server, SERVER_REGION)),
   }
 }
 
@@ -164,14 +176,14 @@ export function encodeRegisters(config, base) {
   out[OFFSET.dhcp] = config.dhcp ? 1 : 0
   out[OFFSET.mode] = config.mode === 'SERVER' ? 1 : 0
   out[OFFSET.role] = config.role === 'PANEL' ? 1 : 0
-  out[OFFSET.radio] = Number(config.radio) & 0xFF
+  out[OFFSET.radio] = Number(config.radio) & 0xff
 
   const ptt = Number(config.pttTimeout)
   if (Number.isInteger(ptt) && ptt >= 0 && ptt <= 255) {
     out[OFFSET.pttTimeout] = ptt
   }
 
-  ;['ip', 'gateway', 'mask', 'dns'].forEach(field => {
+  ;['ip', 'gateway', 'mask', 'dns'].forEach((field) => {
     const parts = ipToBytes(config[field] || '')
     if (parts) {
       for (let i = 0; i < 4; i++) {

@@ -4,7 +4,7 @@ import { removeAndDispose } from '../core/dispose'
 
 const QUALITY_COUNTS = {
   high: { trees: 140, flowers: 220, birds: 26, groundSegments: 72 },
-  low: { trees: 48, flowers: 80, birds: 12, groundSegments: 40 }
+  low: { trees: 48, flowers: 80, birds: 12, groundSegments: 40 },
 }
 
 const WORLD_SIZE = 420
@@ -68,7 +68,7 @@ export class Terrain {
       uniforms: {
         uTopColor: { value: new THREE.Color(0x6fb7ff) },
         uHorizonColor: { value: new THREE.Color(0xffdfc2) },
-        uBottomColor: { value: new THREE.Color(0xbfe3d8) }
+        uBottomColor: { value: new THREE.Color(0xbfe3d8) },
       },
       vertexShader: `
         varying vec3 vWorldPosition;
@@ -90,7 +90,7 @@ export class Terrain {
             : mix(uHorizonColor, uBottomColor, pow(-h, 0.5));
           gl_FragColor = vec4(color, 1.0);
         }
-      `
+      `,
     })
     const sky = new THREE.Mesh(geometry, material)
     sky.name = 'sky'
@@ -144,7 +144,7 @@ export class Terrain {
       vertexColors: true,
       flatShading: true,
       roughness: 0.95,
-      metalness: 0
+      metalness: 0,
     })
     const ground = new THREE.Mesh(geometry, material)
     ground.name = 'ground'
@@ -167,7 +167,7 @@ export class Terrain {
       roughness: 0.15,
       metalness: 0.2,
       emissive: 0x1a4a52,
-      emissiveIntensity: 0.35
+      emissiveIntensity: 0.35,
     })
     const water = new THREE.Mesh(geometry, material)
     water.position.set(WATER_X, 0.3, 0)
@@ -181,8 +181,16 @@ export class Terrain {
   _buildBridge() {
     const bridge = new THREE.Group()
     bridge.name = 'stream-bridge'
-    const stone = new THREE.MeshStandardMaterial({ color: 0xd8d0bd, flatShading: true, roughness: 0.9 })
-    const stoneDark = new THREE.MeshStandardMaterial({ color: 0xb0a488, flatShading: true, roughness: 0.95 })
+    const stone = new THREE.MeshStandardMaterial({
+      color: 0xd8d0bd,
+      flatShading: true,
+      roughness: 0.9,
+    })
+    const stoneDark = new THREE.MeshStandardMaterial({
+      color: 0xb0a488,
+      flatShading: true,
+      roughness: 0.95,
+    })
 
     const span = WATER_WIDTH + 12
     const steps = 9
@@ -201,7 +209,10 @@ export class Terrain {
     }
     // 两侧弧形扶手
     for (const side of [-1.9, 1.9]) {
-      const rail = new THREE.Mesh(new THREE.TorusGeometry(span / 2, 0.12, 6, 32, Math.PI), stoneDark)
+      const rail = new THREE.Mesh(
+        new THREE.TorusGeometry(span / 2, 0.12, 6, 32, Math.PI),
+        stoneDark
+      )
       rail.scale.set(1, 0.16, 1)
       rail.position.set(0, 1.75, side)
       bridge.add(rail)
@@ -210,7 +221,7 @@ export class Terrain {
     const lanternMaterial = new THREE.MeshStandardMaterial({
       color: 0xff4d42,
       emissive: 0xff2d20,
-      emissiveIntensity: 1.6
+      emissiveIntensity: 1.6,
     })
     for (const endX of [-span / 2 - 1.6, span / 2 + 1.6]) {
       const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.13, 3.4, 6), stoneDark)
@@ -232,11 +243,19 @@ export class Terrain {
     const dummy = new THREE.Object3D()
 
     const trunkGeometry = new THREE.CylinderGeometry(0.32, 0.5, 3, 5)
-    const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x6b4a2f, flatShading: true, roughness: 1 })
+    const trunkMaterial = new THREE.MeshStandardMaterial({
+      color: 0x6b4a2f,
+      flatShading: true,
+      roughness: 1,
+    })
     const trunks = new THREE.InstancedMesh(trunkGeometry, trunkMaterial, counts.trees)
 
     const foliageGeometry = new THREE.ConeGeometry(2.3, 6.4, 6)
-    const foliageMaterial = new THREE.MeshStandardMaterial({ color: 0x2f7a3d, flatShading: true, roughness: 1 })
+    const foliageMaterial = new THREE.MeshStandardMaterial({
+      color: 0x2f7a3d,
+      flatShading: true,
+      roughness: 1,
+    })
     const foliage = new THREE.InstancedMesh(foliageGeometry, foliageMaterial, counts.trees)
 
     const foliageColor = new THREE.Color()
@@ -279,7 +298,11 @@ export class Terrain {
     const cherryCount = Math.max(4, Math.floor(counts.trees * 0.35))
     const cherryTrunks = new THREE.InstancedMesh(trunkGeometry, trunkMaterial, cherryCount)
     const cherryGeometry = new THREE.IcosahedronGeometry(2.4, 0)
-    const cherryMaterial = new THREE.MeshStandardMaterial({ color: 0xf4aecb, flatShading: true, roughness: 1 })
+    const cherryMaterial = new THREE.MeshStandardMaterial({
+      color: 0xf4aecb,
+      flatShading: true,
+      roughness: 1,
+    })
     const cherries = new THREE.InstancedMesh(cherryGeometry, cherryMaterial, cherryCount)
     const cherryColor = new THREE.Color()
     let cPlaced = 0
@@ -346,16 +369,24 @@ export class Terrain {
   }
 
   _buildMountains() {
-    const rockMaterial = new THREE.MeshStandardMaterial({ color: 0x86a3ad, flatShading: true, roughness: 1 })
-    const snowMaterial = new THREE.MeshStandardMaterial({ color: 0xf2f8fc, flatShading: true, roughness: 0.9 })
+    const rockMaterial = new THREE.MeshStandardMaterial({
+      color: 0x86a3ad,
+      flatShading: true,
+      roughness: 1,
+    })
+    const snowMaterial = new THREE.MeshStandardMaterial({
+      color: 0xf2f8fc,
+      flatShading: true,
+      roughness: 0.9,
+    })
     const ridge = [
       { x: -180, z: -240, r: 90, h: 120 },
       { x: 40, z: -280, r: 120, h: 150 },
       { x: 240, z: -220, r: 95, h: 110 },
       { x: -280, z: -60, r: 80, h: 95 },
-      { x: 290, z: 40, r: 85, h: 100 }
+      { x: 290, z: 40, r: 85, h: 100 },
     ]
-    ridge.forEach(m => {
+    ridge.forEach((m) => {
       const rock = new THREE.Mesh(new THREE.ConeGeometry(m.r, m.h, 5), rockMaterial)
       rock.position.set(m.x, m.h / 2 - 4, m.z)
       rock.rotation.y = pseudoRandom(m.x, m.z) * Math.PI
@@ -378,7 +409,7 @@ export class Terrain {
       size: 1.6,
       sizeAttenuation: true,
       transparent: true,
-      opacity: 0.9
+      opacity: 0.9,
     })
     this.birds = new THREE.Points(geometry, material)
     this.birds.name = 'birds'
@@ -390,7 +421,7 @@ export class Terrain {
         radius: 30 + Math.random() * 90,
         height: 34 + Math.random() * 40,
         speed: 0.08 + Math.random() * 0.12,
-        phase: Math.random() * Math.PI * 2
+        phase: Math.random() * Math.PI * 2,
       })
     }
     this.group.add(this.birds)
@@ -411,7 +442,7 @@ export class Terrain {
         trunkMesh.getMatrixAt(i, m)
         const x = m.elements[12]
         const z = m.elements[14]
-        const near = points.some(p => {
+        const near = points.some((p) => {
           const dx = x - p.x
           const dz = z - p.z
           return dx * dx + dz * dz < radius * radius

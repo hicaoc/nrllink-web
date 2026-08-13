@@ -8,7 +8,7 @@ import { asyncRoutes, constantRoutes } from '@/router'
  */
 function hasPermission(roles, route) {
   if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
+    return roles.some((role) => route.meta.roles.includes(role))
   } else {
     return true
   }
@@ -36,7 +36,7 @@ function billingAllowed(billingEnabled, route) {
 export function filterAsyncRoutes(routes, roles, billingEnabled) {
   const res = []
 
-  routes.forEach(route => {
+  routes.forEach((route) => {
     const tmp = { ...route }
     const rolePassed = roles === null || hasPermission(roles, tmp)
     if (rolePassed && billingAllowed(billingEnabled, tmp)) {
@@ -53,7 +53,7 @@ export function filterAsyncRoutes(routes, roles, billingEnabled) {
 export const usePermissionStore = defineStore('permission', {
   state: () => ({
     routes: [],
-    addRoutes: []
+    addRoutes: [],
   }),
   actions: {
     generateRoutes(roles, billingEnabled = false) {
@@ -62,6 +62,6 @@ export const usePermissionStore = defineStore('permission', {
       this.addRoutes = accessedRoutes
       this.routes = constantRoutes.concat(accessedRoutes)
       return accessedRoutes
-    }
-  }
+    },
+  },
 })

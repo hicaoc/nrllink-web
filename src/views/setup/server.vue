@@ -8,7 +8,11 @@
         {{ $t('Account.search') }}
       </el-button>
 
-      <el-button class="filter-item action-btn action-btn-secondary" type="primary" @click="handleCreate">
+      <el-button
+        class="filter-item action-btn action-btn-secondary"
+        type="primary"
+        @click="handleCreate"
+      >
         <el-icon>
           <Edit />
         </el-icon>
@@ -38,7 +42,13 @@
         style="width: 100%"
         @sort-change="sortChange"
       >
-        <el-table-column :label="$t('Account.id')" prop="id" sortable="custom" align="center" width="80">
+        <el-table-column
+          :label="$t('Account.id')"
+          prop="id"
+          sortable="custom"
+          align="center"
+          width="80"
+        >
           <template #default="scope">
             <span>{{ scope.row.id }}</span>
           </template>
@@ -148,13 +158,30 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.bind')" align="center" class-name="small-padding fixed-width" width="200">
+        <el-table-column
+          :label="$t('device.bind')"
+          align="center"
+          class-name="small-padding fixed-width"
+          width="200"
+        >
           <template #default="{ row }">
-            <el-button size="small" type="primary" plain class="compact-btn server-edit-btn" @click="handleUpdate(row)">
+            <el-button
+              size="small"
+              type="primary"
+              plain
+              class="compact-btn server-edit-btn"
+              @click="handleUpdate(row)"
+            >
               {{ $t('device.edit') }}
             </el-button>
 
-            <el-button size="small" type="danger" plain class="compact-btn server-delete-btn" @click="handleDelete(row)">
+            <el-button
+              size="small"
+              type="danger"
+              plain
+              class="compact-btn server-delete-btn"
+              @click="handleDelete(row)"
+            >
               {{ $t('device.delete') }}
             </el-button>
           </template>
@@ -169,7 +196,9 @@
             <el-tag size="small" effect="dark" class="server-id-tag">#{{ item.id }}</el-tag>
             <h3>{{ item.name || '--' }}</h3>
           </div>
-          <el-tag :class="statusClass(item.status)" class="server-status-tag">{{ statusLabel(item.status) }}</el-tag>
+          <el-tag :class="statusClass(item.status)" class="server-status-tag">{{
+            statusLabel(item.status)
+          }}</el-tag>
         </div>
 
         <div class="server-card__meta">
@@ -184,27 +213,78 @@
         </div>
 
         <div class="server-card__body">
-          <div class="server-card__row"><span class="server-card__label">{{ $t('server.cpu_type') }}</span><span class="server-card__value">{{ item.cpu_type || '--' }}</span></div>
-          <div class="server-card__row"><span class="server-card__label">{{ $t('server.input_rate') }}</span><div class="metric-pill">{{ item.input_rate || '--' }}</div></div>
-          <div class="server-card__row"><span class="server-card__label">{{ $t('server.output_rate') }}</span><div class="metric-pill">{{ item.output_rate || '--' }}</div></div>
-          <div class="server-card__row"><span class="server-card__label">{{ $t('server.iptype') }}</span><el-tag class="server-ip-tag">{{ item.ip_type || '--' }}</el-tag></div>
-          <div class="server-card__row"><span class="server-card__label">{{ $t('server.ip_addr') }}</span><span class="server-card__value mono-cell">{{ item.ip_addr || '--' }}</span></div>
-          <div class="server-card__row"><span class="server-card__label">{{ $t('server.dns_name') }}</span><span class="server-card__value mono-cell">{{ item.dns_name || '--' }}</span></div>
-          <div class="server-card__row"><span class="server-card__label">{{ $t('server.udp_port') }}</span><div class="metric-pill">{{ item.udp_port || '--' }}</div></div>
-          <div class="server-card__row"><span class="server-card__label">所有者呼号</span><el-tag class="owner-tag">{{ item.ower_callsign || '--' }}</el-tag></div>
-          <div class="server-card__row"><span class="server-card__label">{{ $t('device.createTime') }}</span><span class="server-card__value">{{ parseTime(item.create_time) || '--' }}</span></div>
-          <div class="server-card__row"><span class="server-card__label">{{ $t('device.updateTime') }}</span><span class="server-card__value">{{ parseTime(item.update_time) || '--' }}</span></div>
-          <div class="server-card__row server-card__row--stack"><span class="server-card__label">{{ $t('server.note') }}</span><p class="server-card__note">{{ item.note || '--' }}</p></div>
+          <div class="server-card__row">
+            <span class="server-card__label">{{ $t('server.cpu_type') }}</span
+            ><span class="server-card__value">{{ item.cpu_type || '--' }}</span>
+          </div>
+          <div class="server-card__row">
+            <span class="server-card__label">{{ $t('server.input_rate') }}</span>
+            <div class="metric-pill">{{ item.input_rate || '--' }}</div>
+          </div>
+          <div class="server-card__row">
+            <span class="server-card__label">{{ $t('server.output_rate') }}</span>
+            <div class="metric-pill">{{ item.output_rate || '--' }}</div>
+          </div>
+          <div class="server-card__row">
+            <span class="server-card__label">{{ $t('server.iptype') }}</span
+            ><el-tag class="server-ip-tag">{{ item.ip_type || '--' }}</el-tag>
+          </div>
+          <div class="server-card__row">
+            <span class="server-card__label">{{ $t('server.ip_addr') }}</span
+            ><span class="server-card__value mono-cell">{{ item.ip_addr || '--' }}</span>
+          </div>
+          <div class="server-card__row">
+            <span class="server-card__label">{{ $t('server.dns_name') }}</span
+            ><span class="server-card__value mono-cell">{{ item.dns_name || '--' }}</span>
+          </div>
+          <div class="server-card__row">
+            <span class="server-card__label">{{ $t('server.udp_port') }}</span>
+            <div class="metric-pill">{{ item.udp_port || '--' }}</div>
+          </div>
+          <div class="server-card__row">
+            <span class="server-card__label">所有者呼号</span
+            ><el-tag class="owner-tag">{{ item.ower_callsign || '--' }}</el-tag>
+          </div>
+          <div class="server-card__row">
+            <span class="server-card__label">{{ $t('device.createTime') }}</span
+            ><span class="server-card__value">{{ parseTime(item.create_time) || '--' }}</span>
+          </div>
+          <div class="server-card__row">
+            <span class="server-card__label">{{ $t('device.updateTime') }}</span
+            ><span class="server-card__value">{{ parseTime(item.update_time) || '--' }}</span>
+          </div>
+          <div class="server-card__row server-card__row--stack">
+            <span class="server-card__label">{{ $t('server.note') }}</span>
+            <p class="server-card__note">{{ item.note || '--' }}</p>
+          </div>
         </div>
 
         <div class="server-card__actions">
-          <el-button size="small" type="primary" plain class="compact-btn server-edit-btn" @click="handleUpdate(item)">{{ $t('device.edit') }}</el-button>
-          <el-button size="small" type="danger" plain class="compact-btn server-delete-btn" @click="handleDelete(item)">{{ $t('device.delete') }}</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            plain
+            class="compact-btn server-edit-btn"
+            @click="handleUpdate(item)"
+            >{{ $t('device.edit') }}</el-button
+          >
+          <el-button
+            size="small"
+            type="danger"
+            plain
+            class="compact-btn server-delete-btn"
+            @click="handleDelete(item)"
+            >{{ $t('device.delete') }}</el-button
+          >
         </div>
       </article>
     </div>
 
-    <el-dialog v-model="dialogFormVisible" :title="textMap[dialogStatus]" class="platform-theme-dialog setup-server-dialog">
+    <el-dialog
+      v-model="dialogFormVisible"
+      :title="textMap[dialogStatus]"
+      class="platform-theme-dialog setup-server-dialog"
+    >
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -222,7 +302,9 @@
             <span id="server-type-label">{{ $t('server.server_type') }}</span>
           </template>
           <el-radio-group v-model="temp.server_type" aria-labelledby="server-type-label">
-            <el-radio v-for="item in ServerTypeOptions" :key="item.id" :value="item.id">{{ item.name }}</el-radio>
+            <el-radio v-for="item in ServerTypeOptions" :key="item.id" :value="item.id">{{
+              item.name
+            }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -264,7 +346,11 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
-          <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{ $t('employee.confirm') }}</el-button>
+          <el-button
+            type="primary"
+            @click="dialogStatus === 'create' ? createData() : updateData()"
+            >{{ $t('employee.confirm') }}</el-button
+          >
         </div>
       </template>
     </el-dialog>
@@ -272,12 +358,7 @@
 </template>
 
 <script>
-import {
-  fetchServerList,
-  createServer,
-  updateServer,
-  deleteServer
-} from '@/api/server'
+import { fetchServerList, createServer, updateServer, deleteServer } from '@/api/server'
 import checkPermission from '@/utils/permission'
 import waves from '@/directive/waves'
 import { parseTime, ValueFilter } from '@/utils'
@@ -298,7 +379,7 @@ export default {
       total: 0,
       listLoading: false,
       listQuery: {
-        callsign: ''
+        callsign: '',
       },
       temp: {
         id: undefined,
@@ -310,22 +391,21 @@ export default {
         output_rate: '',
         ip_addr: '',
         udp_port: '',
-        dns_name: ''
+        dns_name: '',
       },
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
         update: 'Edit',
-        create: 'Create'
+        create: 'Create',
       },
       rules: {},
-      downloadLoading: false,
       uploadLoading: false,
-      showtable: true
+      showtable: true,
     }
   },
   computed: {
-    ...mapState(useAppStore, ['device'])
+    ...mapState(useAppStore, ['device']),
   },
 
   methods: {
@@ -351,12 +431,14 @@ export default {
     },
     getList() {
       this.listLoading = true
-      this.fetchServerList(this.listQuery).then(response => {
-        this.list = Object.values(response?.data?.items || {})
-        this.total = this.list.length
-      }).finally(() => {
-        this.listLoading = false
-      })
+      this.fetchServerList(this.listQuery)
+        .then((response) => {
+          this.list = Object.values(response?.data?.items || {})
+          this.total = this.list.length
+        })
+        .finally(() => {
+          this.listLoading = false
+        })
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -387,7 +469,7 @@ export default {
         output_rate: '',
         ip_addr: '',
         udp_port: '',
-        dns_name: ''
+        dns_name: '',
       }
     },
     handleCreate() {
@@ -399,9 +481,9 @@ export default {
       })
     },
     createData() {
-      this.$refs.dataForm.validate(valid => {
+      this.$refs.dataForm.validate((valid) => {
         if (valid) {
-          createServer(this.temp).then(response => {
+          createServer(this.temp).then((response) => {
             this.getList()
             this.dialogFormVisible = false
             ElMessage.success(response?.data?.message || '创建成功')
@@ -418,10 +500,10 @@ export default {
       })
     },
     updateData() {
-      this.$refs.dataForm.validate(valid => {
+      this.$refs.dataForm.validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          updateServer(tempData).then(response => {
+          updateServer(tempData).then((response) => {
             for (const item of this.list) {
               if (item.id === this.temp.id) {
                 const index = this.list.indexOf(item)
@@ -439,11 +521,11 @@ export default {
       ElMessageBox.confirm('此操作将永久删除该群组, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
           deleteServer(row)
-            .then(response => {
+            .then((response) => {
               const message = response?.data?.message || '删除成功'
               ElMessage.success(message)
               this.listLoading = false
@@ -458,13 +540,13 @@ export default {
         .catch(() => {
           ElMessage.info('已取消删除')
         })
-    }
+    },
   },
 
   created() {
     this.showtable = this.device !== 'mobile'
     this.getList()
-  }
+  },
 }
 </script>
 
@@ -494,11 +576,33 @@ export default {
     --el-switch-on-color: linear-gradient(90deg, #26efc7 0%, #3f8dff 100%);
     --el-switch-off-color: rgba(104, 176, 255, 0.22);
 
-    .el-switch__core { border-color: rgba(104, 176, 255, 0.24); background: rgba(12, 31, 58, 0.72); min-width: 46px; height: 24px; }
-    &.is-checked .el-switch__core { border-color: rgba(54, 240, 203, 0.34); background: linear-gradient(90deg, rgba(38, 239, 199, 0.88) 0%, rgba(63, 141, 255, 0.82) 100%); }
-    .el-switch__action { width: 18px; height: 18px; top: 2px; }
-    .el-switch__label, .el-switch__label * { color: var(--platform-ink-dim) !important; }
-    .el-switch__label.is-active, .el-switch__label.is-active * { color: var(--platform-ink) !important; }
+    .el-switch__core {
+      border-color: rgba(104, 176, 255, 0.24);
+      background: rgba(12, 31, 58, 0.72);
+      min-width: 46px;
+      height: 24px;
+    }
+    &.is-checked .el-switch__core {
+      border-color: rgba(54, 240, 203, 0.34);
+      background: linear-gradient(
+        90deg,
+        rgba(38, 239, 199, 0.88) 0%,
+        rgba(63, 141, 255, 0.82) 100%
+      );
+    }
+    .el-switch__action {
+      width: 18px;
+      height: 18px;
+      top: 2px;
+    }
+    .el-switch__label,
+    .el-switch__label * {
+      color: var(--platform-ink-dim) !important;
+    }
+    .el-switch__label.is-active,
+    .el-switch__label.is-active * {
+      color: var(--platform-ink) !important;
+    }
   }
 }
 
@@ -515,19 +619,28 @@ export default {
   .server-type-tag {
     color: var(--platform-chip-text, #bdf4ff) !important;
     border-color: var(--platform-chip-border, rgba(104, 176, 255, 0.26)) !important;
-    background: var(--platform-chip-bg, linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)) !important;
+    background: var(
+      --platform-chip-bg,
+      linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)
+    ) !important;
   }
 
   .server-ip-tag {
     color: var(--platform-id-text, #9feaff) !important;
     border-color: var(--platform-id-border, rgba(88, 184, 255, 0.3)) !important;
-    background: var(--platform-id-bg, linear-gradient(135deg, rgba(18, 55, 99, 0.36) 0%, rgba(13, 33, 60, 0.3) 100%)) !important;
+    background: var(
+      --platform-id-bg,
+      linear-gradient(135deg, rgba(18, 55, 99, 0.36) 0%, rgba(13, 33, 60, 0.3) 100%)
+    ) !important;
   }
 
   .owner-tag {
     color: var(--action-at-text, #9effea) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.26)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)) !important;
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)
+    ) !important;
   }
 
   .metric-pill {
@@ -564,13 +677,19 @@ export default {
   .status-online {
     color: var(--action-at-text, #9effea) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.34)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(17, 89, 80, 0.42) 0%, rgba(12, 48, 71, 0.32) 100%)) !important;
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(17, 89, 80, 0.42) 0%, rgba(12, 48, 71, 0.32) 100%)
+    ) !important;
   }
 
   .status-offline {
     color: var(--action-delete-text, #ffb7c8) !important;
     border-color: var(--action-delete-border, rgba(255, 116, 145, 0.32)) !important;
-    background: var(--action-delete-bg, linear-gradient(135deg, rgba(89, 28, 45, 0.34) 0%, rgba(57, 20, 35, 0.26) 100%)) !important;
+    background: var(
+      --action-delete-bg,
+      linear-gradient(135deg, rgba(89, 28, 45, 0.34) 0%, rgba(57, 20, 35, 0.26) 100%)
+    ) !important;
   }
 
   .status-neutral {
@@ -596,14 +715,20 @@ export default {
   .server-edit-btn {
     color: var(--action-edit-text, #9feaff) !important;
     border-color: var(--action-edit-border, rgba(88, 184, 255, 0.44)) !important;
-    background: var(--action-edit-bg, linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)) !important;
+    background: var(
+      --action-edit-bg,
+      linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px var(--action-edit-shadow, rgba(88, 184, 255, 0.08)) inset;
   }
 
   .server-delete-btn {
     color: var(--action-delete-text, #ffb3bf) !important;
     border-color: var(--action-delete-border, rgba(255, 116, 145, 0.4)) !important;
-    background: var(--action-delete-bg, linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)) !important;
+    background: var(
+      --action-delete-bg,
+      linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px var(--action-delete-shadow, rgba(255, 116, 145, 0.08)) inset;
   }
 
@@ -628,22 +753,110 @@ export default {
   margin: 0 auto;
 }
 
-.server-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; padding: 10px; }
-.server-card { border-radius: 24px; border: 1px solid var(--platform-border-light); background: var(--platform-shell); box-shadow: 0 18px 44px rgba(15,23,42,.08); padding: 18px; display:flex; flex-direction:column; gap:16px; }
-.server-card__header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
-.server-card__headline { min-width:0; display:flex; align-items:center; gap:10px; }
-.server-card__headline h3 { margin:0; font-size:18px; line-height:1.35; color:var(--platform-ink); word-break:break-word; }
-.server-id-tag { color:var(--platform-id-text, #9cccff) !important; border-color:var(--platform-id-border, rgba(88,184,255,.34)) !important; background:var(--platform-id-bg, rgba(20,48,84,.72)) !important; }
-.server-card__meta { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; }
-.server-meta-pill { padding:12px 14px; border-radius:16px; border:1px solid var(--platform-border-light); background:var(--platform-surface-light); display:flex; flex-direction:column; gap:6px; }
-.server-meta-pill strong { color:var(--platform-ink); font-size:16px; font-weight:700; }
-.server-card__label { color:var(--platform-note-text, rgba(228,239,255,.54)); font-size:12px; letter-spacing:.02em; }
-.server-card__body { display:flex; flex-direction:column; gap:12px; }
-.server-card__row { display:grid; grid-template-columns:minmax(84px, 96px) minmax(0, 1fr); align-items:center; gap:12px; padding:12px 14px; border-radius:16px; background:var(--platform-surface-xlight); border:1px solid var(--platform-border-light); }
-.server-card__row--stack { align-items:flex-start; flex-direction:column; }
-.server-card__value, .server-card__note { color:var(--platform-ink); line-height:1.55; text-align:left; word-break:break-word; min-width:0; }
-.server-card__note { width:100%; margin:0; text-align:left; color:var(--platform-note-text, rgba(228,239,255,.78)); }
-.server-card__actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:10px; padding-top:4px; }
+.server-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+  padding: 10px;
+}
+.server-card {
+  border-radius: 24px;
+  border: 1px solid var(--platform-border-light);
+  background: var(--platform-shell);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.server-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.server-card__headline {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.server-card__headline h3 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.35;
+  color: var(--platform-ink);
+  word-break: break-word;
+}
+.server-id-tag {
+  color: var(--platform-id-text, #9cccff) !important;
+  border-color: var(--platform-id-border, rgba(88, 184, 255, 0.34)) !important;
+  background: var(--platform-id-bg, rgba(20, 48, 84, 0.72)) !important;
+}
+.server-card__meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.server-meta-pill {
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--platform-border-light);
+  background: var(--platform-surface-light);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.server-meta-pill strong {
+  color: var(--platform-ink);
+  font-size: 16px;
+  font-weight: 700;
+}
+.server-card__label {
+  color: var(--platform-note-text, rgba(228, 239, 255, 0.54));
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+.server-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.server-card__row {
+  display: grid;
+  grid-template-columns: minmax(84px, 96px) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--platform-surface-xlight);
+  border: 1px solid var(--platform-border-light);
+}
+.server-card__row--stack {
+  align-items: flex-start;
+  flex-direction: column;
+}
+.server-card__value,
+.server-card__note {
+  color: var(--platform-ink);
+  line-height: 1.55;
+  text-align: left;
+  word-break: break-word;
+  min-width: 0;
+}
+.server-card__note {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  color: var(--platform-note-text, rgba(228, 239, 255, 0.78));
+}
+.server-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+}
 
 @media (max-width: 768px) {
   .filter-container {

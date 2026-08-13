@@ -18,7 +18,7 @@ export const UNIVERSE_CONFIG = {
     dmrColor: '#b44dff',
     // 别墅占地与间距（与 computeVillaLayout 的 3 排布局保持一致）
     spacingX: 26,
-    spacingZ: 30
+    spacingZ: 30,
   },
 
   // 彩虹光纤配色（红橙黄绿蓝紫）
@@ -37,14 +37,14 @@ export const UNIVERSE_CONFIG = {
     6: { color: '#fff94d', emissive: '#fff94d', label: '车友会' },
     7: { color: '#ff8d4d', emissive: '#ff8d4d', label: '会议组' },
     8: { color: '#ff4d6d', emissive: '#ff4d6d', label: '私人房间' },
-    100: { color: '#9aa4b2', emissive: '#9aa4b2', label: '其他' }
+    100: { color: '#9aa4b2', emissive: '#9aa4b2', label: '其他' },
   },
 
   // 性能档位：低档减少树木/粒子/光纤分段
   quality: {
     high: { treeCount: 220, particleCount: 600, fiberSegments: 200 },
-    low: { treeCount: 60, particleCount: 150, fiberSegments: 64 }
-  }
+    low: { treeCount: 60, particleCount: 150, fiberSegments: 64 },
+  },
 }
 
 // 判断平台是否为当前用户正在访问的服务器
@@ -52,7 +52,11 @@ export const UNIVERSE_CONFIG = {
 // 开发环境:由 useUniverseData 用 /platform/info 返回的平台名称兜底匹配
 export function isCurrentPlatform(platform) {
   if (typeof window === 'undefined' || !platform) return false
-  const normalize = value => String(value || '').replace(/^https?:\/\//i, '').replace(/\/+$/, '').toLowerCase()
+  const normalize = (value) =>
+    String(value || '')
+      .replace(/^https?:\/\//i, '')
+      .replace(/\/+$/, '')
+      .toLowerCase()
   const host = normalize(platform.host)
   if (!host) return false
   const currentHost = normalize(window.location.host)
@@ -65,10 +69,10 @@ export function isDmrPlatform(platform) {
   if (!platform) return false
   const name = String(platform.name || '').toLowerCase()
   const host = String(platform.host || '').toLowerCase()
-  if (host && UNIVERSE_CONFIG.manualDmrHosts.some(h => String(h).toLowerCase() === host)) {
+  if (host && UNIVERSE_CONFIG.manualDmrHosts.some((h) => String(h).toLowerCase() === host)) {
     return true
   }
-  return UNIVERSE_CONFIG.dmrKeywords.some(kw => name.includes(kw) || host.includes(kw))
+  return UNIVERSE_CONFIG.dmrKeywords.some((kw) => name.includes(kw) || host.includes(kw))
 }
 
 // dev_model 区间：1-99 硬件 / 100-199 软件 APP / 200-299 服务器端

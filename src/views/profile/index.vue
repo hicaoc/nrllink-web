@@ -24,7 +24,6 @@
             </el-tabs>
           </el-card>
         </el-col>
-
       </el-row>
     </div>
   </div>
@@ -45,7 +44,7 @@ export default {
   data() {
     return {
       user: {},
-      activeTab: 'timeline'
+      activeTab: 'timeline',
     }
   },
   computed: {
@@ -57,8 +56,8 @@ export default {
       'phone',
       'callsign',
       'dmrid',
-      'mdcid'
-    ])
+      'mdcid',
+    ]),
   },
   created() {
     this.getUser()
@@ -74,10 +73,10 @@ export default {
         dmrid: this.dmrid,
         mdcid: this.mdcid,
         email: 'caoc@live.com',
-        avatar: this.avatar
+        avatar: this.avatar,
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

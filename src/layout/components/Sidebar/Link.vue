@@ -12,13 +12,13 @@ export default {
   props: {
     to: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     link() {
       return this.createLinkConfig(this.to)
-    }
+    },
   },
   methods: {
     createLinkConfig(url) {
@@ -28,17 +28,17 @@ export default {
           attrs: {
             href: url,
             target: '_blank',
-            rel: 'noopener'
-          }
+            rel: 'noopener',
+          },
         }
       }
       return {
         tag: RouterLink,
         attrs: {
-          to: url
-        }
+          to: url,
+        },
       }
-    }
-  }
+    },
+  },
 }
 </script>

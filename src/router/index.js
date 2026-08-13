@@ -35,85 +35,82 @@ import Layout from '@/layout/index.vue'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [{
-  path: '/redirect',
-  component: Layout,
-  hidden: true,
-  children: [{
-    path: '/redirect/:pathMatch(.*)*',
-    component: () =>
-      import('@/views/redirect/index.vue')
-  }]
-},
-{
-  path: '/login',
-  component: () =>
-    import('@/views/login/index.vue'),
-  hidden: true
-},
-{
-  path: '/universe',
-  component: () =>
-    import('@/views/universe/index.vue'),
-  hidden: true
-},
-{
-  path: '/serial',
-  component: () =>
-    import('@/views/serial/index.vue'),
-  hidden: true
-},
-{
-  path: '/register',
-  component: () =>
-    import('@/views/register/index.vue'),
-  hidden: true
-},
+export const constantRoutes = [
+  {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:pathMatch(.*)*',
+        component: () => import('@/views/redirect/index.vue'),
+      },
+    ],
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login/index.vue'),
+    hidden: true,
+  },
+  {
+    path: '/universe',
+    component: () => import('@/views/universe/index.vue'),
+    hidden: true,
+  },
+  {
+    path: '/serial',
+    component: () => import('@/views/serial/index.vue'),
+    hidden: true,
+  },
+  {
+    path: '/register',
+    component: () => import('@/views/register/index.vue'),
+    hidden: true,
+  },
 
-{
-  path: '/auth-redirect',
-  component: () =>
-    import('@/views/login/auth-redirect.vue'),
-  hidden: true
-},
-{
-  path: '/404',
-  component: () =>
-    import('@/views/error-page/404.vue'),
-  hidden: true
-},
-{
-  path: '/401',
-  component: () =>
-    import('@/views/error-page/401.vue'),
-  hidden: true
-},
-{
-  path: '',
-  component: Layout,
-  redirect: 'dashboard',
-  children: [{
-    path: 'dashboard',
-    component: () =>
-      import('@/views/dashboard/index.vue'),
-    name: 'Dashboard',
-    meta: { title: 'dashboard', icon: 'dashboard', affix: true, noCache: true }
-  }]
-},
+  {
+    path: '/auth-redirect',
+    component: () => import('@/views/login/auth-redirect.vue'),
+    hidden: true,
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/error-page/404.vue'),
+    hidden: true,
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/error-page/401.vue'),
+    hidden: true,
+  },
+  {
+    path: '',
+    component: Layout,
+    redirect: 'dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index.vue'),
+        name: 'Dashboard',
+        meta: { title: 'dashboard', icon: 'dashboard', affix: true, noCache: true },
+      },
+    ],
+  },
 
-{
-  path: '/profile',
-  component: Layout,
-  redirect: '/profile/index',
-  hidden: true,
-  children: [{
-    path: 'index',
-    component: () =>
-      import('@/views/profile/index.vue'),
-    name: 'Profile',
-    meta: { title: 'profile', icon: 'user', noCache: true }
-  }]
-}
+  {
+    path: '/profile',
+    component: Layout,
+    redirect: '/profile/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/profile/index.vue'),
+        name: 'Profile',
+        meta: { title: 'profile', icon: 'user', noCache: true },
+      },
+    ],
+  },
 ]
 
 /**
@@ -121,7 +118,6 @@ export const constantRoutes = [{
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-
   // {
 
   // path: '/month',
@@ -154,50 +150,47 @@ export const asyncRoutes = [
     meta: {
       title: 'devgroup',
       icon: 'people',
-      roles: ['ham'] // you can set roles in root nav
+      roles: ['ham'], // you can set roles in root nav
     },
-    children: [{
-      path: 'totaldevices',
-      component: () =>
-        import('@/views/pub/device.vue'),
-      name: 'totaldevices',
-      meta: {
-        title: 'totaldevices',
-        roles: ['ham']
-      }
-    },
-    {
-      path: 'groups',
-      component: () =>
-        import('@/views/pub/groups.vue'),
-      name: 'grouproom',
-      meta: {
-        title: 'grouproom',
-        roles: ['ham']
-      }
-    },
-    // {
-    //   path: 'mydevices',
-    //   component: () =>
-    //     import ('@/views/pub/mydevice'),
-    //   name: 'mydevices',
-    //   meta: {
-    //     title: 'mydevices',
-    //     roles: ['ham']
-    //   }
-    // },
-    {
-      path: 'relay',
-      component: () =>
-        import('@/views/pub/relay.vue'),
-      name: 'relay',
-      meta: {
-        title: 'relay',
-        roles: ['ham'] // or you can only set roles in sub nav
-      }
-    }
-
-    ]
+    children: [
+      {
+        path: 'totaldevices',
+        component: () => import('@/views/pub/device.vue'),
+        name: 'totaldevices',
+        meta: {
+          title: 'totaldevices',
+          roles: ['ham'],
+        },
+      },
+      {
+        path: 'groups',
+        component: () => import('@/views/pub/groups.vue'),
+        name: 'grouproom',
+        meta: {
+          title: 'grouproom',
+          roles: ['ham'],
+        },
+      },
+      // {
+      //   path: 'mydevices',
+      //   component: () =>
+      //     import ('@/views/pub/mydevice'),
+      //   name: 'mydevices',
+      //   meta: {
+      //     title: 'mydevices',
+      //     roles: ['ham']
+      //   }
+      // },
+      {
+        path: 'relay',
+        component: () => import('@/views/pub/relay.vue'),
+        name: 'relay',
+        meta: {
+          title: 'relay',
+          roles: ['ham'], // or you can only set roles in sub nav
+        },
+      },
+    ],
   },
 
   {
@@ -206,18 +199,19 @@ export const asyncRoutes = [
     redirect: '/renew/index',
     hidden: true,
     meta: { requiresBilling: true },
-    children: [{
-      path: 'index',
-      component: () =>
-        import('@/views/renew/index.vue'),
-      name: 'Renew',
-      meta: {
-        title: 'renew',
-        icon: 'money',
-        roles: ['ham'],
-        requiresBilling: true
-      }
-    }]
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/renew/index.vue'),
+        name: 'Renew',
+        meta: {
+          title: 'renew',
+          icon: 'money',
+          roles: ['ham'],
+          requiresBilling: true,
+        },
+      },
+    ],
   },
 
   {
@@ -229,85 +223,76 @@ export const asyncRoutes = [
     meta: {
       title: 'setup',
       icon: 'edit',
-      roles: ['master'] // you can set roles in root nav
+      roles: ['master'], // you can set roles in root nav
     },
     children: [
-
       {
         path: 'publicgroup',
-        component: () =>
-          import('@/views/setup/groups.vue'),
+        component: () => import('@/views/setup/groups.vue'),
         name: 'publicgroup',
         meta: {
           title: 'publicgroup',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
+          roles: ['admin'], // or you can only set roles in sub nav
+        },
       },
 
       {
         path: 'server',
-        component: () =>
-          import('@/views/setup/server.vue'),
+        component: () => import('@/views/setup/server.vue'),
         name: 'server',
         meta: {
           title: 'server',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
+          roles: ['admin'], // or you can only set roles in sub nav
+        },
       },
 
       {
         path: 'config',
-        component: () =>
-          import('@/views/setup/config.vue'),
+        component: () => import('@/views/setup/config.vue'),
         name: 'serverConfig',
         meta: {
           title: 'serverConfig',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
+          roles: ['admin'], // or you can only set roles in sub nav
+        },
       },
 
       {
         path: 'users',
-        component: () =>
-          import('@/views/setup/users.vue'),
+        component: () => import('@/views/setup/users.vue'),
         name: 'UserMgr',
         meta: {
           title: 'users',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
+          roles: ['admin'], // or you can only set roles in sub nav
+        },
       },
       {
         path: 'register',
-        component: () =>
-          import('@/views/setup/register.vue'),
+        component: () => import('@/views/setup/register.vue'),
         name: 'regMgr',
         meta: {
           title: 'register',
-          roles: ['admin', 'master'] // or you can only set roles in sub nav
-        }
+          roles: ['admin', 'master'], // or you can only set roles in sub nav
+        },
       },
       {
         path: 'billing-packages',
-        component: () =>
-          import('@/views/setup/billing-packages.vue'),
+        component: () => import('@/views/setup/billing-packages.vue'),
         name: 'BillingPackages',
         meta: {
           title: 'billingPackages',
-          roles: ['admin']
-        }
+          roles: ['admin'],
+        },
       },
       {
         path: 'roles',
-        component: () =>
-          import('@/views/setup/role.vue'),
+        component: () => import('@/views/setup/role.vue'),
         name: 'Roles',
         meta: {
           title: 'rolemgr',
-          roles: ['admin']
-        }
-      }
-
-    ]
+          roles: ['admin'],
+        },
+      },
+    ],
   },
 
   {
@@ -319,36 +304,33 @@ export const asyncRoutes = [
     meta: {
       title: 'log',
       icon: 'documentation',
-      roles: ['admin'] // you can set roles in root nav
+      roles: ['admin'], // you can set roles in root nav
     },
     children: [
-
       {
         path: 'operatorlog',
-        component: () =>
-          import('@/views/log/operatorlog.vue'),
+        component: () => import('@/views/log/operatorlog.vue'),
         name: 'OperatorLog',
         meta: {
           title: 'operatorlog',
-          roles: ['admin'] // or you can only set roles in sub nav
-        }
-      }
-    ]
-  }
-
+          roles: ['admin'], // or you can only set roles in sub nav
+        },
+      },
+    ],
+  },
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes: constantRoutes,
-  scrollBehavior: () => ({ top: 0 })
+  scrollBehavior: () => ({ top: 0 }),
 })
 
 export function resetRouter() {
   const newRouter = createRouter({
     history: createWebHashHistory(),
     routes: constantRoutes,
-    scrollBehavior: () => ({ top: 0 })
+    scrollBehavior: () => ({ top: 0 }),
   })
   router.matcher = newRouter.matcher
 }

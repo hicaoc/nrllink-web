@@ -19,7 +19,7 @@ export const useSettingsStore = defineStore('settings', {
     showSettings,
     tagsView,
     fixedHeader,
-    sidebarLogo
+    sidebarLogo,
   }),
   actions: {
     changeSetting({ key, value }) {
@@ -32,6 +32,6 @@ export const useSettingsStore = defineStore('settings', {
         this.platformThemeKey = key
         localStorage.setItem('platform-theme-key', key)
       }
-    }
-  }
+    },
+  },
 })

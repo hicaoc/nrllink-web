@@ -4,7 +4,7 @@ export function createReg(data) {
   return request({
     url: '/user/reg/create',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -14,8 +14,8 @@ export function createRegUpload(data) {
     method: 'post',
     data,
     headers: {
-      'Content-Type': 'multipart/form-data'
-    }
+      'Content-Type': 'multipart/form-data',
+    },
   })
 }
 
@@ -23,7 +23,7 @@ export function listReg(data) {
   return request({
     url: '/user/reg/list',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -31,7 +31,7 @@ export function getImage(data) {
   return request({
     url: '/user/reg/image/get',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -39,7 +39,7 @@ export function updateReg(data) {
   return request({
     url: '/user/reg/update',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -47,7 +47,7 @@ export function addReg(data) {
   return request({
     url: '/user/reg/add',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -55,6 +55,6 @@ export function deleteReg(data) {
   return request({
     url: '/user/reg/delete',
     method: 'post',
-    data
+    data,
   })
 }

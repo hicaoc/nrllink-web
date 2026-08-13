@@ -27,7 +27,7 @@ export function setupErrorLog(app) {
         err,
         vm: instance,
         info,
-        url: window.location.href
+        url: window.location.href,
       })
       console.error(err, info)
     })

@@ -11,19 +11,23 @@
     </div>
 
     <div class="group-grid">
-      <el-card v-for="g,idx in list.filter(item => item.name.includes(name))" :key="g.id" class="box-card platform-theme-card" :body-style="{ padding: '0px' }">
+      <el-card
+        v-for="(g, idx) in list.filter((item) => item.name.includes(name))"
+        :key="g.id"
+        class="box-card platform-theme-card"
+        :body-style="{ padding: '0px' }"
+      >
         <div
           class="card-header"
           :class="{
             'type-hall': g.id === 0,
             'type-room': g.id === 1 || g.id === 2 || g.id === 3,
-            'type-link': g.id !== 0 && g.id !== 1 && g.id !== 2 && g.id !== 3
+            'type-link': g.id !== 0 && g.id !== 1 && g.id !== 2 && g.id !== 3,
           }"
         >
           <span class="group-title">{{
-            g.id + " " + g.name + "-" + ValueFilter(g.type, groupTypeOptions) + " "
+            g.id + ' ' + g.name + '-' + ValueFilter(g.type, groupTypeOptions) + ' '
           }}</span>
-
         </div>
         <div class="card-content">
           <div class="group-action-grid">
@@ -35,11 +39,7 @@
               <span>我要加入</span>
               <strong>{{ getJoinableDevices(g).length }}</strong>
             </button>
-            <button
-              type="button"
-              class="panel-tab"
-              @click="openJoinedDevicesDialog(g, idx)"
-            >
+            <button type="button" class="panel-tab" @click="openJoinedDevicesDialog(g, idx)">
               <span>已加入设备</span>
               <strong>{{ g.online_dev_number }}/{{ g.total_dev_number }}</strong>
             </button>
@@ -65,13 +65,10 @@
               class="join-device-btn"
               :type="mydev.is_online ? 'success' : 'info'"
               @click="changeGroup(mydev, currentJoinGroupId)"
-            >{{ mydev.id +
-              " " +
-              mydev.callsign +
-              "-" +
-              mydev.ssid +
-              " " +
-              mydev.name }}</el-button>
+              >{{
+                mydev.id + ' ' + mydev.callsign + '-' + mydev.ssid + ' ' + mydev.name
+              }}</el-button
+            >
           </div>
         </div>
         <div v-else class="group-empty-state dialog-empty-state">暂无可加入设备</div>
@@ -79,7 +76,9 @@
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="joinDevicesDialogVisible = false">{{ $t("employee.cancel") }}</el-button>
+          <el-button @click="joinDevicesDialogVisible = false">{{
+            $t('employee.cancel')
+          }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -99,16 +98,21 @@
               <el-tag
                 :type="d.is_online ? 'success' : 'info'"
                 :class="d.is_online ? 'group-device-online-tag' : 'group-device-offline-tag'"
-              >{{ d.id + " " + d.callsign + "-" + d.ssid + " " + d.name }}</el-tag>
+                >{{ d.id + ' ' + d.callsign + '-' + d.ssid + ' ' + d.name }}</el-tag
+              >
             </div>
           </div>
         </div>
-        <div v-else-if="!joinedDevicesLoading" class="group-empty-state dialog-empty-state">暂无已加入设备</div>
+        <div v-else-if="!joinedDevicesLoading" class="group-empty-state dialog-empty-state">
+          暂无已加入设备
+        </div>
       </div>
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="joinedDevicesDialogVisible = false">{{ $t("device.close") }}</el-button>
+          <el-button @click="joinedDevicesDialogVisible = false">{{
+            $t('device.close')
+          }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -116,12 +120,7 @@
 </template>
 
 <script>
-
-import {
-  fetchGroupList,
-  fetchGroupDevicesList,
-  fetchGroupListMini
-} from '@/api/groups'
+import { fetchGroupList, fetchGroupDevicesList, fetchGroupListMini } from '@/api/groups'
 import { fetchMyDeviceList, updateDevice } from '@/api/device'
 // import { fetchServerList } from '@/api/server'
 
@@ -152,14 +151,12 @@ export default {
       total: 0,
       listLoading: false,
       listQuery: {
-        callsign: ''
+        callsign: '',
 
         // sort: "+id"
       },
       showReviewer: false,
-      rooms: [
-
-      ],
+      rooms: [],
 
       joinDevicesDialogVisible: false,
       joinDevicesList: [],
@@ -174,12 +171,11 @@ export default {
 
       dialogTimeLineVisible: false,
       dialogTimeLineChartVisible: false,
-      downloadLoading: false,
-      uploadLoading: false
+      uploadLoading: false,
     }
   },
   computed: {
-    ...mapState(useAppStore, ['device'])
+    ...mapState(useAppStore, ['device']),
   },
 
   created() {
@@ -192,7 +188,7 @@ export default {
     this.syncDialogScreenMode()
     this.getList()
 
-    this.fetchMyDeviceList({}).then(response => {
+    this.fetchMyDeviceList({}).then((response) => {
       this.mydevicesOptions = Object.values(response.data.items)
     })
   },
@@ -217,10 +213,10 @@ export default {
       this.isNarrowDialogScreen = window.innerWidth <= 768
     },
     getList() {
-      this.fetchGroupListMini({}).then(response => {
-        this.list = response.data.map(group => ({
+      this.fetchGroupListMini({}).then((response) => {
+        this.list = response.data.map((group) => ({
           ...group,
-          devlist: Array.isArray(group.devlist) ? group.devlist : []
+          devlist: Array.isArray(group.devlist) ? group.devlist : [],
         }))
       })
     },
@@ -230,7 +226,7 @@ export default {
       this.getList()
     },
     getJoinableDevices(group) {
-      return this.mydevicesOptions.filter(device => !this.hasindevlist(device.id, group.devmap))
+      return this.mydevicesOptions.filter((device) => !this.hasindevlist(device.id, group.devmap))
     },
     openJoinDevicesDialog(group) {
       this.currentJoinGroupId = group.id
@@ -249,13 +245,15 @@ export default {
       }
 
       this.joinedDevicesLoading = true
-      fetchGroupDevicesList({ group_id: group.id }).then(response => {
-        const devices = response.data.items || []
-        this.list[idx].devlist = devices
-        this.joinedDevicesList = devices
-      }).finally(() => {
-        this.joinedDevicesLoading = false
-      })
+      fetchGroupDevicesList({ group_id: group.id })
+        .then((response) => {
+          const devices = response.data.items || []
+          this.list[idx].devlist = devices
+          this.joinedDevicesList = devices
+        })
+        .finally(() => {
+          this.joinedDevicesLoading = false
+        })
     },
     handleModifiStatus(row, status) {
       ElMessage.success('操作成功')
@@ -265,7 +263,7 @@ export default {
       tempData.group_id = groupid
 
       //    tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-      updateDevice(tempData).then(response => {
+      updateDevice(tempData).then((response) => {
         this.getList()
         this.joinDevicesDialogVisible = false
         ElMessage.success(response?.data?.message || '操作成功')
@@ -284,57 +282,6 @@ export default {
         this.listQuery.sort = '-id'
       }
       this.handleFilter()
-    },
-    async handleDownload() {
-      this.downloadLoading = true
-      // console.log(this.list)
-      if (this.list === null) {
-        this.downloadLoading = false
-        return
-      }
-      const excel = await import('@/vendor/Export2Excel')
-      const tHeader = ['姓名', '电话', '性别', '出生年月日']
-      const filterVal = ['name', 'phone', 'sex']
-      const data = this.formatJson(filterVal, this.list)
-      await excel.export_json_to_excel({
-        header: tHeader,
-        data,
-        filename: 'device-list'
-      })
-      this.downloadLoading = false
-    },
-
-    handleUpload() {
-      // this.UploadLoading = true;
-      // import("@/vendor/Export2Excel").then(excel => {
-      //   const tHeader = ["姓名", "电话", "性别", "出生年月日", "意向账号", "意向等级"];
-      //   const filterVal = [
-      //     "name",
-      //     "phone",
-      //     "sex",
-      //     "intendent_course",
-      //     "intendent_level"
-      //   ];
-      //   const data = this.formatJson(filterVal, this.list);
-      //   excel.export_json_to_excel({
-      //     header: tHeader,
-      //     data,
-      //     filename: "table-list"
-      //   });
-      //   this.downloadLoading = false;
-      // });
-    },
-
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v =>
-        filterVal.map(j => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
-        })
-      )
     },
 
     returnIndex(id, array) {
@@ -365,8 +312,8 @@ export default {
         }
       }
       return false
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -403,7 +350,7 @@ export default {
 .clearfix:before,
 .clearfix:after {
   display: table;
-  content: "";
+  content: '';
 }
 
 .clearfix:after {
@@ -425,7 +372,9 @@ export default {
   border: 1px solid var(--platform-border);
   background: var(--platform-shell);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 
   &:hover {
     transform: translateY(-4px);
@@ -447,16 +396,28 @@ export default {
     border-bottom: 1px solid var(--platform-border);
 
     &.type-hall {
-      background: linear-gradient(90deg, var(--platform-accent-12) 0%, var(--platform-accent-14) 100%);
+      background: linear-gradient(
+        90deg,
+        var(--platform-accent-12) 0%,
+        var(--platform-accent-14) 100%
+      );
     }
 
     &.type-room {
-      background: linear-gradient(90deg, var(--platform-accent-2) 0%, var(--platform-accent-14) 100%);
+      background: linear-gradient(
+        90deg,
+        var(--platform-accent-2) 0%,
+        var(--platform-accent-14) 100%
+      );
       opacity: 0.8;
     }
 
     &.type-link {
-      background: linear-gradient(90deg, var(--platform-accent-14) 0%, var(--platform-accent-16) 100%);
+      background: linear-gradient(
+        90deg,
+        var(--platform-accent-14) 0%,
+        var(--platform-accent-16) 100%
+      );
     }
   }
 
@@ -474,15 +435,26 @@ export default {
 
 .join-device-btn {
   border-radius: 999px;
-  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 
   &:hover,
   &:focus {
     transform: translateY(-1px);
     color: var(--platform-accent) !important;
     border-color: var(--platform-border-strong) !important;
-    background: linear-gradient(90deg, var(--platform-accent-10) 0%, var(--platform-accent-16) 100%) !important;
-    box-shadow: 0 0 0 1px var(--platform-accent-08) inset, 0 10px 22px rgba(0, 0, 0, 0.24);
+    background: linear-gradient(
+      90deg,
+      var(--platform-accent-10) 0%,
+      var(--platform-accent-16) 100%
+    ) !important;
+    box-shadow:
+      0 0 0 1px var(--platform-accent-08) inset,
+      0 10px 22px rgba(0, 0, 0, 0.24);
   }
 }
 
@@ -512,7 +484,12 @@ export default {
   gap: 12px;
   text-align: left;
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
 
   span {
     font-size: 15px;
@@ -532,7 +509,11 @@ export default {
   }
 
   &.active {
-    background: linear-gradient(90deg, var(--platform-accent-10) 0%, var(--platform-accent-16) 100%);
+    background: linear-gradient(
+      90deg,
+      var(--platform-accent-10) 0%,
+      var(--platform-accent-16) 100%
+    );
     border-color: var(--platform-border-strong);
     color: var(--platform-ink);
     box-shadow: 0 0 0 1px var(--platform-accent-08) inset;
@@ -543,7 +524,11 @@ export default {
   }
 
   &.primary-action {
-    background: linear-gradient(90deg, var(--platform-accent-10) 0%, var(--platform-accent-16) 100%);
+    background: linear-gradient(
+      90deg,
+      var(--platform-accent-10) 0%,
+      var(--platform-accent-16) 100%
+    );
     border-color: var(--platform-border-strong);
     color: var(--platform-ink);
     box-shadow: 0 0 0 1px var(--platform-accent-08) inset;
@@ -595,13 +580,21 @@ export default {
   }
 
   &::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--platform-accent-42) 0%, var(--platform-accent-72) 100%);
+    background: linear-gradient(
+      180deg,
+      var(--platform-accent-42) 0%,
+      var(--platform-accent-72) 100%
+    );
     border-radius: 999px;
     border: 2px solid var(--platform-surface-68);
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, var(--platform-accent-62) 0%, var(--platform-accent-72) 100%);
+    background: linear-gradient(
+      180deg,
+      var(--platform-accent-62) 0%,
+      var(--platform-accent-72) 100%
+    );
   }
 
   &::-webkit-scrollbar-corner {
@@ -623,8 +616,14 @@ export default {
 :deep(.group-device-online-tag) {
   color: var(--platform-accent) !important;
   border-color: var(--platform-border-strong) !important;
-  background: linear-gradient(135deg, var(--platform-accent-20) 0%, var(--platform-accent-14) 100%) !important;
-  box-shadow: 0 0 0 1px var(--platform-accent-08) inset, 0 10px 24px var(--platform-accent-12);
+  background: linear-gradient(
+    135deg,
+    var(--platform-accent-20) 0%,
+    var(--platform-accent-14) 100%
+  ) !important;
+  box-shadow:
+    0 0 0 1px var(--platform-accent-08) inset,
+    0 10px 24px var(--platform-accent-12);
 }
 
 :deep(.group-device-offline-tag) {

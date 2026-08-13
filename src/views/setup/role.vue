@@ -44,14 +44,16 @@
               size="small"
               class="compact-btn role-edit-btn"
               @click="handleEdit(scope)"
-            >{{ $t('permission.editPermission') }}</el-button>
+              >{{ $t('permission.editPermission') }}</el-button
+            >
             <el-button
               type="danger"
               plain
               size="small"
               class="compact-btn role-delete-btn"
               @click="handleDelete(scope)"
-            >{{ $t('permission.delete') }}</el-button>
+              >{{ $t('permission.delete') }}</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -70,13 +72,33 @@
           </div>
         </div>
         <div class="role-card__actions">
-          <el-button type="primary" plain size="small" class="compact-btn role-edit-btn" @click="handleEdit({ row: item })">{{ $t('permission.editPermission') }}</el-button>
-          <el-button type="danger" plain size="small" class="compact-btn role-delete-btn" @click="handleDelete({ $index: rolesList.findIndex(v => v.key === item.key), row: item })">{{ $t('permission.delete') }}</el-button>
+          <el-button
+            type="primary"
+            plain
+            size="small"
+            class="compact-btn role-edit-btn"
+            @click="handleEdit({ row: item })"
+            >{{ $t('permission.editPermission') }}</el-button
+          >
+          <el-button
+            type="danger"
+            plain
+            size="small"
+            class="compact-btn role-delete-btn"
+            @click="
+              handleDelete({ $index: rolesList.findIndex((v) => v.key === item.key), row: item })
+            "
+            >{{ $t('permission.delete') }}</el-button
+          >
         </div>
       </article>
     </div>
 
-    <el-dialog v-model="dialogVisible" :title="dialogType === 'edit' ? 'Edit Role' : 'New Role'" class="platform-theme-dialog setup-role-dialog">
+    <el-dialog
+      v-model="dialogVisible"
+      :title="dialogType === 'edit' ? 'Edit Role' : 'New Role'"
+      class="platform-theme-dialog setup-role-dialog"
+    >
       <el-form :model="role" label-width="96px" label-position="left" class="setup-role-form">
         <el-form-item label="关键字">
           <el-input v-model="role.key" placeholder="此处输入角色简写" />
@@ -94,7 +116,9 @@
         </el-form-item>
       </el-form>
       <div class="dialog-footer role-dialog-footer">
-        <el-button type="default" @click="dialogVisible = false">{{ $t('permission.cancel') }}</el-button>
+        <el-button type="default" @click="dialogVisible = false">{{
+          $t('permission.cancel')
+        }}</el-button>
         <el-button type="primary" @click="confirmRole">{{ $t('permission.confirm') }}</el-button>
       </div>
     </el-dialog>
@@ -103,13 +127,7 @@
 
 <script>
 import { deepClone } from '@/utils'
-import {
-  getRoutes,
-  getRoles,
-  addRole,
-  deleteRole,
-  updateRole
-} from '@/api/role'
+import { getRoutes, getRoles, addRole, deleteRole, updateRole } from '@/api/role'
 import i18n from '@/lang'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { mapState } from 'pinia'
@@ -129,7 +147,7 @@ const defaultRole = {
   key: '',
   name: '',
   description: '',
-  routes: []
+  routes: [],
 }
 
 export default {
@@ -144,16 +162,16 @@ export default {
       checkStrictly: false,
       defaultProps: {
         children: 'children',
-        label: 'title'
+        label: 'title',
       },
-      showtable: true
+      showtable: true,
     }
   },
   computed: {
     ...mapState(useAppStore, ['device']),
     routesData() {
       return this.routes
-    }
+    },
   },
   created() {
     this.showtable = this.device !== 'mobile'
@@ -171,7 +189,7 @@ export default {
       this.rolesList = res.data
     },
     i18n(routes) {
-      const app = routes.map(route => {
+      const app = routes.map((route) => {
         route.title = i18n.global.t(`route.${route.title}`)
         if (route.children) {
           route.children = this.i18n(route.children)
@@ -196,7 +214,7 @@ export default {
 
         const data = {
           path: resolveRoutePath(basePath, route.path),
-          title: route.meta && route.meta.title
+          title: route.meta && route.meta.title,
         }
 
         if (route.children) {
@@ -208,7 +226,7 @@ export default {
     },
     generateArr(routes) {
       let data = []
-      routes.forEach(route => {
+      routes.forEach((route) => {
         data.push(route)
         if (route.children) {
           const temp = this.generateArr(route.children)
@@ -234,14 +252,14 @@ export default {
       ElMessageBox.confirm('确认要删除职位角色?', 'Warning', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
-        .then(async() => {
+        .then(async () => {
           await deleteRole(row.key)
           this.rolesList.splice($index, 1)
           ElMessage.success('角色角色删除成功!')
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err)
         })
     },
@@ -284,7 +302,7 @@ export default {
     },
     onlyOneShowingChild(children = [], parent) {
       let onlyOneChild = null
-      const showingChildren = children.filter(item => !item.hidden)
+      const showingChildren = children.filter((item) => !item.hidden)
 
       if (showingChildren.length === 1) {
         onlyOneChild = showingChildren[0]
@@ -298,8 +316,8 @@ export default {
       }
 
       return false
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -324,11 +342,33 @@ export default {
   :deep(.view-switch) {
     --el-switch-on-color: linear-gradient(90deg, #26efc7 0%, #3f8dff 100%);
     --el-switch-off-color: rgba(104, 176, 255, 0.22);
-    .el-switch__core { border-color: rgba(104, 176, 255, 0.24); background: rgba(12, 31, 58, 0.72); min-width: 46px; height: 24px; }
-    &.is-checked .el-switch__core { border-color: rgba(54, 240, 203, 0.34); background: linear-gradient(90deg, rgba(38, 239, 199, 0.88) 0%, rgba(63, 141, 255, 0.82) 100%); }
-    .el-switch__action { width: 18px; height: 18px; top: 2px; }
-    .el-switch__label, .el-switch__label * { color: var(--platform-ink-dim) !important; }
-    .el-switch__label.is-active, .el-switch__label.is-active * { color: var(--platform-ink) !important; }
+    .el-switch__core {
+      border-color: rgba(104, 176, 255, 0.24);
+      background: rgba(12, 31, 58, 0.72);
+      min-width: 46px;
+      height: 24px;
+    }
+    &.is-checked .el-switch__core {
+      border-color: rgba(54, 240, 203, 0.34);
+      background: linear-gradient(
+        90deg,
+        rgba(38, 239, 199, 0.88) 0%,
+        rgba(63, 141, 255, 0.82) 100%
+      );
+    }
+    .el-switch__action {
+      width: 18px;
+      height: 18px;
+      top: 2px;
+    }
+    .el-switch__label,
+    .el-switch__label * {
+      color: var(--platform-ink-dim) !important;
+    }
+    .el-switch__label.is-active,
+    .el-switch__label.is-active * {
+      color: var(--platform-ink) !important;
+    }
   }
 }
 
@@ -344,7 +384,10 @@ export default {
   .role-key-tag {
     color: var(--action-at-text, #9effea) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.28)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)) !important;
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)
+    ) !important;
   }
 
   .role-name-cell {
@@ -376,14 +419,20 @@ export default {
   .role-edit-btn {
     color: var(--action-edit-text, #9feaff) !important;
     border-color: var(--action-edit-border, rgba(88, 184, 255, 0.44)) !important;
-    background: var(--action-edit-bg, linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)) !important;
+    background: var(
+      --action-edit-bg,
+      linear-gradient(135deg, rgba(20, 64, 108, 0.38) 0%, rgba(18, 45, 90, 0.28) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px var(--action-edit-shadow, rgba(88, 184, 255, 0.08)) inset;
   }
 
   .role-delete-btn {
     color: var(--action-delete-text, #ffb3bf) !important;
     border-color: var(--action-delete-border, rgba(255, 116, 145, 0.4)) !important;
-    background: var(--action-delete-bg, linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)) !important;
+    background: var(
+      --action-delete-bg,
+      linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)
+    ) !important;
     box-shadow: 0 0 0 1px var(--action-delete-shadow, rgba(255, 116, 145, 0.08)) inset;
   }
 
@@ -402,15 +451,68 @@ export default {
   margin: 0 auto;
 }
 
-.role-card-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:18px; padding:10px; }
-.role-card { border-radius:24px; border:1px solid var(--platform-border-light); background:var(--platform-shell); box-shadow:0 18px 44px rgba(15,23,42,.08); padding:18px; display:flex; flex-direction:column; gap:16px; }
-.role-card__header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-.role-card__header h3 { margin:0; color:var(--platform-ink); font-size:18px; line-height:1.35; word-break:break-word; }
-.role-card__row { display:grid; grid-template-columns:minmax(84px, 96px) minmax(0, 1fr); align-items:center; gap:12px; padding:12px 14px; border-radius:16px; background:var(--platform-surface-xlight); border:1px solid var(--platform-border-light); }
-.role-card__row--stack { align-items:flex-start; flex-direction:column; }
-.role-card__label { color:var(--platform-note-text, rgba(228,239,255,.54)); font-size:12px; letter-spacing:.02em; }
-.role-card__note { width:100%; margin:0; text-align:left; color:var(--platform-note-text, rgba(228,239,255,.78)); line-height:1.55; word-break:break-word; }
-.role-card__actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:10px; }
+.role-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+  padding: 10px;
+}
+.role-card {
+  border-radius: 24px;
+  border: 1px solid var(--platform-border-light);
+  background: var(--platform-shell);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.role-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.role-card__header h3 {
+  margin: 0;
+  color: var(--platform-ink);
+  font-size: 18px;
+  line-height: 1.35;
+  word-break: break-word;
+}
+.role-card__row {
+  display: grid;
+  grid-template-columns: minmax(84px, 96px) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--platform-surface-xlight);
+  border: 1px solid var(--platform-border-light);
+}
+.role-card__row--stack {
+  align-items: flex-start;
+  flex-direction: column;
+}
+.role-card__label {
+  color: var(--platform-note-text, rgba(228, 239, 255, 0.54));
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+.role-card__note {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  color: var(--platform-note-text, rgba(228, 239, 255, 0.78));
+  line-height: 1.55;
+  word-break: break-word;
+}
+.role-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
 
 .role-dialog-footer {
   display: flex;
@@ -438,13 +540,42 @@ export default {
     }
   }
 
-  .role-card-grid { grid-template-columns: 1fr; gap: 14px; padding: 6px 0 0; }
-  .role-card { padding: 14px; border-radius: 18px; gap: 14px; }
-  .role-card__header { flex-direction: column; align-items: stretch; gap: 10px; }
-  .role-card__header h3 { font-size: 17px; }
-  .role-card__row { grid-template-columns: 80px minmax(0, 1fr); gap: 10px; padding: 10px 12px; }
-  .role-card__row--stack { display: flex; flex-direction: column; align-items: flex-start; }
-  .role-card__actions { justify-content: stretch; flex-direction: column; gap: 8px; }
-  .role-card__actions .compact-btn { width: 100%; margin: 0 !important; }
+  .role-card-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 6px 0 0;
+  }
+  .role-card {
+    padding: 14px;
+    border-radius: 18px;
+    gap: 14px;
+  }
+  .role-card__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .role-card__header h3 {
+    font-size: 17px;
+  }
+  .role-card__row {
+    grid-template-columns: 80px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px 12px;
+  }
+  .role-card__row--stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .role-card__actions {
+    justify-content: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .role-card__actions .compact-btn {
+    width: 100%;
+    margin: 0 !important;
+  }
 }
 </style>

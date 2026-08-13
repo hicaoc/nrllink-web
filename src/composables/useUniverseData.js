@@ -29,7 +29,9 @@ export default function useUniverseData() {
     platformInfoLoaded = true
     try {
       const response = await getplatforminfo()
-      currentPlatformName = String((response && response.data && response.data.items && response.data.items.name) || '')
+      currentPlatformName = String(
+        (response && response.data && response.data.items && response.data.items.name) || ''
+      )
     } catch {
       currentPlatformName = ''
     }
@@ -39,11 +41,12 @@ export default function useUniverseData() {
     const list = computeVillaLayout(sortPlatforms(items.map(mapPlatform)))
     // 标记当前用户正在访问的服务器(对应的那栋别墅):
     // 生产按 host 匹配;开发环境前端在 localhost,用 /platform/info 的平台名匹配
-    list.forEach(p => {
-      p.isCurrent = isCurrentPlatform(p) || (!!currentPlatformName && p.name === currentPlatformName)
+    list.forEach((p) => {
+      p.isCurrent =
+        isCurrentPlatform(p) || (!!currentPlatformName && p.name === currentPlatformName)
     })
     platforms.value = list
-    const dmr = list.find(p => p.isDmr)
+    const dmr = list.find((p) => p.isDmr)
     dmrPlatformId.value = dmr ? dmr.id : null
     return list
   }
@@ -87,13 +90,17 @@ export default function useUniverseData() {
     const response = await fetchPlatformList({})
     const items = Object.values((response && response.data && response.data.items) || {})
     const next = sortPlatforms(items.map(mapPlatform))
-    const idSetOf = arr => arr.map(p => String(p.id)).sort().join('|')
+    const idSetOf = (arr) =>
+      arr
+        .map((p) => String(p.id))
+        .sort()
+        .join('|')
     if (idSetOf(platforms.value) !== idSetOf(next)) {
       applyPlatforms(items)
       return
     }
-    const byId = new Map(next.map(p => [String(p.id), p]))
-    platforms.value.forEach(p => {
+    const byId = new Map(next.map((p) => [String(p.id), p]))
+    platforms.value.forEach((p) => {
       const updated = byId.get(String(p.id))
       if (updated) {
         p.online = updated.online
@@ -129,6 +136,6 @@ export default function useUniverseData() {
     loadGroupDevices,
     refresh,
     startAutoRefresh,
-    stopAutoRefresh
+    stopAutoRefresh,
   }
 }

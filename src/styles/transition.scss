@@ -14,7 +14,9 @@
 /* fade-transform */
 .fade-transform-leave-active,
 .fade-transform-enter-active {
-  transition: opacity .24s ease, transform .24s ease;
+  transition:
+    opacity 0.24s ease,
+    transform 0.24s ease;
 }
 
 .fade-transform-enter {
@@ -30,7 +32,7 @@
 /* breadcrumb transition */
 .breadcrumb-enter-active,
 .breadcrumb-leave-active {
-  transition: all .5s;
+  transition: all 0.5s;
 }
 
 .breadcrumb-enter,
@@ -40,7 +42,7 @@
 }
 
 .breadcrumb-move {
-  transition: all .5s;
+  transition: all 0.5s;
 }
 
 .breadcrumb-leave-active {

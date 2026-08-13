@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import { vi } from 'vitest'
+import { vi } from 'vite-plus/test'
 import Hamburger from '@/components/Hamburger/index.vue'
 describe('Hamburger.vue', () => {
   it('toggle click', async () => {

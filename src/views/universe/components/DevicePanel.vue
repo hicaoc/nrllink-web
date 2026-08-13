@@ -45,14 +45,16 @@
             plain
             :disabled="!canEdit || saving"
             @click="toggleStatus(1)"
-          >{{ receiveDisabled ? '已禁收 · 点击恢复' : '禁收' }}</el-button>
+            >{{ receiveDisabled ? '已禁收 · 点击恢复' : '禁收' }}</el-button
+          >
           <el-button
             :type="transmitDisabled ? 'danger' : 'info'"
             size="small"
             plain
             :disabled="!canEdit || saving"
             @click="toggleStatus(2)"
-          >{{ transmitDisabled ? '已禁发 · 点击恢复' : '禁发' }}</el-button>
+            >{{ transmitDisabled ? '已禁发 · 点击恢复' : '禁发' }}</el-button
+          >
         </div>
       </div>
 
@@ -60,7 +62,14 @@
         <div class="section-title">名称</div>
         <div class="inline-form">
           <el-input v-model="nameInput" size="small" :disabled="!canEdit" placeholder="设备名称" />
-          <el-button size="small" type="primary" plain :disabled="!canEdit || saving" @click="saveName">保存</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            plain
+            :disabled="!canEdit || saving"
+            @click="saveName"
+            >保存</el-button
+          >
         </div>
       </div>
 
@@ -75,24 +84,49 @@
             placeholder="选择组"
             popper-class="platform-theme-select-dropdown"
           >
-            <el-option v-for="item in groups" :key="item.id" :label="`${item.id}-${item.name}`" :value="item.id" />
+            <el-option
+              v-for="item in groups"
+              :key="item.id"
+              :label="`${item.id}-${item.name}`"
+              :value="item.id"
+            />
           </el-select>
-          <el-button size="small" type="primary" plain :disabled="!canEdit || saving" @click="saveGroup">保存</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            plain
+            :disabled="!canEdit || saving"
+            @click="saveGroup"
+            >保存</el-button
+          >
         </div>
       </div>
 
       <div class="device-section">
         <div class="section-title">AT 指令</div>
         <div class="inline-form">
-          <el-input v-model="atCommand" size="small" :disabled="!canEdit" placeholder="AT+XXX" class="at-command-input" />
-          <el-input v-model="atValue" size="small" :disabled="!canEdit" placeholder="值" class="at-value-input" />
+          <el-input
+            v-model="atCommand"
+            size="small"
+            :disabled="!canEdit"
+            placeholder="AT+XXX"
+            class="at-command-input"
+          />
+          <el-input
+            v-model="atValue"
+            size="small"
+            :disabled="!canEdit"
+            placeholder="值"
+            class="at-value-input"
+          />
           <el-button
             size="small"
             type="success"
             plain
             :disabled="!canEdit || saving || !device.is_online"
             @click="runAtCommand"
-          >执行</el-button>
+            >执行</el-button
+          >
         </div>
       </div>
 
@@ -121,16 +155,16 @@ export default {
   props: {
     modelValue: {
       type: Boolean,
-      default: false
+      default: false,
     },
     device: {
       type: Object,
-      default: null
+      default: null,
     },
     groups: {
       type: Array,
-      default: () => []
-    }
+      default: () => [],
+    },
   },
   data() {
     return {
@@ -138,7 +172,7 @@ export default {
       nameInput: '',
       groupInput: null,
       atCommand: 'AT+',
-      atValue: ''
+      atValue: '',
     }
   },
   computed: {
@@ -148,7 +182,7 @@ export default {
       },
       set(value) {
         this.$emit('update:modelValue', value)
-      }
+      },
     },
     drawerTitle() {
       return this.device ? `设备 · ${this.device.callsign}-${this.device.ssid}` : '设备'
@@ -166,7 +200,7 @@ export default {
     },
     currentGroupName() {
       if (!this.device) return '—'
-      const hit = this.groups.find(item => item.id === this.device.group_id)
+      const hit = this.groups.find((item) => item.id === this.device.group_id)
       return hit ? `${hit.id}-${hit.name}` : `${this.device.group_id ?? '—'}`
     },
     parmEntries() {
@@ -175,7 +209,7 @@ export default {
       return Object.entries(parm)
         .filter(([, value]) => value !== null && value !== '' && typeof value !== 'object')
         .slice(0, 16)
-    }
+    },
   },
   watch: {
     device: {
@@ -183,8 +217,8 @@ export default {
         this.nameInput = device && device.name ? device.name : ''
         this.groupInput = device ? device.group_id : null
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
     formatVoiceTime(seconds) {
@@ -206,7 +240,7 @@ export default {
     submitUpdate(tempData) {
       this.saving = true
       updateDevice(tempData)
-        .then(response => {
+        .then((response) => {
           this.saving = false
           if (response.code === 20000) {
             ElMessage.success((response.data && response.data.message) || '保存成功')
@@ -250,9 +284,9 @@ export default {
         ssid: this.device.ssid,
         atcommand,
         data: this.atValue,
-        type: 2
+        type: 2,
       })
-        .then(response => {
+        .then((response) => {
           this.saving = false
           if (response.code === 20000) {
             ElMessage.success((response.data && response.data.message) || 'AT 指令已下发')
@@ -263,7 +297,7 @@ export default {
         .catch(() => {
           this.saving = false
         })
-    }
-  }
+    },
+  },
 }
 </script>

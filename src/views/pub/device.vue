@@ -18,7 +18,12 @@
         popper-class="platform-theme-select-dropdown"
         @change="handleFilter"
       >
-        <el-option v-for="item in groupsOptions" :key="item.id" :label="item.id + '-' + item.name" :value="item.id" />
+        <el-option
+          v-for="item in groupsOptions"
+          :key="item.id"
+          :label="item.id + '-' + item.name"
+          :value="item.id"
+        />
       </el-select>
 
       <div class="filter-item action-row">
@@ -51,7 +56,6 @@
           <span>{{ $t('device.showtable') }}</span>
         </button>
       </div>
-
     </div>
 
     <div v-if="showtable" class="table-shell">
@@ -65,34 +69,49 @@
         style="width: 100%"
         @sort-change="sortChange"
       >
-        <el-table-column fixed :label="$t('Account.id')" prop="id" sortable="custom" align="center" width="110">
+        <el-table-column
+          fixed
+          :label="$t('Account.id')"
+          prop="id"
+          sortable="custom"
+          align="center"
+          width="110"
+        >
           <template #default="scope">
             <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
 
         <el-table-column
-              fixed
-              prop="callsign"
-              :label="$t('device.callsign')"
-              width="150px"
+          fixed
+          prop="callsign"
+          :label="$t('device.callsign')"
+          width="150px"
           align="center"
           :sortable="true"
         >
           <template #default="scope">
             <div class="tag-wrap">
-              <el-tag :type="scope.row.is_online ? 'success' : 'info'" :class="scope.row.is_online ? 'callsign-online-tag' : 'callsign-offline-tag'">{{ scope.row.callsign + "-" +
-                scope.row.ssid
-              }}
+              <el-tag
+                :type="scope.row.is_online ? 'success' : 'info'"
+                :class="scope.row.is_online ? 'callsign-online-tag' : 'callsign-offline-tag'"
+                >{{ scope.row.callsign + '-' + scope.row.ssid }}
               </el-tag>
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column prop="dmrid" :label="$t('device.dmrid')" width="100px" align="center" :sortable="true">
+        <el-table-column
+          prop="dmrid"
+          :label="$t('device.dmrid')"
+          width="100px"
+          align="center"
+          :sortable="true"
+        >
           <template #default="scope">
             <div class="tag-wrap">
-              <el-tag :type="scope.row.is_online ? 'primary' : 'info'">{{ scope.row.dmrid }}
+              <el-tag :type="scope.row.is_online ? 'primary' : 'info'"
+                >{{ scope.row.dmrid }}
               </el-tag>
             </div>
           </template>
@@ -107,58 +126,100 @@
                 plain
                 class="compact-btn status-receive-btn"
                 @click="updateStatus(scope.row, 1)"
-              >{{ (scope.row.status & 1) === 1 ? $t('device.disableReceive') :
-                $t('device.receive')
-              }}</el-button>
-              
+                >{{
+                  (scope.row.status & 1) === 1 ? $t('device.disableReceive') : $t('device.receive')
+                }}</el-button
+              >
+
               <el-button
                 :type="safeButtonType(((scope.row.status ?? 0) & 2) === 2 ? 'danger' : 'info')"
                 size="small"
                 plain
                 class="compact-btn status-transmit-btn"
                 @click="updateStatus(scope.row, 2)"
-              >{{ (scope.row.status & 2) === 2 ? $t('device.disableTransmit') :
-                $t('device.transmit')
-              }}</el-button>
+                >{{
+                  (scope.row.status & 2) === 2
+                    ? $t('device.disableTransmit')
+                    : $t('device.transmit')
+                }}</el-button
+              >
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.priority')" prop="priority" width="100px" align="center" :sortable="true">
+        <el-table-column
+          :label="$t('device.priority')"
+          prop="priority"
+          width="100px"
+          align="center"
+          :sortable="true"
+        >
           <template #default="scope">
             <span>{{ scope.row.priority }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.name')" prop="name" width="220px" align="center" :sortable="true">
+        <el-table-column
+          :label="$t('device.name')"
+          prop="name"
+          width="220px"
+          align="center"
+          :sortable="true"
+        >
           <template #default="scope">
-            <span>{{ scope.row.ssid === 200 && scope.row.name === '' ? $t('device.serverLink') : scope.row.name }}</span>
+            <span>{{
+              scope.row.ssid === 200 && scope.row.name === ''
+                ? $t('device.serverLink')
+                : scope.row.name
+            }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.qth')" prop="qth" width="220px" align="center" :sortable="true">
+        <el-table-column
+          :label="$t('device.qth')"
+          prop="qth"
+          width="220px"
+          align="center"
+          :sortable="true"
+        >
           <template #default="scope">
             <span>{{ scope.row.qth }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.currentGroup')" prop="group_id" width="180px" align="center" :sortable="true">
+        <el-table-column
+          :label="$t('device.currentGroup')"
+          prop="group_id"
+          width="180px"
+          align="center"
+          :sortable="true"
+        >
           <template #default="scope">
             <span v-if="scope.row.group_id > 0 && scope.row.group_id < 999">
-              {{ $t('device.personalRoom') }}{{ scope.row.group_id }}</span>
-            <span v-else>{{
-              ValueFilter(scope.row.group_id, groupsOptions)
-            }}</span>
+              {{ $t('device.personalRoom') }}{{ scope.row.group_id }}</span
+            >
+            <span v-else>{{ ValueFilter(scope.row.group_id, groupsOptions) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="dev_rf_type" :label="$t('device.rfTypeLabel')" width="140px" align="center" :sortable="true">
+        <el-table-column
+          prop="dev_rf_type"
+          :label="$t('device.rfTypeLabel')"
+          width="140px"
+          align="center"
+          :sortable="true"
+        >
           <template #default="scope">
             <span>{{ ValueFilter(scope.row.rf_type, DevRFtypeOptions) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="tunner" :label="$t('device.channelFrequency')" width="190px" align="center">
+        <el-table-column
+          prop="tunner"
+          :label="$t('device.channelFrequency')"
+          width="190px"
+          align="center"
+        >
           <template #default="scope">
             <div v-if="scope.row.device_parm" class="tag-wrap">
               <el-tag v-if="scope.row.rf_type == 1">
@@ -171,38 +232,69 @@
                   scope.row.device_parm.two_transmit_freq
                 }}
               </el-tag>
-              <el-tag v-if="scope.row.rf_type == 3">{{ $t('device.channelLabel') }}{{ scope.row.device_parm.moto_channel }}
+              <el-tag v-if="scope.row.rf_type == 3"
+                >{{ $t('device.channelLabel') }}{{ scope.row.device_parm.moto_channel }}
                 {{ getChannelName(scope.row) }}
               </el-tag>
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.model')" prop="dev_model" width="150px" align="center" :sortable="true">
+        <el-table-column
+          :label="$t('device.model')"
+          prop="dev_model"
+          width="150px"
+          align="center"
+          :sortable="true"
+        >
           <template #default="scope">
             <span>{{ ValueFilter(scope.row.dev_model, DevModelOptions) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.totalVoiceTime')" prop="voice_time" width="120px" align="center" :sortable="true">
+        <el-table-column
+          :label="$t('device.totalVoiceTime')"
+          prop="voice_time"
+          width="120px"
+          align="center"
+          :sortable="true"
+        >
           <template #default="scope">
             <span>{{ formatVoiceTime(scope.row.voice_time) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.totalTraffic')" prop="traffic" width="120px" align="center" :sortable="true">
+        <el-table-column
+          :label="$t('device.totalTraffic')"
+          prop="traffic"
+          width="120px"
+          align="center"
+          :sortable="true"
+        >
           <template #default="scope">
             <span>{{ formatFileSize(scope.row.traffic) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.lastVoiceDuration')" prop="last_voice_duration" width="150px" align="center" :sortable="true">
+        <el-table-column
+          :label="$t('device.lastVoiceDuration')"
+          prop="last_voice_duration"
+          width="150px"
+          align="center"
+          :sortable="true"
+        >
           <template #default="scope">
             <span>{{ formatVoiceTime(scope.row.last_voice_duration) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('device.lastVoiceTime')" prop="last_voice_end_time" width="160px" align="center" :sortable="true">
+        <el-table-column
+          :label="$t('device.lastVoiceTime')"
+          prop="last_voice_end_time"
+          width="160px"
+          align="center"
+          :sortable="true"
+        >
           <template #default="scope">
             <span>{{ parseTime(scope.row.last_voice_end_time) }}</span>
           </template>
@@ -224,7 +316,8 @@
                 plain
                 class="compact-btn action-edit-btn"
                 @click="handleUpdate(row)"
-              >{{ $t("device.edit") }}</el-button>
+                >{{ $t('device.edit') }}</el-button
+              >
 
               <el-button
                 v-if="checkPermission(['admin']) || row.callsign === callsign"
@@ -234,7 +327,8 @@
                 plain
                 class="compact-btn action-change-btn"
                 @click="handleChange(row)"
-              >{{ $t("device.change") }}</el-button>
+                >{{ $t('device.change') }}</el-button
+              >
 
               <el-button
                 v-if="checkPermission(['admin']) || row.callsign === callsign"
@@ -244,7 +338,8 @@
                 plain
                 class="compact-btn action-at-btn"
                 @click="handleOpenAT(row)"
-              >{{ $t("device.at") }}</el-button>
+                >{{ $t('device.at') }}</el-button
+              >
 
               <el-button
                 v-if="checkPermission(['admin']) || row.callsign === callsign"
@@ -253,11 +348,11 @@
                 plain
                 class="compact-btn action-delete-btn"
                 @click="handleDelete(row)"
-              >{{ $t('employee.delete') }}</el-button>
+                >{{ $t('employee.delete') }}</el-button
+              >
             </div>
           </template>
         </el-table-column>
-
       </el-table>
     </div>
 
@@ -271,13 +366,15 @@
     />
 
     <div v-if="showtable == false" class="box-grid">
-      <div
-        v-for="item in list"
-        :key="item.id"
-        class="box-item"
-      >
+      <div v-for="item in list" :key="item.id" class="box-item">
         <div class="box-header">
-          <el-tag :type="item.is_online ? 'success' : 'info'" size="small" effect="dark" class="id-tag">{{ item.id }}</el-tag>
+          <el-tag
+            :type="item.is_online ? 'success' : 'info'"
+            size="small"
+            effect="dark"
+            class="id-tag"
+            >{{ item.id }}</el-tag
+          >
           <span class="callsign">{{ item.callsign }}-{{ item.ssid }}</span>
           <el-tag size="small" type="info">DMR {{ item.dmrid }}</el-tag>
           <el-tag v-if="item.status == 1" size="small" type="danger">🈲</el-tag>
@@ -285,7 +382,9 @@
         <div class="box-info">
           <div class="info-row">
             <span class="label">{{ $t('device.name') }}:</span>
-            <span class="value">{{ item.ssid === 200 && item.name === '' ? $t('device.serverLink') : item.name || '-' }}</span>
+            <span class="value">{{
+              item.ssid === 200 && item.name === '' ? $t('device.serverLink') : item.name || '-'
+            }}</span>
           </div>
           <div class="info-row">
             <span class="label">{{ $t('device.model') }}:</span>
@@ -303,9 +402,20 @@
             <span class="label">{{ $t('device.channelFrequency') }}:</span>
             <span class="value freq">
               <template v-if="item.device_parm">
-                <template v-if="item.rf_type == 1">R{{ item.device_parm.one_recive_freq }}/T{{ item.device_parm.one_transmit_freq }}</template>
-                <template v-else-if="item.rf_type == 2">R{{ item.device_parm.two_recive_freq }}/T{{ item.device_parm.two_transmit_freq }}</template>
-                <template v-else-if="item.rf_type == 3">{{ $t('device.channelLabel') }}{{ item.device_parm.moto_channel }} {{ getChannelName(item) }}</template>
+                <template v-if="item.rf_type == 1"
+                  >R{{ item.device_parm.one_recive_freq }}/T{{
+                    item.device_parm.one_transmit_freq
+                  }}</template
+                >
+                <template v-else-if="item.rf_type == 2"
+                  >R{{ item.device_parm.two_recive_freq }}/T{{
+                    item.device_parm.two_transmit_freq
+                  }}</template
+                >
+                <template v-else-if="item.rf_type == 3"
+                  >{{ $t('device.channelLabel') }}{{ item.device_parm.moto_channel }}
+                  {{ getChannelName(item) }}</template
+                >
               </template>
               <template v-else>-</template>
             </span>
@@ -313,7 +423,9 @@
           <div class="info-row">
             <span class="label">{{ $t('device.currentGroup') }}:</span>
             <span class="value">
-              <template v-if="item.group_id > 0 && item.group_id < 1000">{{ $t('device.privateGroup') }}</template>
+              <template v-if="item.group_id > 0 && item.group_id < 1000">{{
+                $t('device.privateGroup')
+              }}</template>
               <template v-else>{{ ValueFilter(item.group_id, groupsOptions) }}</template>
             </span>
           </div>
@@ -347,7 +459,10 @@
               class="compact-btn status-receive-btn"
               :disabled="item.is_online === false"
               @click="updateStatus(item, 1)"
-            >{{ ((item.status ?? 0) & 1) === 1 ? $t('device.disableReceive') : $t('device.receive') }}</el-button>
+              >{{
+                ((item.status ?? 0) & 1) === 1 ? $t('device.disableReceive') : $t('device.receive')
+              }}</el-button
+            >
             <el-button
               :type="((item.status ?? 0) & 2) === 2 ? 'danger' : 'success'"
               size="small"
@@ -355,7 +470,12 @@
               class="compact-btn status-transmit-btn"
               :disabled="item.is_online === false"
               @click="updateStatus(item, 2)"
-            >{{ ((item.status ?? 0) & 2) === 2 ? $t('device.disableTransmit') : $t('device.transmit') }}</el-button>
+              >{{
+                ((item.status ?? 0) & 2) === 2
+                  ? $t('device.disableTransmit')
+                  : $t('device.transmit')
+              }}</el-button
+            >
           </div>
           <div class="action-btns">
             <el-button
@@ -366,7 +486,8 @@
               class="compact-btn action-change-btn"
               :disabled="item.is_online === false"
               @click="handleChange(item)"
-            >{{ $t("device.change") }}</el-button>
+              >{{ $t('device.change') }}</el-button
+            >
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
               type="success"
@@ -375,7 +496,8 @@
               class="compact-btn action-at-btn"
               :disabled="item.is_online === false"
               @click="handleOpenAT(item)"
-            >{{ $t("device.at") }}</el-button>
+              >{{ $t('device.at') }}</el-button
+            >
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
               type="primary"
@@ -383,7 +505,8 @@
               size="small"
               class="compact-btn action-edit-btn"
               @click="handleUpdate(item)"
-            >{{ $t("device.edit") }}</el-button>
+              >{{ $t('device.edit') }}</el-button
+            >
             <el-button
               v-if="checkPermission(['admin']) || item.callsign === callsign"
               type="danger"
@@ -391,7 +514,8 @@
               size="small"
               class="compact-btn action-delete-btn"
               @click="handleDelete(item)"
-            >{{ $t('employee.delete') }}</el-button>
+              >{{ $t('employee.delete') }}</el-button
+            >
           </div>
         </div>
       </div>
@@ -431,7 +555,6 @@
             class="filter-item"
             @change="handleFilter"
           >
-
             <el-option
               v-for="item in groupsOptions"
               :key="item.id"
@@ -442,7 +565,12 @@
         </el-form-item>
 
         <el-form-item :label="$t('device.priority')" prop="priority">
-          <el-input-number v-model="temp.priority" :disabled="!checkPermission(['admin'])" :min="0" :max="255" />
+          <el-input-number
+            v-model="temp.priority"
+            :disabled="!checkPermission(['admin'])"
+            :min="0"
+            :max="255"
+          />
         </el-form-item>
 
         <!-- <el-form-item prop="type" for="">
@@ -461,9 +589,7 @@
             <span id="device-model-label">{{ $t('device.model') }}</span>
           </template>
           <el-radio-group v-model="temp.dev_model" aria-labelledby="device-model-label">
-            <el-radio v-for="d in DevModelOptions" :key="d.id" :value="d.id">{{
-              d.name
-            }}</el-radio>
+            <el-radio v-for="d in DevModelOptions" :key="d.id" :value="d.id">{{ d.name }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -489,18 +615,16 @@
             <el-input v-model="temp.chan_name[channel]" />
           </el-form-item>
         </div>
-
-
       </el-form>
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">{{
-            $t("employee.cancel")
-          }}</el-button>
-          <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">{{
-            $t("employee.confirm")
-          }}</el-button>
+          <el-button @click="dialogFormVisible = false">{{ $t('employee.cancel') }}</el-button>
+          <el-button
+            type="primary"
+            @click="dialogStatus === 'create' ? createData() : updateData()"
+            >{{ $t('employee.confirm') }}</el-button
+          >
         </div>
       </template>
     </el-dialog>
@@ -541,12 +665,22 @@
             <el-form-item :label="$t('device.deviceNumber') + ':'" prop="ssid">
               <el-input v-model="temp.device_parm.ssid" style="width: 80px" /><el-button
                 type="primary"
-                @click="changeByte('newcallsignssid', temp.device_parm.callsign + '-' + temp.device_parm.ssid)"
-              >{{ $t('device.save') }}</el-button>
+                @click="
+                  changeByte(
+                    'newcallsignssid',
+                    temp.device_parm.callsign + '-' + temp.device_parm.ssid
+                  )
+                "
+                >{{ $t('device.save') }}</el-button
+              >
             </el-form-item>
 
             <el-form-item :label="$t('device.localPassword') + ':'" prop="local_password">
-              <el-input v-model="temp.device_parm.local_password" style="width: 150px" :disabled="true" />
+              <el-input
+                v-model="temp.device_parm.local_password"
+                style="width: 150px"
+                :disabled="true"
+              />
             </el-form-item>
 
             <el-form-item :label="$t('device.localIp') + ':'" prop="local_ipaddr">
@@ -579,7 +713,19 @@
                 <el-option
                   v-for="item in platformOptions"
                   :key="item.id"
-                  :label="item.name + '-' + item.host + '-' + $t('device.online') + ':' + item.online + ',' + $t('device.peak') + ':' + item.total"
+                  :label="
+                    item.name +
+                    '-' +
+                    item.host +
+                    '-' +
+                    $t('device.online') +
+                    ':' +
+                    item.online +
+                    ',' +
+                    $t('device.peak') +
+                    ':' +
+                    item.total
+                  "
                   :value="item.host"
                 />
               </el-select>
@@ -595,7 +741,6 @@
                 </template>
               </el-popconfirm>
             </el-form-item>
-
           </el-collapse-item>
 
           <el-collapse-item :title="$t('device.settings')" name="2">
@@ -634,12 +779,7 @@
               <el-radio-group
                 v-model="temp.device_parm.ptt_level_reversed"
                 aria-labelledby="device-ptt-level-label"
-                @change="
-                  changeByte(
-                    'ptt_level_reversed',
-                    temp.device_parm.ptt_level_reversed
-                  )
-                "
+                @change="changeByte('ptt_level_reversed', temp.device_parm.ptt_level_reversed)"
               >
                 <el-radio :value="1">{{ $t('device.highLevel') }}</el-radio>
                 <el-radio :value="0">{{ $t('device.lowLevel') }}</el-radio>
@@ -653,9 +793,7 @@
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
-                @change="
-                  changeByte('ptt_resistive', temp.device_parm.ptt_resistive)
-                "
+                @change="changeByte('ptt_resistive', temp.device_parm.ptt_resistive)"
               />
             </el-form-item>
 
@@ -679,9 +817,7 @@
                 :inactive-text="$t('device.modulePowerHigh')"
                 :active-value="1"
                 :inactive-value="0"
-                @change="
-                  changeByte('realy_status', temp.device_parm.realy_status)
-                "
+                @change="changeByte('realy_status', temp.device_parm.realy_status)"
               />
             </el-form-item>
 
@@ -692,9 +828,7 @@
                 inactive-color="#dcdfe6"
                 :active-value="1"
                 :inactive-value="0"
-                @change="
-                  changeByte('one_uv_power', temp.device_parm.one_uv_power)
-                "
+                @change="changeByte('one_uv_power', temp.device_parm.one_uv_power)"
               />
             </el-form-item>
 
@@ -710,7 +844,6 @@
                 <el-radio :value="0">{{ $t('device.relay') }}</el-radio>
                 <el-radio :value="1">PTT</el-radio>
               </el-radio-group>
-
             </el-form-item>
 
             <el-form-item :label="$t('device.addTailVoice') + ':'" prop="name">
@@ -721,9 +854,7 @@
                 show-input
                 :format-tooltip="formatTailVoice"
                 style="width: 95%"
-                @change="
-                  changeByte('add_tail_voice', temp.device_parm.add_tail_voice)
-                "
+                @change="changeByte('add_tail_voice', temp.device_parm.add_tail_voice)"
               />
             </el-form-item>
 
@@ -734,27 +865,19 @@
                 show-input
                 :format-tooltip="formatTailVoice"
                 style="width: 95%"
-                @change="
-                  changeByte(
-                    'remove_tail_voice',
-                    temp.device_parm.remove_tail_voice
-                  )
-                "
+                @change="changeByte('remove_tail_voice', temp.device_parm.remove_tail_voice)"
               />
             </el-form-item>
-
           </el-collapse-item>
 
           <el-collapse-item :title="$t('device.motoSection')" name="3">
             <el-form-item :label="$t('device.channelSwitch') + ':'" prop="moto_channel">
               <el-select
-            popper-class="platform-theme-select-dropdown"
+                popper-class="platform-theme-select-dropdown"
                 v-model="temp.device_parm.moto_channel"
                 style="width: 95%"
-                @change="
-                  changeByte('moto_channel', temp.device_parm.moto_channel)
-                "
-              ><el-option lable="0" :value="0" />
+                @change="changeByte('moto_channel', temp.device_parm.moto_channel)"
+                ><el-option lable="0" :value="0" />
                 <el-option v-for="(item, index) in 16" :key="index" :label="item" :value="item" />
               </el-select>
             </el-form-item>
@@ -775,7 +898,12 @@
                 style="width: 150px"
               /> -->
               <el-select v-model="temp.device_parm.one_recive_cxcss" style="width: 150px">
-                <el-option v-for="item in ctcssOptions" :key="item.id" :label="item.name" :value="item.id" />
+                <el-option
+                  v-for="item in ctcssOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
               </el-select>
             </el-form-item>
 
@@ -785,24 +913,44 @@
                 style="width: 150px"
               /> -->
               <el-select v-model="temp.device_parm.one_transmit_cxcss" style="width: 150px">
-                <el-option v-for="item in ctcssOptions" :key="item.id" :label="item.name" :value="item.id" />
+                <el-option
+                  v-for="item in ctcssOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
               </el-select>
             </el-form-item>
 
             <el-form-item :label="$t('device.volume1w') + ':'" prop="one_volume">
-              <el-slider v-model="temp.device_parm.one_volume" :max="9" show-input style="width: 95%" />
+              <el-slider
+                v-model="temp.device_parm.one_volume"
+                :max="9"
+                show-input
+                style="width: 95%"
+              />
             </el-form-item>
 
             <el-form-item :label="$t('device.sql1w') + ':'" prop="one_sql_level">
-              <el-slider v-model="temp.device_parm.one_sql_level" :max="8" show-input style="width: 95%" />
+              <el-slider
+                v-model="temp.device_parm.one_sql_level"
+                :max="8"
+                show-input
+                style="width: 95%"
+              />
             </el-form-item>
 
             <el-form-item :label="$t('device.micGain1w') + ':'" prop="one_mic_sensitivity">
-              <el-slider v-model="temp.device_parm.one_mic_sensitivity" :max="8" show-input style="width: 95%" />
+              <el-slider
+                v-model="temp.device_parm.one_mic_sensitivity"
+                :max="8"
+                show-input
+                style="width: 95%"
+              />
             </el-form-item>
             <el-form-item :label="$t('device.relayTemplate') + ':'" prop="current_relay">
               <el-select
-            popper-class="platform-theme-select-dropdown"
+                popper-class="platform-theme-select-dropdown"
                 v-model="current_relay"
                 style="width: 95%"
                 filterable
@@ -829,7 +977,9 @@
               </el-select>
             </el-form-item>
 
-            <el-button type="primary" @click="update1w(temp.device_parm)">{{ $t('device.save1w') }}</el-button>
+            <el-button type="primary" @click="update1w(temp.device_parm)">{{
+              $t('device.save1w')
+            }}</el-button>
           </el-collapse-item>
 
           <el-collapse-item :title="$t('device.module2wSection')" name="5">
@@ -869,7 +1019,7 @@
 
             <el-form-item :label="$t('device.relayTemplate') + ':'" prop="current_relay">
               <el-select
-            popper-class="platform-theme-select-dropdown"
+                popper-class="platform-theme-select-dropdown"
                 v-model="current_relay"
                 style="width: 95%"
                 filterable
@@ -896,7 +1046,9 @@
               </el-select>
             </el-form-item>
 
-            <el-button type="primary" @click="update2w(temp.device_parm)">{{ $t('device.save2w') }}</el-button>
+            <el-button type="primary" @click="update2w(temp.device_parm)">{{
+              $t('device.save2w')
+            }}</el-button>
           </el-collapse-item>
         </el-collapse>
       </el-form>
@@ -924,13 +1076,11 @@
         label-width="120px"
         style="width: 85%; margin-left: 5px"
       >
-
         <el-form-item :label="$t('device.deviceInfoLabel')" prop="version">
           {{ tempat.version }}
-
         </el-form-item>
 
-        <el-form-item v-for="v, k in tempat.atmap" :key="k" :label="k + '='" :prop="k">
+        <el-form-item v-for="(v, k) in tempat.atmap" :key="k" :label="k + '='" :prop="k">
           <el-select
             popper-class="platform-theme-select-dropdown"
             v-if="k === 'AT+D_IP'"
@@ -943,8 +1093,20 @@
             <el-option
               v-for="item in platformOptions"
               :key="item.id"
-              :label="item.host + '-' + item.name + '-' + '-' + $t('device.online') + ':' +
-                item.online + ',' + $t('device.peak') + ':' + item.total"
+              :label="
+                item.host +
+                '-' +
+                item.name +
+                '-' +
+                '-' +
+                $t('device.online') +
+                ':' +
+                item.online +
+                ',' +
+                $t('device.peak') +
+                ':' +
+                item.total
+              "
               :value="item.host"
             />
           </el-select>
@@ -955,7 +1117,12 @@
             v-model="tempat.atmap[k]"
             default-first-option
           >
-            <el-option v-for="item, idx in ['ON', 'OFF',]" :key="idx" :label="item" :value="item" />
+            <el-option
+              v-for="(item, idx) in ['ON', 'OFF']"
+              :key="idx"
+              :label="item"
+              :value="item"
+            />
           </el-select>
 
           <el-select
@@ -965,7 +1132,7 @@
             default-first-option
           >
             <el-option
-              v-for="item, idx in ['SQL_LO', 'VOX', 'MANUAL', 'DISABLE',]"
+              v-for="(item, idx) in ['SQL_LO', 'VOX', 'MANUAL', 'DISABLE']"
               :key="idx"
               :label="item"
               :value="item"
@@ -978,7 +1145,12 @@
             v-model="tempat.atmap[k]"
             default-first-option
           >
-            <el-option v-for="item, idx in ['ENABLE', 'DISABLE',]" :key="idx" :label="item" :value="item" />
+            <el-option
+              v-for="(item, idx) in ['ENABLE', 'DISABLE']"
+              :key="idx"
+              :label="item"
+              :value="item"
+            />
           </el-select>
 
           <el-select
@@ -987,27 +1159,29 @@
             v-model="tempat.atmap[k]"
             default-first-option
           >
-            <el-option v-for="item, idx in ['H', 'L',]" :key="idx" :label="item" :value="item" />
+            <el-option v-for="(item, idx) in ['H', 'L']" :key="idx" :label="item" :value="item" />
           </el-select>
 
-          <el-input v-else v-model="tempat.atmap[k]" style="width: 215px;" />
-          <el-button @click="handleChangeAT(tempat.callsign, tempat.ssid, k, tempat.atmap[k])">{{ $t('device.execute') }} </el-button>
+          <el-input v-else v-model="tempat.atmap[k]" style="width: 215px" />
+          <el-button @click="handleChangeAT(tempat.callsign, tempat.ssid, k, tempat.atmap[k])"
+            >{{ $t('device.execute') }}
+          </el-button>
           {{ ATREADMEOptions[k] }}
-
         </el-form-item>
         <el-form-item :label="$t('device.customAt')">
-          <el-input v-model="tempatcommand" style="width: 10%;" />=
-          <el-input v-model="tempatdata" style="width: 18%;" />
-          <el-button @click="handleChangeAT(tempat.callsign, tempat.ssid, tempatcommand, tempatdata)">{{ $t('device.execute') }} </el-button>
+          <el-input v-model="tempatcommand" style="width: 10%" />=
+          <el-input v-model="tempatdata" style="width: 18%" />
+          <el-button
+            @click="handleChangeAT(tempat.callsign, tempat.ssid, tempatcommand, tempatdata)"
+            >{{ $t('device.execute') }}
+          </el-button>
         </el-form-item>
-
       </el-form>
 
       <template #footer>
         <div class="dialog-footer" />
       </template>
     </el-dialog>
-
   </div>
 </template>
 
@@ -1021,7 +1195,7 @@ const buttonTypes = new Set([
   'info',
   'danger',
   'text',
-  'link'
+  'link',
 ])
 
 import {
@@ -1030,10 +1204,9 @@ import {
   queryDevice,
   deleteDevice,
   changeDeviceAT,
-
   changeDeviceParm,
   changeDevice1w,
-  changeDevice2w
+  changeDevice2w,
 } from '@/api/device'
 
 import { fetchPlatformList } from '@/api/platform'
@@ -1046,7 +1219,7 @@ import {
   DevModelOptions,
   DevStatusOptions,
   DevRFtypeOptions,
-  ATREADMEOptions
+  ATREADMEOptions,
 } from '@/utils/system'
 
 import { fetchRelayList } from '@/api/relay'
@@ -1055,12 +1228,7 @@ import { fetchRelayList } from '@/api/relay'
 import checkPermission from '@/utils/permission' // 权限判断函数
 
 import waves from '@/directive/waves' // waves directive
-import {
-  parseTime,
-  ValueFilter,
-  formatFileSize,
-  formatVoiceTime
-} from '@/utils'
+import { parseTime, ValueFilter, formatFileSize, formatVoiceTime } from '@/utils'
 
 import Pagination from '@/components/Pagination/index.vue' // secondary package based on el-pagination
 import { mapState } from 'pinia'
@@ -1091,7 +1259,7 @@ export default {
         up_freq: '430.0000',
         down_freq: '430.0000',
         send_ctss: '0',
-        recive_ctss: '0'
+        recive_ctss: '0',
       },
       currentPage: 1,
       pageSize: 10,
@@ -1120,7 +1288,7 @@ export default {
         group_id: undefined,
         page: 1,
         limit: 10,
-        sort: '-id'
+        sort: '-id',
       },
       showReviewer: false,
       tempatcommand: '',
@@ -1130,7 +1298,7 @@ export default {
         ssid: undefined,
         atcommand: '',
         data: undefined,
-        atmap: undefined
+        atmap: undefined,
       },
       temp: {
         id: undefined,
@@ -1147,8 +1315,8 @@ export default {
           one_recive_cxcss: '0',
           one_transmit_cxcss: '0',
           two_recive_cxcss: '0',
-          two_transmit_cxcss: '0'
-        }
+          two_transmit_cxcss: '0',
+        },
       },
 
       //  roles: ["admin", "editer", "guest"],
@@ -1160,26 +1328,20 @@ export default {
       devicedialogStatus: '',
       textMap: {
         update: 'Edit',
-        create: 'Create'
+        create: 'Create',
       },
-      rules: {
-      },
+      rules: {},
       parmrules: {
-        one_recive_freq: [
-          { validator: validateFreq, trigger: 'blur' }
-        ],
-        one_transmit_freq: [
-          { validator: validateFreq, trigger: 'blur' }
-        ]
+        one_recive_freq: [{ validator: validateFreq, trigger: 'blur' }],
+        one_transmit_freq: [{ validator: validateFreq, trigger: 'blur' }],
       },
 
-      downloadLoading: false,
-      uploadLoading: false
+      uploadLoading: false,
     }
   },
   computed: {
     ...mapState(useAppStore, ['device']),
-    ...mapState(useUserStore, ['callsign'])
+    ...mapState(useUserStore, ['callsign']),
   },
 
   created() {
@@ -1228,7 +1390,7 @@ export default {
       this.fetchDeviceList(this.listQuery).then((response) => {
         // console.log('device list:', response.data)
         this.total = response.data.total
-        this.list = (response.data.items || []).map(item => this.normalizeDeviceRow(item))
+        this.list = (response.data.items || []).map((item) => this.normalizeDeviceRow(item))
 
         // this.handleFilter()
 
@@ -1247,7 +1409,7 @@ export default {
 
       return {
         ...row,
-        chan_name: this.normalizeChanName(row.chan_name)
+        chan_name: this.normalizeChanName(row.chan_name),
       }
     },
 
@@ -1300,10 +1462,10 @@ export default {
       ElMessageBox.confirm(this.$t('device.deleteConfirm'), this.$t('device.notice'), {
         confirmButtonText: this.$t('employee.confirm'),
         cancelButtonText: this.$t('employee.cancel'),
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
-          deleteDevice(row).then(response => {
+          deleteDevice(row).then((response) => {
             const message = response?.data?.message || this.$t('device.completed')
             ElMessage.success(message)
             this.getList()
@@ -1401,7 +1563,7 @@ export default {
         ssid: row.ssid,
         atcommand: 'AT+READ',
         data: '123',
-        type: 1
+        type: 1,
       }
       changeDeviceAT(at).then((response) => {
         // this.tempat = response.data.items.last_atcommand
@@ -1435,7 +1597,7 @@ export default {
         ssid: ssid,
         atcommand: atcommand,
         data: data,
-        type: 2
+        type: 2,
       }
 
       changeDeviceAT(at).then((response) => {
@@ -1461,29 +1623,23 @@ export default {
       if (val !== 0) {
         this.temp.device_parm.two_recive_freq = val.down_freq + '0'
         this.temp.device_parm.two_transmit_freq = val.up_freq + '0'
-        this.temp.device_parm.two_recive_cxcss = this.ValueFilter(
-          val.recive_ctss,
-          ctcssOptions
-        )
-        this.temp.device_parm.two_transmit_cxcss = this.ValueFilter(
-          val.send_ctss,
-          ctcssOptions
-        )
+        this.temp.device_parm.two_recive_cxcss = this.ValueFilter(val.recive_ctss, ctcssOptions)
+        this.temp.device_parm.two_transmit_cxcss = this.ValueFilter(val.send_ctss, ctcssOptions)
       }
     },
 
     changeByte(name, val) {
       changeDeviceParm(
         'DMRID=' +
-        this.temp.dmrid +
-        '&callsign=' +
-        this.temp.callsign +
-        '&ssid=' +
-        this.temp.ssid +
-        '&' +
-        name +
-        '=' +
-        val
+          this.temp.dmrid +
+          '&callsign=' +
+          this.temp.callsign +
+          '&ssid=' +
+          this.temp.ssid +
+          '&' +
+          name +
+          '=' +
+          val
       ).then((response) => {
         ElMessage.info(response?.data?.message || this.$t('device.operationCompleted'))
       })
@@ -1492,21 +1648,21 @@ export default {
     changeIP(val) {
       changeDeviceParm(
         'DMRID=' +
-        this.temp.dmrid +
-        '&callsign=' +
-        this.temp.callsign +
-        '&ssid=' +
-        this.temp.ssid +
-        '&local_ipaddr=' +
-        val.local_ipaddr +
-        '&gateway=' +
-        val.gateway +
-        '&netmask=' +
-        val.netmask +
-        '&dns_ipaddr=' +
-        val.dns_ipaddr +
-        '&dest_domainname=' +
-        val.dest_domainname
+          this.temp.dmrid +
+          '&callsign=' +
+          this.temp.callsign +
+          '&ssid=' +
+          this.temp.ssid +
+          '&local_ipaddr=' +
+          val.local_ipaddr +
+          '&gateway=' +
+          val.gateway +
+          '&netmask=' +
+          val.netmask +
+          '&dns_ipaddr=' +
+          val.dns_ipaddr +
+          '&dest_domainname=' +
+          val.dest_domainname
       ).then((response) => {
         ElMessage.info(response?.data?.message || this.$t('device.operationCompleted'))
       })
@@ -1532,15 +1688,11 @@ export default {
     },
 
     filterCallsign(dev) {
-      return (
-        this.listQuery.callsign === '' || dev.callsign === this.listQuery.callsign
-      )
+      return this.listQuery.callsign === '' || dev.callsign === this.listQuery.callsign
     },
 
     filterGroup(dev) {
-      return (
-        this.listQuery.group_id === '' || dev.group_id === this.listQuery.group_id
-      )
+      return this.listQuery.group_id === '' || dev.group_id === this.listQuery.group_id
     },
 
     sortChange(data) {
@@ -1557,11 +1709,11 @@ export default {
       }
       this.handleFilter()
     },
-    handleSizeChange: function(size) {
+    handleSizeChange: function (size) {
       this.pageSize = size
       // console.log(this.pageSize) //每页下拉显示数据
     },
-    handleCurrentChange: function(currentPage) {
+    handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage
       // console.log(this.currentPage) //点击第几页
     },
@@ -1575,48 +1727,12 @@ export default {
         name: '',
         name_pref: '',
         type: 0,
-        status: 1
+        status: 1,
 
         // timestamp: new Date(),
         // roles: [],
         // password: ""
       }
-    },
-
-    async handleDownload() {
-      this.downloadLoading = true
-      // console.log(this.list)
-      if (this.list === null) {
-        this.downloadLoading = false
-        return
-      }
-      const excel = await import('@/vendor/Export2Excel')
-      const tHeader = ['姓名', '电话', '性别', '出生年月日']
-      const filterVal = ['name', 'phone', 'sex']
-      const data = this.formatJson(filterVal, this.list)
-      await excel.export_json_to_excel({
-        header: tHeader,
-        data,
-        filename: 'device-list'
-      })
-      this.downloadLoading = false
-    },
-
-    handleUpload() {
-      // this.UploadLoading = true;
-
-    },
-
-    formatJson(filterVal, jsonData) {
-      return jsonData.map((v) =>
-        filterVal.map((j) => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
-        })
-      )
     },
 
     returnIndex(id, array) {
@@ -1638,8 +1754,8 @@ export default {
         }
       }
       return false
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -1675,7 +1791,7 @@ export default {
 .clearfix:before,
 .clearfix:after {
   display: table;
-  content: "";
+  content: '';
 }
 
 .clearfix:after {
@@ -1759,7 +1875,11 @@ export default {
     }
 
     &.is-checked .el-switch__core {
-      background: linear-gradient(90deg, rgba(38, 239, 199, 0.9) 0%, rgba(63, 141, 255, 0.92) 100%) !important;
+      background: linear-gradient(
+        90deg,
+        rgba(38, 239, 199, 0.9) 0%,
+        rgba(63, 141, 255, 0.92) 100%
+      ) !important;
       border-color: rgba(54, 240, 203, 0.36) !important;
       box-shadow: 0 8px 20px rgba(63, 141, 255, 0.18);
     }
@@ -1807,8 +1927,13 @@ export default {
   .callsign-online-tag {
     color: var(--action-at-text, #96ffe7) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.42)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(16, 86, 77, 0.42) 0%, rgba(14, 55, 74, 0.28) 100%)) !important;
-    box-shadow: 0 0 0 1px rgba(54, 240, 203, 0.08) inset, 0 10px 24px rgba(54, 240, 203, 0.12);
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(16, 86, 77, 0.42) 0%, rgba(14, 55, 74, 0.28) 100%)
+    ) !important;
+    box-shadow:
+      0 0 0 1px rgba(54, 240, 203, 0.08) inset,
+      0 10px 24px rgba(54, 240, 203, 0.12);
   }
 
   .callsign-offline-tag {
@@ -1876,7 +2001,9 @@ export default {
       color: var(--action-edit-hover-text, #d9eeff) !important;
       border-color: var(--action-edit-hover-border, rgba(111, 182, 255, 0.9)) !important;
       background: var(--action-edit-hover-bg, rgba(43, 84, 140, 0.34)) !important;
-      box-shadow: 0 0 0 1px var(--action-edit-shadow, rgba(111, 182, 255, 0.24)) inset, 0 10px 24px var(--action-edit-shadow, rgba(63, 141, 255, 0.18));
+      box-shadow:
+        0 0 0 1px var(--action-edit-shadow, rgba(111, 182, 255, 0.24)) inset,
+        0 10px 24px var(--action-edit-shadow, rgba(63, 141, 255, 0.18));
     }
   }
 
@@ -1950,7 +2077,7 @@ export default {
 .clearfix:before,
 .clearfix:after {
   display: table;
-  content: "";
+  content: '';
 }
 
 .clearfix:after {
@@ -1980,7 +2107,10 @@ export default {
   border-radius: 20px;
   border: 1px solid var(--platform-border-light);
   padding: 10px 12px;
-  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
   box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
 
   &:hover {

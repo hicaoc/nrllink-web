@@ -12,7 +12,7 @@ export default function checkPermission(value) {
     const roles = userStore.roles
     const permissionRoles = value
 
-    const hasPermission = roles.some(role => {
+    const hasPermission = roles.some((role) => {
       return permissionRoles.includes(role)
     })
 

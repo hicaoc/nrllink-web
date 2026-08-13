@@ -5,7 +5,7 @@
  * @param  {[String]} mime [description]
  * @return {[blob]}      [description]
  */
-export default function(data, mime) {
+export default function (data, mime) {
   data = data.split(',')[1]
   data = window.atob(data)
   var ia = new Uint8Array(data.length)
@@ -14,6 +14,6 @@ export default function(data, mime) {
   }
   // canvas.toDataURL 返回的默认格式就是 image/png
   return new Blob([ia], {
-    type: mime
+    type: mime,
   })
 }

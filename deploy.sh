@@ -6,7 +6,7 @@ set -euo pipefail
 hostlist='182.92.158.141 39.106.62.160 nrlptt.com ba1gm.nrlptt.com nrlptt.bd4vki.xyz www.bg1vif.com  bd4vki.nrlptt.com ah.nrlptt.com nrl.bd4two.site  bh1osw.nrlptt.com ham.73ham.com js.nrlptt.com www.bg1vif.com usa.nrlptt.com yz.hamuv.com'
 
 # 调试单机时可覆盖：
-#hostlist='js.nrlptt.com nrlptt.com'
+hostlist='js.nrlptt.com nrlptt.com'
  
 #hostlist='nrl.bd4two.site'
 
@@ -14,7 +14,7 @@ hostlist='182.92.158.141 39.106.62.160 nrlptt.com ba1gm.nrlptt.com nrlptt.bd4vki
 #hostlist='nrlptt.bd4vki.xyz'
 #hostlist='nrlptt.com'
 #hostlist='bd4vki.nrlptt.com'
-#hostlist='yz.hamuv.com'
+hostlist='yz.hamuv.com'
 #hostlist='www.bg1vif.com'
 #hostlist='ah.nrlptt.com'
 
@@ -29,12 +29,12 @@ remote_pkg="/tmp/$(basename "${dist_pkg}")"
 docker_host="192.168.35.40"
 docker_target="/root/nrllink/nrllink/www"
 
-# 可选：yarn lint --fix
-# 可选：yarn build:prod
+# 可选：vp check
+# 可选：vp build
 
 if [ ! -d dist ]; then
-  echo "dist 目录不存在，先执行构建  yarn build:prod）"
-  yarn build:prod
+  echo "dist 目录不存在，先执行构建 vp build）"
+  vp build
 fi
 
 cleanup() {

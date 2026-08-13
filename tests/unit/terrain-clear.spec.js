@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vite-plus/test'
 import * as THREE from 'three'
 import { Terrain } from '@/three/world/Terrain'
 
@@ -26,7 +26,10 @@ describe('Terrain.clearVegetationNear', () => {
       return near
     }
 
-    const villaPos = [{ x: 0, z: 0 }, { x: 26, z: 30 }]
+    const villaPos = [
+      { x: 0, z: 0 },
+      { x: 26, z: 30 },
+    ]
     const before0 = countNear(0, 0, 17)
     const before1 = countNear(26, 30, 17)
     const total = terrain.treePairs.reduce((sum, [t]) => sum + t.count, 0)

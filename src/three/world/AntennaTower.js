@@ -37,14 +37,21 @@ export class AntennaTower {
   }
 
   _buildLattice() {
-    const material = new THREE.MeshStandardMaterial({ color: 0x9aa7b5, roughness: 0.6, metalness: 0.6 })
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x9aa7b5,
+      roughness: 0.6,
+      metalness: 0.6,
+    })
     const halfBase = 1.7
     const halfTop = 0.55
     const corners = [
-      [-1, -1], [1, -1], [1, 1], [-1, 1]
+      [-1, -1],
+      [1, -1],
+      [1, 1],
+      [-1, 1],
     ]
     // 4 根立柱,向内收分
-    corners.forEach(corner => {
+    corners.forEach((corner) => {
       const leg = new THREE.Mesh(new THREE.BoxGeometry(0.22, TOWER_HEIGHT, 0.22), material)
       const bottomX = corner[0] * halfBase
       const bottomZ = corner[1] * halfBase
@@ -122,7 +129,7 @@ export class AntennaTower {
         opacity: 0.9,
         depthWrite: false,
         blending: THREE.AdditiveBlending,
-        color: 0x8ff9de
+        color: 0x8ff9de,
       })
       const points = new THREE.Points(geometry, material)
       points.name = `data-particles-${systemIndex}`
@@ -152,7 +159,7 @@ export class AntennaTower {
     }
 
     // 0/1 粒子沿塔身上飘,到顶后回到底部
-    this.particleSystems.forEach(system => {
+    this.particleSystems.forEach((system) => {
       const attr = system.points.geometry.attributes.position
       system.params.forEach((param, i) => {
         param.y += param.speed * dt

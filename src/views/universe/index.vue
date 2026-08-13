@@ -13,7 +13,9 @@
             画质：{{ quality === 'high' ? '高' : '低' }}
           </button>
           <router-link to="/login" class="universe-link">返回旧登录页</router-link>
-          <router-link v-if="isAuthed" to="/" class="universe-link universe-link-solid">进入控制台</router-link>
+          <router-link v-if="isAuthed" to="/" class="universe-link universe-link-solid"
+            >进入控制台</router-link
+          >
         </div>
       </div>
 
@@ -30,14 +32,22 @@
             class="universe-crumb"
             :class="{ 'is-current': index === breadcrumbs.length - 1 }"
             @click="gotoCrumb(crumb.mode)"
-          >{{ crumb.label }}</button>
+          >
+            {{ crumb.label }}
+          </button>
           <span v-if="index < breadcrumbs.length - 1" class="universe-crumb-sep">›</span>
         </template>
       </div>
 
-      <div class="universe-hint">左键拖拽旋转 · 右键拖拽平移 · 滚轮缩放 · WASD移动 · Q/E升降 · 再点别墅进入超空间大厅 · Esc返回</div>
+      <div class="universe-hint">
+        左键拖拽旋转 · 右键拖拽平移 · 滚轮缩放 · WASD移动 · Q/E升降 · 再点别墅进入超空间大厅 ·
+        Esc返回
+      </div>
 
-      <div class="universe-hint">左键拖拽旋转 · 右键拖拽平移 · 滚轮缩放 · WASD移动 · Q/E升降 · 再点别墅进入超空间大厅 · Esc返回</div>
+      <div class="universe-hint">
+        左键拖拽旋转 · 右键拖拽平移 · 滚轮缩放 · WASD移动 · Q/E升降 · 再点别墅进入超空间大厅 ·
+        Esc返回
+      </div>
 
       <login-console
         v-if="!isAuthed"
@@ -92,7 +102,7 @@ export default {
       devicePanelVisible: false,
       selectedDevice: null,
       selectedVilla: null,
-      selectedRoom: null
+      selectedRoom: null,
     }
   },
   computed: {
@@ -121,7 +131,7 @@ export default {
         crumbs.push({ label: this.selectedRoom.name || '房间', mode: 'ROOM' })
       }
       return crumbs
-    }
+    },
   },
   created() {
     const universe = useUniverseData()
@@ -134,16 +144,24 @@ export default {
       }
     }
     this.unwatchers = [
-      watch(universe.platforms, list => {
-        if (this.app) {
-          this.app.setPlatforms(list || [])
-        }
-      }, { deep: true }),
-      watch(universe.groups, list => {
-        if (this.app) {
-          this.app.setGroups(list || [])
-        }
-      }, { deep: true })
+      watch(
+        universe.platforms,
+        (list) => {
+          if (this.app) {
+            this.app.setPlatforms(list || [])
+          }
+        },
+        { deep: true }
+      ),
+      watch(
+        universe.groups,
+        (list) => {
+          if (this.app) {
+            this.app.setGroups(list || [])
+          }
+        },
+        { deep: true }
+      ),
     ]
   },
   mounted() {
@@ -153,7 +171,7 @@ export default {
     })
   },
   beforeUnmount() {
-    this.unwatchers.forEach(unwatch => unwatch())
+    this.unwatchers.forEach((unwatch) => unwatch())
     this.unwatchers = []
     if (this.universe && this.universe.stopAutoRefresh) {
       this.universe.stopAutoRefresh()
@@ -194,7 +212,7 @@ export default {
         x: payload.screen.x,
         y: payload.screen.y,
         kind: payload.kind,
-        data: payload.data
+        data: payload.data,
       }
     },
     async handleSelect(payload) {
@@ -263,7 +281,7 @@ export default {
       const roomId = this.app.currentRoomId
       const list = roomId != null ? map[roomId] : null
       if (list) {
-        const target = list.find(item => item.id === device.id)
+        const target = list.find((item) => item.id === device.id)
         if (target) {
           Object.assign(target, device)
         }
@@ -280,8 +298,8 @@ export default {
       if (this.app) {
         this.app.setQuality(this.quality)
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

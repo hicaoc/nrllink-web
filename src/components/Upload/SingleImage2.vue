@@ -12,13 +12,11 @@
       <el-icon class="el-icon-upload">
         <Upload />
       </el-icon>
-      <div class="el-upload__text">
-        Drag或<em>点击上传</em>
-      </div>
+      <div class="el-upload__text">Drag或<em>点击上传</em></div>
     </el-upload>
-    <div v-show="imageUrl.length>0" class="image-preview">
-      <div v-show="imageUrl.length>1" class="image-preview-wrapper">
-        <img :src="imageUrl">
+    <div v-show="imageUrl.length > 0" class="image-preview">
+      <div v-show="imageUrl.length > 1" class="image-preview-wrapper">
+        <img :src="imageUrl" />
         <div class="image-preview-action">
           <el-icon class="el-icon-delete" @click="rmImage">
             <Delete />
@@ -37,19 +35,19 @@ export default {
   props: {
     value: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   data() {
     return {
       tempUrl: '',
-      dataObj: { token: '', key: '' }
+      dataObj: { token: '', key: '' },
     }
   },
   computed: {
     imageUrl() {
       return this.value
-    }
+    },
   },
   methods: {
     rmImage() {
@@ -64,19 +62,21 @@ export default {
     beforeUpload() {
       const _self = this
       return new Promise((resolve, reject) => {
-        getToken().then(response => {
-          const key = response.data.qiniu_key
-          const token = response.data.qiniu_token
-          _self._data.dataObj.token = token
-          _self._data.dataObj.key = key
-          this.tempUrl = response.data.qiniu_url
-          resolve(true)
-        }).catch(() => {
-          reject(false)
-        })
+        getToken()
+          .then((response) => {
+            const key = response.data.qiniu_key
+            const token = response.data.qiniu_token
+            _self._data.dataObj.token = token
+            _self._data.dataObj.key = key
+            this.tempUrl = response.data.qiniu_url
+            resolve(true)
+          })
+          .catch(() => {
+            reject(false)
+          })
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -115,8 +115,8 @@ export default {
       color: #fff;
       opacity: 0;
       font-size: 20px;
-      background-color: rgba(0, 0, 0, .5);
-      transition: opacity .3s;
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: opacity 0.3s;
       cursor: pointer;
       text-align: center;
       line-height: 200px;

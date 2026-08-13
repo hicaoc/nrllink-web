@@ -95,7 +95,9 @@ export class SerialATClient {
       } finally {
         try {
           this.reader.releaseLock()
-        } catch (e) { /* ignore */ }
+        } catch (e) {
+          /* ignore */
+        }
         this.reader = null
       }
     }
@@ -106,7 +108,7 @@ export class SerialATClient {
     const lines = this.buffer.split(/\r\n|\r|\n/)
     this.buffer = lines.pop() || ''
 
-    lines.forEach(raw => {
+    lines.forEach((raw) => {
       const line = raw.trim()
       if (!line) return
       this._emit('rx', line)
@@ -124,7 +126,7 @@ export class SerialATClient {
     if (!waiter) return
     this.waiter = null
     clearTimeout(waiter.timer)
-    const ok = waiter.lines.some(line => /^OK(\b.*)?$/i.test(line))
+    const ok = waiter.lines.some((line) => /^OK(\b.*)?$/i.test(line))
     waiter.resolve({ lines: waiter.lines, ok })
   }
 
@@ -188,8 +190,9 @@ export class SerialATClient {
       const writer = this.port.writable.getWriter()
       const payload = new TextEncoder().encode('AT+SET=READ\r\n')
       this._emit('tx', 'AT+SET=READ')
-      writer.write(payload)
-        .catch(error => {
+      writer
+        .write(payload)
+        .catch((error) => {
           if (this.binaryWaiter) {
             this._settleBinaryWaiter(null)
           }
@@ -198,7 +201,9 @@ export class SerialATClient {
         .finally(() => {
           try {
             writer.releaseLock()
-          } catch (e) { /* ignore */ }
+          } catch (e) {
+            /* ignore */
+          }
         })
     })
   }
@@ -224,7 +229,9 @@ export class SerialATClient {
     } finally {
       try {
         writer.releaseLock()
-      } catch (e) { /* ignore */ }
+      } catch (e) {
+        /* ignore */
+      }
     }
 
     // 设备可能返回 OK / ERROR，也可能静默；等待片刻取结果，超时视为已送达
@@ -232,7 +239,7 @@ export class SerialATClient {
   }
 
   _waitResponse(timeout) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       if (this.waiter) {
         this._settleWaiter()
       }
@@ -253,7 +260,7 @@ export class SerialATClient {
       }
     }
     // 设备可能只返回版本本身，取第一条非 OK/ERROR/回显 的行
-    const dataLine = result.lines.find(line => {
+    const dataLine = result.lines.find((line) => {
       const text = line.trim()
       return text && !/^(OK|ERROR)(\b.*)?$/i.test(text) && !/AT\+VER=\?/i.test(text)
     })
@@ -283,8 +290,9 @@ export class SerialATClient {
       const writer = this.port.writable.getWriter()
       const payload = new TextEncoder().encode(command + '\r\n')
       this._emit('tx', command)
-      writer.write(payload)
-        .catch(error => {
+      writer
+        .write(payload)
+        .catch((error) => {
           if (this.waiter) {
             this._settleWaiter()
           }
@@ -293,7 +301,9 @@ export class SerialATClient {
         .finally(() => {
           try {
             writer.releaseLock()
-          } catch (e) { /* ignore */ }
+          } catch (e) {
+            /* ignore */
+          }
         })
     })
   }
@@ -302,7 +312,7 @@ export class SerialATClient {
   async readAll(timeout = 4000) {
     const result = await this.sendCommand('AT+READ=123', { timeout })
     const map = {}
-    result.lines.forEach(line => {
+    result.lines.forEach((line) => {
       const parsed = parseATLine(line)
       if (parsed) {
         map[parsed.key] = parsed.value
@@ -321,9 +331,13 @@ export class SerialATClient {
       }
     }
     // 设备可能只返回值本身，取第一条非 OK/ERROR/回显 的行
-    const dataLine = result.lines.find(line => {
+    const dataLine = result.lines.find((line) => {
       const text = line.trim()
-      return text && !/^(OK|ERROR)(\b.*)?$/i.test(text) && !text.toUpperCase().startsWith(key.toUpperCase())
+      return (
+        text &&
+        !/^(OK|ERROR)(\b.*)?$/i.test(text) &&
+        !text.toUpperCase().startsWith(key.toUpperCase())
+      )
     })
     return dataLine ? dataLine.trim() : ''
   }
@@ -348,20 +362,26 @@ export class SerialATClient {
     if (this.port && this._disconnectHandler) {
       try {
         this.port.removeEventListener('disconnect', this._disconnectHandler)
-      } catch (e) { /* ignore */ }
+      } catch (e) {
+        /* ignore */
+      }
       this._disconnectHandler = null
     }
 
     if (this.reader) {
       try {
         await this.reader.cancel()
-      } catch (e) { /* ignore */ }
+      } catch (e) {
+        /* ignore */
+      }
     }
 
     if (this.port) {
       try {
         await this.port.close()
-      } catch (e) { /* ignore */ }
+      } catch (e) {
+        /* ignore */
+      }
       this.port = null
     }
 

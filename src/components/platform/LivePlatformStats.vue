@@ -13,20 +13,20 @@ export default {
   props: {
     onlineDevices: {
       type: Number,
-      default: 0
+      default: 0,
     },
     connectedClients: {
       type: Number,
-      default: 0
+      default: 0,
     },
     totalSubs: {
       type: Number,
-      default: 0
+      default: 0,
     },
     centered: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     statItems() {
@@ -34,21 +34,21 @@ export default {
         {
           key: 'onlineDevices',
           value: this.onlineDevices,
-          label: this.$t('login.onlineDevices')
+          label: this.$t('login.onlineDevices'),
         },
         {
           key: 'connectedClients',
           value: this.connectedClients,
-          label: this.$t('login.onlineBrowsers')
+          label: this.$t('login.onlineBrowsers'),
         },
         {
           key: 'totalSubs',
           value: this.totalSubs,
-          label: this.$t('login.audioSubscriptions')
-        }
+          label: this.$t('login.audioSubscriptions'),
+        },
       ]
-    }
-  }
+    },
+  },
 }
 </script>
 

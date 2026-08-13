@@ -6,11 +6,11 @@ export const useAppStore = defineStore('app', {
   state: () => ({
     sidebar: {
       opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
-      withoutAnimation: false
+      withoutAnimation: false,
     },
     device: 'desktop',
     language: getLanguage(),
-    size: Cookies.get('size') || 'medium'
+    size: Cookies.get('size') || 'medium',
   }),
   actions: {
     toggleSideBar() {
@@ -37,6 +37,6 @@ export const useAppStore = defineStore('app', {
     setSize(size) {
       this.size = size
       Cookies.set('size', size)
-    }
-  }
+    },
+  },
 })

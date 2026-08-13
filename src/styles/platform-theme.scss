@@ -81,11 +81,17 @@
   --sidebar-sub-hover: #1a3050;
 }
 
-*, *::before, *::after {
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+*,
+*::before,
+*::after {
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
-body, html {
+body,
+html {
   background: var(--platform-deep-98) !important;
 }
 
@@ -121,9 +127,15 @@ body, html {
 
   &.is-active {
     border-color: var(--platform-border-strong);
-    background: linear-gradient(135deg, var(--platform-accent-10) 0%, var(--platform-accent-16) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--platform-accent-10) 0%,
+      var(--platform-accent-16) 100%
+    );
     color: var(--platform-ink);
-    box-shadow: 0 0 0 1px var(--platform-accent-08) inset, 0 4px 16px var(--platform-accent-16);
+    box-shadow:
+      0 0 0 1px var(--platform-accent-08) inset,
+      0 4px 16px var(--platform-accent-16);
 
     .capsule-indicator {
       background: linear-gradient(135deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%);
@@ -135,8 +147,12 @@ body, html {
 .platform-theme-page {
   min-height: calc(100vh - 84px);
   padding: 24px;
-  background:
-    radial-gradient(980px 460px at 18% -14%, var(--platform-accent-2) 0%, var(--platform-surface) 56%, var(--platform-surface-soft) 100%);
+  background: radial-gradient(
+    980px 460px at 18% -14%,
+    var(--platform-accent-2) 0%,
+    var(--platform-surface) 56%,
+    var(--platform-surface-soft) 100%
+  );
   color: var(--platform-ink);
 }
 
@@ -254,7 +270,9 @@ body, html {
   border: 1px solid var(--platform-border) !important;
   border-radius: 18px !important;
   background: var(--platform-shell) !important;
-  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.42), 0 0 0 1px var(--platform-accent-08) inset !important;
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.42),
+    0 0 0 1px var(--platform-accent-08) inset !important;
   overflow: hidden;
 }
 
@@ -268,18 +286,29 @@ body, html {
   margin: 4px 0;
   border-radius: 12px;
   color: var(--platform-ink) !important;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .platform-theme-select-dropdown .el-select-dropdown__item.hover,
 .platform-theme-select-dropdown .el-select-dropdown__item:hover {
-  background: linear-gradient(90deg, var(--platform-accent-10) 0%, var(--platform-accent-16) 100%) !important;
+  background: linear-gradient(
+    90deg,
+    var(--platform-accent-10) 0%,
+    var(--platform-accent-16) 100%
+  ) !important;
   color: var(--platform-ink) !important;
   transform: translateX(2px);
 }
 
 .platform-theme-select-dropdown .el-select-dropdown__item.selected {
-  background: linear-gradient(90deg, var(--platform-accent-16) 0%, var(--platform-accent-22) 100%) !important;
+  background: linear-gradient(
+    90deg,
+    var(--platform-accent-16) 0%,
+    var(--platform-accent-22) 100%
+  ) !important;
   color: var(--platform-accent) !important;
   font-weight: 700;
 }
@@ -470,7 +499,10 @@ body, html {
 }
 
 .platform-theme-page .el-table--border .el-table__cell,
-.platform-theme-page .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
+.platform-theme-page
+  .el-table__body-wrapper
+  .el-table--border.is-scrolling-left
+  ~ .el-table__fixed {
   border-right-color: var(--platform-border-lighter) !important;
 }
 
@@ -490,7 +522,11 @@ body, html {
 }
 
 .platform-theme-page .el-pager li.is-active {
-  background: linear-gradient(90deg, var(--platform-accent-18) 0%, var(--platform-accent-22) 100%) !important;
+  background: linear-gradient(
+    90deg,
+    var(--platform-accent-18) 0%,
+    var(--platform-accent-22) 100%
+  ) !important;
   color: var(--platform-accent) !important;
   border-color: var(--platform-border-accent);
 }
@@ -502,7 +538,9 @@ body, html {
   --el-dialog-bg-color: var(--platform-deep-98) !important;
   background: var(--platform-shell) !important;
   border: 1px solid var(--platform-border) !important;
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--platform-accent-08) inset !important;
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.5),
+    0 0 0 1px var(--platform-accent-08) inset !important;
   border-radius: 24px !important;
 }
 
@@ -556,7 +594,9 @@ body, html {
 
 .platform-theme-dialog .el-dialog__headerbtn .el-dialog__close {
   color: var(--platform-ink-dim) !important;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .platform-theme-dialog .el-dialog__headerbtn:hover .el-dialog__close {
@@ -608,12 +648,19 @@ body, html {
   border-color: var(--platform-border-input) !important;
   background: var(--platform-surface-88) !important;
   color: var(--platform-ink-dim) !important;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .platform-theme-dialog .el-input-number__decrease:hover,
 .platform-theme-dialog .el-input-number__increase:hover {
-  background: linear-gradient(90deg, var(--platform-accent-12) 0%, var(--platform-accent-16) 100%) !important;
+  background: linear-gradient(
+    90deg,
+    var(--platform-accent-12) 0%,
+    var(--platform-accent-16) 100%
+  ) !important;
   border-color: var(--platform-border-stronger) !important;
   color: var(--platform-ink) !important;
 }
@@ -640,7 +687,9 @@ body, html {
 .platform-theme-dialog .el-select__wrapper.is-focused,
 .platform-theme-dialog .el-textarea__inner:focus,
 .platform-theme-dialog .el-input-number__wrapper.is-focus {
-  box-shadow: 0 0 0 1px var(--platform-border-stronger) inset, 0 0 0 4px var(--platform-accent-08) !important;
+  box-shadow:
+    0 0 0 1px var(--platform-border-stronger) inset,
+    0 0 0 4px var(--platform-accent-08) !important;
 }
 
 .platform-theme-dialog .el-input.is-disabled .el-input__wrapper,
@@ -689,7 +738,11 @@ body, html {
 
 .platform-theme-dialog .el-radio__input.is-checked .el-radio__inner {
   border-color: var(--platform-border-strong) !important;
-  background: linear-gradient(135deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    var(--platform-accent) 0%,
+    var(--platform-accent-2) 100%
+  ) !important;
 }
 
 .platform-theme-dialog .el-radio__input.is-checked .el-radio__inner::after {
@@ -697,7 +750,11 @@ body, html {
 }
 
 .platform-theme-dialog .el-switch {
-  --el-switch-on-color: linear-gradient(90deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%);
+  --el-switch-on-color: linear-gradient(
+    90deg,
+    var(--platform-accent) 0%,
+    var(--platform-accent-2) 100%
+  );
   --el-switch-off-color: var(--platform-border);
 }
 
@@ -707,7 +764,11 @@ body, html {
 }
 
 .platform-theme-dialog .is-checked .el-switch__core {
-  background: linear-gradient(90deg, var(--platform-accent-85) 0%, var(--platform-accent-88) 100%) !important;
+  background: linear-gradient(
+    90deg,
+    var(--platform-accent-85) 0%,
+    var(--platform-accent-88) 100%
+  ) !important;
 }
 
 .platform-theme-dialog .el-switch__label,
@@ -726,7 +787,11 @@ body, html {
 }
 
 .platform-theme-dialog .el-slider__bar {
-  background: linear-gradient(90deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%) !important;
+  background: linear-gradient(
+    90deg,
+    var(--platform-accent) 0%,
+    var(--platform-accent-2) 100%
+  ) !important;
 }
 
 .platform-theme-dialog .el-slider__button {
@@ -754,13 +819,19 @@ body, html {
   padding: 0 14px;
   border-radius: 16px;
   background: var(--platform-surface-xlight) !important;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
 .platform-theme-dialog .el-collapse-item__header.is-active,
 .platform-theme-dialog .el-collapse-item__header:hover {
   border-color: var(--platform-border-strong) !important;
-  background: linear-gradient(90deg, var(--platform-accent-08) 0%, var(--platform-accent-14) 100%) !important;
+  background: linear-gradient(
+    90deg,
+    var(--platform-accent-08) 0%,
+    var(--platform-accent-14) 100%
+  ) !important;
 }
 
 .platform-theme-dialog .el-collapse-item__content {
@@ -785,7 +856,11 @@ body, html {
 }
 
 .platform-theme-dialog .el-button--primary {
-  background: linear-gradient(90deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%) !important;
+  background: linear-gradient(
+    90deg,
+    var(--platform-accent) 0%,
+    var(--platform-accent-2) 100%
+  ) !important;
   box-shadow: 0 12px 28px var(--platform-accent-22);
   color: var(--platform-deep) !important;
 }
@@ -833,7 +908,10 @@ body, html {
   }
 
   .platform-theme-page .filter-container.platform-theme-toolbar .filter-item.action-btn .el-icon,
-  .platform-theme-page .filter-container.platform-theme-toolbar .filter-item.action-btn-secondary .el-icon {
+  .platform-theme-page
+    .filter-container.platform-theme-toolbar
+    .filter-item.action-btn-secondary
+    .el-icon {
     margin-right: 6px;
   }
 
@@ -891,7 +969,9 @@ body, html {
   --el-messagebox-border-color: var(--platform-border) !important;
   background: var(--platform-shell) !important;
   border: 1px solid var(--platform-border) !important;
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--platform-accent-08) inset !important;
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.5),
+    0 0 0 1px var(--platform-accent-08) inset !important;
   border-radius: 20px !important;
 }
 
@@ -930,7 +1010,11 @@ body, html {
 }
 
 .el-message-box__btns .el-button--primary {
-  background: linear-gradient(90deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%) !important;
+  background: linear-gradient(
+    90deg,
+    var(--platform-accent) 0%,
+    var(--platform-accent-2) 100%
+  ) !important;
   border-color: transparent !important;
   color: var(--platform-deep) !important;
   font-weight: 700;

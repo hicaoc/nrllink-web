@@ -1,9 +1,9 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig, loadEnv, lazyPlugins } from 'vite-plus'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import createSvgSpritePlugin from 'vite-plugin-svg-sprite'
 import path from 'path'
 
 export default defineConfig(({ mode }) => {
@@ -14,25 +14,48 @@ export default defineConfig(({ mode }) => {
   const proxyTarget = env.VITE_PROXY_TARGET || 'https://js.nrlptt.com/'
 
   return {
-    plugins: [
+    fmt: {
+      singleQuote: true,
+      semi: false,
+      trailingComma: 'es5',
+      ignorePatterns: [
+        'docs/**',
+        'serial-tool/**',
+        'public/**',
+        'dist/**',
+        '*.md',
+        'src/assets/custom-theme/**',
+        'src/auto-imports.d.ts',
+        'src/components.d.ts',
+      ],
+    },
+    lint: {
+      jsPlugins: [{ name: 'vite-plus', specifier: 'vite-plus/oxlint-plugin' }],
+      rules: { 'vite-plus/prefer-vite-plus-imports': 'error' },
+      options: { typeAware: true, typeCheck: true },
+    },
+    staged: {
+      '*.{js,ts,tsx,vue}': 'vp check --fix',
+    },
+    plugins: lazyPlugins(() => [
       vue(),
       AutoImport({
         resolvers: [ElementPlusResolver({ importStyle: 'css' })],
-        dts: generateDts ? 'src/auto-imports.d.ts' : false
+        dts: generateDts ? 'src/auto-imports.d.ts' : false,
       }),
       Components({
         resolvers: [ElementPlusResolver({ importStyle: 'css', directives: true })],
-        dts: generateDts ? 'src/components.d.ts' : false
+        dts: generateDts ? 'src/components.d.ts' : false,
       }),
-      createSvgIconsPlugin({
-        iconDirs: [path.resolve(process.cwd(), 'src/icons/svg')],
-        symbolId: 'icon-[name]'
-      })
-    ],
+      createSvgSpritePlugin({
+        symbolId: 'icon-[name]',
+        include: '**/src/icons/svg/*.svg',
+      }),
+    ]),
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, 'src')
-      }
+        '@': path.resolve(__dirname, 'src'),
+      },
     },
     server: {
       port: 9527,
@@ -42,16 +65,16 @@ export default defineConfig(({ mode }) => {
           target: proxyTarget,
           ws: true,
           changeOrigin: true,
-          rewrite: (pathValue) => pathValue.replace(new RegExp(`^${baseApi}`), '')
-        }
-      }
+          rewrite: (pathValue) => pathValue.replace(new RegExp(`^${baseApi}`), ''),
+        },
+      },
     },
     css: {
       preprocessorOptions: {
         scss: {
-          silenceDeprecations: ['legacy-js-api']
-        }
-      }
+          silenceDeprecations: ['legacy-js-api'],
+        },
+      },
     },
     build: {
       outDir: 'dist',
@@ -74,15 +97,15 @@ export default defineConfig(({ mode }) => {
               return 'vendor'
             }
             return undefined
-          }
-        }
+          },
+        },
       },
-      chunkSizeWarningLimit: 800
+      chunkSizeWarningLimit: 800,
     },
     test: {
       environment: 'jsdom',
       globals: true,
-      setupFiles: ['tests/setup.js']
-    }
+      setupFiles: ['tests/setup.js'],
+    },
   }
 })

@@ -30,6 +30,7 @@ declare module 'vue' {
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
+    ElDivider: typeof import('element-plus/es')['ElDivider']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
     ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
@@ -90,7 +91,6 @@ declare module 'vue' {
     Sticky: typeof import('./components/Sticky/index.vue')['default']
     SvgIcon: typeof import('./components/SvgIcon/index.vue')['default']
     ThemePicker: typeof import('./components/ThemePicker/index.vue')['default']
-    UploadExcel: typeof import('./components/UploadExcel/index.vue')['default']
   }
   export interface GlobalDirectives {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

@@ -1,11 +1,11 @@
 <template>
-  <div :style="{zIndex:zIndex,height:height,width:width}" class="pan-item">
+  <div :style="{ zIndex: zIndex, height: height, width: width }" class="pan-item">
     <div class="pan-info">
       <div class="pan-info-roles-container">
         <slot />
       </div>
     </div>
-    <img :src="image" class="pan-thumb">
+    <img :src="image" class="pan-thumb" />
   </div>
 </template>
 
@@ -15,21 +15,21 @@ export default {
   props: {
     image: {
       type: String,
-      required: true
+      required: true,
     },
     zIndex: {
       type: Number,
-      default: 1
+      default: 1,
     },
     width: {
       type: String,
-      default: '150px'
+      default: '150px',
     },
     height: {
       type: String,
-      default: '150px'
-    }
-  }
+      default: '150px',
+    },
+  },
 }
 </script>
 
@@ -69,7 +69,11 @@ export default {
   top: 40%;
   left: 95%;
   margin: -4px 0 0 -4px;
-  background: radial-gradient(ellipse at center, rgba(14, 14, 14, 1) 0%, rgba(125, 126, 125, 1) 100%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(14, 14, 14, 1) 0%,
+    rgba(125, 126, 125, 1) 100%
+  );
   box-shadow: 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
@@ -92,7 +96,9 @@ export default {
   padding: 22px 0 0 0;
   height: 85px;
   font-family: 'Open Sans', Arial, sans-serif;
-  text-shadow: 0 0 1px #fff, 0 1px 2px rgba(0, 0, 0, 0.3);
+  text-shadow:
+    0 0 1px #fff,
+    0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .pan-info p {
@@ -121,7 +127,10 @@ export default {
   margin: 7px auto 0;
   font-family: 'Open Sans', Arial, sans-serif;
   opacity: 0;
-  transition: transform 0.3s ease-in-out 0.2s, opacity 0.3s ease-in-out 0.2s, background 0.2s linear 0s;
+  transition:
+    transform 0.3s ease-in-out 0.2s,
+    opacity 0.3s ease-in-out 0.2s,
+    background 0.2s linear 0s;
   transform: translateX(60px) rotate(90deg);
 }
 

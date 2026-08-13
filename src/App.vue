@@ -23,14 +23,14 @@ export default {
         medium: 'default',
         small: 'small',
         default: 'default',
-        '': 'default'
+        '': 'default',
       }
       const rawSize = this.size || Cookies.get('size') || 'default'
       return sizeMap[rawSize] || 'default'
     },
     elementLocale() {
       return this.language === 'zh' ? elementZhLocale : elementEnLocale
-    }
-  }
+    },
+  },
 }
 </script>

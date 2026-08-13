@@ -1,8 +1,12 @@
 <template>
-  <div ref="rightPanel" :class="{show:show}" class="rightPanel-container">
+  <div ref="rightPanel" :class="{ show: show }" class="rightPanel-container">
     <div class="rightPanel-background" />
     <div class="rightPanel">
-      <div class="handle-button" :style="{'top':buttonTop+'px','background-color':theme}" @click="show=!show">
+      <div
+        class="handle-button"
+        :style="{ top: buttonTop + 'px', 'background-color': theme }"
+        @click="show = !show"
+      >
         <el-icon v-if="show">
           <Close />
         </el-icon>
@@ -26,23 +30,23 @@ export default {
   props: {
     clickNotClose: {
       default: false,
-      type: Boolean
+      type: Boolean,
     },
     buttonTop: {
       default: 250,
-      type: Number
-    }
+      type: Number,
+    },
   },
   data() {
     return {
-      show: false
+      show: false,
     }
   },
   computed: {
     theme() {
       const settingsStore = useSettingsStore()
       return settingsStore.theme
-    }
+    },
   },
   watch: {
     show(value) {
@@ -54,7 +58,7 @@ export default {
       } else {
         removeClass(document.body, 'showRightPanel')
       }
-    }
+    },
   },
   mounted() {
     this.insertToBody()
@@ -78,8 +82,8 @@ export default {
       const elx = this.$refs.rightPanel
       const body = document.querySelector('body')
       body.insertBefore(elx, body.firstChild)
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -94,8 +98,8 @@ export default {
 <style lang="scss" scoped>
 .rightPanel-background {
   opacity: 0;
-  transition: opacity .3s cubic-bezier(.7, .3, .1, 1);
-  background: rgba(0, 0, 0, .2);
+  transition: opacity 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+  background: rgba(0, 0, 0, 0.2);
   width: 0;
   height: 0;
   top: 0;
@@ -113,8 +117,8 @@ export default {
   max-width: 260px;
   top: 0px;
   left: 0px;
-  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, .05);
-  transition: all .25s cubic-bezier(.7, .3, .1, 1);
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s cubic-bezier(0.7, 0.3, 0.1, 1);
   transform: translate(100%);
   z-index: 40000;
   left: auto;
@@ -122,7 +126,7 @@ export default {
 }
 
 .show {
-  transition: all .3s cubic-bezier(.7, .3, .1, 1);
+  transition: all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
 
   .rightPanel-background {
     z-index: 20000;

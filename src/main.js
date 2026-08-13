@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
-import 'virtual:svg-icons-register'
 import './styles/element-variables.scss'
 import {
   CaretBottom,
@@ -14,7 +13,7 @@ import {
   Search,
   Setting,
   Share,
-  Upload
+  Upload,
 } from '@element-plus/icons-vue'
 
 import '@/styles/index.scss' // global css

@@ -5,12 +5,8 @@
     </div>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item :disabled="language==='zh'" command="zh">
-          中文
-        </el-dropdown-item>
-        <el-dropdown-item :disabled="language==='en'" command="en">
-          English
-        </el-dropdown-item>
+        <el-dropdown-item :disabled="language === 'zh'" command="zh"> 中文 </el-dropdown-item>
+        <el-dropdown-item :disabled="language === 'en'" command="en"> English </el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -24,7 +20,7 @@ import { setI18nLanguage } from '@/lang'
 
 export default {
   computed: {
-    ...mapState(useAppStore, ['language'])
+    ...mapState(useAppStore, ['language']),
   },
   methods: {
     handleSetLanguage(lang) {
@@ -33,9 +29,9 @@ export default {
       appStore.setLanguage(lang)
       ElMessage({
         message: 'Switch Language Success',
-        type: 'success'
+        type: 'success',
       })
-    }
-  }
+    },
+  },
 }
 </script>

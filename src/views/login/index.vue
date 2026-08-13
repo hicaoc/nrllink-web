@@ -2,43 +2,65 @@
   <div class="login-container">
     <div class="topnav">
       <nav class="topnav-links">
-        <a href="https://www.nrlptt.com" target="_blank" rel="noopener noreferrer" class="topnav-link">NRL官网</a>
-        <a href="https://ota.nrlptt.com" target="_blank" rel="noopener noreferrer" class="topnav-link">NRL固件</a>
-        <a href="https://dmr.nrlptt.com" target="_blank" rel="noopener noreferrer" class="topnav-link">DMR数字</a>
+        <a
+          href="https://www.nrlptt.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="topnav-link"
+          >NRL官网</a
+        >
+        <a
+          href="https://ota.nrlptt.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="topnav-link"
+          >NRL固件</a
+        >
+        <a
+          href="https://dmr.nrlptt.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="topnav-link"
+          >DMR数字</a
+        >
         <router-link to="/serial" class="topnav-link">{{ $t('serial.navEntry') }}</router-link>
       </nav>
 
       <div class="topbar-actions">
-          <div class="language-switch">
-            <button
-              type="button"
-              class="lang-toggle-button"
-              :class="`lang-${nextLanguage}`"
-              :aria-label="languageToggleTitle"
-              :title="languageToggleTitle"
-              @click="toggleLanguage"
-            >
-              <span class="lang-toggle-icon" aria-hidden="true">{{ languageToggleShort }}</span>
-            </button>
-          </div>
+        <div class="language-switch">
+          <button
+            type="button"
+            class="lang-toggle-button"
+            :class="`lang-${nextLanguage}`"
+            :aria-label="languageToggleTitle"
+            :title="languageToggleTitle"
+            @click="toggleLanguage"
+          >
+            <span class="lang-toggle-icon" aria-hidden="true">{{ languageToggleShort }}</span>
+          </button>
+        </div>
 
-          <el-dropdown class="theme-picker-dropdown" trigger="click" popper-class="platform-theme-login-dropdown">
-            <div class="theme-trigger">
-              <span class="theme-icon">{{ currentTheme.icon }}</span>
-              <span class="theme-name">{{ currentTheme.name }}</span>
-            </div>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item v-for="(theme, key) in themes" :key="key" @click="switchTheme(key)">
-                  <span class="theme-option">
-                    <span class="theme-option-icon">{{ theme.icon }}</span>
-                    <span class="theme-option-name">{{ theme.name }}</span>
-                    <el-icon v-if="platformThemeKey === key" class="theme-check"><Check /></el-icon>
-                  </span>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
+        <el-dropdown
+          class="theme-picker-dropdown"
+          trigger="click"
+          popper-class="platform-theme-login-dropdown"
+        >
+          <div class="theme-trigger">
+            <span class="theme-icon">{{ currentTheme.icon }}</span>
+            <span class="theme-name">{{ currentTheme.name }}</span>
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item v-for="(theme, key) in themes" :key="key" @click="switchTheme(key)">
+                <span class="theme-option">
+                  <span class="theme-option-icon">{{ theme.icon }}</span>
+                  <span class="theme-option-name">{{ theme.name }}</span>
+                  <el-icon v-if="platformThemeKey === key" class="theme-check"><Check /></el-icon>
+                </span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
         <button
           v-if="hasHiddenPanels"
           type="button"
@@ -48,18 +70,24 @@
           @click="restoreAllPanels"
         >
           <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-            <path d="M4 7a3 3 0 0 1 3-3h3a1 1 0 1 1 0 2H7a1 1 0 0 0-1 1v3a1 1 0 1 1-2 0V7Zm10-3a1 1 0 0 1 1-1h2a3 3 0 0 1 3 3v2a1 1 0 1 1-2 0V7a1 1 0 0 0-1-1h-2a1 1 0 0 1-1-1ZM5 14a1 1 0 0 1 1 1v2a1 1 0 0 0 1 1h2a1 1 0 1 1 0 2H7a3 3 0 0 1-3-3v-2a1 1 0 0 1 1-1Zm14 0a1 1 0 0 1 1 1v2a3 3 0 0 1-3 3h-3a1 1 0 1 1 0-2h3a1 1 0 0 0 1-1v-2a1 1 0 0 1 1-1ZM9 9h6a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1Zm1 2v2h4v-2h-4Z" />
+            <path
+              d="M4 7a3 3 0 0 1 3-3h3a1 1 0 1 1 0 2H7a1 1 0 0 0-1 1v3a1 1 0 1 1-2 0V7Zm10-3a1 1 0 0 1 1-1h2a3 3 0 0 1 3 3v2a1 1 0 1 1-2 0V7a1 1 0 0 0-1-1h-2a1 1 0 0 1-1-1ZM5 14a1 1 0 0 1 1 1v2a1 1 0 0 0 1 1h2a1 1 0 1 1 0 2H7a3 3 0 0 1-3-3v-2a1 1 0 0 1 1-1Zm14 0a1 1 0 0 1 1 1v2a3 3 0 0 1-3 3h-3a1 1 0 1 1 0-2h3a1 1 0 0 0 1-1v-2a1 1 0 0 1 1-1ZM9 9h6a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1Zm1 2v2h4v-2h-4Z"
+            />
           </svg>
         </button>
         <button type="button" class="topbar-button ghost" @click="goUniverse">3D宇宙</button>
-        <button type="button" class="topbar-button ghost" @click="openLoginDialog">{{ $t('login.login') }}</button>
-        <button type="button" class="topbar-button solid" @click="openRegisterDialog">{{ $t('login.register') }}</button>
+        <button type="button" class="topbar-button ghost" @click="openLoginDialog">
+          {{ $t('login.login') }}
+        </button>
+        <button type="button" class="topbar-button solid" @click="openRegisterDialog">
+          {{ $t('login.register') }}
+        </button>
       </div>
     </div>
 
     <div ref="topbar" class="topbar" :class="{ 'topbar-stacked': topbarStacked }">
       <div ref="brandBlock" class="brand-block">
-        <img src="/images/logo.png" alt="Logo" class="topbar-logo">
+        <img src="/images/logo.png" alt="Logo" class="topbar-logo" />
         <div class="brand-text">
           <h1>{{ title }}</h1>
           <p>{{ $t('login.brandDesc') }}</p>
@@ -89,14 +117,13 @@
         :style="getPanelStyle('left')"
         @mousedown="bringPanelToFront('left')"
       >
-        <div
-          class="panel-toolbar"
-          @mousedown="startPanelDrag('left', $event)"
-        >
+        <div class="panel-toolbar" @mousedown="startPanelDrag('left', $event)">
           <span class="panel-title">
             <span class="panel-title-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" focusable="false">
-                <path d="M4 7.5A3.5 3.5 0 0 1 7.5 4h9A3.5 3.5 0 0 1 20 7.5v4A3.5 3.5 0 0 1 16.5 15h-1.8l-2.3 2.8a.6.6 0 0 1-.9 0L9.2 15H7.5A3.5 3.5 0 0 1 4 11.5v-4Zm3.5-2.3A2.3 2.3 0 0 0 5.2 7.5v4a2.3 2.3 0 0 0 2.3 2.3h2a.6.6 0 0 1 .47.22l1.98 2.42 1.98-2.42a.6.6 0 0 1 .47-.22h2.05a2.3 2.3 0 0 0 2.3-2.3v-4a2.3 2.3 0 0 0-2.3-2.3h-9Z" />
+                <path
+                  d="M4 7.5A3.5 3.5 0 0 1 7.5 4h9A3.5 3.5 0 0 1 20 7.5v4A3.5 3.5 0 0 1 16.5 15h-1.8l-2.3 2.8a.6.6 0 0 1-.9 0L9.2 15H7.5A3.5 3.5 0 0 1 4 11.5v-4Zm3.5-2.3A2.3 2.3 0 0 0 5.2 7.5v4a2.3 2.3 0 0 0 2.3 2.3h2a.6.6 0 0 1 .47.22l1.98 2.42 1.98-2.42a.6.6 0 0 1 .47-.22h2.05a2.3 2.3 0 0 0 2.3-2.3v-4a2.3 2.3 0 0 0-2.3-2.3h-9Z"
+                />
                 <circle cx="8.5" cy="9.5" r="1" />
                 <circle cx="12" cy="9.5" r="1" />
                 <circle cx="15.5" cy="9.5" r="1" />
@@ -107,7 +134,7 @@
           <button type="button" class="panel-close" @click.stop="closePanel('left')">×</button>
         </div>
         <div class="panel-content">
-        <support-links @toggle-image="toggleImage" />
+          <support-links @toggle-image="toggleImage" />
         </div>
         <button
           v-if="isDesktopPanels"
@@ -125,14 +152,13 @@
         :style="getPanelStyle('middle')"
         @mousedown="bringPanelToFront('middle')"
       >
-        <div
-          class="panel-toolbar"
-          @mousedown="startPanelDrag('middle', $event)"
-        >
+        <div class="panel-toolbar" @mousedown="startPanelDrag('middle', $event)">
           <span class="panel-title">
             <span class="panel-title-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" focusable="false">
-                <path d="M5 18.5h14a1 1 0 0 1 0 2H5a1 1 0 1 1 0-2Zm2.2-3.23 2.15-2.86a1 1 0 0 1 1.67.12l1.57 2.35 3.14-5.18a1 1 0 1 1 1.71 1.04l-3.95 6.52a1 1 0 0 1-1.69.03l-1.64-2.46-1.35 1.8a1 1 0 0 1-1.6-1.2ZM6 4h12a2 2 0 0 1 2 2v8.5a1 1 0 1 1-2 0V6H6v8.5a1 1 0 1 1-2 0V6a2 2 0 0 1 2-2Z" />
+                <path
+                  d="M5 18.5h14a1 1 0 0 1 0 2H5a1 1 0 1 1 0-2Zm2.2-3.23 2.15-2.86a1 1 0 0 1 1.67.12l1.57 2.35 3.14-5.18a1 1 0 1 1 1.71 1.04l-3.95 6.52a1 1 0 0 1-1.69.03l-1.64-2.46-1.35 1.8a1 1 0 0 1-1.6-1.2ZM6 4h12a2 2 0 0 1 2 2v8.5a1 1 0 1 1-2 0V6H6v8.5a1 1 0 1 1-2 0V6a2 2 0 0 1 2-2Z"
+                />
               </svg>
             </span>
             <span>{{ $t('login.monitorPanel') }}</span>
@@ -161,14 +187,13 @@
         :style="getPanelStyle('right')"
         @mousedown="bringPanelToFront('right')"
       >
-        <div
-          class="panel-toolbar"
-          @mousedown="startPanelDrag('right', $event)"
-        >
+        <div class="panel-toolbar" @mousedown="startPanelDrag('right', $event)">
           <span class="panel-title">
             <span class="panel-title-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" focusable="false">
-                <path d="M6.5 4A2.5 2.5 0 0 0 4 6.5v2A2.5 2.5 0 0 0 6.5 11h11A2.5 2.5 0 0 0 20 8.5v-2A2.5 2.5 0 0 0 17.5 4h-11Zm0 8A2.5 2.5 0 0 0 4 14.5v2A2.5 2.5 0 0 0 6.5 19h11a2.5 2.5 0 0 0 2.5-2.5v-2A2.5 2.5 0 0 0 17.5 12h-11Zm0-6.8h11c.72 0 1.3.58 1.3 1.3v2c0 .72-.58 1.3-1.3 1.3h-11a1.3 1.3 0 0 1-1.3-1.3v-2c0-.72.58-1.3 1.3-1.3Zm0 8h11c.72 0 1.3.58 1.3 1.3v2c0 .72-.58 1.3-1.3 1.3h-11a1.3 1.3 0 0 1-1.3-1.3v-2c0-.72.58-1.3 1.3-1.3Z" />
+                <path
+                  d="M6.5 4A2.5 2.5 0 0 0 4 6.5v2A2.5 2.5 0 0 0 6.5 11h11A2.5 2.5 0 0 0 20 8.5v-2A2.5 2.5 0 0 0 17.5 4h-11Zm0 8A2.5 2.5 0 0 0 4 14.5v2A2.5 2.5 0 0 0 6.5 19h11a2.5 2.5 0 0 0 2.5-2.5v-2A2.5 2.5 0 0 0 17.5 12h-11Zm0-6.8h11c.72 0 1.3.58 1.3 1.3v2c0 .72-.58 1.3-1.3 1.3h-11a1.3 1.3 0 0 1-1.3-1.3v-2c0-.72.58-1.3 1.3-1.3Zm0 8h11c.72 0 1.3.58 1.3 1.3v2c0 .72-.58 1.3-1.3 1.3h-11a1.3 1.3 0 0 1-1.3-1.3v-2c0-.72.58-1.3 1.3-1.3Z"
+                />
                 <circle cx="8" cy="7.5" r="1" />
                 <circle cx="8" cy="15.5" r="1" />
                 <rect x="11" y="7" width="6" height="1" rx=".5" />
@@ -180,7 +205,7 @@
           <button type="button" class="panel-close" @click.stop="closePanel('right')">×</button>
         </div>
         <div class="panel-content">
-        <server-list :list="sortedServerList" />
+          <server-list :list="sortedServerList" />
         </div>
         <button
           v-if="isDesktopPanels"
@@ -230,12 +255,7 @@
             />
           </el-form-item>
 
-          <el-tooltip
-            v-model="capsTooltip"
-            content="Caps lock is On"
-            placement="right"
-            manual
-          >
+          <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
             <el-form-item prop="password">
               <span class="svg-container">
                 <svg-icon icon-class="password" />
@@ -254,9 +274,7 @@
                 @keyup.enter="handleLogin"
               />
               <span class="show-pwd" @click="showPwd">
-                <svg-icon
-                  :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-                />
+                <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
               </span>
             </el-form-item>
           </el-tooltip>
@@ -267,7 +285,8 @@
               type="primary"
               class="login-button"
               @click.prevent="handleLogin"
-            >{{ $t("login.logIn") }}</el-button>
+              >{{ $t('login.logIn') }}</el-button
+            >
           </div>
         </el-form>
       </div>
@@ -297,7 +316,7 @@
       <div v-if="isImageVisible" class="overlay" @click.self="toggleImage(false)">
         <div class="image-container">
           <button class="close-btn" @click.prevent="toggleImage(false)">×</button>
-          <img :src="nrlmpImg" alt="NRL微信小程序" class="floating-image">
+          <img :src="nrlmpImg" alt="NRL微信小程序" class="floating-image" />
         </div>
       </div>
     </transition>
@@ -333,7 +352,14 @@ import RealtimeMonitorPanel from '@/components/platform/RealtimeMonitorPanel.vue
 
 export default {
   name: 'LoginView',
-  components: { ServerList, SupportLinks, RegisterView, LivePlatformStats, RealtimeMonitorPanel, Check },
+  components: {
+    ServerList,
+    SupportLinks,
+    RegisterView,
+    LivePlatformStats,
+    RealtimeMonitorPanel,
+    Check,
+  },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -356,16 +382,12 @@ export default {
       themes,
       loginForm: {
         username: '',
-        password: ''
+        password: '',
       },
       isImageVisible: false,
       loginRules: {
-        username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
-        ],
-        password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
+        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -379,25 +401,25 @@ export default {
       monitorStats: {
         totalSubs: 0,
         connectedClients: 0,
-        onlineDevices: 0
+        onlineDevices: 0,
       },
       isDesktopPanels: false,
       panelLayouts: {
         left: { visible: true, x: 0, y: 0, w: 300, h: 760 },
         middle: { visible: true, x: 324, y: 0, w: 720, h: 760 },
-        right: { visible: true, x: 1068, y: 0, w: 320, h: 760 }
+        right: { visible: true, x: 1068, y: 0, w: 320, h: 760 },
       },
       panelZIndices: {
         left: 1,
         middle: 2,
-        right: 3
+        right: 3,
       },
       nextPanelZIndex: 4,
       panelInteraction: null,
       panelDefaultsInitialized: false,
       topbarStacked: false,
       topbarResizeObserver: null,
-      topbarLayoutFrame: null
+      topbarLayoutFrame: null,
     }
   },
   computed: {
@@ -409,8 +431,12 @@ export default {
     sortedServerList() {
       const currentHost = typeof window !== 'undefined' ? window.location.host : ''
       const currentHostname = typeof window !== 'undefined' ? window.location.hostname : ''
-      const normalizeHost = value => String(value || '').replace(/^https?:\/\//i, '').replace(/\/+$/, '').toLowerCase()
-      const isLocalServer = server => {
+      const normalizeHost = (value) =>
+        String(value || '')
+          .replace(/^https?:\/\//i, '')
+          .replace(/\/+$/, '')
+          .toLowerCase()
+      const isLocalServer = (server) => {
         const host = normalizeHost(server && server.host)
         if (!host) return false
         return host === normalizeHost(currentHost) || host === normalizeHost(currentHostname)
@@ -439,10 +465,12 @@ export default {
       return this.nextLanguage === 'zh' ? '中' : 'EN'
     },
     languageToggleTitle() {
-      return this.nextLanguage === 'zh' ? this.$t('login.switchToChinese') : this.$t('login.switchToEnglish')
+      return this.nextLanguage === 'zh'
+        ? this.$t('login.switchToChinese')
+        : this.$t('login.switchToEnglish')
     },
     hasHiddenPanels() {
-      return Object.values(this.panelLayouts).some(panel => !panel.visible)
+      return Object.values(this.panelLayouts).some((panel) => !panel.visible)
     },
     platformThemeKey() {
       const settingsStore = useSettingsStore()
@@ -456,27 +484,27 @@ export default {
         return {}
       }
 
-      const visiblePanels = Object.values(this.panelLayouts).filter(panel => panel.visible)
+      const visiblePanels = Object.values(this.panelLayouts).filter((panel) => panel.visible)
       const height = visiblePanels.reduce((maxHeight, panel) => {
         return Math.max(maxHeight, panel.y + panel.h)
       }, 420)
 
       return {
         height: `${height}px`,
-        minHeight: `${height}px`
+        minHeight: `${height}px`,
       }
-    }
+    },
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   created() {
-    getplatforminfo().then(response => {
+    getplatforminfo().then((response) => {
       this.title = response.data.items.name
       this.cs_qr_url = response.data.items.cs_qr_url
       this.icp = response.data.items.icp
@@ -518,7 +546,9 @@ export default {
       }
 
       this.destroyTopbarResizeObserver()
-      const targets = [this.$refs.topbar, this.$refs.brandBlock, this.$refs.topbarRight].filter(Boolean)
+      const targets = [this.$refs.topbar, this.$refs.brandBlock, this.$refs.topbarRight].filter(
+        Boolean
+      )
       if (!targets.length) {
         return
       }
@@ -527,7 +557,7 @@ export default {
         this.scheduleTopbarLayoutCheck()
       })
 
-      targets.forEach(target => this.topbarResizeObserver.observe(target))
+      targets.forEach((target) => this.topbarResizeObserver.observe(target))
     },
     destroyTopbarResizeObserver() {
       if (this.topbarResizeObserver) {
@@ -583,7 +613,7 @@ export default {
       this.monitorStats = {
         totalSubs: Number(stats && stats.totalSubs) || 0,
         connectedClients: Number(stats && stats.connectedClients) || 0,
-        onlineDevices: Number(stats && stats.onlineDevices) || 0
+        onlineDevices: Number(stats && stats.onlineDevices) || 0,
       }
       this.scheduleTopbarLayoutCheck()
     },
@@ -591,7 +621,7 @@ export default {
       const limits = {
         left: { minW: 260, minH: 280 },
         middle: { minW: 480, minH: 360 },
-        right: { minW: 280, minH: 280 }
+        right: { minW: 280, minH: 280 },
       }
 
       return limits[panelId] || { minW: 260, minH: 260 }
@@ -618,14 +648,14 @@ export default {
       const defaults = {
         left: { x: 0, y: topOffset, w: leftWidth, h: 760 },
         middle: { x: leftWidth + gap, y: topOffset, w: middleWidth, h: 760 },
-        right: { x: leftWidth + gap + middleWidth + gap, y: topOffset, w: rightWidth, h: 760 }
+        right: { x: leftWidth + gap + middleWidth + gap, y: topOffset, w: rightWidth, h: 760 },
       }
 
       if (forceReset || !this.panelDefaultsInitialized) {
         this.panelLayouts = {
           left: { ...defaults.left, visible: this.panelLayouts.left.visible },
           middle: { ...defaults.middle, visible: this.panelLayouts.middle.visible },
-          right: { ...defaults.right, visible: this.panelLayouts.right.visible }
+          right: { ...defaults.right, visible: this.panelLayouts.right.visible },
         }
         this.panelDefaultsInitialized = true
         return
@@ -634,7 +664,7 @@ export default {
       this.panelLayouts = {
         left: this.clampPanelLayout('left', this.panelLayouts.left),
         middle: this.clampPanelLayout('middle', this.panelLayouts.middle),
-        right: this.clampPanelLayout('right', this.panelLayouts.right)
+        right: this.clampPanelLayout('right', this.panelLayouts.right),
       }
     },
     clampPanelLayout(panelId, layout) {
@@ -664,7 +694,7 @@ export default {
         top: `${layout.y}px`,
         width: `${layout.w}px`,
         height: `${layout.h}px`,
-        zIndex: this.panelZIndices[panelId]
+        zIndex: this.panelZIndices[panelId],
       }
     },
     bringPanelToFront(panelId) {
@@ -676,7 +706,7 @@ export default {
 
       this.panelZIndices = {
         ...this.panelZIndices,
-        [panelId]: this.nextPanelZIndex
+        [panelId]: this.nextPanelZIndex,
       }
       this.nextPanelZIndex += 1
     },
@@ -689,8 +719,8 @@ export default {
         ...this.panelLayouts,
         [panelId]: {
           ...this.panelLayouts[panelId],
-          visible: false
-        }
+          visible: false,
+        },
       }
       this.stopPanelInteraction()
       this.$nextTick(() => {
@@ -701,7 +731,7 @@ export default {
       this.panelLayouts = {
         left: { ...this.panelLayouts.left, visible: true },
         middle: { ...this.panelLayouts.middle, visible: true },
-        right: { ...this.panelLayouts.right, visible: true }
+        right: { ...this.panelLayouts.right, visible: true },
       }
       this.$nextTick(() => {
         this.initializePanels(true)
@@ -721,7 +751,7 @@ export default {
         startX: event.clientX,
         startY: event.clientY,
         originX: panel.x,
-        originY: panel.y
+        originY: panel.y,
       }
       window.addEventListener('mousemove', this.handlePanelPointerMove)
       window.addEventListener('mouseup', this.stopPanelInteraction)
@@ -741,7 +771,7 @@ export default {
         startX: event.clientX,
         startY: event.clientY,
         originW: panel.w,
-        originH: panel.h
+        originH: panel.h,
       }
       window.addEventListener('mousemove', this.handlePanelPointerMove)
       window.addEventListener('mouseup', this.stopPanelInteraction)
@@ -769,8 +799,8 @@ export default {
           [interaction.panelId]: {
             ...panel,
             x: nextX,
-            y: nextY
-          }
+            y: nextY,
+          },
         }
         return
       }
@@ -783,8 +813,8 @@ export default {
         [interaction.panelId]: {
           ...panel,
           w: nextWidth,
-          h: nextHeight
-        }
+          h: nextHeight,
+        },
       }
     },
     stopPanelInteraction() {
@@ -796,11 +826,13 @@ export default {
       }
     },
     fetchServerList() {
-      fetchPlatformList().then(response => {
-        this.serverList = response.data.items
-      }).catch(error => {
-        console.error('Failed to fetch server list:', error)
-      })
+      fetchPlatformList()
+        .then((response) => {
+          this.serverList = response.data.items
+        })
+        .catch((error) => {
+          console.error('Failed to fetch server list:', error)
+        })
     },
     setLanguage(language) {
       if (this.$i18n.locale === language) {
@@ -823,10 +855,7 @@ export default {
     },
     checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
-        if (
-          (shiftKey && key >= 'a' && key <= 'z') ||
-          (!shiftKey && key >= 'A' && key <= 'Z')
-        ) {
+        if ((shiftKey && key >= 'a' && key <= 'z') || (!shiftKey && key >= 'A' && key <= 'Z')) {
           this.capsTooltip = true
         } else {
           this.capsTooltip = false
@@ -874,11 +903,12 @@ export default {
       }
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true
           const userStore = useUserStore()
-          userStore.login(this.loginForm)
+          userStore
+            .login(this.loginForm)
             .then(() => {
               this.loginDialogVisible = false
               this.$router.push({ path: this.redirect || '/' })
@@ -892,8 +922,8 @@ export default {
           return false
         }
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -958,7 +988,9 @@ export default {
     border-radius: 12px !important;
     color: var(--platform-ink);
     padding-right: 40px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
   }
 
   .el-form-item:hover {
@@ -978,7 +1010,9 @@ export default {
     overflow: hidden;
     background: var(--platform-shell) !important;
     border: 1px solid var(--platform-border) !important;
-    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--platform-accent-08) inset !important;
+    box-shadow:
+      0 28px 80px rgba(0, 0, 0, 0.5),
+      0 0 0 1px var(--platform-accent-08) inset !important;
   }
 
   .login-button-wrapper {
@@ -994,9 +1028,15 @@ export default {
       height: 48px !important;
       font-size: 16px !important;
       border-radius: 14px !important;
-      background: linear-gradient(90deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%) !important;
+      background: linear-gradient(
+        90deg,
+        var(--platform-accent) 0%,
+        var(--platform-accent-2) 100%
+      ) !important;
       border: none !important;
-      box-shadow: 0 14px 34px var(--platform-accent-22), 0 0 0 1px rgba(255, 255, 255, 0.14) inset !important;
+      box-shadow:
+        0 14px 34px var(--platform-accent-22),
+        0 0 0 1px rgba(255, 255, 255, 0.14) inset !important;
       transition: all 0.3s ease;
       font-weight: 600 !important;
       letter-spacing: 0.6px;
@@ -1007,7 +1047,9 @@ export default {
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 18px 44px var(--platform-accent-25), 0 0 18px var(--platform-accent-22) !important;
+        box-shadow:
+          0 18px 44px var(--platform-accent-25),
+          0 0 18px var(--platform-accent-22) !important;
       }
     }
   }
@@ -1032,7 +1074,9 @@ export default {
     height: 34px;
     border-radius: 50%;
     background: var(--platform-surface-68);
-    transition: background 0.2s ease, transform 0.2s ease;
+    transition:
+      background 0.2s ease,
+      transform 0.2s ease;
 
     .el-dialog__close {
       color: var(--platform-ink-dim) !important;
@@ -1105,7 +1149,9 @@ export default {
     border-radius: 12px !important;
     color: var(--platform-ink);
     padding-right: 40px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
   }
 
   .el-form-item:hover {
@@ -1149,7 +1195,9 @@ export default {
   border: 1px solid var(--platform-border) !important;
   border-radius: 18px !important;
   background: var(--platform-shell) !important;
-  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.42), 0 0 0 1px var(--platform-border-strong) inset !important;
+  box-shadow:
+    0 24px 56px rgba(0, 0, 0, 0.42),
+    0 0 0 1px var(--platform-border-strong) inset !important;
   overflow: hidden;
 
   .el-dropdown-menu {
@@ -1163,12 +1211,19 @@ export default {
     border-radius: 12px;
     color: var(--platform-ink-dim) !important;
     font-weight: 600;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
   }
 
   .el-dropdown-menu__item:not(.is-disabled):hover,
   .el-dropdown-menu__item:not(.is-disabled):focus {
-    background: linear-gradient(90deg, var(--platform-accent) 0%, var(--platform-accent-2) 100%) !important;
+    background: linear-gradient(
+      90deg,
+      var(--platform-accent) 0%,
+      var(--platform-accent-2) 100%
+    ) !important;
     color: var(--platform-ink) !important;
     transform: translateX(2px);
   }
@@ -1184,7 +1239,12 @@ export default {
 .login-container {
   min-height: 100vh;
   width: 100%;
-  background: radial-gradient(980px 460px at 18% -14%, var(--platform-accent-2) 0%, var(--platform-surface) 56%, var(--platform-surface-soft) 100%);
+  background: radial-gradient(
+    980px 460px at 18% -14%,
+    var(--platform-accent-2) 0%,
+    var(--platform-surface) 56%,
+    var(--platform-surface-soft) 100%
+  );
   position: relative;
   overflow: hidden;
   display: flex;
@@ -1202,24 +1262,34 @@ export default {
   }
 
   &::before {
-    content: "";
+    content: '';
     position: fixed;
     inset: -40% auto auto -20%;
     width: 640px;
     height: 640px;
-    background: radial-gradient(circle, var(--platform-accent) 0%, var(--platform-accent) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      var(--platform-accent) 0%,
+      var(--platform-accent) 0%,
+      transparent 70%
+    );
     filter: blur(3px);
     pointer-events: none;
   }
 
   &::after {
-    content: "";
+    content: '';
     position: fixed;
     right: -20%;
     bottom: -30%;
     width: 720px;
     height: 720px;
-    background: radial-gradient(circle, var(--platform-accent-2) 0%, var(--platform-accent-2) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      var(--platform-accent-2) 0%,
+      var(--platform-accent-2) 0%,
+      transparent 70%
+    );
     filter: blur(5px);
     pointer-events: none;
   }
@@ -1255,7 +1325,11 @@ export default {
     font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
-    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease,
+      background 0.2s ease,
+      color 0.2s ease;
 
     &:hover {
       transform: translateY(-1px);
@@ -1367,7 +1441,12 @@ export default {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease,
+      background 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.2s ease;
 
     &:hover {
       transform: translateY(-1px);
@@ -1376,7 +1455,11 @@ export default {
     }
 
     &.lang-zh {
-      background: linear-gradient(90deg, var(--platform-accent-10) 0%, var(--platform-accent-16) 100%);
+      background: linear-gradient(
+        90deg,
+        var(--platform-accent-10) 0%,
+        var(--platform-accent-16) 100%
+      );
       border-color: var(--platform-border-strong);
       box-shadow: 0 0 0 1px var(--platform-accent-08) inset;
     }
@@ -1475,7 +1558,10 @@ export default {
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease,
+      border-color 0.2s ease;
 
     &:hover {
       transform: translateY(-1px);
@@ -1620,7 +1706,12 @@ export default {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-50%) scale(0.92);
-    transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease, opacity 0.2s ease, visibility 0.2s ease;
+    transition:
+      background 0.2s ease,
+      transform 0.2s ease,
+      border-color 0.2s ease,
+      opacity 0.2s ease,
+      visibility 0.2s ease;
 
     &:hover {
       transform: translateY(-50%) scale(1.04);
@@ -1663,10 +1754,13 @@ export default {
     opacity: 0;
     visibility: hidden;
     transform: scale(0.9);
-    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    transition:
+      opacity 0.2s ease,
+      visibility 0.2s ease,
+      transform 0.2s ease;
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       inset: 2px;
       border-right: 2px solid var(--platform-accent);
@@ -1802,13 +1896,21 @@ export default {
 
   .monitor-room-button.active {
     border-color: var(--platform-accent);
-    background: linear-gradient(140deg, var(--platform-accent-20) 0%, var(--platform-accent-14) 100%);
-    box-shadow: 0 0 0 1px var(--platform-accent-10) inset, 0 12px 32px var(--platform-accent-12);
+    background: linear-gradient(
+      140deg,
+      var(--platform-accent-20) 0%,
+      var(--platform-accent-14) 100%
+    );
+    box-shadow:
+      0 0 0 1px var(--platform-accent-10) inset,
+      0 12px 32px var(--platform-accent-12);
   }
 
   .monitor-room-button.speaking {
     border-color: var(--platform-accent-2);
-    box-shadow: 0 0 0 1px var(--platform-accent-22) inset, 0 0 20px var(--platform-accent-22);
+    box-shadow:
+      0 0 0 1px var(--platform-accent-22) inset,
+      0 0 20px var(--platform-accent-22);
     animation: speakingPulse 0.8s ease-in-out infinite;
     animation-delay: var(--speaking-pulse-delay);
   }
@@ -1887,7 +1989,9 @@ export default {
       border-radius: 999px;
       border: 1px solid transparent;
       box-shadow: none;
-      transition: background 0.2s ease, border-color 0.2s ease;
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
     }
   }
 
@@ -1904,13 +2008,21 @@ export default {
 
   .middle-column:hover .recent-call-list::-webkit-scrollbar-thumb,
   .middle-column:focus-within .recent-call-list::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--platform-accent-42) 0%, var(--platform-accent-72) 100%);
+    background: linear-gradient(
+      180deg,
+      var(--platform-accent-42) 0%,
+      var(--platform-accent-72) 100%
+    );
     border-color: var(--platform-border);
   }
 
   .middle-column:hover .recent-call-list::-webkit-scrollbar-thumb:hover,
   .middle-column:focus-within .recent-call-list::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, var(--platform-accent-62) 0%, var(--platform-accent-72) 100%);
+    background: linear-gradient(
+      180deg,
+      var(--platform-accent-62) 0%,
+      var(--platform-accent-72) 100%
+    );
     border-color: var(--platform-border-strong);
   }
 
@@ -1924,12 +2036,18 @@ export default {
     background: var(--platform-surface);
     border: 1px solid var(--platform-border);
     font-size: 12px;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background 0.2s ease,
+      transform 0.2s ease;
   }
 
   .recent-call-item.active {
     border-color: var(--platform-accent-2);
-    box-shadow: 0 0 0 1px var(--platform-accent-22) inset, 0 0 20px var(--platform-accent-22);
+    box-shadow:
+      0 0 0 1px var(--platform-accent-22) inset,
+      0 0 20px var(--platform-accent-22);
     animation: speakingPulse 0.8s ease-in-out infinite;
     animation-delay: var(--speaking-pulse-delay);
   }
@@ -1962,7 +2080,9 @@ export default {
   .login-form-card {
     background: var(--platform-shell);
     border: 1px solid var(--platform-border);
-    box-shadow: 0 26px 68px rgba(0, 0, 0, 0.58), 0 0 0 1px var(--platform-accent-08) inset;
+    box-shadow:
+      0 26px 68px rgba(0, 0, 0, 0.58),
+      0 0 0 1px var(--platform-accent-08) inset;
     border-radius: 20px;
     padding: 40px 34px 32px;
     min-height: 0 !important;
@@ -2033,14 +2153,18 @@ export default {
       border-radius: 14px;
       background: linear-gradient(90deg, #26efc7 0%, #3f8dff 52%, #6c79ff 100%) !important;
       border: none !important;
-      box-shadow: 0 14px 34px rgba(63, 141, 255, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.14) inset;
+      box-shadow:
+        0 14px 34px rgba(63, 141, 255, 0.42),
+        0 0 0 1px rgba(255, 255, 255, 0.14) inset;
       transition: all 0.3s ease;
       font-weight: 600;
       letter-spacing: 0.6px;
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 18px 44px rgba(38, 239, 199, 0.46), 0 0 18px rgba(79, 152, 255, 0.35) !important;
+        box-shadow:
+          0 18px 44px rgba(38, 239, 199, 0.46),
+          0 0 18px rgba(79, 152, 255, 0.35) !important;
       }
     }
   }
@@ -2061,12 +2185,19 @@ export default {
     font-weight: 600;
     letter-spacing: 0.5px;
     background: linear-gradient(90deg, rgba(30, 73, 121, 0.86) 0%, rgba(45, 76, 130, 0.84) 100%);
-    box-shadow: 0 10px 24px rgba(63, 141, 255, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    box-shadow:
+      0 10px 24px rgba(63, 141, 255, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
 
     &:hover {
       border-color: rgba(54, 240, 203, 0.74);
-      box-shadow: 0 14px 32px rgba(63, 141, 255, 0.28), 0 0 14px rgba(54, 240, 203, 0.2);
+      box-shadow:
+        0 14px 32px rgba(63, 141, 255, 0.28),
+        0 0 14px rgba(54, 240, 203, 0.2);
       transform: translateY(-1px);
     }
   }
@@ -2182,7 +2313,9 @@ export default {
       border-radius: 999px;
       border: 1px solid transparent;
       box-shadow: none;
-      transition: background 0.2s ease, border-color 0.2s ease;
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
     }
 
     &::-webkit-scrollbar-corner {
@@ -2213,7 +2346,8 @@ export default {
   .left-column:hover :deep(.support-links-component ul::-webkit-scrollbar-track),
   .left-column:focus-within :deep(.support-links-component ul::-webkit-scrollbar-track),
   .right-column:hover :deep(.server-list-component .scroll-container::-webkit-scrollbar-track),
-  .right-column:focus-within :deep(.server-list-component .scroll-container::-webkit-scrollbar-track) {
+  .right-column:focus-within
+    :deep(.server-list-component .scroll-container::-webkit-scrollbar-track) {
     background: linear-gradient(180deg, rgba(8, 20, 36, 0.2) 0%, rgba(8, 20, 36, 0.42) 100%);
     border-color: rgba(109, 180, 255, 0.08);
   }
@@ -2221,17 +2355,28 @@ export default {
   .left-column:hover :deep(.support-links-component ul::-webkit-scrollbar-thumb),
   .left-column:focus-within :deep(.support-links-component ul::-webkit-scrollbar-thumb),
   .right-column:hover :deep(.server-list-component .scroll-container::-webkit-scrollbar-thumb),
-  .right-column:focus-within :deep(.server-list-component .scroll-container::-webkit-scrollbar-thumb) {
-    background: linear-gradient(180deg, rgba(117, 148, 184, 0.78) 0%, rgba(88, 109, 140, 0.94) 100%);
+  .right-column:focus-within
+    :deep(.server-list-component .scroll-container::-webkit-scrollbar-thumb) {
+    background: linear-gradient(
+      180deg,
+      rgba(117, 148, 184, 0.78) 0%,
+      rgba(88, 109, 140, 0.94) 100%
+    );
     border-color: rgba(223, 232, 245, 0.18);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
   }
 
   .left-column:hover :deep(.support-links-component ul::-webkit-scrollbar-thumb:hover),
   .left-column:focus-within :deep(.support-links-component ul::-webkit-scrollbar-thumb:hover),
-  .right-column:hover :deep(.server-list-component .scroll-container::-webkit-scrollbar-thumb:hover),
-  .right-column:focus-within :deep(.server-list-component .scroll-container::-webkit-scrollbar-thumb:hover) {
-    background: linear-gradient(180deg, rgba(143, 249, 222, 0.62) 0%, rgba(94, 166, 255, 0.72) 100%);
+  .right-column:hover
+    :deep(.server-list-component .scroll-container::-webkit-scrollbar-thumb:hover),
+  .right-column:focus-within
+    :deep(.server-list-component .scroll-container::-webkit-scrollbar-thumb:hover) {
+    background: linear-gradient(
+      180deg,
+      rgba(143, 249, 222, 0.62) 0%,
+      rgba(94, 166, 255, 0.72) 100%
+    );
     border-color: rgba(143, 249, 222, 0.24);
   }
 
@@ -2498,7 +2643,6 @@ export default {
     .right-column {
       order: 3;
     }
-
   }
 
   @media (max-width: 900px) {
@@ -2529,8 +2673,8 @@ export default {
     .recent-call-item {
       grid-template-columns: minmax(0, 1fr) auto auto;
       grid-template-areas:
-        "room room room"
-        "caller duration time";
+        'room room room'
+        'caller duration time';
       gap: 6px 10px;
     }
 
@@ -2606,8 +2750,8 @@ export default {
     .recent-call-item {
       grid-template-columns: minmax(0, 1fr) auto auto;
       grid-template-areas:
-        "room room room"
-        "caller duration time";
+        'room room room'
+        'caller duration time';
       gap: 4px 8px;
     }
 
@@ -2815,12 +2959,16 @@ export default {
     0%,
     100% {
       border-color: rgba(247, 187, 67, 0.75);
-      box-shadow: 0 0 0 1px rgba(247, 187, 67, 0.3) inset, 0 0 14px rgba(247, 187, 67, 0.18);
+      box-shadow:
+        0 0 0 1px rgba(247, 187, 67, 0.3) inset,
+        0 0 14px rgba(247, 187, 67, 0.18);
     }
 
     50% {
       border-color: #f7bb43;
-      box-shadow: 0 0 0 1px rgba(247, 187, 67, 0.45) inset, 0 0 28px rgba(247, 187, 67, 0.42);
+      box-shadow:
+        0 0 0 1px rgba(247, 187, 67, 0.45) inset,
+        0 0 28px rgba(247, 187, 67, 0.42);
     }
   }
 }

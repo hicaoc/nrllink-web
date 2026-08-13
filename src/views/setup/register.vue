@@ -24,19 +24,6 @@
         {{ $t('employee.search') }}
       </el-button>
 
-      <el-button
-        v-waves
-        :loading="downloadLoading"
-        class="filter-item action-btn action-btn-secondary"
-        type="primary"
-        @click="handleDownload"
-      >
-        <el-icon>
-          <Download />
-        </el-icon>
-        {{ $t('employee.export') }}
-      </el-button>
-
       <button
         type="button"
         class="toolbar-capsule"
@@ -59,7 +46,14 @@
         style="width: 100%"
         @sort-change="sortChange"
       >
-        <el-table-column :label="$t('employee.id')" prop="id" fixed="left" sortable="custom" align="center" width="80">
+        <el-table-column
+          :label="$t('employee.id')"
+          prop="id"
+          fixed="left"
+          sortable="custom"
+          align="center"
+          width="80"
+        >
           <template #default="scope">
             <span>{{ scope.row.id }}</span>
           </template>
@@ -89,7 +83,12 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('register.mail')" width="200" align="center" show-overflow-tooltip>
+        <el-table-column
+          :label="$t('register.mail')"
+          width="200"
+          align="center"
+          show-overflow-tooltip
+        >
           <template #default="scope">
             <div class="mail-cell">{{ scope.row.mail || '--' }}</div>
           </template>
@@ -115,7 +114,12 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('register.note')" width="180" align="center" show-overflow-tooltip>
+        <el-table-column
+          :label="$t('register.note')"
+          width="180"
+          align="center"
+          show-overflow-tooltip
+        >
           <template #default="scope">
             <div class="note-cell">{{ scope.row.note || '--' }}</div>
           </template>
@@ -136,7 +140,8 @@
               size="small"
               class="compact-btn audit-btn"
               @click="handleUpdate(row)"
-            >{{ $t('register.audit') }}</el-button>
+              >{{ $t('register.audit') }}</el-button
+            >
 
             <el-button
               size="small"
@@ -144,7 +149,8 @@
               plain
               class="compact-btn delete-btn"
               @click="handleDelete(row)"
-            >{{ $t('employee.delete') }}</el-button>
+              >{{ $t('employee.delete') }}</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -160,19 +166,54 @@
               <el-tag class="callsign-tag">{{ item.callsign || '--' }}</el-tag>
             </div>
           </div>
-          <el-tag :class="statusClass(item.status)" class="register-status-tag">{{ statusFilter(item.status) }}</el-tag>
+          <el-tag :class="statusClass(item.status)" class="register-status-tag">{{
+            statusFilter(item.status)
+          }}</el-tag>
         </div>
         <div class="register-card__body">
-          <div class="register-card__row"><span class="register-card__label">{{ $t('employee.phone') }}</span><span class="register-card__value">{{ item.phone || '--' }}</span></div>
-          <div class="register-card__row"><span class="register-card__label">{{ $t('register.mail') }}</span><span class="register-card__value">{{ item.mail || '--' }}</span></div>
-          <div class="register-card__row"><span class="register-card__label">{{ $t('register.create_time') }}</span><span class="register-card__value">{{ item.create_time || '--' }}</span></div>
-          <div class="register-card__row"><span class="register-card__label">{{ $t('register.update_time') }}</span><span class="register-card__value">{{ item.update_time || '--' }}</span></div>
-          <div class="register-card__row register-card__row--stack"><span class="register-card__label">{{ $t('employee.address') }}</span><p class="register-card__note">{{ item.address || '--' }}</p></div>
-          <div class="register-card__row register-card__row--stack"><span class="register-card__label">{{ $t('register.note') }}</span><p class="register-card__note">{{ item.note || '--' }}</p></div>
+          <div class="register-card__row">
+            <span class="register-card__label">{{ $t('employee.phone') }}</span
+            ><span class="register-card__value">{{ item.phone || '--' }}</span>
+          </div>
+          <div class="register-card__row">
+            <span class="register-card__label">{{ $t('register.mail') }}</span
+            ><span class="register-card__value">{{ item.mail || '--' }}</span>
+          </div>
+          <div class="register-card__row">
+            <span class="register-card__label">{{ $t('register.create_time') }}</span
+            ><span class="register-card__value">{{ item.create_time || '--' }}</span>
+          </div>
+          <div class="register-card__row">
+            <span class="register-card__label">{{ $t('register.update_time') }}</span
+            ><span class="register-card__value">{{ item.update_time || '--' }}</span>
+          </div>
+          <div class="register-card__row register-card__row--stack">
+            <span class="register-card__label">{{ $t('employee.address') }}</span>
+            <p class="register-card__note">{{ item.address || '--' }}</p>
+          </div>
+          <div class="register-card__row register-card__row--stack">
+            <span class="register-card__label">{{ $t('register.note') }}</span>
+            <p class="register-card__note">{{ item.note || '--' }}</p>
+          </div>
         </div>
         <div class="register-card__actions">
-          <el-button v-if="item.status === 1" type="success" plain size="small" class="compact-btn audit-btn" @click="handleUpdate(item)">{{ $t('register.audit') }}</el-button>
-          <el-button size="small" type="danger" plain class="compact-btn delete-btn" @click="handleDelete(item)">{{ $t('employee.delete') }}</el-button>
+          <el-button
+            v-if="item.status === 1"
+            type="success"
+            plain
+            size="small"
+            class="compact-btn audit-btn"
+            @click="handleUpdate(item)"
+            >{{ $t('register.audit') }}</el-button
+          >
+          <el-button
+            size="small"
+            type="danger"
+            plain
+            class="compact-btn delete-btn"
+            @click="handleDelete(item)"
+            >{{ $t('employee.delete') }}</el-button
+          >
         </div>
       </article>
     </div>
@@ -186,7 +227,11 @@
       @pagination="getList"
     />
 
-    <el-dialog v-model="dialogFormVisible" :title="textMap[dialogStatus]" class="platform-theme-dialog setup-register-dialog">
+    <el-dialog
+      v-model="dialogFormVisible"
+      :title="textMap[dialogStatus]"
+      class="platform-theme-dialog setup-register-dialog"
+    >
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -223,14 +268,20 @@
               :alt="$t('reg.license')"
               class="license-preview-image"
               @click="showlicenseFullScreenImage"
-            >
+            />
           </div>
           <div v-else class="image-empty-state">{{ $t('register.noLicense') }}</div>
         </div>
 
-        <div v-if="showlicenseFullScreen" class="fullscreen-overlay" @click.self="closelicenseFullScreen">
-          <img :src="originallicenseImage" :alt="$t('reg.license')" class="fullscreen-image">
-          <button class="close-button" @click="closelicenseFullScreen">{{ $t('register.close') }}</button>
+        <div
+          v-if="showlicenseFullScreen"
+          class="fullscreen-overlay"
+          @click.self="closelicenseFullScreen"
+        >
+          <img :src="originallicenseImage" :alt="$t('reg.license')" class="fullscreen-image" />
+          <button class="close-button" @click="closelicenseFullScreen">
+            {{ $t('register.close') }}
+          </button>
         </div>
       </el-form>
 
@@ -246,13 +297,7 @@
 </template>
 
 <script>
-import {
-  listReg,
-  addReg,
-  deleteReg,
-  updateReg,
-  getImage
-} from '@/api/register'
+import { listReg, addReg, deleteReg, updateReg, getImage } from '@/api/register'
 import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination/index.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -275,7 +320,7 @@ export default {
         limit: 10,
         sort: '-id',
         callsign: '',
-        namephone: ''
+        namephone: '',
       },
       certificate: '',
       license: '',
@@ -294,31 +339,30 @@ export default {
         address: '',
         mail: '',
         note: '',
-        status: 1
+        status: 1,
       },
       roles: [],
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
         update: this.$t('register.editTitle'),
-        create: this.$t('register.editTitle')
+        create: this.$t('register.editTitle'),
       },
       dialogPvVisible: false,
       pvData: [],
       rules: {
         callsign: [
           { required: true, message: this.$t('register.callsignRequired'), trigger: 'change' },
-          { max: 6, message: this.$t('register.callsignMax'), trigger: ['blur', 'change'] }
+          { max: 6, message: this.$t('register.callsignMax'), trigger: ['blur', 'change'] },
         ],
         name: [{ required: true, message: this.$t('register.nameRequired'), trigger: 'change' }],
-        phone: [{ required: true, message: this.$t('register.phoneRequired'), trigger: 'blur' }]
+        phone: [{ required: true, message: this.$t('register.phoneRequired'), trigger: 'blur' }],
       },
-      downloadLoading: false,
-      showtable: true
+      showtable: true,
     }
   },
   computed: {
-    ...mapState(useAppStore, ['device'])
+    ...mapState(useAppStore, ['device']),
   },
 
   created() {
@@ -329,7 +373,7 @@ export default {
     statusFilter(status) {
       const statusMap = {
         1: this.$t('register.pending'),
-        2: this.$t('register.audited')
+        2: this.$t('register.audited'),
       }
       return statusMap[status] || this.$t('register.unknown')
     },
@@ -340,12 +384,14 @@ export default {
     },
     getList() {
       this.listLoading = true
-      listReg(this.listQuery).then(response => {
-        this.list = response?.data?.items || []
-        this.total = response?.data?.total || 0
-      }).finally(() => {
-        this.listLoading = false
-      })
+      listReg(this.listQuery)
+        .then((response) => {
+          this.list = response?.data?.items || []
+          this.total = response?.data?.total || 0
+        })
+        .finally(() => {
+          this.listLoading = false
+        })
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -387,7 +433,7 @@ export default {
         address: '',
         mail: '',
         note: '',
-        status: 1
+        status: 1,
       }
     },
     handleUpdate(row) {
@@ -395,14 +441,16 @@ export default {
       this.dialogStatus = 'update'
 
       if (row.license_path) {
-        getImage({ path: row.license_path }).then(response => {
-          this.license = `data:image/jpeg;base64,${response.data}`
-          this.originallicenseImage = this.license
-        }).catch(() => {
-          this.license = ''
-          this.originallicenseImage = ''
-          ElMessage.warning(this.$t('register.licenseLoadFail'))
-        })
+        getImage({ path: row.license_path })
+          .then((response) => {
+            this.license = `data:image/jpeg;base64,${response.data}`
+            this.originallicenseImage = this.license
+          })
+          .catch(() => {
+            this.license = ''
+            this.originallicenseImage = ''
+            ElMessage.warning(this.$t('register.licenseLoadFail'))
+          })
       } else {
         this.license = ''
         this.originallicenseImage = ''
@@ -415,10 +463,10 @@ export default {
       })
     },
     updateData() {
-      this.$refs.dataForm.validate(valid => {
+      this.$refs.dataForm.validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          updateReg(tempData).then(response => {
+          updateReg(tempData).then((response) => {
             for (const v of this.list) {
               if (v.id === this.temp.id) {
                 const index = this.list.indexOf(v)
@@ -427,16 +475,18 @@ export default {
               }
             }
             this.dialogFormVisible = false
-            ElMessage.success(response?.message || response?.data?.message || this.$t('register.updateSuccess'))
+            ElMessage.success(
+              response?.message || response?.data?.message || this.$t('register.updateSuccess')
+            )
           })
         }
       })
     },
     auditData() {
-      this.$refs.dataForm.validate(valid => {
+      this.$refs.dataForm.validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          addReg(tempData).then(response => {
+          addReg(tempData).then((response) => {
             if (response && response.code === 20000) {
               this.getList()
             }
@@ -445,7 +495,7 @@ export default {
             ElMessage({
               message: response?.message || response?.data?.message || this.$t('register.opDone'),
               type: response?.code === 20000 ? 'success' : 'warning',
-              duration: 2000
+              duration: 2000,
             })
           })
         }
@@ -458,13 +508,14 @@ export default {
         {
           confirmButtonText: this.$t('employee.confirm'),
           cancelButtonText: this.$t('employee.cancel'),
-          type: 'warning'
+          type: 'warning',
         }
       )
         .then(() => {
           // 删除成功后再刷新列表，避免竞态导致已删除记录仍显示
-          deleteReg(row).then(response => {
-            const message = response?.data?.message || response?.message || this.$t('register.opDone')
+          deleteReg(row).then((response) => {
+            const message =
+              response?.data?.message || response?.message || this.$t('register.opDone')
             ElMessage.success(message)
             this.getList()
           })
@@ -473,34 +524,7 @@ export default {
           ElMessage.info(this.$t('register.canceled'))
         })
     },
-    async handleDownload() {
-      this.downloadLoading = true
-      const excel = await import('@/vendor/Export2Excel')
-      const tHeader = [
-        this.$t('register.callsign'),
-        this.$t('register.name'),
-        this.$t('employee.phone'),
-        this.$t('register.mail'),
-        this.$t('employee.address'),
-        this.$t('employee.status'),
-        this.$t('register.create_time'),
-        this.$t('register.update_time')
-      ]
-      const filterVal = ['callsign', 'name', 'phone', 'mail', 'address', 'status', 'create_time', 'update_time']
-      const data = this.formatJson(filterVal, this.list)
-      await excel.export_json_to_excel({
-        header: tHeader,
-        data,
-        filename: 'register-list'
-      })
-      this.downloadLoading = false
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v =>
-        filterVal.map(j => (j === 'status' ? this.statusFilter(v[j]) : v[j]))
-      )
-    }
-  }
+  },
 }
 </script>
 
@@ -533,11 +557,33 @@ export default {
   :deep(.view-switch) {
     --el-switch-on-color: linear-gradient(90deg, #26efc7 0%, #3f8dff 100%);
     --el-switch-off-color: rgba(104, 176, 255, 0.22);
-    .el-switch__core { border-color: rgba(104, 176, 255, 0.24); background: rgba(12, 31, 58, 0.72); min-width: 46px; height: 24px; }
-    &.is-checked .el-switch__core { border-color: rgba(54, 240, 203, 0.34); background: linear-gradient(90deg, rgba(38, 239, 199, 0.88) 0%, rgba(63, 141, 255, 0.82) 100%); }
-    .el-switch__action { width: 18px; height: 18px; top: 2px; }
-    .el-switch__label, .el-switch__label * { color: var(--platform-ink-dim) !important; }
-    .el-switch__label.is-active, .el-switch__label.is-active * { color: var(--platform-ink) !important; }
+    .el-switch__core {
+      border-color: rgba(104, 176, 255, 0.24);
+      background: rgba(12, 31, 58, 0.72);
+      min-width: 46px;
+      height: 24px;
+    }
+    &.is-checked .el-switch__core {
+      border-color: rgba(54, 240, 203, 0.34);
+      background: linear-gradient(
+        90deg,
+        rgba(38, 239, 199, 0.88) 0%,
+        rgba(63, 141, 255, 0.82) 100%
+      );
+    }
+    .el-switch__action {
+      width: 18px;
+      height: 18px;
+      top: 2px;
+    }
+    .el-switch__label,
+    .el-switch__label * {
+      color: var(--platform-ink-dim) !important;
+    }
+    .el-switch__label.is-active,
+    .el-switch__label.is-active * {
+      color: var(--platform-ink) !important;
+    }
   }
 }
 
@@ -554,7 +600,10 @@ export default {
   .callsign-tag {
     color: var(--action-at-text, #9effea) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.28)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)) !important;
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)
+    ) !important;
   }
 
   .mail-cell,
@@ -580,13 +629,19 @@ export default {
   .status-approved {
     color: var(--action-at-text, #9effea) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.34)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(17, 89, 80, 0.42) 0%, rgba(12, 48, 71, 0.32) 100%)) !important;
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(17, 89, 80, 0.42) 0%, rgba(12, 48, 71, 0.32) 100%)
+    ) !important;
   }
 
   .status-pending {
     color: var(--action-change-text, #ffd88c) !important;
     border-color: var(--action-change-border, rgba(255, 194, 86, 0.36)) !important;
-    background: var(--action-change-bg, linear-gradient(135deg, rgba(96, 68, 23, 0.34) 0%, rgba(62, 42, 16, 0.24) 100%)) !important;
+    background: var(
+      --action-change-bg,
+      linear-gradient(135deg, rgba(96, 68, 23, 0.34) 0%, rgba(62, 42, 16, 0.24) 100%)
+    ) !important;
   }
 
   .status-neutral {
@@ -612,13 +667,19 @@ export default {
   .audit-btn {
     color: var(--action-at-text, #96ffe7) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.4)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(15, 87, 79, 0.34) 0%, rgba(13, 54, 77, 0.26) 100%)) !important;
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(15, 87, 79, 0.34) 0%, rgba(13, 54, 77, 0.26) 100%)
+    ) !important;
   }
 
   .delete-btn {
     color: var(--action-delete-text, #ffb3bf) !important;
     border-color: var(--action-delete-border, rgba(255, 116, 145, 0.4)) !important;
-    background: var(--action-delete-bg, linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)) !important;
+    background: var(
+      --action-delete-bg,
+      linear-gradient(135deg, rgba(82, 24, 42, 0.34) 0%, rgba(56, 18, 34, 0.26) 100%)
+    ) !important;
   }
 
   :deep(.el-table td.el-table__cell) {
@@ -636,19 +697,90 @@ export default {
   margin: 0 auto;
 }
 
-.register-card-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:18px; padding:10px; }
-.register-card { border-radius:24px; border:1px solid var(--platform-border-light); background:var(--platform-shell); box-shadow:0 18px 44px rgba(15,23,42,.08); padding:18px; display:flex; flex-direction:column; gap:16px; }
-.register-card__header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
-.register-card__headline { min-width:0; display:flex; align-items:center; gap:10px; }
-.register-card__headline h3 { margin:0 0 6px; font-size:18px; line-height:1.35; color:var(--platform-ink); word-break:break-word; }
-.register-id-tag { color:var(--platform-id-text, #9cccff) !important; border-color:var(--platform-id-border, rgba(88,184,255,.34)) !important; background:var(--platform-id-bg, rgba(20,48,84,.72)) !important; }
-.register-card__body { display:flex; flex-direction:column; gap:12px; }
-.register-card__row { display:grid; grid-template-columns:minmax(84px, 96px) minmax(0, 1fr); align-items:center; gap:12px; padding:12px 14px; border-radius:16px; background:var(--platform-surface-xlight); border:1px solid var(--platform-border-light); }
-.register-card__row--stack { align-items:flex-start; flex-direction:column; }
-.register-card__label { color:var(--platform-note-text, rgba(228,239,255,.54)); font-size:12px; letter-spacing:.02em; }
-.register-card__value, .register-card__note { color:var(--platform-ink); line-height:1.55; text-align:left; word-break:break-word; min-width:0; }
-.register-card__note { width:100%; margin:0; text-align:left; color:var(--platform-note-text, rgba(228,239,255,.78)); }
-.register-card__actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:10px; }
+.register-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+  padding: 10px;
+}
+.register-card {
+  border-radius: 24px;
+  border: 1px solid var(--platform-border-light);
+  background: var(--platform-shell);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.register-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.register-card__headline {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.register-card__headline h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  line-height: 1.35;
+  color: var(--platform-ink);
+  word-break: break-word;
+}
+.register-id-tag {
+  color: var(--platform-id-text, #9cccff) !important;
+  border-color: var(--platform-id-border, rgba(88, 184, 255, 0.34)) !important;
+  background: var(--platform-id-bg, rgba(20, 48, 84, 0.72)) !important;
+}
+.register-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.register-card__row {
+  display: grid;
+  grid-template-columns: minmax(84px, 96px) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--platform-surface-xlight);
+  border: 1px solid var(--platform-border-light);
+}
+.register-card__row--stack {
+  align-items: flex-start;
+  flex-direction: column;
+}
+.register-card__label {
+  color: var(--platform-note-text, rgba(228, 239, 255, 0.54));
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+.register-card__value,
+.register-card__note {
+  color: var(--platform-ink);
+  line-height: 1.55;
+  text-align: left;
+  word-break: break-word;
+  min-width: 0;
+}
+.register-card__note {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  color: var(--platform-note-text, rgba(228, 239, 255, 0.78));
+}
+.register-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
 
 .license-preview-panel {
   margin-top: 12px;
@@ -721,7 +853,7 @@ export default {
 }
 
 @media (max-width: 768px) {
-.filter-container {
+  .filter-container {
     .filter-item {
       &.search-input,
       &.action-btn,
@@ -738,14 +870,46 @@ export default {
     }
   }
 
-  .register-card-grid { grid-template-columns: 1fr; gap: 14px; padding: 6px 0 0; }
-  .register-card { padding: 14px; border-radius: 18px; gap: 14px; }
-  .register-card__header { flex-direction: column; align-items: stretch; gap: 10px; }
-  .register-card__headline { width: 100%; align-items: flex-start; }
-  .register-card__headline h3 { font-size: 17px; }
-  .register-card__row { grid-template-columns: 80px minmax(0, 1fr); gap: 10px; padding: 10px 12px; }
-  .register-card__row--stack { display: flex; flex-direction: column; align-items: flex-start; }
-  .register-card__actions { justify-content: stretch; flex-direction: column; gap: 8px; }
-  .register-card__actions .compact-btn { width: 100%; margin: 0 !important; }
+  .register-card-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 6px 0 0;
+  }
+  .register-card {
+    padding: 14px;
+    border-radius: 18px;
+    gap: 14px;
+  }
+  .register-card__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .register-card__headline {
+    width: 100%;
+    align-items: flex-start;
+  }
+  .register-card__headline h3 {
+    font-size: 17px;
+  }
+  .register-card__row {
+    grid-template-columns: 80px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px 12px;
+  }
+  .register-card__row--stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .register-card__actions {
+    justify-content: stretch;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .register-card__actions .compact-btn {
+    width: 100%;
+    margin: 0 !important;
+  }
 }
 </style>

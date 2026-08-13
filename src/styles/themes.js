@@ -9,7 +9,8 @@ export const themes = {
     vars: {
       '--platform-ink': '#f4f8ff',
       '--platform-ink-dim': 'rgba(228, 239, 255, 0.72)',
-      '--platform-shell': 'linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%)',
+      '--platform-shell':
+        'linear-gradient(145deg, rgba(10, 23, 41, 0.82) 0%, rgba(12, 29, 50, 0.72) 100%)',
       '--platform-surface': 'rgba(12, 31, 58, 0.74)',
       '--platform-surface-soft': 'rgba(12, 31, 58, 0.52)',
       '--platform-surface-light': 'rgba(12, 31, 58, 0.46)',
@@ -56,8 +57,8 @@ export const themes = {
       '--sidebar-active-text': '#36f0cb',
       '--sidebar-hover': '#1a3050',
       '--sidebar-sub-bg': '#0b1625',
-      '--sidebar-sub-hover': '#1a3050'
-    }
+      '--sidebar-sub-hover': '#1a3050',
+    },
   },
   dark: {
     name: '夜间阅读',
@@ -69,7 +70,8 @@ export const themes = {
     vars: {
       '--platform-ink': '#eef6ff',
       '--platform-ink-dim': 'rgba(214, 228, 246, 0.78)',
-      '--platform-shell': 'linear-gradient(145deg, rgba(9, 14, 26, 0.94) 0%, rgba(15, 23, 42, 0.86) 100%)',
+      '--platform-shell':
+        'linear-gradient(145deg, rgba(9, 14, 26, 0.94) 0%, rgba(15, 23, 42, 0.86) 100%)',
       '--platform-surface': 'rgba(20, 31, 52, 0.78)',
       '--platform-surface-soft': 'rgba(20, 31, 52, 0.56)',
       '--platform-surface-light': 'rgba(20, 31, 52, 0.48)',
@@ -116,8 +118,8 @@ export const themes = {
       '--sidebar-active-text': '#7dd3fc',
       '--sidebar-hover': '#162238',
       '--sidebar-sub-bg': '#070d18',
-      '--sidebar-sub-hover': '#162238'
-    }
+      '--sidebar-sub-hover': '#162238',
+    },
   },
   light: {
     name: '日间阅读',
@@ -130,7 +132,8 @@ export const themes = {
       '--platform-ink': '#172033',
       '--platform-ink-dim': 'rgba(47, 64, 92, 0.76)',
       '--platform-on-accent': '#ffffff',
-      '--platform-shell': 'linear-gradient(145deg, rgba(255, 255, 255, 0.94) 0%, rgba(239, 246, 255, 0.88) 100%)',
+      '--platform-shell':
+        'linear-gradient(145deg, rgba(255, 255, 255, 0.94) 0%, rgba(239, 246, 255, 0.88) 100%)',
       '--platform-surface': 'rgba(226, 238, 252, 0.74)',
       '--platform-surface-soft': 'rgba(241, 247, 255, 0.66)',
       '--platform-surface-light': 'rgba(255, 255, 255, 0.72)',
@@ -233,8 +236,8 @@ export const themes = {
       '--platform-id-border': 'rgba(37, 99, 235, 0.28)',
       '--platform-id-bg': 'rgba(219, 234, 254, 0.88)',
       '--platform-note-text': 'rgba(47, 64, 92, 0.72)',
-      '--platform-empty-text': 'rgba(71, 85, 105, 0.56)'
-    }
+      '--platform-empty-text': 'rgba(71, 85, 105, 0.56)',
+    },
   },
   green: {
     name: '绿色环保',
@@ -246,7 +249,8 @@ export const themes = {
     vars: {
       '--platform-ink': '#f0fdf4',
       '--platform-ink-dim': 'rgba(220, 255, 235, 0.72)',
-      '--platform-shell': 'linear-gradient(145deg, rgba(10, 25, 18, 0.88) 0%, rgba(12, 32, 22, 0.78) 100%)',
+      '--platform-shell':
+        'linear-gradient(145deg, rgba(10, 25, 18, 0.88) 0%, rgba(12, 32, 22, 0.78) 100%)',
       '--platform-surface': 'rgba(12, 35, 24, 0.76)',
       '--platform-surface-soft': 'rgba(12, 35, 24, 0.54)',
       '--platform-surface-light': 'rgba(12, 35, 24, 0.46)',
@@ -293,8 +297,8 @@ export const themes = {
       '--sidebar-active-text': '#06d6a0',
       '--sidebar-hover': '#1a4030',
       '--sidebar-sub-bg': '#0a1f12',
-      '--sidebar-sub-hover': '#1a4030'
-    }
+      '--sidebar-sub-hover': '#1a4030',
+    },
   },
   orange: {
     name: '橙色温馨',
@@ -306,7 +310,8 @@ export const themes = {
     vars: {
       '--platform-ink': '#fff7ed',
       '--platform-ink-dim': 'rgba(255, 247, 237, 0.78)',
-      '--platform-shell': 'linear-gradient(145deg, rgba(28, 18, 8, 0.92) 0%, rgba(38, 24, 12, 0.82) 100%)',
+      '--platform-shell':
+        'linear-gradient(145deg, rgba(28, 18, 8, 0.92) 0%, rgba(38, 24, 12, 0.82) 100%)',
       '--platform-surface': 'rgba(38, 24, 12, 0.78)',
       '--platform-surface-soft': 'rgba(38, 24, 12, 0.54)',
       '--platform-surface-light': 'rgba(38, 24, 12, 0.46)',
@@ -353,8 +358,8 @@ export const themes = {
       '--sidebar-active-text': '#fb923c',
       '--sidebar-hover': '#402010',
       '--sidebar-sub-bg': '#1f1006',
-      '--sidebar-sub-hover': '#402010'
-    }
+      '--sidebar-sub-hover': '#402010',
+    },
   },
   pink: {
     name: '粉雾霓光',
@@ -366,7 +371,8 @@ export const themes = {
     vars: {
       '--platform-ink': '#fff1f7',
       '--platform-ink-dim': 'rgba(255, 231, 242, 0.8)',
-      '--platform-shell': 'linear-gradient(145deg, rgba(46, 12, 30, 0.92) 0%, rgba(66, 18, 42, 0.82) 100%)',
+      '--platform-shell':
+        'linear-gradient(145deg, rgba(46, 12, 30, 0.92) 0%, rgba(66, 18, 42, 0.82) 100%)',
       '--platform-surface': 'rgba(58, 16, 38, 0.78)',
       '--platform-surface-soft': 'rgba(58, 16, 38, 0.56)',
       '--platform-surface-light': 'rgba(58, 16, 38, 0.48)',
@@ -413,8 +419,8 @@ export const themes = {
       '--sidebar-active-text': '#f9a8d4',
       '--sidebar-hover': '#4a1732',
       '--sidebar-sub-bg': '#220918',
-      '--sidebar-sub-hover': '#4a1732'
-    }
+      '--sidebar-sub-hover': '#4a1732',
+    },
   },
   purple: {
     name: '紫曜星云',
@@ -426,7 +432,8 @@ export const themes = {
     vars: {
       '--platform-ink': '#f6f0ff',
       '--platform-ink-dim': 'rgba(234, 221, 255, 0.8)',
-      '--platform-shell': 'linear-gradient(145deg, rgba(22, 12, 46, 0.92) 0%, rgba(34, 18, 68, 0.82) 100%)',
+      '--platform-shell':
+        'linear-gradient(145deg, rgba(22, 12, 46, 0.92) 0%, rgba(34, 18, 68, 0.82) 100%)',
       '--platform-surface': 'rgba(30, 16, 58, 0.78)',
       '--platform-surface-soft': 'rgba(30, 16, 58, 0.56)',
       '--platform-surface-light': 'rgba(30, 16, 58, 0.48)',
@@ -473,9 +480,9 @@ export const themes = {
       '--sidebar-active-text': '#c4b5fd',
       '--sidebar-hover': '#2e1b56',
       '--sidebar-sub-bg': '#120923',
-      '--sidebar-sub-hover': '#2e1b56'
-    }
-  }
+      '--sidebar-sub-hover': '#2e1b56',
+    },
+  },
 }
 
 export const themeKeys = Object.keys(themes)

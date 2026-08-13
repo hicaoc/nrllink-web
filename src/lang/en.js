@@ -70,7 +70,7 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: 'Internationalization',
     externalLink: 'External Link',
-    profile: 'Profile'
+    profile: 'Profile',
   },
   server: {
     server_name: 'Server Name',
@@ -90,14 +90,15 @@ export default {
     create: 'Create',
     edit: 'Edit',
     delete: 'Delete',
-    active: 'Actions'
+    active: 'Actions',
 
     // master_server: 'Master Server',
     // slave_server: 'Slave Server'
   },
   config: {
     title: 'Server Config',
-    restartTip: 'Changes to port, database and similar settings take effect only after restarting the service',
+    restartTip:
+      'Changes to port, database and similar settings take effect only after restarting the service',
     save: 'Save',
     saveSuccess: 'Saved successfully',
     loadFailed: 'Failed to load configuration',
@@ -122,25 +123,25 @@ export default {
       license_path: 'License Path',
       dbfile: 'Database File',
       ipfile: 'IP Database File',
-      calllog_path: 'Call Log Path'
+      calllog_path: 'Call Log Path',
     },
     web: {
       path: 'Web Path',
       port: 'Web Port',
       icp: 'ICP Number',
       ssl_crt: 'SSL Certificate',
-      ssl_key: 'SSL Private Key'
+      ssl_key: 'SSL Private Key',
     },
     systeminfo: {
       name: 'System Name',
       nameshorthand: 'Short Name',
       logo_url: 'Logo URL',
-      language: 'Default Language'
+      language: 'Default Language',
     },
     openai: {
       base_url: 'Base URL',
       api_key: 'API Key',
-      engine: 'Engine'
+      engine: 'Engine',
     },
     aprs: {
       aprs_server_host: 'APRS Server',
@@ -152,7 +153,7 @@ export default {
       passcode: 'Passcode',
       latitude: 'Latitude',
       longitude: 'Longitude',
-      altitude: 'Altitude'
+      altitude: 'Altitude',
     },
     weixin: {
       mp_appid: 'MP AppID',
@@ -167,7 +168,7 @@ export default {
       server_url: 'Server URL',
       weixin_api_url: 'WeChat API URL',
       wx_msg_url: 'Message Push URL',
-      alarm_mode_id: 'Alarm Mode ID'
+      alarm_mode_id: 'Alarm Mode ID',
     },
     billing: {
       enabled: 'Enable Billing',
@@ -181,7 +182,7 @@ export default {
       serial_no: 'Certificate Serial No.',
       private_key_path: 'Private Key Path',
       wechat_notify_url: 'WeChat Pay Notify URL',
-      description: 'Description'
+      description: 'Description',
     },
     platforms: {
       name: 'Platform Name',
@@ -189,8 +190,8 @@ export default {
       port: 'Port',
       online: 'Online',
       total: 'Total',
-      actions: 'Actions'
-    }
+      actions: 'Actions',
+    },
   },
   device: {
     grouproom: 'Group Room',
@@ -253,7 +254,8 @@ export default {
     dnsAddress: 'DNS Address',
     targetAddress: 'Target Address',
     selectServer: 'Select Server',
-    confirmTargetAddress: 'Please confirm the target address or domain. If it is wrong, the device will not be able to connect.',
+    confirmTargetAddress:
+      'Please confirm the target address or domain. If it is wrong, the device will not be able to connect.',
     saveConfirm: 'Save',
     discard: 'Discard',
     dcdSelect: 'DCD Select',
@@ -299,14 +301,17 @@ export default {
     customAt: 'Custom AT Command',
     updateSuccess: 'Updated successfully',
     requestFailed: 'Request failed',
-    deleteConfirm: 'This will delete the device. When it comes online again it will be recreated. Continue?',
+    deleteConfirm:
+      'This will delete the device. When it comes online again it will be recreated. Continue?',
     notice: 'Notice',
     completed: 'Completed',
     deleteCancelled: 'Delete cancelled',
     save1wSuccess: '1W module settings saved',
     freqValidation: 'Frequency must have exactly 4 decimal places',
-    loadParamFailed: 'Failed to load settings. The firmware may not support this or the device is offline.',
-    loadAtFailed: 'Failed to load AT commands. The firmware may not support this or the device is offline.',
+    loadParamFailed:
+      'Failed to load settings. The firmware may not support this or the device is offline.',
+    loadAtFailed:
+      'Failed to load AT commands. The firmware may not support this or the device is offline.',
     atSuccess: 'AT command executed successfully',
     atFailed: 'AT command failed',
     operationSuccess: 'Operation successful',
@@ -314,14 +319,13 @@ export default {
     basicInfo: 'Basic Info',
     groupAndOwner: 'Group & Owner',
     statistics: 'Statistics',
-    statusControl: 'Status Control'
+    statusControl: 'Status Control',
   },
   group: {
     name: 'Name',
     type: 'Type',
     allow_callsign_ssid: 'Allowed Devices',
-    note: 'Note'
-
+    note: 'Note',
   },
   relay: {
     name: 'Name',
@@ -330,17 +334,15 @@ export default {
     ower_callsign: 'Creator',
     note: 'Note',
     enabled: 'Enabled',
-    disabled: 'Disabled'
-
+    disabled: 'Disabled',
   },
   navbar: {
-
     dashboard: 'Dashboard',
     logOut: 'Log Out',
     profile: 'Profile',
     theme: 'Theme',
     size: 'Layout Size',
-    renew: 'Click to renew'
+    renew: 'Click to renew',
   },
   login: {
     title: 'HAM Interconnect',
@@ -377,7 +379,7 @@ export default {
     serverListPanel: 'Servers',
     showAllPanels: 'Show All Panels',
     switchToChinese: 'Switch to Chinese',
-    switchToEnglish: 'Switch to English'
+    switchToEnglish: 'Switch to English',
   },
   serial: {
     entry: 'USB Serial Device Config (Direct)',
@@ -389,7 +391,8 @@ export default {
     disconnect: 'Disconnect',
     connected: 'Connected',
     disconnected: 'Disconnected',
-    unsupported: 'This browser does not support the Web Serial API. Please use Chrome / Edge over HTTPS or localhost.',
+    unsupported:
+      'This browser does not support the Web Serial API. Please use Chrome / Edge over HTTPS or localhost.',
     httpsTip: 'Requires HTTPS or localhost, connects to the device via USB',
     basicSettings: 'Basic Settings',
     callsign: 'Callsign',
@@ -451,11 +454,12 @@ export default {
     regWriteConfirm: 'Write all settings to the device registers?',
     ipInvalid: 'Invalid IP address format',
     serverInvalid: 'Server address must be a domain or IPv4 address',
-    snInvalid: 'Remote S/N must be 14 hex characters'
+    snInvalid: 'Remote S/N must be 14 hex characters',
   },
   dashboardHome: {
     heroBadge: 'Control Center',
-    heroDesc: 'A unified post-login view for platform health, live calls and key operational metrics',
+    heroDesc:
+      'A unified post-login view for platform health, live calls and key operational metrics',
     summaryEyebrow: 'Overview',
     summaryTitle: 'Core Platform Metrics',
     totalDevices: 'Total Devices',
@@ -469,34 +473,39 @@ export default {
     liveAccessDesc: '{subs} active audio subscriptions right now',
     platformName: 'Platform Name',
     platformIcp: 'ICP Filing',
-    platformLanguage: 'Current Language'
+    platformLanguage: 'Current Language',
   },
   documentation: {
-    documentation: 'Nanjing Xinfeng Network Technology Co., Ltd.'
+    documentation: 'Nanjing Xinfeng Network Technology Co., Ltd.',
   },
   permission: {
     addRole: 'Add Role',
     editPermission: 'Edit Permission',
     roles: 'Your Roles',
     switchRoles: 'Switch Roles',
-    tips: 'In some cases, it is not suitable to use v-permission. For example: Element-UI\'s el-tab or el-table-column and other scenarios that dynamically render the dom. You can only achieve this by manually setting v-if.',
+    tips: "In some cases, it is not suitable to use v-permission. For example: Element-UI's el-tab or el-table-column and other scenarios that dynamically render the dom. You can only achieve this by manually setting v-if.",
     delete: 'Delete',
     confirm: 'Confirm',
-    cancel: 'Cancel'
-
+    cancel: 'Cancel',
   },
   guide: {
-    description: 'The guide page is useful for people entering the project for the first time. You can briefly introduce the functions of the project. This Demo is based on ',
-    button: 'Open Guide'
+    description:
+      'The guide page is useful for people entering the project for the first time. You can briefly introduce the functions of the project. This Demo is based on ',
+    button: 'Open Guide',
   },
   components: {
     documentation: 'Documentation',
-    tinymceTips: 'Rich text is a core feature of the management backend, but it is also a place with many pitfalls. I also took many detours in the process of selecting rich text. I have basically used all the common rich texts on the market, and finally chose Tinymce after weighing the pros and cons. For more detailed rich text comparison and introduction, see',
-    dropzoneTips: "Because our company's business has special needs, and we need to upload to Qiniu, we didn't use a third-party library and chose to encapsulate it ourselves. The code is very simple, you can see the specific code here {'@'}/components/Dropzone",
+    tinymceTips:
+      'Rich text is a core feature of the management backend, but it is also a place with many pitfalls. I also took many detours in the process of selecting rich text. I have basically used all the common rich texts on the market, and finally chose Tinymce after weighing the pros and cons. For more detailed rich text comparison and introduction, see',
+    dropzoneTips:
+      "Because our company's business has special needs, and we need to upload to Qiniu, we didn't use a third-party library and chose to encapsulate it ourselves. The code is very simple, you can see the specific code here {'@'}/components/Dropzone",
     stickyTips: 'When the page scrolls to the preset position, it will stick to the top',
-    backToTopTips1: 'When the page scrolls to the specified position, a back-to-top button will appear in the lower right corner',
-    backToTopTips2: 'You can customize the style, show/hide, appearance height, and return position of the button. If you need text prompts, you can use Element\'s el-tooltip element externally',
-    imageUploadTips: "Because when I used it, it only had the vue{'@'}1 version, and it was incompatible with mockjs, so I modified it myself. If you want to use it, it is still recommended to use the official version first."
+    backToTopTips1:
+      'When the page scrolls to the specified position, a back-to-top button will appear in the lower right corner',
+    backToTopTips2:
+      "You can customize the style, show/hide, appearance height, and return position of the button. If you need text prompts, you can use Element's el-tooltip element externally",
+    imageUploadTips:
+      "Because when I used it, it only had the vue{'@'}1 version, and it was incompatible with mockjs, so I modified it myself. If you want to use it, it is still recommended to use the official version first.",
   },
   user: {
     id: 'ID',
@@ -516,7 +525,7 @@ export default {
     is_Account: 'Identity',
     subscribe_scene: 'Subscription Scene',
     subscribe_time: 'Subscription Time',
-    subscribe: 'Subscription Status'
+    subscribe: 'Subscription Status',
   },
   register: {
     name: 'Name',
@@ -544,8 +553,7 @@ export default {
     callsignRequired: 'Callsign is required',
     callsignMax: 'Callsign must be at most 6 characters',
     nameRequired: 'Name is required',
-    phoneRequired: 'Phone is required'
-
+    phoneRequired: 'Phone is required',
   },
 
   reg: {
@@ -585,8 +593,9 @@ export default {
     processFail: 'Image processing failed, please try another image',
     processing: 'Processing image, please submit later',
     submitFail: 'Registration failed, please try again later',
-    successMsg: 'Registration successful. Please wait for administrator review, usually within 48 hours. You registered on server [{server}] — please make sure to select this server when logging in to avoid signing in to the wrong one.',
-    successTitle: 'Registration Successful'
+    successMsg:
+      'Registration successful. Please wait for administrator review, usually within 48 hours. You registered on server [{server}] — please make sure to select this server when logging in to avoid signing in to the wrong one.',
+    successTitle: 'Registration Successful',
   },
 
   operator_log: {
@@ -594,7 +603,7 @@ export default {
     timestamp: 'Time',
     content: 'Content',
     event_type: 'Category',
-    operator: 'Operator'
+    operator: 'Operator',
   },
   area: {
     name: 'Area Name',
@@ -612,8 +621,7 @@ export default {
     create_time: 'Creation Time',
     update_time: 'Modification Time',
     note: 'Note',
-    actions: 'Actions'
-
+    actions: 'Actions',
   },
 
   Account: {
@@ -651,7 +659,6 @@ export default {
     note: 'Note',
     search: 'Search',
     add: 'Add',
-    export: 'Export',
     reviewer: 'Reviewer',
     id: 'ID',
 
@@ -675,7 +682,7 @@ export default {
     delete: 'Delete',
     realdelete: 'Permanently Delete',
     cancel: 'Cancel',
-    confirm: 'Confirm'
+    confirm: 'Confirm',
   },
   userquery: {
     dynamicTips1: 'Fixed header, sorted by header order',
@@ -698,7 +705,6 @@ export default {
     note: 'Note',
     search: 'Search',
     add: 'Add',
-    export: 'Export',
     reviewer: 'Reviewer',
     id: 'ID',
     password: 'Login Password',
@@ -709,7 +715,7 @@ export default {
     draft: 'On Leave',
     delete: 'Delete',
     cancel: 'Cancel',
-    confirm: 'Confirm'
+    confirm: 'Confirm',
   },
   employee: {
     dmrid: 'DMR-ID',
@@ -724,7 +730,6 @@ export default {
     remark: 'Comment',
     search: 'Search',
     add: 'Add',
-    export: 'Export',
     reviewer: 'Reviewer',
     id: 'ID',
     pid: 'ID Card Number',
@@ -750,44 +755,34 @@ export default {
     draft: 'On Leave',
     delete: 'Delete',
     cancel: 'Cancel',
-    confirm: 'Confirm'
+    confirm: 'Confirm',
   },
   example: {
-    warning: 'Create and edit pages cannot be cached by keep-alive, because keep-alive\'s include currently does not support caching based on routes, so caching is currently based on component name. If you want to achieve a similar caching effect, you can use browser caching solutions such as localStorage. Or do not use keep-alive\'s include, and directly cache all pages. See details'
+    warning:
+      "Create and edit pages cannot be cached by keep-alive, because keep-alive's include currently does not support caching based on routes, so caching is currently based on component name. If you want to achieve a similar caching effect, you can use browser caching solutions such as localStorage. Or do not use keep-alive's include, and directly cache all pages. See details",
   },
   errorLog: {
     tips: 'Please click the bug icon in the upper right corner',
-    description: 'Modern management backends are mostly SPAs, which enhances user experience but also increases the possibility of page problems. A small oversight may lead to the deadlock of the entire page. Fortunately, the Vue official website provides a method to capture and handle exceptions, where you can perform error handling or exception reporting.',
-    documentation: 'Documentation Introduction'
-  },
-  excel: {
-    export: 'Export',
-    selectedExport: 'Export Selected Items',
-    placeholder: 'Please enter the file name (default excel-list)'
-  },
-  zip: {
-    export: 'Export',
-    placeholder: 'Please enter the file name (default file)'
-  },
-  pdf: {
-    tips: 'Here use window.print() to implement the function of downloading pdf'
+    description:
+      'Modern management backends are mostly SPAs, which enhances user experience but also increases the possibility of page problems. A small oversight may lead to the deadlock of the entire page. Fortunately, the Vue official website provides a method to capture and handle exceptions, where you can perform error handling or exception reporting.',
+    documentation: 'Documentation Introduction',
   },
   theme: {
     change: 'Change Theme',
     documentation: 'Theme Documentation',
-    tips: 'Tips: It is different from the theme-pick on the navbar. They are two different theme changing methods, each with different application scenarios. Please refer to the documentation for details.'
+    tips: 'Tips: It is different from the theme-pick on the navbar. They are two different theme changing methods, each with different application scenarios. Please refer to the documentation for details.',
   },
   tagsView: {
     refresh: 'Refresh',
     close: 'Close',
     closeOthers: 'Close Others',
-    closeAll: 'Close All'
+    closeAll: 'Close All',
   },
   settings: {
     title: 'System Layout Configuration',
     theme: 'Theme Color',
     tagsView: 'Enable Tags-View',
     fixedHeader: 'Fixed Header',
-    sidebarLogo: 'Sidebar Logo'
-  }
+    sidebarLogo: 'Sidebar Logo',
+  },
 }

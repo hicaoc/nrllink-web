@@ -38,5 +38,5 @@ export default {
   },
   unmounted(el) {
     removeResizeListener(window.document.body, el.resizeListener)
-  }
+  },
 }

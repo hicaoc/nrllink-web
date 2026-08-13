@@ -4,7 +4,7 @@ export function login(data) {
   return request({
     url: '/user/login',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -12,14 +12,14 @@ export function getInfo(token) {
   return request({
     url: '/user/info',
     method: 'get',
-    params: { token }
+    params: { token },
   })
 }
 
 export function logout() {
   return request({
     url: '/user/logout',
-    method: 'post'
+    method: 'post',
   })
 }
 
@@ -29,8 +29,8 @@ export function addUser(optype, data) {
     method: 'post',
     data: {
       optype,
-      data
-    }
+      data,
+    },
   })
 }
 
@@ -38,7 +38,7 @@ export function password(data) {
   return request({
     url: '/user/password',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -46,6 +46,6 @@ export function updateProfile(data) {
   return request({
     url: '/user/profile/update',
     method: 'post',
-    data
+    data,
   })
 }

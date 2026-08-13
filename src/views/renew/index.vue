@@ -4,7 +4,9 @@
       <div>
         <p class="eyebrow">账号续费</p>
         <h2>{{ user.callsign || user.name || '--' }}</h2>
-        <p class="summary-line">当前到期时间：<strong>{{ expireTime }}</strong></p>
+        <p class="summary-line">
+          当前到期时间：<strong>{{ expireTime }}</strong>
+        </p>
       </div>
       <el-tag :class="expired ? 'expire-danger' : 'expire-ok'" class="expire-tag">
         {{ expired ? '已到期' : '使用中' }}
@@ -35,7 +37,12 @@
     </section>
 
     <div class="renew-actions">
-      <el-button type="primary" :disabled="!enabled || !selectedPackage" :loading="creating" @click="createOrder">
+      <el-button
+        type="primary"
+        :disabled="!enabled || !selectedPackage"
+        :loading="creating"
+        @click="createOrder"
+      >
         生成微信扫码订单
       </el-button>
       <el-button :disabled="!order" :loading="querying" @click="queryOrder">
@@ -45,7 +52,7 @@
 
     <section v-if="order" class="pay-panel">
       <div class="qr-box">
-        <img v-if="order.code_url" :src="qrImageURL" alt="微信支付二维码">
+        <img v-if="order.code_url" :src="qrImageURL" alt="微信支付二维码" />
         <div v-else class="qr-empty">未返回二维码</div>
       </div>
       <div class="order-info">
@@ -74,7 +81,7 @@ export default {
       order: null,
       creating: false,
       querying: false,
-      pollTimer: null
+      pollTimer: null,
     }
   },
   computed: {
@@ -87,7 +94,7 @@ export default {
     },
     qrImageURL() {
       return `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=12&data=${encodeURIComponent(this.order.code_url)}`
-    }
+    },
   },
   created() {
     this.loadInfo()
@@ -144,8 +151,8 @@ export default {
         window.clearInterval(this.pollTimer)
         this.pollTimer = null
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -213,7 +220,9 @@ export default {
   border: 1px solid var(--platform-border-light);
   background: var(--platform-shell);
   cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
 
   &.selected,
   &:hover {

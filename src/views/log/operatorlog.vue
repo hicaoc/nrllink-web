@@ -153,16 +153,13 @@ export default {
         sort: '+id',
         operator_id: undefined,
         event_type: '',
-        daterange: [
-          formatDate(firstDate(), 'yyyy-MM-dd'),
-          formatDate(lastDate(), 'yyyy-MM-dd')
-        ]
-      }
+        daterange: [formatDate(firstDate(), 'yyyy-MM-dd'), formatDate(lastDate(), 'yyyy-MM-dd')],
+      },
     }
   },
   created() {
     this.showtable = this.device !== 'mobile'
-    fetchEmployeeList({}).then(response => {
+    fetchEmployeeList({}).then((response) => {
       this.employeesOptions = response.data.items
       this.employeesOptions.unshift({ id: 0, name: '未知' })
     })
@@ -171,12 +168,14 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchOperatorLogList(this.listQuery).then(response => {
-        this.list = response?.data?.items || []
-        this.total = response?.data?.total || 0
-      }).finally(() => {
-        this.listLoading = false
-      })
+      fetchOperatorLogList(this.listQuery)
+        .then((response) => {
+          this.list = response?.data?.items || []
+          this.total = response?.data?.total || 0
+        })
+        .finally(() => {
+          this.listLoading = false
+        })
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -199,8 +198,8 @@ export default {
         this.listQuery.sort = '-id'
       }
       this.handleFilter()
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -256,13 +255,19 @@ export default {
   .event-type-tag {
     color: var(--platform-chip-text, #bdf4ff) !important;
     border-color: var(--platform-chip-border, rgba(104, 176, 255, 0.26)) !important;
-    background: var(--platform-chip-bg, linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)) !important;
+    background: var(
+      --platform-chip-bg,
+      linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%)
+    ) !important;
   }
 
   .operator-tag {
     color: var(--action-at-text, #9effea) !important;
     border-color: var(--action-at-border, rgba(54, 240, 203, 0.26)) !important;
-    background: var(--action-at-bg, linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)) !important;
+    background: var(
+      --action-at-bg,
+      linear-gradient(135deg, rgba(14, 77, 78, 0.26) 0%, rgba(12, 42, 67, 0.22) 100%)
+    ) !important;
   }
 
   :deep(.el-table td.el-table__cell) {
@@ -291,7 +296,10 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 
   &:hover {
     transform: translateY(-2px);
@@ -329,7 +337,11 @@ export default {
 .log-id-tag {
   color: #bdf4ff !important;
   border-color: rgba(104, 176, 255, 0.26) !important;
-  background: linear-gradient(135deg, rgba(19, 49, 84, 0.72) 0%, rgba(13, 34, 60, 0.88) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    rgba(19, 49, 84, 0.72) 0%,
+    rgba(13, 34, 60, 0.88) 100%
+  ) !important;
 }
 
 @media (max-width: 768px) {
