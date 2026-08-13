@@ -5,6 +5,7 @@ export default {
     relay: 'Relay Management',
     devgroup: 'Device Group',
     server: 'Node Management',
+    serverConfig: 'Server Config',
     publicgroup: 'Group Management',
     grouproom: 'Group Room',
     myhome: 'Private Area',
@@ -93,6 +94,103 @@ export default {
 
     // master_server: 'Master Server',
     // slave_server: 'Slave Server'
+  },
+  config: {
+    title: 'Server Config',
+    restartTip: 'Changes to port, database and similar settings take effect only after restarting the service',
+    save: 'Save',
+    saveSuccess: 'Saved successfully',
+    loadFailed: 'Failed to load configuration',
+    addPlatform: 'Add Platform',
+    deletePlatform: 'Delete',
+    deleteConfirm: 'Are you sure you want to delete this platform?',
+    tip: 'Notice',
+    confirm: 'OK',
+    cancel: 'Cancel',
+    canceled: 'Canceled',
+    tabSystem: 'System',
+    tabWeb: 'Web Service',
+    tabSysteminfo: 'System Info',
+    tabOpenai: 'OpenAI',
+    tabAprs: 'APRS',
+    tabWeixin: 'WeChat',
+    tabBilling: 'Billing',
+    tabPlatforms: 'Platforms',
+    system: {
+      port: 'Service Port',
+      log_path: 'Log Path',
+      license_path: 'License Path',
+      dbfile: 'Database File',
+      ipfile: 'IP Database File',
+      calllog_path: 'Call Log Path'
+    },
+    web: {
+      path: 'Web Path',
+      port: 'Web Port',
+      icp: 'ICP Number',
+      ssl_crt: 'SSL Certificate',
+      ssl_key: 'SSL Private Key'
+    },
+    systeminfo: {
+      name: 'System Name',
+      nameshorthand: 'Short Name',
+      logo_url: 'Logo URL',
+      language: 'Default Language'
+    },
+    openai: {
+      base_url: 'Base URL',
+      api_key: 'API Key',
+      engine: 'Engine'
+    },
+    aprs: {
+      aprs_server_host: 'APRS Server',
+      aprs_server_port: 'APRS Port',
+      self_address: 'Self Address',
+      self_port: 'Self Port',
+      callsign: 'Callsign',
+      ssid: 'SSID',
+      passcode: 'Passcode',
+      latitude: 'Latitude',
+      longitude: 'Longitude',
+      altitude: 'Altitude'
+    },
+    weixin: {
+      mp_appid: 'MP AppID',
+      mp_appsecret: 'MP AppSecret',
+      phone_code_url: 'Phone Code URL',
+      avatar_url: 'Default Avatar URL',
+      appid: 'Open Platform AppID',
+      appsecret: 'Open Platform AppSecret',
+      encodingaeskey: 'EncodingAESKey',
+      weixin_welcome: 'Welcome Message',
+      default_keywords: 'Default Keywords',
+      server_url: 'Server URL',
+      weixin_api_url: 'WeChat API URL',
+      wx_msg_url: 'Message Push URL',
+      alarm_mode_id: 'Alarm Mode ID'
+    },
+    billing: {
+      enabled: 'Enable Billing',
+      account_expire_recheck_secs: 'Expire Recheck Interval (s)',
+      package_unit_price_cents: 'Package Unit Price (cents)',
+      notify_url: 'Payment Notify URL',
+      wechatPay: 'WeChat Pay',
+      appid: 'AppID',
+      mch_id: 'Merchant ID',
+      api_v3_key: 'API v3 Key',
+      serial_no: 'Certificate Serial No.',
+      private_key_path: 'Private Key Path',
+      wechat_notify_url: 'WeChat Pay Notify URL',
+      description: 'Description'
+    },
+    platforms: {
+      name: 'Platform Name',
+      host: 'Host',
+      port: 'Port',
+      online: 'Online',
+      total: 'Total',
+      actions: 'Actions'
+    }
   },
   device: {
     grouproom: 'Group Room',

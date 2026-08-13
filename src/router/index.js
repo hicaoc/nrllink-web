@@ -256,6 +256,17 @@ export const asyncRoutes = [
       },
 
       {
+        path: 'config',
+        component: () =>
+          import('@/views/setup/config.vue'),
+        name: 'serverConfig',
+        meta: {
+          title: 'serverConfig',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
+      },
+
+      {
         path: 'users',
         component: () =>
           import('@/views/setup/users.vue'),

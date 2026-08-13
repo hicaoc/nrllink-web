@@ -5,6 +5,7 @@ export default {
     relay: '频点管理',
     devgroup: '设备群组',
     server: '节点管理',
+    serverConfig: '服务器配置',
     publicgroup: '群组管理',
     grouproom: '群组房间',
     myhome: '私有区域',
@@ -93,6 +94,103 @@ export default {
 
     // master_server: '主服务器',
     // slave_server: '从服务器'
+  },
+  config: {
+    title: '服务器配置',
+    restartTip: '端口、数据库等配置修改后需重启服务才能生效',
+    save: '保存',
+    saveSuccess: '保存成功',
+    loadFailed: '配置加载失败',
+    addPlatform: '新增平台',
+    deletePlatform: '删除',
+    deleteConfirm: '确认删除该平台吗？',
+    tip: '提示',
+    confirm: '确定',
+    cancel: '取消',
+    canceled: '已取消',
+    tabSystem: '系统',
+    tabWeb: 'Web服务',
+    tabSysteminfo: '系统信息',
+    tabOpenai: 'OpenAI',
+    tabAprs: 'APRS',
+    tabWeixin: '微信',
+    tabBilling: '计费',
+    tabPlatforms: '互联平台',
+    system: {
+      port: '服务端口',
+      log_path: '日志路径',
+      license_path: 'License路径',
+      dbfile: '数据库文件',
+      ipfile: 'IP库文件',
+      calllog_path: '通话日志路径'
+    },
+    web: {
+      path: 'Web路径',
+      port: 'Web端口',
+      icp: 'ICP备案号',
+      ssl_crt: 'SSL证书',
+      ssl_key: 'SSL私钥'
+    },
+    systeminfo: {
+      name: '系统名称',
+      nameshorthand: '系统简称',
+      logo_url: 'Logo地址',
+      language: '默认语言'
+    },
+    openai: {
+      base_url: 'Base URL',
+      api_key: 'API Key',
+      engine: '模型引擎'
+    },
+    aprs: {
+      aprs_server_host: 'APRS服务器',
+      aprs_server_port: 'APRS端口',
+      self_address: '本机地址',
+      self_port: '本机端口',
+      callsign: '呼号',
+      ssid: 'SSID',
+      passcode: '验证码',
+      latitude: '纬度',
+      longitude: '经度',
+      altitude: '海拔'
+    },
+    weixin: {
+      mp_appid: '公众号AppID',
+      mp_appsecret: '公众号AppSecret',
+      phone_code_url: '手机号授权URL',
+      avatar_url: '默认头像URL',
+      appid: '开放平台AppID',
+      appsecret: '开放平台AppSecret',
+      encodingaeskey: 'EncodingAESKey',
+      weixin_welcome: '欢迎语',
+      default_keywords: '默认关键词',
+      server_url: '服务器URL',
+      weixin_api_url: '微信API URL',
+      wx_msg_url: '消息推送URL',
+      alarm_mode_id: '告警模式ID'
+    },
+    billing: {
+      enabled: '启用计费',
+      account_expire_recheck_secs: '过期复查间隔(秒)',
+      package_unit_price_cents: '套餐单价(分)',
+      notify_url: '支付回调URL',
+      wechatPay: '微信支付',
+      appid: 'AppID',
+      mch_id: '商户号',
+      api_v3_key: 'APIv3密钥',
+      serial_no: '证书序列号',
+      private_key_path: '私钥路径',
+      wechat_notify_url: '微信支付回调URL',
+      description: '商品描述'
+    },
+    platforms: {
+      name: '平台名称',
+      host: '主机',
+      port: '端口',
+      online: '在线数',
+      total: '总数',
+      actions: '操作'
+    }
   },
   device: {
     grouproom: '群组房间',
