@@ -330,15 +330,19 @@ export default {
 
         this.loading = true
         createRegUpload(formData)
-          .then(() => {
+          .then(response => {
+            if (!response || response.code !== 20000) {
+              ElMessage.error(response?.message || response?.data?.message || '注册失败，请稍后重试')
+              return
+            }
+
             return ElMessageBox.alert(
               '注册成功，请等待管理员审核，一般48小时内完成。',
               '注册成功',
               { confirmButtonText: '返回登录' }
-            )
-          })
-          .then(() => {
-            this.$router.push('/login')
+            ).then(() => {
+              this.$router.push('/login')
+            })
           })
           .catch(() => {})
           .finally(() => {

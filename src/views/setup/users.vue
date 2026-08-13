@@ -108,8 +108,8 @@
 
         <el-table-column :label="$t('Account.avatar')" width="90" align="center">
           <template #default="scope">
-            <div class="avatar-shell">
-              <img class="user-avatar" :src="scope.row.avatar" alt="avatar">
+            <div v-if="shouldShowAvatar(scope.row.avatar)" class="avatar-shell">
+              <img class="user-avatar" :src="scope.row.avatar" alt="avatar" @error="handleAvatarError(scope.row.avatar)">
             </div>
           </template>
         </el-table-column>
@@ -188,7 +188,9 @@
       <article v-for="item in list" :key="item.id" class="users-card">
         <div class="users-card__header">
           <div class="users-card__headline">
-            <div class="avatar-shell"><img class="user-avatar" :src="item.avatar" alt="avatar"></div>
+            <div v-if="shouldShowAvatar(item.avatar)" class="avatar-shell">
+              <img class="user-avatar" :src="item.avatar" alt="avatar" @error="handleAvatarError(item.avatar)">
+            </div>
             <div>
               <h3>{{ item.name || '--' }}</h3>
               <el-tag class="callsign-tag">{{ item.callsign || '--' }}</el-tag>
@@ -416,6 +418,7 @@ export default {
         phone: [{ required: true, message: '电话号码是必选项', trigger: 'blur' }]
       },
       downloadLoading: false,
+      failedAvatarUrls: {},
       showtable: true
     }
   },
@@ -430,6 +433,15 @@ export default {
     })
   },
   methods: {
+    shouldShowAvatar(avatar) {
+      return typeof avatar === 'string' && avatar.trim() !== '' && !this.failedAvatarUrls[avatar]
+    },
+    handleAvatarError(avatar) {
+      this.failedAvatarUrls = {
+        ...this.failedAvatarUrls,
+        [avatar]: true
+      }
+    },
     SexFilter(type) {
       const sexMap = {
         '0': '女',

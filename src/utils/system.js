@@ -46,7 +46,7 @@ export const DevModelOptions = [
   { id: 36, name: 'NRL-2700-HF-HOST' },
   { id: 37, name: 'NRL-2700-HF-PANEL' },
   { id: 50, name: '海能达中继' },
-  { id: 55, name: 'UVE5' },
+  { id: 55, name: 'NRL-ESP32' },
 
 
 
@@ -122,7 +122,7 @@ export const groupTypeOptions = [
   { id: 5, name: '俱乐部' },
   { id: 6, name: '车友会' },
   { id: 7, name: '会议组' },
-  { id: 8, name: '私人房间' },
+  { id: 8, name: '私密房间' },
   { id: 100, name: '其他' }
 ]
 
