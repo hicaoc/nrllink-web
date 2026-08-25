@@ -1,7 +1,7 @@
 allowBuilds:
-  '@parcel/watcher': set this to true or false
-  core-js: set this to true or false
-  esbuild: set this to true or false
+  '@parcel/watcher': true
+  core-js: true
+  esbuild: true
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@0.2.4
   vite-plus: 0.2.4
