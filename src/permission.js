@@ -18,6 +18,7 @@ const whiteList = [
   '/signtimes',
   '/getcustomer',
   '/auth-redirect',
+  '/oidc-callback',
   '/universe',
   '/serial',
 ] // no redirect whitelist

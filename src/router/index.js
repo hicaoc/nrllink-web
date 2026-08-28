@@ -74,6 +74,11 @@ export const constantRoutes = [
     hidden: true,
   },
   {
+    path: '/oidc-callback',
+    component: () => import('@/views/login/oidc-callback.vue'),
+    hidden: true,
+  },
+  {
     path: '/404',
     component: () => import('@/views/error-page/404.vue'),
     hidden: true,

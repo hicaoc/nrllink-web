@@ -288,6 +288,13 @@
               >{{ $t('login.logIn') }}</el-button
             >
           </div>
+
+          <div v-if="oidcEnabled" class="oidc-login-wrapper">
+            <el-divider class="oidc-divider">{{ $t('login.thirdparty') }}</el-divider>
+            <el-button class="oidc-button" @click.prevent="handleOidcLogin">
+              {{ oidcButtonName || $t('login.oidcDefaultButton') }}
+            </el-button>
+          </div>
         </el-form>
       </div>
     </el-dialog>
@@ -335,6 +342,7 @@
 
 <script>
 import { getplatforminfo, fetchPlatformList } from '@/api/platform'
+import { getOidcConfig } from '@/api/user'
 import { setI18nLanguage } from '@/lang'
 import { validUsername } from '@/utils/validate'
 import { mapState } from 'pinia'
@@ -343,6 +351,7 @@ import { useUserStore } from '@/store/modules/user'
 import { useSettingsStore } from '@/store/modules/settings'
 import { themes } from '@/styles/themes'
 import { setPlatformTheme } from '@/utils/theme'
+import { ElMessage } from 'element-plus'
 import { Check } from '@element-plus/icons-vue'
 import ServerList from './components/ServerList.vue'
 import SupportLinks from './components/SupportLinks.vue'
@@ -395,6 +404,8 @@ export default {
       showDialog: false,
       loginDialogVisible: false,
       registerDialogVisible: false,
+      oidcEnabled: false,
+      oidcButtonName: '',
       redirect: undefined,
       serverList: [],
       nrlmpImg: '',
@@ -521,8 +532,10 @@ export default {
     })
 
     this.fetchServerList()
+    this.fetchOidcConfig()
   },
   mounted() {
+    this.handleOidcError()
     window.addEventListener('resize', this.handleViewportResize)
     this.$nextTick(() => {
       this.initializePanels(true)
@@ -902,6 +915,29 @@ export default {
         this.nrlmpImg = mod.default || mod
       }
     },
+    fetchOidcConfig() {
+      getOidcConfig()
+        .then((response) => {
+          const data = response.data || {}
+          this.oidcEnabled = !!data.enabled
+          this.oidcButtonName = data.button_name || ''
+        })
+        .catch(() => {})
+    },
+    handleOidcLogin() {
+      // 整页跳转，由后端 302 到外部认证服务器
+      window.location.href = '/user/oidc/login'
+    },
+    handleOidcError() {
+      const oidcError = this.$route.query && this.$route.query.oidc_error
+      if (!oidcError) {
+        return
+      }
+      ElMessage.error(`${this.$t('login.oidcLoginFailed')}: ${oidcError}`)
+      const query = { ...this.$route.query }
+      delete query.oidc_error
+      this.$router.replace({ query })
+    },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
@@ -1051,6 +1087,33 @@ export default {
           0 18px 44px var(--platform-accent-25),
           0 0 18px var(--platform-accent-22) !important;
       }
+    }
+  }
+
+  .oidc-login-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .oidc-divider {
+      width: 100%;
+      margin: 8px 0 14px;
+      border-color: var(--platform-border-light);
+
+      .el-divider__text {
+        background: var(--platform-shell);
+        color: var(--platform-ink-dim);
+        font-size: 13px;
+      }
+    }
+
+    .oidc-button {
+      width: 200px;
+      height: 44px;
+      font-size: 15px;
+      border-radius: 14px;
+      letter-spacing: 0.6px;
     }
   }
 

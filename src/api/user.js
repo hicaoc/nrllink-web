@@ -8,6 +8,13 @@ export function login(data) {
   })
 }
 
+export function getOidcConfig() {
+  return request({
+    url: '/user/oidc/config',
+    method: 'get',
+  })
+}
+
 export function getInfo(token) {
   return request({
     url: '/user/info',

@@ -297,6 +297,46 @@
         </el-form>
       </el-tab-pane>
 
+      <el-tab-pane :label="$t('config.tabOidc')" name="oidc">
+        <el-form
+          :model="conf.oidc"
+          label-position="right"
+          label-width="180px"
+          class="config-form"
+          autocomplete="off"
+        >
+          <el-form-item :label="$t('config.oidc.enabled')">
+            <el-switch v-model="conf.oidc.enabled" />
+          </el-form-item>
+          <el-form-item :label="$t('config.oidc.issuer')">
+            <el-input autocomplete="new-password" v-model="conf.oidc.issuer" />
+          </el-form-item>
+          <el-form-item :label="$t('config.oidc.client_id')">
+            <el-input autocomplete="new-password" v-model="conf.oidc.client_id" />
+          </el-form-item>
+          <el-form-item :label="$t('config.oidc.client_secret')">
+            <el-input autocomplete="new-password" v-model="conf.oidc.client_secret" show-password />
+          </el-form-item>
+          <el-form-item :label="$t('config.oidc.redirect_url')">
+            <el-input
+              autocomplete="new-password"
+              v-model="conf.oidc.redirect_url"
+              :placeholder="$t('config.oidc.redirectUrlPlaceholder')"
+            />
+          </el-form-item>
+          <el-form-item :label="$t('config.oidc.auto_provision')">
+            <el-switch v-model="conf.oidc.auto_provision" />
+          </el-form-item>
+          <el-form-item :label="$t('config.oidc.button_name')">
+            <el-input
+              autocomplete="new-password"
+              v-model="conf.oidc.button_name"
+              :placeholder="$t('config.oidc.buttonNamePlaceholder')"
+            />
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+
       <el-tab-pane :label="$t('config.tabPlatforms')" name="platforms">
         <div class="platforms-toolbar">
           <el-button class="filter-item" type="primary" @click="handleAddPlatform">
@@ -375,6 +415,7 @@ export default {
         aprs: {},
         weixin: {},
         billing: { wechat_pay: {} },
+        oidc: {},
         platforms: [],
       },
     }
@@ -390,7 +431,16 @@ export default {
           const data = response.data || {}
           // 整体保存返回的配置，未在表单展示的字段（map、运行时字段等）原样保留回传
           this.conf = data
-          const sections = ['system', 'web', 'systeminfo', 'openai', 'aprs', 'weixin', 'billing']
+          const sections = [
+            'system',
+            'web',
+            'systeminfo',
+            'openai',
+            'aprs',
+            'weixin',
+            'billing',
+            'oidc',
+          ]
           sections.forEach((key) => {
             if (!this.conf[key] || typeof this.conf[key] !== 'object') {
               this.conf[key] = {}
@@ -399,6 +449,19 @@ export default {
           if (!this.conf.billing.wechat_pay || typeof this.conf.billing.wechat_pay !== 'object') {
             this.conf.billing.wechat_pay = {}
           }
+          // 老配置没有 oidc 段时补默认值，未展示的字段由 Object.assign 原样保留
+          this.conf.oidc = Object.assign(
+            {
+              enabled: false,
+              issuer: '',
+              client_id: '',
+              client_secret: '',
+              redirect_url: '',
+              auto_provision: false,
+              button_name: '',
+            },
+            this.conf.oidc
+          )
           if (!Array.isArray(this.conf.platforms)) {
             this.conf.platforms = []
           }
