@@ -353,7 +353,7 @@ export default {
   },
   login: {
     title: 'HAM互联',
-    logIn: '登录',
+    logIn: '本地登录',
     username: '账号',
     password: '密码',
     any: '随便填',
@@ -361,7 +361,7 @@ export default {
     csqrTips: '请用微信扫描客服微信二维码',
     thirdparty: '第三方登录',
     thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！',
-    oidcDefaultButton: 'OIDC 统一认证',
+    oidcDefaultButton: 'HAM统一认证平台登录',
     oidcLoginFailed: 'OIDC 登录失败',
     oidcLoggingIn: '正在通过 OIDC 登录，请稍候…',
     visibleRooms: '可见房间',

@@ -287,11 +287,7 @@
               @click.prevent="handleLogin"
               >{{ $t('login.logIn') }}</el-button
             >
-          </div>
-
-          <div v-if="oidcEnabled" class="oidc-login-wrapper">
-            <el-divider class="oidc-divider">{{ $t('login.thirdparty') }}</el-divider>
-            <el-button class="oidc-button" @click.prevent="handleOidcLogin">
+            <el-button v-if="oidcEnabled" class="oidc-button" @click.prevent="handleOidcLogin">
               {{ oidcButtonName || $t('login.oidcDefaultButton') }}
             </el-button>
           </div>
@@ -1055,12 +1051,13 @@ export default {
     width: 100%;
     display: flex;
     justify-content: center;
+    gap: 12px;
     padding: 10px 0;
     box-sizing: border-box;
 
     .login-button {
-      width: 200px !important;
-      min-width: 200px !important;
+      flex: 1;
+      min-width: 0 !important;
       height: 48px !important;
       font-size: 16px !important;
       border-radius: 14px !important;
@@ -1079,7 +1076,7 @@ export default {
       display: flex !important;
       justify-content: center;
       align-items: center;
-      margin: 0 auto;
+      margin: 0 !important;
 
       &:hover {
         transform: translateY(-2px);
@@ -1088,32 +1085,15 @@ export default {
           0 0 18px var(--platform-accent-22) !important;
       }
     }
-  }
-
-  .oidc-login-wrapper {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .oidc-divider {
-      width: 100%;
-      margin: 8px 0 14px;
-      border-color: var(--platform-border-light);
-
-      .el-divider__text {
-        background: var(--platform-shell);
-        color: var(--platform-ink-dim);
-        font-size: 13px;
-      }
-    }
 
     .oidc-button {
-      width: 200px;
-      height: 44px;
+      flex: 1;
+      min-width: 0;
+      height: 48px;
       font-size: 15px;
       border-radius: 14px;
       letter-spacing: 0.6px;
+      margin: 0 !important;
     }
   }
 

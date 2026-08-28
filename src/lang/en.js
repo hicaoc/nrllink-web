@@ -358,7 +358,7 @@ export default {
   },
   login: {
     title: 'HAM Interconnect',
-    logIn: 'Login',
+    logIn: 'Local Login',
     username: 'Account',
     password: 'Password',
     any: 'Fill in anything',
@@ -366,7 +366,7 @@ export default {
     csqrTips: 'Please scan the customer service WeChat QR code with WeChat',
     thirdparty: 'Third-party Login',
     thirdpartyTips: 'Cannot simulate locally, please simulate based on your own business!!!',
-    oidcDefaultButton: 'OIDC Sign In',
+    oidcDefaultButton: 'HAM Unified Login',
     oidcLoginFailed: 'OIDC login failed',
     oidcLoggingIn: 'Signing in with OIDC, please wait…',
     visibleRooms: 'Visible Rooms',
