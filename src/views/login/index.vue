@@ -1089,11 +1089,29 @@ export default {
     .oidc-button {
       flex: 1;
       min-width: 0;
-      height: 48px;
-      font-size: 15px;
-      border-radius: 14px;
+      height: 48px !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      border-radius: 14px !important;
       letter-spacing: 0.6px;
       margin: 0 !important;
+      color: var(--platform-accent) !important;
+      background: var(--platform-accent-10) !important;
+      border: 1px solid var(--platform-border-strong) !important;
+      box-shadow:
+        0 10px 26px var(--platform-accent-14),
+        0 0 0 1px var(--platform-accent-08) inset !important;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        color: var(--platform-ink) !important;
+        background: var(--platform-accent-18) !important;
+        border-color: var(--platform-accent-34) !important;
+        box-shadow:
+          0 16px 38px var(--platform-accent-22),
+          0 0 16px var(--platform-accent-18) !important;
+      }
     }
   }
 
