@@ -5,6 +5,7 @@
 <script>
 import { ElMessage } from 'element-plus'
 import { setToken } from '@/utils/auth'
+import { useUserStore } from '@/store/modules/user'
 
 export default {
   name: 'OidcCallback',
@@ -13,6 +14,10 @@ export default {
     const token = query.token
     if (token) {
       setToken(token)
+      // 与 userStore.login 保持一致：token 要同时写入 cookie 和 store，
+      // 否则 axios 请求拦截器（判断 userStore.token）不会携带 X-Token 头，后端会返回 50008
+      const userStore = useUserStore()
+      userStore.token = token
       // 无需手动调 getInfo，permission.js 守卫检测到无 roles 会自动拉取并生成动态路由
       this.$router.replace({ path: query.redirect || '/' })
     } else {
