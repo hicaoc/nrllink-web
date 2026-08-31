@@ -192,6 +192,8 @@ export default {
       redirect_url: '回调URL',
       redirectUrlPlaceholder: 'https://你的域名/user/oidc/callback',
       auto_provision: '自动创建账号',
+      virtual_login: '无本地账号临时登录',
+      virtualLoginTip: 'OIDC 认证通过后，即使本地没有账号也允许进入公共功能；不写本地用户表。',
       button_name: '登录按钮文案',
       buttonNamePlaceholder: '留空则显示默认文案',
     },

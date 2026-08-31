@@ -193,6 +193,9 @@ export default {
       redirect_url: 'Redirect URL',
       redirectUrlPlaceholder: 'https://your-domain/user/oidc/callback',
       auto_provision: 'Auto Provision Users',
+      virtual_login: 'Virtual OIDC Session',
+      virtualLoginTip:
+        'Allow authenticated OIDC users without a local account to access public features; no local user row is created.',
       button_name: 'Login Button Label',
       buttonNamePlaceholder: 'Leave empty to use the default label',
     },

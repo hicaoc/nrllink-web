@@ -327,6 +327,10 @@
           <el-form-item :label="$t('config.oidc.auto_provision')">
             <el-switch v-model="conf.oidc.auto_provision" />
           </el-form-item>
+          <el-form-item :label="$t('config.oidc.virtual_login')">
+            <el-switch v-model="conf.oidc.virtual_login" />
+            <div class="form-tip">{{ $t('config.oidc.virtualLoginTip') }}</div>
+          </el-form-item>
           <el-form-item :label="$t('config.oidc.button_name')">
             <el-input
               autocomplete="new-password"
@@ -458,6 +462,7 @@ export default {
               client_secret: '',
               redirect_url: '',
               auto_provision: false,
+              virtual_login: false,
               button_name: '',
             },
             this.conf.oidc
@@ -547,6 +552,13 @@ export default {
 
     :deep(.el-input-number) {
       width: 220px;
+    }
+
+    .form-tip {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--el-text-color-secondary);
     }
   }
 

@@ -339,6 +339,7 @@
 <script>
 import { getplatforminfo, fetchPlatformList } from '@/api/platform'
 import { getOidcConfig } from '@/api/user'
+import { isMiniProgramEnv, reLaunchToMiniProgram } from '@/utils/miniprogram'
 import { setI18nLanguage } from '@/lang'
 import { validUsername } from '@/utils/validate'
 import { mapState } from 'pinia'
@@ -927,6 +928,11 @@ export default {
     handleOidcError() {
       const oidcError = this.$route.query && this.$route.query.oidc_error
       if (!oidcError) {
+        return
+      }
+      // 小程序 web-view 环境：跳回小程序登录页，由小程序 toast 错误
+      if (isMiniProgramEnv()) {
+        reLaunchToMiniProgram(`/pages/login/login?oidc_error=${encodeURIComponent(oidcError)}`)
         return
       }
       ElMessage.error(`${this.$t('login.oidcLoginFailed')}: ${oidcError}`)
