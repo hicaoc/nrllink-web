@@ -196,6 +196,9 @@ export default {
       virtual_login: 'Virtual OIDC Session',
       virtualLoginTip:
         'Allow authenticated OIDC users without a local account to access public features; no local user row is created.',
+      token_login: 'Long-lived API Token',
+      tokenLoginTip:
+        'Allow devices, apps and mini programs to access NRL with a HAM ID hamid_pat_ token.',
       button_name: 'Login Button Label',
       buttonNamePlaceholder: 'Leave empty to use the default label',
     },

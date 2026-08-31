@@ -194,6 +194,8 @@ export default {
       auto_provision: '自动创建账号',
       virtual_login: '无本地账号临时登录',
       virtualLoginTip: 'OIDC 认证通过后，即使本地没有账号也允许进入公共功能；不写本地用户表。',
+      token_login: '长期 API Token 登录',
+      tokenLoginTip: '允许设备/App/小程序携带 HAM ID 的 hamid_pat_ 长期 Token 访问 NRL。',
       button_name: '登录按钮文案',
       buttonNamePlaceholder: '留空则显示默认文案',
     },

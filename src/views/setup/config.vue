@@ -331,6 +331,10 @@
             <el-switch v-model="conf.oidc.virtual_login" />
             <div class="form-tip">{{ $t('config.oidc.virtualLoginTip') }}</div>
           </el-form-item>
+          <el-form-item :label="$t('config.oidc.token_login')">
+            <el-switch v-model="conf.oidc.token_login" />
+            <div class="form-tip">{{ $t('config.oidc.tokenLoginTip') }}</div>
+          </el-form-item>
           <el-form-item :label="$t('config.oidc.button_name')">
             <el-input
               autocomplete="new-password"
@@ -463,6 +467,7 @@ export default {
               redirect_url: '',
               auto_provision: false,
               virtual_login: false,
+              token_login: false,
               button_name: '',
             },
             this.conf.oidc
