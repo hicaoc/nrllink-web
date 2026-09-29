@@ -79,7 +79,12 @@
         <button type="button" class="topbar-button ghost" @click="openLoginDialog">
           {{ $t('login.login') }}
         </button>
-        <button type="button" class="topbar-button solid" @click="openRegisterDialog">
+        <button
+          v-if="localRegisterEnabled || oidcEnabled"
+          type="button"
+          class="topbar-button solid"
+          @click="openRegisterDialog"
+        >
           {{ $t('login.register') }}
         </button>
       </div>
@@ -455,6 +460,7 @@ export default {
       registerDialogVisible: false,
       oidcEnabled: false,
       oidcButtonName: '',
+      localRegisterEnabled: true,
       loginTab: 'local',
       redirect: undefined,
       serverList: [],
@@ -983,6 +989,7 @@ export default {
           const data = response.data || {}
           this.oidcEnabled = !!data.enabled
           this.oidcButtonName = data.button_name || ''
+          this.localRegisterEnabled = !data.disable_register
           this.loginTab = this.oidcEnabled ? 'oidc' : 'local'
         })
         .catch(() => {})

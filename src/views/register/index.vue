@@ -35,11 +35,16 @@
               {{ $t('reg.oidcButton') }}
             </el-button>
           </div>
-          <div v-if="oidcEnabled" class="register-divider">
+          <div v-if="oidcEnabled && !registerDisabled" class="register-divider">
             <span>{{ $t('reg.localDivider') }}</span>
           </div>
 
+          <div v-if="registerDisabled && !oidcEnabled" class="register-closed-tip">
+            {{ $t('reg.closedTip') }}
+          </div>
+
           <el-form
+            v-if="!registerDisabled"
             ref="registerForm"
             :model="registerForm"
             :rules="registerRules"
@@ -230,6 +235,7 @@ export default {
       platformName: '',
       oidcEnabled: false,
       oidcButtonName: '',
+      registerDisabled: false,
     }
   },
   created() {
@@ -253,6 +259,7 @@ export default {
           const data = response.data || {}
           this.oidcEnabled = !!data.enabled
           this.oidcButtonName = data.button_name || ''
+          this.registerDisabled = !!data.disable_register
         })
         .catch(() => {})
     },
@@ -407,6 +414,7 @@ export default {
       }
     },
     handleSubmit() {
+      if (this.registerDisabled) return
       if (!this.$refs.registerForm) return
       if (this.fileProcessing) {
         ElMessage.warning(this.$t('reg.processing'))
@@ -850,6 +858,18 @@ body,
       height: 1px;
       background: var(--platform-border);
     }
+  }
+
+  .register-closed-tip {
+    padding: 18px;
+    margin-bottom: 14px;
+    border-radius: 14px;
+    border: 1px solid var(--platform-border);
+    background: var(--platform-surface);
+    color: var(--platform-ink-dim);
+    font-size: 14px;
+    line-height: 1.7;
+    text-align: center;
   }
 
   .form-section {

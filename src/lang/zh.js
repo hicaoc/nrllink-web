@@ -124,6 +124,9 @@ export default {
       dbfile: '数据库文件',
       ipfile: 'IP库文件',
       calllog_path: '通话日志路径',
+      disable_register: '关闭本地注册',
+      disableRegisterTip:
+        '开启后停止接受本地账号注册申请，仅保留 OIDC 统一认证注册；小程序等客户端提交注册时会收到错误提示',
     },
     web: {
       path: 'Web路径',
@@ -579,6 +582,7 @@ export default {
     oidcTip: '使用 HAM 统一认证平台账号，注册登录一站完成',
     oidcButton: '前往统一认证平台注册',
     localDivider: '或使用本地账号注册',
+    closedTip: '本平台已关闭注册，如有需要请联系管理员',
     sectionBasic: '基本信息',
     sectionContact: '联系方式',
     sectionLicense: '证件上传',

@@ -41,6 +41,10 @@
           <el-form-item :label="$t('config.system.calllog_path')">
             <el-input autocomplete="new-password" v-model="conf.system.calllog_path" />
           </el-form-item>
+          <el-form-item :label="$t('config.system.disable_register')">
+            <el-switch v-model="conf.system.disable_register" />
+            <div class="form-tip">{{ $t('config.system.disableRegisterTip') }}</div>
+          </el-form-item>
         </el-form>
       </el-tab-pane>
 

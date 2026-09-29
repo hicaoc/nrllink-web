@@ -125,6 +125,9 @@ export default {
       dbfile: 'Database File',
       ipfile: 'IP Database File',
       calllog_path: 'Call Log Path',
+      disable_register: 'Disable Local Registration',
+      disableRegisterTip:
+        'When enabled, local account registration is closed and only OIDC unified-auth registration remains; clients such as the mini program will receive an error message when submitting',
     },
     web: {
       path: 'Web Path',
@@ -588,6 +591,7 @@ export default {
     oidcTip: 'Use your HAM Unified Auth account — register and sign in in one place',
     oidcButton: 'Register via Unified Auth',
     localDivider: 'or register with a local account',
+    closedTip: 'Registration is closed on this server. Please contact the administrator if needed.',
     sectionBasic: 'Basic Information',
     sectionContact: 'Contact',
     sectionLicense: 'License Upload',
