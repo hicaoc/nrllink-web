@@ -127,6 +127,8 @@ export default {
       disable_register: '关闭本地注册',
       disableRegisterTip:
         '开启后停止接受本地账号注册申请，仅保留 OIDC 统一认证注册；小程序等客户端提交注册时会收到错误提示',
+      disable_group_cmd: '关闭群组查询切换',
+      disableGroupCmdTip: '开启后设备端 7 号指令（查询群组列表、切换群组）将被服务器直接丢弃',
     },
     web: {
       path: 'Web路径',

@@ -45,6 +45,10 @@
             <el-switch v-model="conf.system.disable_register" />
             <div class="form-tip">{{ $t('config.system.disableRegisterTip') }}</div>
           </el-form-item>
+          <el-form-item :label="$t('config.system.disable_group_cmd')">
+            <el-switch v-model="conf.system.disable_group_cmd" />
+            <div class="form-tip">{{ $t('config.system.disableGroupCmdTip') }}</div>
+          </el-form-item>
         </el-form>
       </el-tab-pane>
 

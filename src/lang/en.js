@@ -128,6 +128,9 @@ export default {
       disable_register: 'Disable Local Registration',
       disableRegisterTip:
         'When enabled, local account registration is closed and only OIDC unified-auth registration remains; clients such as the mini program will receive an error message when submitting',
+      disable_group_cmd: 'Disable Group Query/Switch',
+      disableGroupCmdTip:
+        'When enabled, device-side command 7 (query group list, switch group) is silently dropped by the server',
     },
     web: {
       path: 'Web Path',
